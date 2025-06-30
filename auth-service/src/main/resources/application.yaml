@@ -1,0 +1,35 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /authentication
+
+spring:
+  application:
+    name: authentication-service
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: authentication-service
+    server: http://localhost:8080/authentication
+    title: Authentication Service
+    version: 1.0.0
