@@ -6,10 +6,15 @@ import MediaList from "./components/MediaList/index.jsx";
 function App() {
 
     return (
-        <div>
+        <div className="bg-black">
             <Header />
-            <FeatureMovies />
-            <MediaList />
+            <FeatureMovies/>
+            <MediaList
+                title="Đang chiếu"
+                url="https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"/>
+            <MediaList
+                title="Sắp chiếu"
+                url="https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1"/>
         </div>
     );
 }

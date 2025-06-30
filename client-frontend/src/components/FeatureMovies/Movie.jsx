@@ -10,9 +10,10 @@ const Movie = (props) => {
                 className="aspect-video brightness-50 transition-opacity duration-700 w-full object-cover"
                 src={`https://image.tmdb.org/t/p/original${backdrop_path}`}
                 alt={title}
+                loading="lazy"
             />
 
-            <div className="absolute bottom-[10%] left-4 sm:left-8 right-4 flex flex-col sm:flex-row items-start gap-4 sm:gap-8 w-auto sm:w-2/3 text-white z-10">
+            <div className="absolute bottom-[30%] left-4 sm:left-8 right-4 flex flex-col sm:flex-row items-start gap-4 sm:gap-8 w-auto sm:w-2/3 text-white z-10">
                 {/* Poster */}
                 <div className="hidden sm:w-56 sm:block md:w-68 md:block shrink-0">
                     <img

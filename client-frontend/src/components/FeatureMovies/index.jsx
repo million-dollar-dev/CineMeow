@@ -5,6 +5,7 @@ import Movie from "./Movie.jsx";
 const FeatureMovies = () => {
     const [movies, setMovies] = useState([]);
     const [activeMovieId, setActiveMovieId] = React.useState();
+    const [isFading, setIsFading] = useState(false);
     useEffect(() => {
         fetch("https://api.themoviedb.org/3/trending/movie/day?language=en-US", {
             method: "GET",
@@ -23,24 +24,35 @@ const FeatureMovies = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setActiveMovieId(prevId => {
-                const currentIndex = movies.findIndex(m => m.id === prevId);
-                const nextIndex = (currentIndex + 1) % movies.length;
-                return movies[nextIndex].id;
-            });
-        }, 4000);
+            setIsFading(true);
+            setTimeout(() => {
+                setActiveMovieId(prevId => {
+                    const currentIndex = movies.findIndex(m => m.id === prevId);
+                    const nextIndex = (currentIndex + 1) % movies.length;
+                    return movies[nextIndex].id;
+                });
+                setIsFading(false);
+            }, 400);
+        }, 5000);
 
-        return () => clearInterval(interval); // clearInterval khi unmount
+        return () => clearInterval(interval);
     }, [movies]);
-
+    const activeMovie = movies.find(m => m.id === activeMovieId);
     return (
-        <div className="relative">
-            {
-                movies
-                    .filter((movie) => movie.id === activeMovieId)
-                    .map((movie) => (<Movie key={movie.id} data={movie}/>))
-            }
-            <PaginateIndicator movies={movies} activeMovieId={activeMovieId} setActiveMovieId={setActiveMovieId}/>
+        <div className="relative overflow-hidden min-h-[60vh] bg-black">
+            <div
+                className={`transition-opacity duration-500 ease-in-out ${
+                    isFading ? 'opacity-0' : 'opacity-100'
+                }`}
+            >
+                {activeMovie && <Movie data={activeMovie}/>}
+            </div>
+
+            <PaginateIndicator
+                movies={movies}
+                activeMovieId={activeMovieId}
+                setActiveMovieId={setActiveMovieId}
+            />
         </div>
 
     );

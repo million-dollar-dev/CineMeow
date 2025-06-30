@@ -27,7 +27,7 @@ const CircularProgressBar = ({
                     strokeDasharray={`${2 * Math.PI * radius}vw`}
                     strokeDashoffset={`${2 * Math.PI * radius - (percent / 100) * 2 * Math.PI * radius}vw`}
                     transform="rotate(-90)"
-                    style={{transformOrigin: "center"}}
+                    style={{ transformOrigin: "center" }}
                     strokeLinecap="round"
                 />
                 <text
@@ -35,7 +35,7 @@ const CircularProgressBar = ({
                     y={`${size / 2}vw`}
                     fill="white"
                     fontSize="1.2vw"
-                    alignmentBaseline="middle"
+                    dominantBaseline="middle"
                     textAnchor="middle"
                 >
                     {percent}
