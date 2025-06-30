@@ -1,11 +1,11 @@
 
-import Header from "./components/Header.jsx";
-import FeatureMovies from "./components/FeatureMovies";
-import MediaList from "./components/MediaList/index.jsx";
-import Promotions from "./components/Promotions.jsx";
-import Footer from "./components/Footer.jsx";
+import Header from "../components/Header.jsx";
+import FeatureMovies from "../components/FeatureMovies/index.jsx";
+import MediaList from "../components/MediaList/index.jsx";
+import Promotions from "../components/Promotions.jsx";
+import Footer from "../components/Footer.jsx";
 
-function App() {
+function HomePage() {
 
     return (
         <div className="bg-black">
@@ -23,4 +23,4 @@ function App() {
     );
 }
 
-export default App
+export default HomePage
