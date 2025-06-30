@@ -2,44 +2,52 @@ import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlay} from "@fortawesome/free-solid-svg-icons";
 
-const Movie = () => {
+const Movie = (props) => {
+    const {data: {backdrop_path, title, release_date, overview, poster_path}} = props;
     return (
         <>
             <img
-                className="aspect-video brightness-50"
-                src="https://images.bauerhosting.com/legacy/empire-tmdb/films/157336/images/xu9zaAevzQ5nnrsXN6JcahLnG4i.jpg?ar=16:9&fit=crop&crop=top"/>
-            <div className="absolute bottom-[10%] left-8 w-1/2 sm:w-1/3 text-white">
-                <p className="font-bold sm:text-[3vw] mb-2">Interstellar</p>
-                <div>
-                    <p className="text-gray-400 border border-gray-400 inline-block p-1 mb-1">PG13</p>
-                    <p className="text-[1.2vw]">2020-11-11</p>
-                </div>
-                <div>
-                    <div className="hidden sm:block text-[1.2vw] mt-4">
-                        <p className="font-bold mb-2">Overview</p>
-                        <p>Interstellar là một bộ phim khoa học viễn tưởng do Christopher Nolan đạo diễn, phát hành
-                            năm
-                            2014. Lấy bối cảnh tương lai khi Trái Đất đang dần trở nên không thể sinh sống, phim
-                            theo
-                            chân một nhóm phi hành gia thực hiện nhiệm vụ vượt qua lỗ sâu (wormhole) để tìm kiếm một
-                            hành tinh mới cho loài người.
+                className="aspect-video brightness-50 transition-opacity duration-700 w-full object-cover"
+                src={`https://image.tmdb.org/t/p/original${backdrop_path}`}
+                alt={title}
+                loading="lazy"
+            />
 
-                            Bộ phim kết hợp những khái niệm khoa học phức tạp như thuyết tương đối, giãn nở thời
-                            gian,
-                            và lỗ đen với yếu tố cảm xúc mạnh mẽ về tình cha con và lòng hy sinh. Không chỉ là một
-                            chuyến phiêu lưu không gian, Interstellar đặt ra câu hỏi sâu sắc về nhân loại, sự sống
-                            còn
-                            và tình yêu vượt mọi giới hạn của thời gian và không gian.</p>
+            <div className="absolute bottom-[30%] left-4 sm:left-8 right-4 flex flex-col sm:flex-row items-start gap-4 sm:gap-8 w-auto sm:w-2/3 text-white z-10">
+                {/* Poster */}
+                <div className="hidden sm:w-56 sm:block md:w-68 md:block shrink-0">
+                    <img
+                        src={`https://image.tmdb.org/t/p/w500${poster_path}`}
+                        alt={title}
+                        className="w-full rounded-xl shadow-2xl"
+                    />
+                </div>
+
+
+                <div className="flex flex-col justify-start max-w-full sm:max-w-[700px]">
+                    <p className="font-bold text-xl sm:text-[2.5vw] mb-2 sm:mb-3">{title}</p>
+
+                    <div className="mb-2">
+                        <p className="text-gray-400 border border-gray-400 inline-block px-2 py-1 text-xs sm:text-sm mb-1">PG13</p>
+                        <p className="text-sm sm:text-base">{release_date}</p>
+                    </div>
+
+                    <div className="hidden sm:block text-sm sm:text-base mt-3">
+                        <p className="font-bold mb-1">Overview</p>
+                        <p className="line-clamp-3 sm:line-clamp-4">{overview}</p>
+                    </div>
+
+                    <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                        <button className="bg-white text-black py-2 px-4 rounded text-sm sm:text-base">
+                            <FontAwesomeIcon icon={faPlay} /> Trailer
+                        </button>
+                        <button className="bg-slate-300/35 py-2 px-4 rounded text-sm sm:text-base">Mua vé</button>
                     </div>
                 </div>
-                <div className="mt-4">
-                    <button className="bg-white text-black py-2 px-4 rounded text-10 lg:text-lg mr-2"><FontAwesomeIcon
-                        icon={faPlay}/>Trailer
-                    </button>
-                    <button className="bg-slate-300/35 py-2 px-4 rounded text-10 lg:text-lg">Mua vé</button>
-                </div>
             </div>
+
         </>
+
     );
 };
 
