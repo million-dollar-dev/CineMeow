@@ -2,6 +2,8 @@
 import Header from "./components/Header.jsx";
 import FeatureMovies from "./components/FeatureMovies";
 import MediaList from "./components/MediaList/index.jsx";
+import Promotions from "./components/Promotions.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
 
@@ -15,6 +17,8 @@ function App() {
             <MediaList
                 title="Sắp chiếu"
                 url="https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1"/>
+            <Promotions/>
+            <Footer/>
         </div>
     );
 }

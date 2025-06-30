@@ -195,9 +195,9 @@ const Header = () => {
                         <a href="#"
                            className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
                             <span className="mr-2">Đăng nhập</span>
-                            <svg className="stroke-current" width="10" height="10" stroke-width="2" viewBox="0 0 10 10"
+                            <svg className="stroke-current" width="10" height="10" strokeWidth="2" viewBox="0 0 10 10"
                                  aria-hidden="true">
-                                <g fill-rule="evenodd">
+                                <g fillRule="evenodd">
                                     <path
                                         className="opacity-0 group-hover:opacity-100 transition ease-in-out duration-200"
                                         d="M0 5h7"></path>
