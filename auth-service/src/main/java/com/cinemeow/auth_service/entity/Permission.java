@@ -20,9 +20,6 @@ public class Permission extends BaseEntity {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "create_user_id", nullable = false)
-    String createUserId;
-
     @Column(name = "description", nullable = false)
     String description;
 }

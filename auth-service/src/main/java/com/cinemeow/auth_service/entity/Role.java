@@ -23,9 +23,6 @@ public class Role extends BaseEntity {
     @Column(name = "name", nullable = false)
     String name;
 
-    @Column(name = "create_user_id")
-    String createUserId;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "role_permission",
             joinColumns = @JoinColumn(name = "role_id"),

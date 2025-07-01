@@ -18,7 +18,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(1002, "Refresh token is invalid", HttpStatus.BAD_REQUEST),
     TOKEN_NOT_FOUND(1003, "Token is not found", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(403, "Access denied", HttpStatus.UNAUTHORIZED),
-    DATA_INTEGRITY_VIOLATION(1011, "Request's data issue", HttpStatus.BAD_REQUEST)
+    DATA_INTEGRITY_VIOLATION(1011, "Request's data issue", HttpStatus.BAD_REQUEST),
+    INVALID_JWT(1012, "Invalid Token", HttpStatus.UNAUTHORIZED),
+    PARSE_ERROR(1013, "There's an issue in parsing", HttpStatus.BAD_REQUEST);
     ;
 
     int code;
