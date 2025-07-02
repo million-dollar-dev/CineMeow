@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /authentication
+
+spring:
+  application:
+    name: authentication-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cinemeow_auth
+    username: postgres
+    password: sa123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+app:
+  init-data: true
+  admin-info:
+    username: admin
+    password: admin
+    email: admin123@gmail.com
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: authentication-service
+    server: http://localhost:8080/authentication
+    title: Authentication Service
+    version: 1.0.0
+
+jwt:
+  signerKey: "Kdx2vu8GOXH6lZnpmYwdtICtOIYxSS+jJH+yDB0PZvUH2gMVxyxDGoVqL3hBNTfv"
+  valid-duration: 3600 #in second
+  refreshable-duration: 5000 #in second
