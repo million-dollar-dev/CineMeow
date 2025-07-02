@@ -4,6 +4,7 @@ import com.cinemeow.auth_service.dto.request.PermissionRequest;
 import com.cinemeow.auth_service.dto.response.BaseResponse;
 import com.cinemeow.auth_service.dto.response.PermissionResponse;
 import com.cinemeow.auth_service.service.PermissionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/permissions")
+@Tag(name = "Permissions")
 public class PermissionController {
     PermissionService permissionService;
 
@@ -52,6 +54,7 @@ public class PermissionController {
 
     @DeleteMapping("/{id}")
     public BaseResponse<Void> delete(@PathVariable String id) {
+        permissionService.delete(id);
         return BaseResponse.<Void>builder()
                 .message("Delete successfully!")
                 .build();

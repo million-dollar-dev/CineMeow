@@ -1,11 +1,13 @@
 package com.cinemeow.auth_service.dto.response;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @Getter
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 public class BaseResponse <T> {
     @Builder.Default
     String status = "Success";
@@ -22,5 +25,5 @@ public class BaseResponse <T> {
     T data;
     String message;
     @Builder.Default
-    LocalDateTime timestamp = LocalDateTime.now();
+    Date timestamp = new Date();
 }
