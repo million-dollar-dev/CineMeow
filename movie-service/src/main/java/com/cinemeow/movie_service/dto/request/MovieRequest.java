@@ -1,0 +1,67 @@
+package com.cinemeow.movie_service.dto.request;
+
+import com.cinemeow.movie_service.enums.MovieRating;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
+import java.util.Set;
+
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class MovieRequest {
+    @NotBlank(message = "ID is required")
+    String id;
+
+    @NotNull(message = "Rating is required")
+    String rating;
+
+    @NotBlank(message = "Backdrop path is required")
+    @Pattern(regexp = "^/.*\\.jpg$", message = "Backdrop path must be a valid image path ending with .jpg")
+    String backdropPath;
+
+    @NotEmpty(message = "At least one genre is required")
+    Set<Integer> genres;
+
+    @NotEmpty(message = "At least one origin country is required")
+    String originCountry;
+
+    @NotBlank(message = "Original language is required")
+    @Size(min = 2, max = 3, message = "Original language must be 2-3 characters")
+    String originalLanguage;
+
+    @NotBlank(message = "Overview is required")
+    @Size(min = 10, max = 1000, message = "Overview must be between 10 and 1000 characters")
+    String overview;
+
+    @NotBlank(message = "Poster path is required")
+    @Pattern(regexp = "^/.*\\.jpg$", message = "Poster path must be a valid image path ending with .jpg")
+    String posterPath;
+
+    @NotNull(message = "Release date is required")
+    LocalDate releaseDate;
+
+    @NotNull(message = "Duration is required")
+    @Min(value = 1, message = "Duration must be at least 1 minute")
+    Integer duration;
+
+    @NotNull(message = "Status is required")
+    MovieRating status;
+
+    @NotBlank(message = "Tagline is required")
+    @Size(max = 200, message = "Tagline must be less than 200 characters")
+    String tagline;
+
+    @NotBlank(message = "Title is required")
+    @Size(max = 100, message = "Title must be less than 100 characters")
+    String title;
+
+    @NotBlank(message = "Subtitle is required")
+    @Size(min = 2, max = 10, message = "Subtitle must be between 2 and 10 characters")
+    String subtitle;
+}
