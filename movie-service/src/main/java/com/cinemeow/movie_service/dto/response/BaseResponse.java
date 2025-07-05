@@ -1,4 +1,4 @@
-package com.cinemeow.auth_service.dto.response;
+package com.cinemeow.movie_service.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -17,7 +16,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-public class BaseResponse <T> {
+public class BaseResponse<T> {
     @Builder.Default
     String status = "Success";
     @Builder.Default

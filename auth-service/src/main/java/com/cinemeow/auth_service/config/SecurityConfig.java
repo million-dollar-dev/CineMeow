@@ -30,7 +30,7 @@ public class SecurityConfig {
             "/webjars/**",
             "/v1/api-docs/**",
             "/users",
-            "auth/token",
+            "auth/login",
             "auth/introspect",
             "auth/logout",
             "auth/refresh"
