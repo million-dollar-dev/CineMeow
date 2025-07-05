@@ -1,0 +1,97 @@
+package com.cinemeow.movie_service.service.impl;
+
+import com.cinemeow.movie_service.dto.request.MovieRequest;
+import com.cinemeow.movie_service.dto.response.MovieResponse;
+import com.cinemeow.movie_service.dto.response.PagedResponse;
+import com.cinemeow.movie_service.entity.Movie;
+import com.cinemeow.movie_service.exception.AppException;
+import com.cinemeow.movie_service.exception.ErrorCode;
+import com.cinemeow.movie_service.mapper.MovieMapper;
+import com.cinemeow.movie_service.repository.MovieRepository;
+import com.cinemeow.movie_service.service.MovieService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class MovieServiceImpl implements MovieService {
+    MovieRepository movieRepository;
+    MovieMapper movieMapper;
+
+    @Override
+    public MovieResponse create(MovieRequest request) {
+        var movie = movieMapper.toMovie(request);
+        return movieMapper.toMovieResponse(movieRepository.save(movie));
+    }
+
+    @Override
+    public MovieResponse getById(String id) {
+        var movie = movieRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+        return movieMapper.toMovieResponse(movie);
+    }
+
+    @Override
+    public PagedResponse<List<MovieResponse>> getMovies(int pageNo, int pageSize, String sortBy) {
+        int page = Math.max(0, pageNo - 1);
+
+        Sort sort = buildSort(sortBy);
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        Page<Movie> moviePage = movieRepository.findAll(pageable);
+        List<MovieResponse> movieResponses = moviePage
+                .stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
+
+        return PagedResponse.<List<MovieResponse>>builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .totalPages(moviePage.getTotalPages())
+                .content(movieResponses)
+                .build();
+    }
+
+    private Sort buildSort(String sortBy) {
+        if (!StringUtils.hasText(sortBy)) return Sort.unsorted();
+
+        Pattern pattern = Pattern.compile("(\\w+?)(:)(asc|desc)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(sortBy);
+
+        if (matcher.matches()) {
+            String field = matcher.group(1);
+            String direction = matcher.group(3);
+            Sort.Direction sortDirection = Sort.Direction.fromString(direction);
+            return Sort.by(new Sort.Order(sortDirection, field));
+        }
+
+        return Sort.unsorted();
+    }
+
+
+    @Override
+    public MovieResponse update(String id, MovieRequest request) {
+        var movie = movieRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+        movieMapper.update(movie, request);
+        movieRepository.save(movie);
+        return movieMapper.toMovieResponse(movie);
+    }
+
+
+}
