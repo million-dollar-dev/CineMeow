@@ -1,6 +1,7 @@
 package com.cinemeow.movie_service.dto.request;
 
 import com.cinemeow.movie_service.enums.MovieRating;
+import com.cinemeow.movie_service.enums.Status;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,11 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieRequest {
-    @NotBlank(message = "ID is required")
-    String id;
-
     @NotNull(message = "Rating is required")
-    String rating;
+    MovieRating rating;
 
     @NotBlank(message = "Backdrop path is required")
     @Pattern(regexp = "^/.*\\.jpg$", message = "Backdrop path must be a valid image path ending with .jpg")
@@ -51,7 +49,7 @@ public class MovieRequest {
     Integer duration;
 
     @NotNull(message = "Status is required")
-    MovieRating status;
+    Status status;
 
     @NotBlank(message = "Tagline is required")
     @Size(max = 200, message = "Tagline must be less than 200 characters")

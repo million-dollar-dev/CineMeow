@@ -8,6 +8,7 @@ import com.cinemeow.movie_service.exception.AppException;
 import com.cinemeow.movie_service.exception.ErrorCode;
 import com.cinemeow.movie_service.mapper.MovieMapper;
 import com.cinemeow.movie_service.repository.MovieRepository;
+import com.cinemeow.movie_service.service.GenreService;
 import com.cinemeow.movie_service.service.MovieService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,13 @@ import java.util.regex.Pattern;
 public class MovieServiceImpl implements MovieService {
     MovieRepository movieRepository;
     MovieMapper movieMapper;
+    GenreService genreService;
 
     @Override
     public MovieResponse create(MovieRequest request) {
         var movie = movieMapper.toMovie(request);
+        var genres = genreService.findGenresByIds(request.getGenres());
+        movie.setGenres(genres);
         return movieMapper.toMovieResponse(movieRepository.save(movie));
     }
 
@@ -62,6 +66,7 @@ public class MovieServiceImpl implements MovieService {
         return PagedResponse.<List<MovieResponse>>builder()
                 .pageNo(pageNo)
                 .pageSize(pageSize)
+                .totalElements(moviePage.getTotalElements())
                 .totalPages(moviePage.getTotalPages())
                 .content(movieResponses)
                 .build();
@@ -88,6 +93,8 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponse update(String id, MovieRequest request) {
         var movie = movieRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+        var genres = genreService.findGenresByIds(request.getGenres());
+        movie.setGenres(genres);
         movieMapper.update(movie, request);
         movieRepository.save(movie);
         return movieMapper.toMovieResponse(movie);
