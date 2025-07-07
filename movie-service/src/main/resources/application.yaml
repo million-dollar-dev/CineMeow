@@ -32,3 +32,9 @@ openapi:
     server: http://localhost:8081/movie
     title: Movie Service
     version: 1.0.0
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.cinemeow.movie_service.repository.specification: DEBUG

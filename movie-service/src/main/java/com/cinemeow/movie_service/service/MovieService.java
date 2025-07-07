@@ -3,6 +3,7 @@ package com.cinemeow.movie_service.service;
 import com.cinemeow.movie_service.dto.request.MovieRequest;
 import com.cinemeow.movie_service.dto.response.MovieResponse;
 import com.cinemeow.movie_service.dto.response.PagedResponse;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface MovieService {
     MovieResponse getById(String id);
     PagedResponse<List<MovieResponse>> getMovies(int pageNo, int pageSize, String sortBy);
     MovieResponse update(String id, MovieRequest request);
-
+    PagedResponse<List<MovieResponse>> searchMovies(Pageable pageable, String[] filters);
 }
