@@ -1,6 +1,7 @@
 package com.cinemeow.movie_service.dto.response;
 
 import com.cinemeow.movie_service.entity.Genre;
+import com.cinemeow.movie_service.enums.MovieRating;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MovieResponse {
     String id;
-    String rating;
+    MovieRating rating;
     String backdropPath;
     Set<Genre> genres;
     String originCountry;

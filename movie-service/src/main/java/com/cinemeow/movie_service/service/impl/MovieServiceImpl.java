@@ -8,6 +8,8 @@ import com.cinemeow.movie_service.exception.AppException;
 import com.cinemeow.movie_service.exception.ErrorCode;
 import com.cinemeow.movie_service.mapper.MovieMapper;
 import com.cinemeow.movie_service.repository.MovieRepository;
+import com.cinemeow.movie_service.repository.specification.MovieSpecificationBuilder;
+import com.cinemeow.movie_service.service.GenreService;
 import com.cinemeow.movie_service.service.MovieService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,10 +36,13 @@ import java.util.regex.Pattern;
 public class MovieServiceImpl implements MovieService {
     MovieRepository movieRepository;
     MovieMapper movieMapper;
+    GenreService genreService;
 
     @Override
     public MovieResponse create(MovieRequest request) {
         var movie = movieMapper.toMovie(request);
+        var genres = genreService.findGenresByIds(request.getGenres());
+        movie.setGenres(genres);
         return movieMapper.toMovieResponse(movieRepository.save(movie));
     }
 
@@ -62,6 +69,7 @@ public class MovieServiceImpl implements MovieService {
         return PagedResponse.<List<MovieResponse>>builder()
                 .pageNo(pageNo)
                 .pageSize(pageSize)
+                .totalElements(moviePage.getTotalElements())
                 .totalPages(moviePage.getTotalPages())
                 .content(movieResponses)
                 .build();
@@ -88,10 +96,62 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponse update(String id, MovieRequest request) {
         var movie = movieRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
+        var genres = genreService.findGenresByIds(request.getGenres());
+        movie.setGenres(genres);
         movieMapper.update(movie, request);
         movieRepository.save(movie);
         return movieMapper.toMovieResponse(movie);
     }
+
+    @Override
+    public PagedResponse<List<MovieResponse>> searchMovies(Pageable pageable, String[] filters) {
+        Page<Movie> moviePage;
+        log.info("Search params: {}", Arrays.toString(filters));
+        if (filters != null && filters.length > 0) {
+            MovieSpecificationBuilder builder = new MovieSpecificationBuilder();
+
+            Pattern pattern = Pattern.compile("(\\w+?)([:<>~!])(\\p{Punct})(.*)(\\p{Punct})");
+            for (String filter : filters) {
+                Matcher matcher = pattern.matcher(filter);
+
+                if (matcher.find()) {
+                    String key = matcher.group(1);
+                    String operation = matcher.group(2);
+                    String prefix = matcher.group(3);
+                    String value = matcher.group(4);
+                    String suffix = matcher.group(5);
+                    log.info("key: {}", key);
+                    log.info("operation: {}", operation);
+                    log.info("prefix: {}", prefix);
+                    log.info("suffix: {}", suffix);
+                    log.info("value: {}", value);
+                    if (value.isEmpty()) {
+                        log.warn("Empty value in filter: {}", filter);
+                        continue;
+                    }
+                    builder.with(null, key, operation, value, prefix, suffix);
+                } else {
+                    log.warn("Invalid filter format: {}", filter);
+                }
+            }
+            Specification<Movie> spec = builder.build();
+            moviePage = movieRepository.findAll(spec, pageable);
+        } else {
+            moviePage = movieRepository.findAll(pageable);
+        }
+
+        List<MovieResponse> movieResponses = moviePage.stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
+
+        return PagedResponse.<List<MovieResponse>>builder()
+                .pageNo(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalPages(moviePage.getTotalPages())
+                .content(movieResponses)
+                .build();
+    }
+
 
 
 }

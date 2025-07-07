@@ -11,8 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +36,13 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void deleteById(Integer id) {
         genreRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<Genre> findGenresByIds(Set<Integer> ids) {
+        if (ids == null || ids.size() == 0)
+            return Collections.emptySet();
+        List<Genre> genres = genreRepository.findAllById(ids);
+        return new HashSet<>(genres);
     }
 }
