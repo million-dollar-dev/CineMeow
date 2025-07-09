@@ -1,5 +1,5 @@
 import React from 'react';
-import CircularProgressBar from "./CircularProgressBar.jsx";
+import CircularProgressBar from "../CircularProgressBar.jsx";
 
 const MovieCard = ({item}) => {
     return (
