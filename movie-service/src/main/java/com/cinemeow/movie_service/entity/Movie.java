@@ -47,7 +47,7 @@ public class Movie {
     @Column(name = "original_language")
     String originalLanguage;
 
-    @Column(name = "overview")
+    @Column(name = "overview", columnDefinition = "TEXT")
     String overview;
 
     @Column(name = "poster_path")

@@ -17,3 +17,18 @@ spring:
       ddl-auto: update
     show-sql: true
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: profile-service
+    server: http://localhost:8081/profile
+    title: Profile Service
+    version: 1.0.0

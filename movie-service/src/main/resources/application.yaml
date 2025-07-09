@@ -28,8 +28,8 @@ springdoc:
 
 openapi:
   service:
-    api-docs: authentication-service
-    server: http://localhost:8081/movie
+    api-docs: movie-service
+    server: http://localhost:8082/movie
     title: Movie Service
     version: 1.0.0
 
