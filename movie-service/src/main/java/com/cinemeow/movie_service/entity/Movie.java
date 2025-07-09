@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -46,7 +47,7 @@ public class Movie {
     @Column(name = "original_language")
     String originalLanguage;
 
-    @Column(name = "overview")
+    @Column(name = "overview", columnDefinition = "TEXT")
     String overview;
 
     @Column(name = "poster_path")
@@ -69,4 +70,14 @@ public class Movie {
 
     @Column(name = "subtitle")
     String subtitle;
+
+    @Column(name = "director")
+    String director;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "movie_casts",
+            joinColumns = @JoinColumn(name = "movie_id"))
+    @Column(name = "casts")
+    List<String> casts;
 }

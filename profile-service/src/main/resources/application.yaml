@@ -1,13 +1,13 @@
 server:
-  port: 8082
+  port: 8081
   servlet:
-    context-path: /movie
+    context-path: /profile
 
 spring:
   application:
-    name: movie-service
+    name: profile-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/cinemeow_movie
+    url: jdbc:postgresql://localhost:5432/cinemeow_profile
     username: postgres
     password: sa123
     driver-class-name: org.postgresql.Driver
@@ -28,13 +28,7 @@ springdoc:
 
 openapi:
   service:
-    api-docs: movie-service
-    server: http://localhost:8082/movie
-    title: Movie Service
+    api-docs: profile-service
+    server: http://localhost:8081/profile
+    title: Profile Service
     version: 1.0.0
-
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    com.cinemeow.movie_service.repository.specification: DEBUG
