@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {faCat, faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Link} from "react-router-dom";
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -19,7 +20,7 @@ const Header = () => {
                 isScrolled ? 'bg-black bg-opacity-90' : 'bg-transparent'
             }`}
         >
-            <a href="/" className="font-bold text-black text-xl text-white"><FontAwesomeIcon icon={faCat} /> CineMeow</a>
+            <Link to={"/"} className="font-bold text-black text-xl text-white"><FontAwesomeIcon icon={faCat} /> CineMeow</Link>
             <nav>
                 <ul className="text-white flex items-center justify-center font-semibold">
                     <li className="relative group px-3 py-2">
