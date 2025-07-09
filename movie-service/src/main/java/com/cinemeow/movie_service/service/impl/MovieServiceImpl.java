@@ -120,11 +120,6 @@ public class MovieServiceImpl implements MovieService {
                     String prefix = matcher.group(3);
                     String value = matcher.group(4);
                     String suffix = matcher.group(5);
-                    log.info("key: {}", key);
-                    log.info("operation: {}", operation);
-                    log.info("prefix: {}", prefix);
-                    log.info("suffix: {}", suffix);
-                    log.info("value: {}", value);
                     if (value.isEmpty()) {
                         log.warn("Empty value in filter: {}", filter);
                         continue;
