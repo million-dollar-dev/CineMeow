@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -62,4 +63,12 @@ public class MovieRequest {
     @NotBlank(message = "Subtitle is required")
     @Size(min = 2, max = 10, message = "Subtitle must be between 2 and 10 characters")
     String subtitle;
+
+    @NotBlank(message = "Director must not be blank")
+    @Size(max = 100, message = "Director name must not exceed 100 characters")
+    String director;
+
+    @NotEmpty(message = "Casts list must not be empty")
+    @Size(max = 20, message = "Casts list must not exceed 20 members")
+    List<String> casts;
 }

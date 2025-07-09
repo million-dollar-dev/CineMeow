@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -29,4 +30,6 @@ public class MovieResponse {
     String tagline;
     String title;
     String subtitle;
+    String director;
+    List<String> casts;
 }
