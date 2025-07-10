@@ -3,16 +3,22 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import HomePage from './pages/HomePage.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Movie from "./components/FeatureMovies/Movie.jsx";
+import MovieDetail from "./pages/MovieDetail.jsx";
+import RootLayout from "./pages/RootLayout.jsx";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <HomePage/>,
-    },
-    {
-        path: "/movie",
-        element: <Movie />,
+        element: <RootLayout />,
+        children: [
+            {
+                path: "/",
+                element: <HomePage/>,
+            },
+            {
+                path: "/movie/:movieId",
+                element: <MovieDetail />,
+            }
+        ]
     }
 ]);
 

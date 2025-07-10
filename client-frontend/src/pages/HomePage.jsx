@@ -9,7 +9,7 @@ function HomePage() {
 
     return (
         <div className="bg-black">
-            <Header />
+
             <FeatureMovies/>
             <MediaList
                 title="Đang chiếu"
@@ -18,7 +18,7 @@ function HomePage() {
                 title="Sắp chiếu"
                 url="https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1"/>
             <Promotions/>
-            <Footer/>
+
         </div>
     );
 }
