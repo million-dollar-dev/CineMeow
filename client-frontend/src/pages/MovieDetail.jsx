@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import Loading from "../components/Loading.jsx";
 import Banner from "../components/MovieDetail/Banner.jsx";
 import ShowtimesList from "../components/MovieDetail/ShowtimesList.jsx";
+import NowPlayingList from "../components/MovieDetail/NowPlayingList.jsx";
 
 const MovieDetail = () => {
     const {movieId} = useParams();
@@ -34,11 +35,11 @@ const MovieDetail = () => {
         <div className="bg-black">
             <Banner movieInfo={movieInfo}/>
             <div className="flex mx-auto max-w-screen-xl">
-                <div className="flex-[3]">
+                <div className="flex-[2]">
                     <ShowtimesList />
                 </div>
                 <div className="flex-1">
-
+                    <NowPlayingList/>
                 </div>
             </div>
         </div>
