@@ -15,7 +15,6 @@ const ShowtimesList = () => {
         {date: "12/12", day: "Sat"},
         {date: "12/12", day: "Sun"},
     ]
-
     const cinemaData = [
         {
             id: 1,
@@ -47,8 +46,31 @@ const ShowtimesList = () => {
             name: "BHD Star",
             logoUrl: "123"
         },
-
     ]
+    const showtimesData = [
+        {
+            id: 1,
+            name: "CGV Aeon Bình Tân",
+            address: "Tầng 5 | Vincom Mega Mall Thảo Điền, số 159 đường Xa Lộ Hà Nội, Quận 2, thành phố Hồ Chí Minh"
+        },
+        {
+            id: 2,
+            name: "CGV GigaMall Thủ Đức",
+            address: "Tầng 6 | GigaMall, 240-242 Phạm Văn Đồng, Hiệp Bình Chánh, Thủ Đức, TP.HCM"
+        },
+        {
+            id: 3,
+            name: "Lotte Cinema Nam Sài Gòn",
+            address: "Lầu 3 | Lotte Mart Nam Sài Gòn, 469 Nguyễn Hữu Thọ, Quận 7, TP.HCM"
+        },
+        {
+            id: 4,
+            name: "Galaxy Nguyễn Du",
+            address: "116 Nguyễn Du, Phường Bến Thành, Quận 1, TP.HCM"
+        }
+    ];
+
+    // const [selectedShowtimes, setSelectedShowtimes] = React.useState(showtimesData[0]);
     return (
         <div className="text-white my-[2vw]">
             <div className="">
@@ -80,14 +102,18 @@ const ShowtimesList = () => {
                     <div className="flex gap-[0.5vw] gap-[1vw] justify-center m-[2vw]">
                         {
                             cinemaData.map((c) => {
-                                return <CinemaBrandSelector key={c.id}/>
+                                return <CinemaBrandSelector key={c.id} name={c.name} logoUrl={c.logoUrl}/>
                             })
                         }
                     </div>
                 </div>
             </div>
             <div className="bg-white text-black">
-                <ShowtimesSelector/>
+                {
+                    showtimesData.map((aShowtime) => {
+                        return <ShowtimesSelector key={aShowtime.id} name={aShowtime.name} address={aShowtime.address}/>
+                    })
+                }
             </div>
         </div>
     );

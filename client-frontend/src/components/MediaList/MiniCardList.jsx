@@ -1,5 +1,6 @@
 import React from 'react';
 import CircularProgressBar from "../CircularProgressBar.jsx";
+import RatingCard from "../RatingCard.jsx";
 
 const MiniCardList = () => {
     return (
@@ -8,11 +9,12 @@ const MiniCardList = () => {
                 <div className="mr-[1vw] max-w-1/4">
                     <div className="relative">
                         <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/2VUmvqsHb6cEtdfscEA6fqqVzLg.jpg" alt=""
-                             className="border-gray-900 rounded-2xl border-1"/>
-                        <p className="absolute bottom-2 left-2 font-extrabold text-[2vw] italic">1</p>
+                             className="border-gray-900 rounded-md border-1"/>
+                        <p className="absolute bottom-1 left-1 font-extrabold text-[2vw] italic">7</p>
                     </div>
                 </div>
                 <div className="flex gap-[0.4vw] flex-col">
+                    <RatingCard rating={"18+"}/>
                     <p className="font-bold text-[1.2vw]">Superman</p>
                     <p className="font-light text-[1vw] text-gray-300">Khoa học viễn tưởng, hành động</p>
                     <CircularProgressBar
