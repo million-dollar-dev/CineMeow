@@ -37,11 +37,14 @@ const MovieDetail = () => {
             <div className="flex mx-auto max-w-screen-xl">
                 <div className="flex-[2]">
                     <ShowtimesList />
+                    <div className="border-t border-1 border-gray-light my-[3vw]"></div>
+                    <ReviewList/>
                 </div>
                 <div className="flex-1">
                     <NowPlayingList/>
                 </div>
             </div>
+
         </div>
     );
 };

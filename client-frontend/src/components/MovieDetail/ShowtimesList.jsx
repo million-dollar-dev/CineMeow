@@ -8,12 +8,12 @@ import ShowtimesSelector from "./ShowtimesSelector.jsx";
 const ShowtimesList = () => {
     const dateData = [
         {date: "11/07", day: "MON"},
-        {date: "12/12", day: "Tue"},
-        {date: "12/12", day: "Wed"},
-        {date: "12/12", day: "Thu"},
-        {date: "12/12", day: "Fri"},
-        {date: "12/12", day: "Sat"},
-        {date: "12/12", day: "Sun"},
+        {date: "12/12", day: "TUE"},
+        {date: "12/12", day: "WED"},
+        {date: "12/12", day: "THU"},
+        {date: "12/12", day: "FRI"},
+        {date: "12/12", day: "SAT"},
+        {date: "12/12", day: "SUN"},
     ]
     const cinemaData = [
         {
@@ -72,7 +72,7 @@ const ShowtimesList = () => {
 
     // const [selectedShowtimes, setSelectedShowtimes] = React.useState(showtimesData[0]);
     return (
-        <div className="text-white my-[2vw]">
+        <div className="text-white bg-black my-[2vw] bg-jet">
             <div className="">
                 <div className="flex justify-between items-center my-[0.6vw]">
                     <p className="font-bold text-[1.8vw]">Lịch chiếu</p>
@@ -91,8 +91,8 @@ const ShowtimesList = () => {
                         </button>
                     </div>
                 </div>
-                <div className="border border-2 border-white">
-                    <div className="flex gap-[1vw] space-between justify-between my-[1vw] mx-[1vw]">
+                <div className="border border-2 border-gray-light bg-gray-sub rounded-xl my-[2vw]">
+                    <div className="flex gap-[1vw] space-between justify-between my-[2vw] mx-[2vw]">
                         {
                             dateData.map((d) => {
                                 return <MovieDateSelector date={d.date} day={d.day} key={d.day}/>
@@ -106,14 +106,22 @@ const ShowtimesList = () => {
                             })
                         }
                     </div>
+                    <div className=" text-black">
+                        {
+                            showtimesData.map((aShowtime) => {
+                                return <ShowtimesSelector key={aShowtime.id} name={aShowtime.name}
+                                                          address={aShowtime.address}/>
+                            })
+                        }
+                        <div className="flex justify-center my-[2vw]">
+                            <button
+                                className="rounded-full px-[1.6vw] py-[0.6vw] font-semibold bg-white bg-opacity-10 flex items-center"
+                            >
+                                Xem thêm
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="bg-white text-black">
-                {
-                    showtimesData.map((aShowtime) => {
-                        return <ShowtimesSelector key={aShowtime.id} name={aShowtime.name} address={aShowtime.address}/>
-                    })
-                }
             </div>
         </div>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 
 const CinemaBrandSelector = ({name}) => {
     return (
-        <button className="px-[1.2vw] py-[0.4vw] bg-white text-black hover:opacity-95 max-w-[7vw] max-h-[7vw]">
+        <button className="px-[1.2vw] py-[0.4vw] bg-white text-black hover:opacity-95 max-w-[7vw] max-h-[7vw] rounded-lg">
             <div className="flex items-center justify-between flex-col gap-[0.2vw]">
                 <div className="w-[4vw] h-[4vw] border-2 border-gray-400 rounded-lg overflow-hidden flex items-center justify-center">
                     <img
