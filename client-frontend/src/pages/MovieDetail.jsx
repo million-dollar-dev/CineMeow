@@ -4,6 +4,7 @@ import Loading from "../components/Loading.jsx";
 import Banner from "../components/MovieDetail/Banner.jsx";
 import ShowtimesList from "../components/MovieDetail/ShowtimesList.jsx";
 import NowPlayingList from "../components/MovieDetail/NowPlayingList.jsx";
+import ReviewList from "../components/MovieDetail/ReviewList.jsx";
 
 const MovieDetail = () => {
     const {movieId} = useParams();

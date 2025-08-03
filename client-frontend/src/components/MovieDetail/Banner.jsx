@@ -1,10 +1,11 @@
-import React from 'react';
-import {faPlay} from "@fortawesome/free-solid-svg-icons";
+import React, {useState} from 'react';
+import {faPlay, faStar} from "@fortawesome/free-solid-svg-icons";
 import CircularProgressBar from "../CircularProgressBar.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import RatingCard from "../RatingCard.jsx";
 
 const Banner = ({movieInfo}) => {
+    const [showAllOverview, setShowAllOverview] = useState(false);
     return (
         <div className="relative text-white overflow-hidden lg:h-154 my-auto">
             <img className="absolute inset-0 brightness-[0.35]"
@@ -26,12 +27,24 @@ const Banner = ({movieInfo}) => {
                             <CircularProgressBar percent={90} size={3.5} strokeWidth={0.3}/>
                         </div>
                         <button className="mr-1">
-                            <FontAwesomeIcon icon={faPlay}/> Trailer
+                            <FontAwesomeIcon icon={faPlay} className="text-violet"/> Xem trailer
+                        </button>
+                        <button className="mr-1">
+                            <FontAwesomeIcon icon={faStar} className="text-yellow-300"/> Xem đánh giá
                         </button>
                     </div>
                     <div className="mt-4">
-                        <p className="font-bold text-[1.3vw] mb-2">Overview</p>
-                        <p>{movieInfo?.overview}</p>
+                        <p className={`${showAllOverview ? "" : "line-clamp-2"} text-[1vw] transition-all`}>
+                            {movieInfo?.overview}
+                        </p>
+                        {movieInfo?.overview?.length > 100 && (
+                            <button
+                                className="text-violet text-[0.9vw] mt-1 hover:underline"
+                                onClick={() => setShowAllOverview(!showAllOverview)}
+                            >
+                                {showAllOverview ? "Ẩn bớt" : "Xem thêm"}
+                            </button>
+                        )}
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-4">
                         <div>
