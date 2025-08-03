@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@tailwind utilities;
 
 @font-face {
     font-family: 'Netflix Sans';
@@ -25,10 +26,41 @@
     font-weight: 300;
 }
 
-@theme {
-    --font-main: 'Netflix Sans', serif;
-    --text-10: 10px;
+@layer theme {
+    @theme {
+        --font-main: 'Netflix Sans', serif;
+        --text-10: 10px;
+
+        --color-black: #010101;
+        --color-white: #fffffe;
+        --color-gray-dark: #16161a;
+        --color-gray-sub: #242629;
+        --color-gray-light: #94a1b2;
+        --color-violet: #7f5af0;
+        --color-lime: #2cb67d;
+
+
+        --animate-fadeIn: fadeIn 0.5s ease-in forwards;
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        --animate-slide-down: slide-down 0.3s ease forwards;
+        @keyframes slide-down {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    }
 }
+
+
+
 
 body {
     font-family: 'Netflix Sans';
