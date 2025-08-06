@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import MovieCard from "./MovieCard.jsx";
+import ButtonMore from "../utils/ButtonMore.jsx";
 
 const MediaList = ({title, url}) => {
     const [mediaList, setMediaList] = useState([]);
@@ -23,10 +24,9 @@ const MediaList = ({title, url}) => {
         }
     }, [url]);
     return (
-        <div className="px-8 text-[1.2vw] py-10 bg-black text-white">
-            <div className="my-4 text-[2vw] font-bold flex justify-between">
-                <p className="text-[2vw] font-bold">{title}</p>
-                <a href="#" className="hover:underline">View All</a>
+        <div className="max-w-screen-xl mx-auto text-[1.2vw] py-[3vw] bg-black text-white">
+            <div className="my-[2vw] text-[2vw] font-bold">
+                <p className="text-[2vw] font-bold text-center">{title}</p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
                 {
@@ -34,6 +34,7 @@ const MediaList = ({title, url}) => {
                 }
 
             </div>
+            <ButtonMore />
         </div>
     );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlay} from "@fortawesome/free-solid-svg-icons";
+import RatingCard from "../RatingCard.jsx";
 
 const Movie = (props) => {
     const {data: {backdrop_path, title, release_date, overview, poster_path}} = props;
@@ -13,7 +14,7 @@ const Movie = (props) => {
                 loading="lazy"
             />
 
-            <div className="absolute bottom-[30%] left-4 sm:left-8 right-4 flex flex-col sm:flex-row items-start gap-4 sm:gap-8 w-auto sm:w-2/3 text-white z-10">
+            <div className="absolute bottom-[30%]  flex gap-6 left-30 text-white z-10">
                 {/* Poster */}
                 <div className="hidden sm:w-56 sm:block md:w-68 md:block shrink-0">
                     <img
@@ -25,10 +26,10 @@ const Movie = (props) => {
 
 
                 <div className="flex flex-col justify-start max-w-full sm:max-w-[700px]">
+                    <RatingCard rating={"PG12"} />
                     <p className="font-bold text-xl sm:text-[2.5vw] mb-2 sm:mb-3">{title}</p>
 
                     <div className="mb-2">
-                        <p className="text-gray-400 border border-gray-400 inline-block px-2 py-1 text-xs sm:text-sm mb-1">PG13</p>
                         <p className="text-sm sm:text-base">{release_date}</p>
                     </div>
 

@@ -10,9 +10,9 @@ import {
 import MovieDateSelector from "../components/MovieDetail/MovieDateSelector.jsx";
 import CinemaBrandSelector from "../components/MovieDetail/CinemaBrandSelector.jsx";
 import ShowtimesSelector from "../components/MovieDetail/ShowtimesSelector.jsx";
-import ShowtimesBanner from "../components/Showtimes/ShowtimesBanner.jsx";
+import Banner from "../components/Banner.jsx";
 import MovieAndShowtimeCard from "../components/Showtimes/MovieAndShowtimeCard.jsx";
-import Promotions from "../components/Promotions.jsx";
+import Promotions from "../components/PromotionSection.jsx";
 
 const Showtimes = () => {
     const dateData = [
@@ -82,7 +82,7 @@ const Showtimes = () => {
     // const [selectedShowtimes, setSelectedShowtimes] = React.useState(showtimesData[0]);
     return (
         <div className="bg-black text-white pt-[5vw]">
-            <ShowtimesBanner />
+            <Banner title={"Lịch chiếu phim hôm nay"}/>
             <p className="font-bold text-[2vw] text-center my-[2vw]">Lịch Chiếu phim</p>
             <div className="border border-gray-light rounded-md max-w-screen-xl mx-auto bg-gray-dark">
                 <div className="border-b p-[2vw]">

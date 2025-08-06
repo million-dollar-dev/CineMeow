@@ -4,6 +4,7 @@ import {faChevronDown, faLocationCrosshairs, faLocationDot} from "@fortawesome/f
 import MovieDateSelector from "./MovieDateSelector.jsx";
 import CinemaBrandSelector from "./CinemaBrandSelector.jsx";
 import ShowtimesSelector from "./ShowtimesSelector.jsx";
+import ButtonMore from "../utils/ButtonMore.jsx";
 
 const ShowtimesList = () => {
     const dateData = [
@@ -113,13 +114,7 @@ const ShowtimesList = () => {
                                                           address={aShowtime.address}/>
                             })
                         }
-                        <div className="flex justify-center my-[2vw]">
-                            <button
-                                className="rounded-full px-[1.6vw] py-[0.6vw] font-semibold bg-white bg-opacity-10 flex items-center"
-                            >
-                                Xem thêm
-                            </button>
-                        </div>
+                        <ButtonMore />
                     </div>
                 </div>
             </div>

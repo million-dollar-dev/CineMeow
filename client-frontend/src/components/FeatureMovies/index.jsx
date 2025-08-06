@@ -39,7 +39,7 @@ const FeatureMovies = () => {
     }, [movies]);
     const activeMovie = movies.find(m => m.id === activeMovieId);
     return (
-        <div className="relative overflow-hidden min-h-[60vh] bg-black">
+        <div className="relative overflow-hidden min-h-[60vh] bg-black mb-[2vw]">
             <div
                 className={`transition-opacity duration-500 ease-in-out ${
                     isFading ? 'opacity-0' : 'opacity-100'
