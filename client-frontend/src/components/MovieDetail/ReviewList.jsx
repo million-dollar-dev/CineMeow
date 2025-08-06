@@ -1,6 +1,7 @@
 import React from 'react';
 import CircularProgressBar from "../CircularProgressBar.jsx";
 import ReviewItem from "./ReviewItem.jsx";
+import ButtonMore from "../utils/ButtonMore.jsx";
 
 const ReviewList = () => {
     return (
@@ -15,13 +16,7 @@ const ReviewList = () => {
                     <ReviewItem/>
                     <ReviewItem/>
                     <ReviewItem/>
-                    <div className="flex justify-center">
-                        <button
-                            className="rounded-full px-[1.6vw] py-[0.6vw] font-semibold bg-white bg-opacity-10 flex items-center text-black"
-                        >
-                            Xem thêm
-                        </button>
-                    </div>
+                    <ButtonMore/>
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ import CinemaBrandSelector from "../components/MovieDetail/CinemaBrandSelector.j
 import ShowtimesSelector from "../components/MovieDetail/ShowtimesSelector.jsx";
 import Banner from "../components/Banner.jsx";
 import MovieAndShowtimeCard from "../components/Showtimes/MovieAndShowtimeCard.jsx";
-import Promotions from "../components/Promotions.jsx";
+import Promotions from "../components/PromotionSection.jsx";
 
 const Showtimes = () => {
     const dateData = [

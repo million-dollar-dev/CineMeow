@@ -87,7 +87,7 @@ const MediaCarousel = ({title}) => {
     const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi])
 
     return (
-        <section className="bg-cover bg-center bg-no-repeat py-20 px-4 w-full bg-[url('https://homepage.momocdn.net/img/momo-upload-api-210701105436-637607336767432408.jpg')]" >
+        <section className="bg-cover bg-center bg-no-repeat py-20 px-4 w-full bg-[url('https://homepage.momocdn.net/img/momo-upload-api-230912110927-638301137672516955.jpeg')]" >
             <div className="relative">
                 <h2 className="text-white text-2xl md:text-3xl font-bold mb-10 text-center">{title}</h2>
                 <div className="overflow-hidden relative max-w-screen-xl mx-auto" ref={emblaRef}>
