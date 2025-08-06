@@ -1,12 +1,12 @@
 import React from "react";
 
-const ShowtimesBanner = () => {
+const Banner = ({title}) => {
     return (
         <div className="bg-gray-sub py-10 px-6 md:px-16 lg:px-24">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
                 <div className="flex-1 text-center md:text-left">
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                        Lịch chiếu phim trên <span className="text-violet">CineMeow</span>
+                        {title} <span className="text-violet">CineMeow</span>
                     </h2>
                     <p className="text-gray-light mb-6 max-w-lg">
                         Khám phá thế giới điện ảnh tại những rạp chiếu phim hàng đầu, cùng
@@ -14,15 +14,15 @@ const ShowtimesBanner = () => {
                     </p>
                     <ul className="space-y-3 text-left text-gray-light font-medium">
                         <li>✔️ Lịch chiếu luôn <span className="font-semibold text-white">cập nhật sớm nhất</span></li>
-                        <li>✔️ Suất chiếu đầy đủ các rạp</li>
+                        <li>✔️ <span className="font-semibold text-white">Suất chiếu đầy đủ </span>các rạp</li>
                         <li>✔️ Đặt lịch chiếu <span className="font-semibold text-white">mua vé siêu nhanh</span></li>
-                        <li>✔️ Đặt vé lịch chiếu phim yêu thích mọi nơi</li>
+                        <li>✔️ <span className="font-semibold text-white"> Đặt vé lịch chiếu phim </span>yêu thích mọi nơi</li>
                     </ul>
                 </div>
                 <div className="flex-1 w-full max-w-md">
                     <div className="bg-white p-6 rounded-lg shadow-md text-center">
                         <h3 className="text-xl font-bold text-black mb-2">
-                            Lịch chiếu phim trên CineMeow
+                            {title} trên CineMeow
                         </h3>
                         <p className="text-sm font-medium text-gray-800">
                             Ghế đẹp, giá hời, vào rạp{" "}
@@ -42,4 +42,4 @@ const ShowtimesBanner = () => {
     );
 };
 
-export default ShowtimesBanner;
+export default Banner;
