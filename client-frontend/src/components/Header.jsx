@@ -39,12 +39,14 @@ const Header = () => {
                                 </div>
                                 <div className="relative z-10">
                                     <ul className="text-[15px]">
-                                        <li>
-                                            <a href="#"
-                                               className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
-                                                Lịch chiếu hôm nay
-                                            </a>
-                                        </li>
+                                        <Link to={"/showtimes/today"}>
+                                            <li>
+                                                <a href="#"
+                                                   className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
+                                                    Lịch chiếu hôm nay
+                                                </a>
+                                            </li>
+                                        </Link>
                                         <li>
                                             <a href="#"
                                                className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">

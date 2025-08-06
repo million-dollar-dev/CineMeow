@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import MovieDetail from "./pages/MovieDetail.jsx";
 import RootLayout from "./pages/RootLayout.jsx";
+import Showtimes from "./pages/Showtimes.jsx";
 
 const router = createBrowserRouter([
     {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
             {
                 path: "/movie/:movieId",
                 element: <MovieDetail />,
+            },
+            {
+                path: "/showtimes/today",
+                element: <Showtimes />,
             }
         ]
     }

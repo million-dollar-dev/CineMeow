@@ -12,7 +12,8 @@ const Banner = ({movieInfo}) => {
                  src={`https://image.tmdb.org/t/p/original${movieInfo?.backdrop_path}`} alt=""/>
             <div className="flex relative max-w-screen-xl mx-auto p-5 gap-6 lg:gap-8 py-10 lg:mt-14">
                 <div className="flex-1 max-w-3xs">
-                    <img src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieInfo?.poster_path}`} alt="" className="border-1 border-gray-800"/>
+                    <img src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieInfo?.poster_path}`} alt="poster"
+                         className="border-1 border-gray-800 rounded-md"/>
                 </div>
                 <div className="flex-2 text-[1.2vw]">
                     <RatingCard rating={"K"}/>
