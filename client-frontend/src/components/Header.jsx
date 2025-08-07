@@ -55,12 +55,14 @@ const Header = () => {
                                                 </a>
                                             </li>
                                         </Link>
-                                        <li>
-                                            <a href="#"
-                                               className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
-                                                Phim sắp chiếu
-                                            </a>
-                                        </li>
+                                        <Link to={"/comming-soon"}>
+                                            <li>
+                                                <a href="#"
+                                                   className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
+                                                    Phim sắp chiếu
+                                                </a>
+                                            </li>
+                                        </Link>
                                     </ul>
                                 </div>
                             </div>
