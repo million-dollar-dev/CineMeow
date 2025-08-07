@@ -5,7 +5,7 @@ import TopReviewSection from "../components/TopReviewSection.jsx";
 import PromotionSection from "../components/PromotionSection.jsx";
 import MovieBlogSection from "../components/MovieBlogSection.jsx";
 
-const NowPlaying = () => {
+const NowPlayingPage = () => {
     return (
         <div className="bg-black pt-[4vw]">
             <div className="mt-[2vw] ">
@@ -20,4 +20,4 @@ const NowPlaying = () => {
     );
 };
 
-export default NowPlaying;
+export default NowPlayingPage;

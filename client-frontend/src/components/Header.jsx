@@ -87,12 +87,14 @@ const Header = () => {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <ul className="mt-3 text-[15px]">
-                                                <li>
-                                                    <a href="#"
-                                                       className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
-                                                        CGV
-                                                    </a>
-                                                </li>
+                                                <Link to={"/cinema/cgv"}>
+                                                    <li>
+                                                        <a href="#"
+                                                           className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
+                                                            CGV
+                                                        </a>
+                                                    </li>
+                                                </Link>
                                                 <li>
                                                     <a href="#"
                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
