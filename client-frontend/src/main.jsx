@@ -7,6 +7,7 @@ import MovieDetail from "./pages/MovieDetail.jsx";
 import RootLayout from "./pages/RootLayout.jsx";
 import Showtimes from "./pages/Showtimes.jsx";
 import NowPlaying from "./pages/NowPlaying.jsx";
+import CommingSoon from "./pages/CommingSoon.jsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
             {
                 path: "/now-playing",
                 element: <NowPlaying />,
+            },
+            {
+                path: "/comming-soon",
+                element: <CommingSoon />,
             }
         ]
     }
