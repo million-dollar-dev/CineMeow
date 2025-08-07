@@ -3,11 +3,12 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import HomePage from './pages/HomePage.jsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import MovieDetail from "./pages/MovieDetail.jsx";
+import MovieDetailPage from "./pages/MovieDetailPage.jsx";
 import RootLayout from "./pages/RootLayout.jsx";
-import Showtimes from "./pages/Showtimes.jsx";
-import NowPlaying from "./pages/NowPlaying.jsx";
-import CommingSoon from "./pages/CommingSoon.jsx";
+import ShowtimesPage from "./pages/ShowtimesPage.jsx";
+import NowPlayingPage from "./pages/NowPlayingPage.jsx";
+import CommingSoon from "./pages/CommingSoonPage.jsx";
+import CinemaPage from "./pages/CinemaPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -19,19 +20,23 @@ const router = createBrowserRouter([
             },
             {
                 path: "/movie/:movieId",
-                element: <MovieDetail />,
+                element: <MovieDetailPage />,
             },
             {
                 path: "/showtimes/today",
-                element: <Showtimes />,
+                element: <ShowtimesPage />,
             },
             {
                 path: "/now-playing",
-                element: <NowPlaying />,
+                element: <NowPlayingPage />,
             },
             {
                 path: "/comming-soon",
                 element: <CommingSoon />,
+            },
+            {
+                path: "/cinema/:cinemaId",
+                element: <CinemaPage />,
             }
         ]
     }

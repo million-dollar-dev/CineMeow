@@ -4,7 +4,7 @@ import TimeSelector from "../MovieDetail/TimeSelector.jsx";
 
 const MovieAndShowtimeCard = () => {
     return (
-        <div className="flex border-t py-[1.6vw] items-center">
+        <div className="flex border-t py-[1.6vw] items-center pl-[2vw]">
             <div className="mr-[1vw] max-w-1/7">
                 <div className="relative">
                     <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/2VUmvqsHb6cEtdfscEA6fqqVzLg.jpg" alt=""

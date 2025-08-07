@@ -6,7 +6,7 @@ import ShowtimesList from "../components/MovieDetail/ShowtimesList.jsx";
 import NowPlayingList from "../components/MovieDetail/NowPlayingList.jsx";
 import ReviewList from "../components/MovieDetail/ReviewList.jsx";
 
-const MovieDetail = () => {
+const MovieDetailPage = () => {
     const {movieId} = useParams();
     const [movieInfo, setMovieInfo] = useState();
     const [isLoading, setIsLoading] = useState(false);
@@ -50,4 +50,4 @@ const MovieDetail = () => {
     );
 };
 
-export default MovieDetail;
+export default MovieDetailPage;
