@@ -9,6 +9,7 @@ import ShowtimesPage from "./pages/ShowtimesPage.jsx";
 import NowPlayingPage from "./pages/NowPlayingPage.jsx";
 import CommingSoon from "./pages/CommingSoonPage.jsx";
 import CinemaPage from "./pages/CinemaPage.jsx";
+import MoviesPage from "./pages/MoviesPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -37,7 +38,12 @@ const router = createBrowserRouter([
             {
                 path: "/cinema/:cinemaId",
                 element: <CinemaPage />,
+            },
+            {
+                path: "/movies",
+                element: <MoviesPage />,
             }
+
         ]
     }
 ]);

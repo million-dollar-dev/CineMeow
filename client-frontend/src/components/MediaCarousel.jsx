@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronLeft, faChevronRight, faPlay} from "@fortawesome/free-solid-svg-icons";
 import CircularProgressBar from "./CircularProgressBar.jsx";
 import RatingCard from "./RatingCard.jsx";
+import ButtonPlay from "./utils/ButtonPlay.jsx";
 
 const MediaCarousel = ({title}) => {
     const movies = [
@@ -108,11 +109,7 @@ const MediaCarousel = ({title}) => {
                                         className="w-full h-[300px] object-cover transform transition-transform duration-300 group-hover:scale-105"
                                     />
 
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-80">
-                                        <button className="bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center border border-white border-2 transform transition-transform duration-300 group-hover:scale-90">
-                                            <FontAwesomeIcon icon={faPlay} className="text-white" />
-                                        </button>
-                                    </div>
+                                    <ButtonPlay />
 
                                     <div className="absolute inset-2">
                                         <RatingCard rating={"13+"} />

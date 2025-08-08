@@ -15,7 +15,6 @@ const NowPlayingPage = () => {
             <TopReviewSection />
             <MovieBlogSection />
             <PromotionSection />
-
         </div>
     );
 };

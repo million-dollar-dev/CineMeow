@@ -139,9 +139,11 @@ const Header = () => {
                             </div>
                         </div>
                     </li>
-                    <li className="relative group px-3 py-2">
-                        <button className="hover:opacity-50 cursor-default">Phim chiếu</button>
-                    </li>
+                    <Link to={"/movies"}>
+                        <li className="relative group px-3 py-2">
+                            <button className="hover:opacity-50 cursor-default">Phim chiếu</button>
+                        </li>
+                    </Link>
                     <li className="relative group px-3 py-2">
                         <button className="hover:opacity-50 cursor-default">Review Phim</button>
                     </li>
