@@ -144,9 +144,11 @@ const Header = () => {
                             <button className="hover:opacity-50 cursor-default">Phim chiếu</button>
                         </li>
                     </Link>
-                    <li className="relative group px-3 py-2">
-                        <button className="hover:opacity-50 cursor-default">Review Phim</button>
-                    </li>
+                    <Link to={"/reviews"}>
+                        <li className="relative group px-3 py-2">
+                            <button className="hover:opacity-50 cursor-default">Review Phim</button>
+                        </li>
+                    </Link>
                     <li className="relative group px-3 py-2">
                         <button className="flex items-center space-x-1 hover:text-neutral-300 transition-colors duration-300">
                             <span>Blog Phim</span>
