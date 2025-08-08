@@ -133,9 +133,6 @@ const MediaCarousel = ({title}) => {
                     <FontAwesomeIcon icon={faChevronRight}/>
                 </button>
             </div>
-
-            {/* Nút điều hướng */}
-
         </section>
     )
 };

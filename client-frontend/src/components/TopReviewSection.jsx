@@ -2,6 +2,7 @@ import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faComment, faPlay} from "@fortawesome/free-solid-svg-icons";
 import ButtonMore from "./utils/ButtonMore.jsx";
+import ButtonPlay from "./utils/ButtonPlay.jsx";
 
 const TopReviewSection = () => {
     const data = [
@@ -130,17 +131,14 @@ const TopReviewSection = () => {
                 {data.map((movie) => (
                     <div key={movie.id} className="bg-gray-sub rounded-md shadow-md overflow-hidden">
                         {/* Movie Image + Info */}
-                        <div className="relative">
+                        <div className="relative group">
                             <img
                                 src={movie.image}
                                 alt={movie.title}
                                 className="w-full h-48 object-cover opacity-85"
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <button
-                                    className="bg-black bg-opacity-50 rounded-full w-10 h-10 text-white flex items-center justify-center">
-                                    <FontAwesomeIcon icon={faPlay}/>
-                                </button>
+                                <ButtonPlay />
                             </div>
                             <div
                                 className="absolute bottom-2 left-2 right-2 flex justify-between text-white text-sm font-medium">
