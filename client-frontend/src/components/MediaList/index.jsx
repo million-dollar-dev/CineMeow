@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import MovieCard from "./MovieCard.jsx";
 import ButtonMore from "../utils/ButtonMore.jsx";
+import PaginationComponent from "../utils/PaginationComponent.jsx";
 
 const MediaList = ({title, url}) => {
     const [mediaList, setMediaList] = useState([]);
@@ -34,6 +35,7 @@ const MediaList = ({title, url}) => {
                 }
 
             </div>
+            <PaginationComponent pageCount={12}/>
             <ButtonMore />
         </div>
     );

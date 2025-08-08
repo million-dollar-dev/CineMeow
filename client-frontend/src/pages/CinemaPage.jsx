@@ -8,7 +8,7 @@ import PromotionSection from "../components/PromotionSection.jsx";
 
 const CinemaPage = () => {
     return (
-        <div className="bg-black text-white pt-[2vw]">
+        <div className="bg-black text-white pt-[6vw]">
             <div className="mb-[2vw] relative bg-cover bg-center bg-no-repeat w-full bg-[url('https://homepage.momocdn.net/cinema/momo-upload-api-210812191129-637643922898236024.jpg')]">
                 <div className="absolute inset-0 bg-black opacity-30 z-0"></div>
                 <div className="relative z-10 flex gap-4 max-w-screen-xl mx-auto pt-[16vw] pb-[2vw] items-center">
