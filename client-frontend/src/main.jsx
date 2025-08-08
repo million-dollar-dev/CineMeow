@@ -11,6 +11,7 @@ import CommingSoon from "./pages/CommingSoonPage.jsx";
 import CinemaPage from "./pages/CinemaPage.jsx";
 import MoviesPage from "./pages/MoviesPage.jsx";
 import ReviewPage from "./pages/ReviewPage.jsx";
+import MovieReviewPage from "./pages/MovieReviewPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path: "/reviews",
                 element: <ReviewPage />,
+            },
+            {
+                path: "/movies/:movieId/review",
+                element: <MovieReviewPage />,
             }
 
         ]

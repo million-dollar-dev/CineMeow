@@ -3,6 +3,7 @@ import {faPlay, faStar} from "@fortawesome/free-solid-svg-icons";
 import CircularProgressBar from "../CircularProgressBar.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import RatingCard from "../RatingCard.jsx";
+import {Link} from "react-router-dom";
 
 const Banner = ({movieInfo}) => {
     const [showAllOverview, setShowAllOverview] = useState(false);
@@ -30,9 +31,11 @@ const Banner = ({movieInfo}) => {
                         <button className="mr-1">
                             <FontAwesomeIcon icon={faPlay} className="text-violet"/> Xem trailer
                         </button>
-                        <button className="mr-1">
-                            <FontAwesomeIcon icon={faStar} className="text-yellow-300"/> Xem đánh giá
-                        </button>
+                        <Link to={`/movies/${movieInfo?.id}/review`}>
+                            <button className="mr-1">
+                                <FontAwesomeIcon icon={faStar} className="text-yellow-300"/> Xem đánh giá
+                            </button>
+                        </Link>
                     </div>
                     <div className="mt-4">
                         <p className={`${showAllOverview ? "" : "line-clamp-2"} text-[1vw] transition-all`}>
