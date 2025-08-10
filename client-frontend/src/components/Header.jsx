@@ -204,10 +204,11 @@ const Header = () => {
                             </div>
                         </div>
                     </li>
-                    <li className="relative group px-3 py-2">
-                        <a href="#" className="hover:opacity-50 cursor-default">Ưu đãi
-                        </a>
-                    </li>
+                    <Link to={"/promotions"}>
+                        <li className="relative group px-3 py-2">
+                            <a href="#" className="hover:opacity-50 cursor-default">Ưu đãi</a>
+                        </li>
+                    </Link>
                 </ul>
             </nav>
             <nav>
