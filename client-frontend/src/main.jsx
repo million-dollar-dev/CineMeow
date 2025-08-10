@@ -14,6 +14,7 @@ import ReviewPage from "./pages/ReviewPage.jsx";
 import MovieReviewPage from "./pages/MovieReviewPage.jsx";
 import AllBlogPage from "./pages/AllBlogPage.jsx";
 import BlogPage from "./pages/BlogPage.jsx";
+import AllPromotionPage from "./pages/AllPromotionPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -61,7 +62,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/blogs/:category/:id",
-                element: <BlogPage />,
+                element: <BlogPage />
+            },
+            {
+                path: "/promotions",
+                element: <AllPromotionPage />
             }
         ]
     }
