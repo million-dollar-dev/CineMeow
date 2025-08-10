@@ -7,7 +7,7 @@ import ButtonMore from "../components/utils/ButtonMore.jsx";
 import MediaCarousel from "../components/MediaCarousel.jsx";
 import Promotions from "../components/PromotionSection.jsx";
 
-const BlogPage = () => {
+const BlogDetailPage = () => {
     //const {category, id} = useParams();
     const content = "Mở đầu bằng chiếc quan tài và cú sốc tâm lý\n" +
         "Phần ba bắt đầu ngay sau cú twist cuối cùng của phần hai: cuộc nổi dậy thất bại. Một số người chơi bị hành quyết, kẻ phản bội Kang Dae-ho vẫn sống nhăn, còn trò chơi thì… tiếp tục như chưa hề có cuộc chia tay nào. Gi-hun (Lee Jung-jae) – nhân vật trung tâm – được mang về trong… một chiếc quan tài. Anh còn sống, nhưng trong trạng thái kiệt quệ tâm lý. Mở đầu mùa ba bằng một nhân vật chính bị còng tay, mê man – đó là cách Hwang Dong-hyuk tuyên bố rằng lần này, cuộc chơi sẽ tàn khốc hơn bao giờ hết.";
@@ -47,18 +47,20 @@ const BlogPage = () => {
                         </div>
                         {/*Mục lục*/}
                         <div className="flex-2 mt-[0.8vw]">
-                            <p className="font-bold text-[1.2vw] uppercase">Mục Lục</p>
-                            <div className="border-l-1 my-[1vw]">
-                                <p className="py-[0.8vw] px-[1vw]">
-                                    Mở đầu bằng chiếc quan tài và cú sốc tâm lý
-                                </p>
-                                <p className="py-[0.8vw] px-[1vw]">
-                                    Mở đầu bằng chiếc quan tài và cú sốc tâm lý
-                                </p>
-                                <p className="py-[0.8vw] px-[1vw]">
-                                    Mở đầu bằng chiếc quan tài và cú sốc tâm lý
-                                </p>
+                            <div className="sticky top-[6vw]">
+                                <p className="font-bold text-[1.2vw] uppercase">Mục Lục</p>
+                                <div className="border-l-1 my-[1vw]">
+                                    <p className="py-[0.8vw] px-[1vw]">
+                                        Mở đầu bằng chiếc quan tài và cú sốc tâm lý
+                                    </p>
+                                    <p className="py-[0.8vw] px-[1vw]">
+                                        Mở đầu bằng chiếc quan tài và cú sốc tâm lý
+                                    </p>
+                                    <p className="py-[0.8vw] px-[1vw]">
+                                        Mở đầu bằng chiếc quan tài và cú sốc tâm lý
+                                    </p>
 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,4 +80,4 @@ const BlogPage = () => {
     );
 };
 
-export default BlogPage;
+export default BlogDetailPage;
