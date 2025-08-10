@@ -4,6 +4,7 @@ import {faFire} from "@fortawesome/free-solid-svg-icons";
 import PromotionCard from "../components/Promotion/PromotionCard.jsx";
 import ButtonMore from "../components/utils/ButtonMore.jsx";
 import TopPromotionCard from "../components/Promotion/TopPromotionCard.jsx";
+import {Link} from "react-router-dom";
 
 const AllPromotionPage = () => {
     return (
@@ -12,7 +13,9 @@ const AllPromotionPage = () => {
                 <div className="flex-6">
                     <p className="font-bold text-[3vw]">Khuyến Mãi & Tin tức</p>
                     <div className="mt-[1vw]">
-                        <PromotionCard />
+                        <Link to={"/promotions/123"}>
+                            <PromotionCard />
+                        </Link>
                         <div className="mt-[1vw] grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                             <PromotionCard />
                             <PromotionCard />

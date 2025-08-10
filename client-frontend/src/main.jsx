@@ -13,8 +13,9 @@ import MoviesPage from "./pages/MoviesPage.jsx";
 import ReviewPage from "./pages/ReviewPage.jsx";
 import MovieReviewPage from "./pages/MovieReviewPage.jsx";
 import AllBlogPage from "./pages/AllBlogPage.jsx";
-import BlogPage from "./pages/BlogPage.jsx";
+import BlogDetailPage from "./pages/BlogDetailPage.jsx";
 import AllPromotionPage from "./pages/AllPromotionPage.jsx";
+import PromotionDetailPage from "./pages/PromotionDetailPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -62,11 +63,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "/blogs/:category/:id",
-                element: <BlogPage />
+                element: <BlogDetailPage />
             },
             {
                 path: "/promotions",
                 element: <AllPromotionPage />
+            },
+            {
+                path: "/promotions/:id",
+                element: <PromotionDetailPage />
             }
         ]
     }
