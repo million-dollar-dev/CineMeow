@@ -165,30 +165,38 @@ const Header = () => {
                                 </div>
                                 <div className="relative z-10">
                                     <ul className="text-[15px]">
-                                        <li>
-                                            <a href="#"
-                                               className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                Blog điện ảnh
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                               className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                Phim chiếu rạp
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                               className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                Tổng hợp phim
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                               className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                Phim Netflix
-                                            </a>
-                                        </li>
+                                        <Link to={"/blogs/cinema"}>
+                                            <li>
+                                                <a href="#"
+                                                   className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                    Blog điện ảnh
+                                                </a>
+                                            </li>
+                                        </Link>
+                                        <Link to={"/blogs/movie"}>
+                                            <li>
+                                                <a href="#"
+                                                   className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                    Phim chiếu rạp
+                                                </a>
+                                            </li>
+                                        </Link>
+                                        <Link to={"/blogs/movie"}>
+                                            <li>
+                                                <a href="#"
+                                                   className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                    Tổng hợp phim
+                                                </a>
+                                            </li>
+                                        </Link>
+                                        <Link to={"/blogs/neflix"}>
+                                            <li>
+                                                <a href="#"
+                                                   className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                    Phim Netflix
+                                                </a>
+                                            </li>
+                                        </Link>
                                     </ul>
 
 

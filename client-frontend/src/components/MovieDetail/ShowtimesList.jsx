@@ -107,7 +107,7 @@ const ShowtimesList = () => {
                             })
                         }
                     </div>
-                    <div className=" text-black">
+                    <div className="mb-[2vw] text-black">
                         {
                             showtimesData.map((aShowtime) => {
                                 return <ShowtimesSelector key={aShowtime.id} name={aShowtime.name}
@@ -116,6 +116,7 @@ const ShowtimesList = () => {
                         }
                         <ButtonMore />
                     </div>
+
                 </div>
             </div>
         </div>

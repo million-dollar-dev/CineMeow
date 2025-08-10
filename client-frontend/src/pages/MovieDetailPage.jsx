@@ -42,7 +42,9 @@ const MovieDetailPage = () => {
                     <ReviewList/>
                 </div>
                 <div className="flex-1">
-                    <NowPlayingList/>
+                    <div className="">
+                        <NowPlayingList/>
+                    </div>
                 </div>
             </div>
 
