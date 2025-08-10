@@ -35,7 +35,6 @@ const MediaList = ({title, url}) => {
                 }
 
             </div>
-            <PaginationComponent pageCount={12}/>
             <ButtonMore />
         </div>
     );
