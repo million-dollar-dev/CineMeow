@@ -16,6 +16,7 @@ import AllBlogPage from "./pages/AllBlogPage.jsx";
 import BlogDetailPage from "./pages/BlogDetailPage.jsx";
 import AllPromotionPage from "./pages/AllPromotionPage.jsx";
 import PromotionDetailPage from "./pages/PromotionDetailPage.jsx";
+import BookingPage from "./pages/BookingPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
             {
                 path: "/promotions/:id",
                 element: <PromotionDetailPage />
+            },
+            {
+                path: "/showtimes/booking/:movieId",
+                element: <BookingPage />,
             }
         ]
     }

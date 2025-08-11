@@ -8,9 +8,10 @@ import {Link} from "react-router-dom";
 const Banner = ({movieInfo}) => {
     const [showAllOverview, setShowAllOverview] = useState(false);
     return (
-        <div className="relative text-white overflow-hidden lg:h-154 my-auto">
-            <img className="absolute inset-0 brightness-[0.35]"
+        <div className="relative text-white overflow-hidden lg:h-[80vh] my-auto">
+            <img className="absolute inset-0 brightness-[0.5]"
                  src={`https://image.tmdb.org/t/p/original${movieInfo?.backdrop_path}`} alt=""/>
+            <div className="absolute inset-0 bg-dot-pattern opacity-60"></div>
             <div className="flex relative max-w-screen-xl mx-auto p-5 gap-6 lg:gap-8 py-10 lg:mt-14">
                 <div className="flex-1 max-w-3xs">
                     <img src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieInfo?.poster_path}`} alt="poster"

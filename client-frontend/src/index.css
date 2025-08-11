@@ -76,3 +76,9 @@ body {
     font-family: 'Netflix Sans';
 }
 
+.bg-dot-pattern {
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
+    background-size: 4px 4px; /* khoảng cách chấm */
+    color: rgba(0, 0, 0, 0.14); /* màu chấm */
+}
+

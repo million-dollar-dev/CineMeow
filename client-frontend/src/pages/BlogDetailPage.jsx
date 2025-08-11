@@ -59,7 +59,6 @@ const BlogDetailPage = () => {
                                     <p className="py-[0.8vw] px-[1vw]">
                                         Mở đầu bằng chiếc quan tài và cú sốc tâm lý
                                     </p>
-
                                 </div>
                             </div>
                         </div>
