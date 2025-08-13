@@ -1,0 +1,34 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /cinema
+
+spring:
+  application:
+    name: cinema-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cinemeow_cinema
+    username: postgres
+    password: sa123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: cinema-service
+    server: http://localhost:8084/cinema
+    title: Cinema Service
+    version: 1.0.0
