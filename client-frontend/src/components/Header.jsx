@@ -213,23 +213,25 @@ const Header = () => {
             </nav>
             <nav>
                 <ul>
-                    <li>
-                        <a href="#"
-                           className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
-                            <span className="mr-2">Đăng nhập</span>
-                            <svg className="stroke-current" width="10" height="10" strokeWidth="2" viewBox="0 0 10 10"
-                                 aria-hidden="true">
-                                <g fillRule="evenodd">
-                                    <path
-                                        className="opacity-0 group-hover:opacity-100 transition ease-in-out duration-200"
-                                        d="M0 5h7"></path>
-                                    <path
-                                        className="opacity-100 group-hover:transform group-hover:translate-x-1 transition ease-in-out duration-200"
-                                        d="M1 1l4 4-4 4"></path>
-                                </g>
-                            </svg>
-                        </a>
-                    </li>
+                    <Link to={"/auth"}>
+                        <li>
+                            <a href="#"
+                               className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
+                                <span className="mr-2">Đăng nhập</span>
+                                <svg className="stroke-current" width="10" height="10" strokeWidth="2" viewBox="0 0 10 10"
+                                     aria-hidden="true">
+                                    <g fillRule="evenodd">
+                                        <path
+                                            className="opacity-0 group-hover:opacity-100 transition ease-in-out duration-200"
+                                            d="M0 5h7"></path>
+                                        <path
+                                            className="opacity-100 group-hover:transform group-hover:translate-x-1 transition ease-in-out duration-200"
+                                            d="M1 1l4 4-4 4"></path>
+                                    </g>
+                                </svg>
+                            </a>
+                        </li>
+                    </Link>
                 </ul>
             </nav>
         </header>

@@ -17,6 +17,7 @@ import BlogDetailPage from "./pages/BlogDetailPage.jsx";
 import AllPromotionPage from "./pages/AllPromotionPage.jsx";
 import PromotionDetailPage from "./pages/PromotionDetailPage.jsx";
 import BookingPage from "./pages/BookingPage.jsx";
+import AuthPage from "./pages/AuthPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
             {
                 path: "/showtimes/booking/:movieId",
                 element: <BookingPage />,
+            },
+            {
+                path: "/auth",
+                element: <AuthPage />,
             }
         ]
     }
