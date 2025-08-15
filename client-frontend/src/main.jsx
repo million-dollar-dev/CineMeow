@@ -17,7 +17,9 @@ import BlogDetailPage from "./pages/BlogDetailPage.jsx";
 import AllPromotionPage from "./pages/AllPromotionPage.jsx";
 import PromotionDetailPage from "./pages/PromotionDetailPage.jsx";
 import BookingPage from "./pages/BookingPage.jsx";
-import AuthPage from "./pages/AuthPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import AuthLayout from "./pages/AuthLayout.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -80,9 +82,19 @@ const router = createBrowserRouter([
                 element: <BookingPage />,
             },
             {
-                path: "/auth",
-                element: <AuthPage />,
+                element: <AuthLayout />,
+                children: [
+                    {
+                        path: "/register",
+                        element: <RegisterPage />,
+                    },
+                    {
+                        path: "/login",
+                        element: <LoginPage />,
+                    }
+                ]
             }
+
         ]
     }
 ]);
