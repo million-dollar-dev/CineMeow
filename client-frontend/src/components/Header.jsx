@@ -213,7 +213,7 @@ const Header = () => {
             </nav>
             <nav>
                 <ul>
-                    <Link to={"/auth"}>
+                    <Link to={"/login"}>
                         <li>
                             <a href="#"
                                className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
