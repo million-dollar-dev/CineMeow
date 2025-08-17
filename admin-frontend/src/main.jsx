@@ -6,6 +6,8 @@ import HomePage from "./pages/HomePage.jsx";
 import {ThemeProvider} from "@mui/material";
 import theme from "./configs/muiConfig.js";
 import AuthPage from "./pages/AuthPage.jsx";
+import {Provider} from "react-redux";
+import {store} from "./redux/store.js";
 const router = createBrowserRouter([
     {
         element: <RootLayout/>,
@@ -23,7 +25,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')).render(
-    <ThemeProvider theme={theme}>
-        <RouterProvider router={router}/>
-    </ThemeProvider>
+    <Provider store={store}>
+        <ThemeProvider theme={theme}>
+            <RouterProvider router={router}/>
+        </ThemeProvider>
+    </Provider>
 )
