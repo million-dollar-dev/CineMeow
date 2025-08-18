@@ -1,19 +1,28 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import FormField from "../components/FormField.jsx";
 import {FormProvider, useForm} from "react-hook-form";
 import TextInput from "../components/FormInputs/TextInput.jsx";
 import {Alert, Button} from "@mui/material";
 import {useLoginMutation} from "../services/rootApi.js";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 
 const AuthPage = () => {
     const {control, handleSubmit} = useForm();
-    const [login, {data, isLoading, isError, error}] = useLoginMutation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [login, {data, isError, error, isSuccess}] = useLoginMutation();
     function onSubmit(formData) {
         console.log(formData);
         login(formData);
     }
-    console.log({data, isLoading});
-
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(openSnackbar({message: 'Login successfully!'}));
+            navigate("/");
+        }
+    }, [isSuccess, data, navigate, dispatch]);
     return (
         <div className="bg-gray-300 flex items-center justify-center h-screen">
             <div className="bg-white shadow-sm w-[450px] h-fit px-8 py-10 rounded-xl">
