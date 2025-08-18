@@ -7,16 +7,28 @@ import {useLoginMutation} from "../services/rootApi.js";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
+import * as yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
 
 const AuthPage = () => {
-    const {control, handleSubmit} = useForm();
+    const formSchema = yup.object().shape({
+        email: yup.string().required("Email is required"),
+        password: yup.string().required("Password is required"),
+    })
+    const {control, handleSubmit, formState: {errors}} = useForm({
+        resolver: yupResolver(formSchema)
+    });
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [login, {data, isError, error, isSuccess}] = useLoginMutation();
+
+
     function onSubmit(formData) {
         console.log(formData);
+        console.log(errors);
         login(formData);
     }
+
     useEffect(() => {
         if (isSuccess) {
             dispatch(openSnackbar({message: 'Login successfully!'}));
@@ -29,8 +41,21 @@ const AuthPage = () => {
                 <FormProvider>
                     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
                         <h1 className="font-bold text-[2vw] mx-auto">CineMeow Admin</h1>
-                        <FormField name="email" label="Username" control={control} Component={TextInput} />
-                        <FormField name="password" label="Password" control={control} Component={TextInput} type={"password"} />
+                        <FormField
+                            name="email"
+                            label="Username"
+                            control={control}
+                            Component={TextInput}
+                            error={errors["email"]}
+                        />
+                        <FormField
+                            name="password"
+                            label="Password"
+                            control={control}
+                            Component={TextInput}
+                            type={"password"}
+                            error={errors["password"]}
+                        />
                         <Button variant="contained" type="submit">Login</Button>
                         {isError && <Alert severity="error">{error?.data?.message}</Alert>}
                     </form>
