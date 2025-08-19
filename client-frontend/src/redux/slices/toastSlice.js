@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const toastSlice = createSlice({
+export const toastSlice = createSlice({
     name: "toast",
     initialState: {
         open: false,

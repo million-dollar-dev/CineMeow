@@ -20,7 +20,9 @@ import BookingPage from "./pages/BookingPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import AuthLayout from "./pages/AuthLayout.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-
+import {store} from "./redux/store.js"
+import {Provider} from "react-redux";
+import {ToastContainer} from "react-toastify";
 const router = createBrowserRouter([
     {
         element: <RootLayout />,
@@ -101,6 +103,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+      <Provider store={store}>
+          <RouterProvider router={router}></RouterProvider>
+          <ToastContainer position="bottom-right" autoClose={4000} />
+      </Provider>
   </StrictMode>,
 )

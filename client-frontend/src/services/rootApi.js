@@ -3,14 +3,14 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 export const rootApi = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery(
-        { baseUrl: "https://api.escuelajs.co/api/v1/auth" }),
+        { baseUrl: import.meta.env.VITE_API_BASE_URL}),
     endpoints: (builder) => {
         return {
             login: builder.mutation({
-                query: ({email, password}) => {
+                query: ({username, password}) => {
                     return {
                         url: "/login",
-                        body: {email, password},
+                        body: {username, password},
                         method: "POST",
                     }
                 }

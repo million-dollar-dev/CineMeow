@@ -1,11 +1,45 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import {faGoogle} from "@fortawesome/free-brands-svg-icons";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import TextInput from "../components/FormInputs/TextInput.jsx";
+import FormField from "../components/FormField.jsx";
+import {FormProvider, useForm} from "react-hook-form";
+import {useDispatch} from "react-redux";
+import {useLoginMutation} from "../services/rootApi.js";
+import {toast} from "react-toastify";
 
 const RegisterPage = () => {
-    const [showPassword, setShowPassword] = useState(false);
+    const {control, handleSubmit, formState: {errors}} = useForm({
+        defaultValues: {
+            username: "",
+            password: ""
+        }
+    });
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [login, {data = {}, isError, error, isSuccess, isLoading}] = useLoginMutation();
+
+    const onSubmit = (formData) => {
+        console.log(import.meta.env);
+        console.log(import.meta.env.VITE_API_BASE_URL);
+
+        console.log(formData);
+        login(formData);
+    };
+
+    useEffect(() => {
+        if (isSuccess) {
+            console.log(data)
+            // navigate("/");
+        }
+        if(isError) {
+            console.log(data)
+            toast.error(error?.data?.message || "Đăng nhập thất bại!");
+        }
+    }, [isSuccess, data, navigate, dispatch, isLoading]);
+
     return (
         <>
             {/* RIGHT SIDE - FORM */}
@@ -20,27 +54,22 @@ const RegisterPage = () => {
                         </button>
                     </Link>
                 </p>
-
-                <form className="space-y-4">
-                    <input
-                        type="text"
-                        placeholder="Tên đăng nhập"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+                <FormProvider>
+                <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+                    <FormField
+                        name="username"
+                        placeholder={"Tên đăng nhập"}
+                        control={control}
+                        Component={TextInput}
                     />
-                    <div className="relative">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Mật khẩu"
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-black"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
-                        >
-                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}/>
-                        </button>
-                    </div>
+                    <FormField
+                        name="password"
+                        placeholder={"Mật khẩu"}
+                        control={control}
+                        type="password"
+                        Component={TextInput}
+                    />
+
                     <p className="text-sm text-gray-500 text-right underline">
                         Quên mật khẩu
                     </p>
@@ -51,7 +80,7 @@ const RegisterPage = () => {
                         Đăng nhập
                     </button>
                 </form>
-
+                </FormProvider>
                 <div className="flex items-center my-6">
                     <hr className="flex-grow border-gray-300"/>
                     <span className="px-2 text-gray-500 text-sm">hoặc</span>

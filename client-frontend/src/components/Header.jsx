@@ -41,26 +41,26 @@ const Header = () => {
                                     <ul className="text-[15px]">
                                         <Link to={"/showtimes/today"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
                                                     Lịch chiếu hôm nay
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                         <Link to={"/now-playing"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
                                                     Phim đang chiếu
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                         <Link to={"/comming-soon"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
                                                     Phim sắp chiếu
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                     </ul>
@@ -89,48 +89,48 @@ const Header = () => {
                                             <ul className="mt-3 text-[15px]">
                                                 <Link to={"/cinema/cgv"}>
                                                     <li>
-                                                        <a href="#"
+                                                        <p
                                                            className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition-colors duration-300">
                                                             CGV
-                                                        </a>
+                                                        </p>
                                                     </li>
                                                 </Link>
                                                 <li>
-                                                    <a href="#"
+                                                    <p
                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                         Galaxy Cinema
 
-                                                    </a>
+                                                    </p>
                                                 </li>
                                                 <li>
-                                                    <a href="#"
+                                                    <p
                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                         CineStar
-                                                    </a>
+                                                    </p>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div>
                                             <ul className="mt-3 text-[15px]">
                                                 <li>
-                                                    <a href="#"
+                                                    <p
                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                         Lotte Cinema
 
-                                                    </a>
+                                                    </p>
                                                 </li>
                                                 <li>
-                                                    <a href="#"
+                                                    <p
                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                         Beta Cinemas
 
-                                                    </a>
+                                                    </p>
                                                 </li>
                                                 <li>
-                                                    <a href="#"
+                                                    <p
                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                         BHD Star
-                                                    </a>
+                                                    </p>
                                                 </li>
                                             </ul>
                                         </div>
@@ -167,34 +167,34 @@ const Header = () => {
                                     <ul className="text-[15px]">
                                         <Link to={"/blogs/cinema"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                     Blog điện ảnh
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                         <Link to={"/blogs/movie"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                     Phim chiếu rạp
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                         <Link to={"/blogs/movie"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                     Tổng hợp phim
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                         <Link to={"/blogs/neflix"}>
                                             <li>
-                                                <a href="#"
+                                                <p
                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                     Phim Netflix
-                                                </a>
+                                                </p>
                                             </li>
                                         </Link>
                                     </ul>
@@ -206,7 +206,7 @@ const Header = () => {
                     </li>
                     <Link to={"/promotions"}>
                         <li className="relative group px-3 py-2">
-                            <a href="#" className="hover:opacity-50 cursor-default">Ưu đãi</a>
+                            <p className="hover:opacity-50 cursor-default">Ưu đãi</p>
                         </li>
                     </Link>
                 </ul>
@@ -215,7 +215,7 @@ const Header = () => {
                 <ul>
                     <Link to={"/login"}>
                         <li>
-                            <a href="#"
+                            <p
                                className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
                                 <span className="mr-2">Đăng nhập</span>
                                 <svg className="stroke-current" width="10" height="10" strokeWidth="2" viewBox="0 0 10 10"
@@ -229,7 +229,7 @@ const Header = () => {
                                             d="M1 1l4 4-4 4"></path>
                                     </g>
                                 </svg>
-                            </a>
+                            </p>
                         </li>
                     </Link>
                 </ul>
