@@ -8,13 +8,22 @@ import {FormProvider, useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {useLoginMutation} from "../services/rootApi.js";
 import {toast} from "react-toastify";
+import * as yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {setTokens} from "../redux/slices/authSlice.js";
 
 const RegisterPage = () => {
+    const schema = yup.object().shape({
+        username: yup.string().required("Username is required").min(3, "Min 3 characters"),
+        password: yup.string().required("Password is required").min(3, "Min 3 characters"),
+    });
+
     const {control, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
             username: "",
             password: ""
-        }
+        },
+        resolver: yupResolver(schema)
     });
 
     const navigate = useNavigate();
@@ -22,16 +31,13 @@ const RegisterPage = () => {
     const [login, {data = {}, isError, error, isSuccess, isLoading}] = useLoginMutation();
 
     const onSubmit = (formData) => {
-        console.log(import.meta.env);
-        console.log(import.meta.env.VITE_API_BASE_URL);
-
-        console.log(formData);
         login(formData);
     };
 
     useEffect(() => {
         if (isSuccess) {
             console.log(data)
+            dispatch(setTokens({accessToken: data.data.token}));
             // navigate("/");
         }
         if(isError) {
@@ -61,6 +67,7 @@ const RegisterPage = () => {
                         placeholder={"Tên đăng nhập"}
                         control={control}
                         Component={TextInput}
+                        error={errors["username"]}
                     />
                     <FormField
                         name="password"
@@ -68,6 +75,7 @@ const RegisterPage = () => {
                         control={control}
                         type="password"
                         Component={TextInput}
+                        error={errors["password"]}
                     />
 
                     <p className="text-sm text-gray-500 text-right underline">

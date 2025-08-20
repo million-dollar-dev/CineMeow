@@ -21,7 +21,6 @@ const FormField = ({ control, placeholder, name, Component, type, error}) => {
                     );
                 }}
             />
-            {error?.message && (<p>{error}</p>)}
         </div>
     );
 };

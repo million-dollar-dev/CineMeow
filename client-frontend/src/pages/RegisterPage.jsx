@@ -1,15 +1,43 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import {faGoogle} from "@fortawesome/free-brands-svg-icons";
 import {Link} from "react-router-dom";
+import TextInput from "../components/FormInputs/TextInput.jsx";
+import FormField from "../components/FormField.jsx";
+import {FormProvider, useForm} from "react-hook-form";
+import {useRegisterMutation} from "../services/rootApi.js";
+import * as yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
 
 const RegisterPage = () => {
-    const [showPassword, setShowPassword] = useState(false);
+
+    const schema = yup.object().shape({
+        username: yup.string().required("Username is required").min(3, "Min 3 characters"),
+        password: yup.string().required("Password is required").min(3, "Min 3 characters"),
+        email: yup.string().required("Email is required").email("Invalid email address"),
+    });
+
+    const {control, handleSubmit, formState: {errors}} = useForm({
+        defaultValues: {
+            username: "",
+            email: "",
+            password: ""
+        },
+        resolver: yupResolver(schema)
+    });
+
+    const [register, {data = {}, isError, error, isSuccess, isLoading}] = useRegisterMutation();
+    const onSubmit = (formData) => {
+        console.log(formData);
+        //register(formData);
+    }
+
+    useEffect(() => {
+        console.log(errors);
+    }, [errors]);
     return (
         <>
             <div className="bg-white p-10 flex flex-col justify-center">
-                {/* Tiêu đề thay đổi */}
                 <h2 className="text-2xl font-bold mb-2 text-gray-900">
                     Đăng ký
                 </h2>
@@ -23,49 +51,50 @@ const RegisterPage = () => {
                         </button>
                     </Link>
                 </p>
-
-                <form className="space-y-4">
-                    <input
-                        type="text"
-                        placeholder="Tên đăng nhập"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-                    />
-                    <input
-                        type="email"
-                        placeholder="E-mail"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-                    />
-                    <div className="relative">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Mật khẩu"
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-black"
+                <FormProvider>
+                    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+                        <FormField
+                            name="username"
+                            placeholder={"Tên đăng nhập"}
+                            control={control}
+                            Component={TextInput}
+                            error={errors["username"]}
                         />
+                        <FormField
+                            name="email"
+                            placeholder={"Email"}
+                            control={control}
+                            Component={TextInput}
+                            type="email"
+                            error={errors["email"]}
+                        />
+                        <FormField
+                            name="password"
+                            placeholder={"Mật khẩu"}
+                            control={control}
+                            type="password"
+                            Component={TextInput}
+                            error={errors["password"]}
+                        />
+                        <p className="text-xs text-gray-500">
+                            Khi đăng ký, bạn đồng ý với{" "}
+                            <a href="#" className="underline">
+                                Điều khoản sử dụng
+                            </a>{" "}
+                            và{" "}
+                            <a href="#" className="underline">
+                                Chính sách bảo mật
+                            </a>.
+                        </p>
                         <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
+                            type="submit"
+                            className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
                         >
-                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}/>
+                            Đăng ký
                         </button>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                        Khi đăng ký, bạn đồng ý với{" "}
-                        <a href="#" className="underline">
-                            Điều khoản sử dụng
-                        </a>{" "}
-                        và{" "}
-                        <a href="#" className="underline">
-                            Chính sách bảo mật
-                        </a>.
-                    </p>
-                    <button
-                        type="submit"
-                        className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
-                    >
-                        Đăng ký
-                    </button>
-                </form>
+                    </form>
+                </FormProvider>
+
 
                 <div className="flex items-center my-6">
                     <hr className="flex-grow border-gray-300"/>
