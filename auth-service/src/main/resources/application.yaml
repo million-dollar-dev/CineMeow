@@ -44,3 +44,5 @@ jwt:
   signerKey: "Kdx2vu8GOXH6lZnpmYwdtICtOIYxSS+jJH+yDB0PZvUH2gMVxyxDGoVqL3hBNTfv"
   valid-duration: 3600 #in second
   refreshable-duration: 5000 #in second
+  access-token-validity: 1800
+  refresh-token-validity: 604800

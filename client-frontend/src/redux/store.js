@@ -5,6 +5,7 @@ import {toastSlice} from "./slices/toastSlice.js";
 import {persistReducer, persistStore} from "redux-persist";
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/es/constants";
 import storage from "redux-persist/lib/storage";
+import {logoutMiddleware} from "./middlewares.js";
 
 const persistConfig = {
     key: "root",
@@ -29,7 +30,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
             }
-        }).concat(rootApi.middleware);
+        }).concat(logoutMiddleware, rootApi.middleware);
     }
 });
 

@@ -2,39 +2,45 @@ import React, {useEffect} from 'react';
 import FormField from "../components/FormField.jsx";
 import {FormProvider, useForm} from "react-hook-form";
 import TextInput from "../components/FormInputs/TextInput.jsx";
-import {Alert, Button} from "@mui/material";
+import {Alert, Button, CircularProgress} from "@mui/material";
 import {useLoginMutation} from "../services/rootApi.js";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
+import {setTokens} from "../redux/slices/authSlice.js";
 
 const AuthPage = () => {
     const formSchema = yup.object().shape({
-        email: yup.string().required("Email is required"),
+        username: yup.string().required("Username is required"),
         password: yup.string().required("Password is required"),
     })
+
     const {control, handleSubmit, formState: {errors}} = useForm({
+        defaultValues: {
+          username: "",
+          password: "",
+        },
         resolver: yupResolver(formSchema)
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [login, {data, isError, error, isSuccess}] = useLoginMutation();
-
+    const [login, {data = {}, isError, error, isSuccess, isLoading}] = useLoginMutation();
 
     function onSubmit(formData) {
         console.log(formData);
-        console.log(errors);
         login(formData);
     }
 
     useEffect(() => {
         if (isSuccess) {
+            console.log(data);
             dispatch(openSnackbar({message: 'Login successfully!'}));
+            dispatch(setTokens({accessToken: data.data.accessToken, refreshToken: data.data.refreshToken}));
             navigate("/");
         }
-    }, [isSuccess, data, navigate, dispatch]);
+    }, [isSuccess, data, navigate, dispatch, isLoading]);
     return (
         <div className="bg-gray-300 flex items-center justify-center h-screen">
             <div className="bg-white shadow-sm w-[450px] h-fit px-8 py-10 rounded-xl">
@@ -42,11 +48,11 @@ const AuthPage = () => {
                     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
                         <h1 className="font-bold text-[2vw] mx-auto">CineMeow Admin</h1>
                         <FormField
-                            name="email"
+                            name="username"
                             label="Username"
                             control={control}
                             Component={TextInput}
-                            error={errors["email"]}
+                            error={errors["username"]}
                         />
                         <FormField
                             name="password"
@@ -56,7 +62,10 @@ const AuthPage = () => {
                             type={"password"}
                             error={errors["password"]}
                         />
-                        <Button variant="contained" type="submit">Login</Button>
+                        <Button variant="contained" type="submit">
+                            {isLoading && (<CircularProgress size="20px" color={"white"} className="mr-1"/>)}
+                            Login
+                        </Button>
                         {isError && <Alert severity="error">{error?.data?.message}</Alert>}
                     </form>
                 </FormProvider>

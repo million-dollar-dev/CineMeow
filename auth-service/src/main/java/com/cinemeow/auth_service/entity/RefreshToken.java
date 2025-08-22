@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -13,7 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InvalidatedToken {
+@Table(name = "refresh_tokens")
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -21,11 +23,14 @@ public class InvalidatedToken {
     @ManyToOne(fetch = FetchType.LAZY)
     User user;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
     String token;
 
     @Column(nullable = false)
-    Date expiryDate;
+    Instant expiryDate;
+
+    @Column(nullable = false)
+    boolean revoked;
 
     String deviceInfo;
 }
