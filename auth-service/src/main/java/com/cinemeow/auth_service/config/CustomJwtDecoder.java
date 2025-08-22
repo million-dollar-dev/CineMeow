@@ -3,6 +3,7 @@ package com.cinemeow.auth_service.config;
 import com.cinemeow.auth_service.dto.request.IntrospectRequest;
 import com.cinemeow.auth_service.service.impl.AuthenticationServiceImpl;
 import com.nimbusds.jose.JOSEException;
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,33 +22,25 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomJwtDecoder implements JwtDecoder {
+
     @Value("${jwt.signerKey}")
-    @NonFinal
     String signerKey;
 
-    AuthenticationServiceImpl authenticationService;
+    NimbusJwtDecoder nimbusJwtDecoder;
 
-    @NonFinal
-    NimbusJwtDecoder nimbusJwtDecoder = null;
+    @PostConstruct
+    public void init() {
+        SecretKeySpec secretKey = new SecretKeySpec(signerKey.getBytes(), "HmacSHA512");
+        this.nimbusJwtDecoder = NimbusJwtDecoder
+                .withSecretKey(secretKey)
+                .macAlgorithm(MacAlgorithm.HS512)
+                .build();
+    }
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        try {
-            var response = authenticationService.introspect(
-                    IntrospectRequest.builder().token(token).build());
-            if (!response.isValid()) throw new JwtException("Invalid token");
-        } catch (Exception e) {
-            throw new JwtException(e.getMessage());
-        }
-
-        if (Objects.isNull(nimbusJwtDecoder)) {
-            SecretKeySpec secretKey = new SecretKeySpec(signerKey.getBytes(), "HS512");
-            nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey)
-                    .macAlgorithm(MacAlgorithm.HS512)
-                    .build();
-        }
         return nimbusJwtDecoder.decode(token);
     }
 }

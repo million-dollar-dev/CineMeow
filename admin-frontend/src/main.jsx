@@ -8,13 +8,22 @@ import theme from "./configs/muiConfig.js";
 import AuthPage from "./pages/AuthPage.jsx";
 import {Provider} from "react-redux";
 import {store} from "./redux/store.js";
+import {PersistGate} from "redux-persist/integration/react";
+import {persistor} from "./redux/store.js";
+import ProtectedLayout from "./pages/ProtectedLayout.jsx";
+
 const router = createBrowserRouter([
     {
         element: <RootLayout/>,
         children: [
             {
-                path: "/",
-                element: <HomePage/>
+                element: <ProtectedLayout/>,
+                children: [
+                    {
+                        path: "/",
+                        element: <HomePage/>
+                    },
+                ]
             },
             {
                 path: "/auth",
@@ -25,9 +34,12 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')).render(
-    <Provider store={store}>
-        <ThemeProvider theme={theme}>
-            <RouterProvider router={router}/>
-        </ThemeProvider>
-    </Provider>
+    <PersistGate persistor={persistor} loading={<p>Loading...</p>}>
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <RouterProvider router={router}/>
+            </ThemeProvider>
+        </Provider>
+    </PersistGate>
+
 )
