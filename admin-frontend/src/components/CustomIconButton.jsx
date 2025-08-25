@@ -1,9 +1,10 @@
 import { IconButton } from "@mui/material";
 
-const CustomIconButton = ({ children }) => {
+const CustomIconButton = ({ children, ...props }) => {
     return (
         <IconButton
-            className="bg-gray-100 hover:bg-gray-200 transition-colors"
+            className="!bg-white hover:!bg-gray-200 ease-in-out transition-colors !text-black"
+            {...props}
             sx={{
                 width: 48,
                 height: 48,
