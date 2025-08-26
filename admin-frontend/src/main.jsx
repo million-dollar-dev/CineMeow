@@ -11,6 +11,7 @@ import {store} from "./redux/store.js";
 import {PersistGate} from "redux-persist/integration/react";
 import {persistor} from "./redux/store.js";
 import ProtectedLayout from "./pages/ProtectedLayout.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
                         path: "/",
                         element: <HomePage/>
                     },
+                    {
+                        path: "/dashboard",
+                        element: <DashboardPage/>
+                    }
                 ]
             },
             {

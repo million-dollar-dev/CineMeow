@@ -30,7 +30,7 @@ import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 
 const menuItems = [
-    { icon: <DashboardOutlinedIcon />, label: "Dashboard", path: "#" },
+    { icon: <DashboardOutlinedIcon />, label: "Dashboard", path: "/dashboard" },
     {
         icon: <MovieOutlinedIcon />,
         label: "Movies",
