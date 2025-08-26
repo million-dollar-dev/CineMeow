@@ -27,6 +27,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {useDispatch, useSelector} from "react-redux";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import {toggle} from "../redux/slices/sidebarSlice.js";
+import {useLogout} from "../hooks/useLogout.js";
 
 const Topbar = () => {
     const today = new Date();
@@ -37,6 +38,7 @@ const Topbar = () => {
     const dispatch = useDispatch();
     const expanded = useSelector((state) => state.sidebar.expanded);
 
+    const {logOut} = useLogout();
 
     // Quản lý state riêng biệt
     const [anchorAcc, setAnchorAcc] = React.useState(null);
@@ -71,7 +73,7 @@ const Topbar = () => {
                 </ListItemIcon>
                 Đổi mật khẩu
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={() => logOut()}>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>

@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage";
 import {persistReducer, persistStore} from "redux-persist";
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/es/constants";
 import {sidebarSlice} from "./slices/sidebarSlice.js";
+import {logoutMiddleware} from "../middlewares/logoutMiddleware.js";
 
 const persistConfig = {
     key: "root",
@@ -31,7 +32,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
             }
-        }).concat(rootApi.middleware);
+        }).concat(logoutMiddleware, rootApi.middleware);
     }
 });
 
