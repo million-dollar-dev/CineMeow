@@ -135,10 +135,9 @@ const Topbar = () => {
 
     return (
         <Box
-            className="flex items-center justify-between px-6 py-3 bg-transparent text-gray-800 rounded-lg"
+            className="flex items-center justify-between px-4 py-4 !bg-[#F1F4F9] text-gray-800 rounded-lg"
             sx={{
-                height: "64px",
-                borderBottom: "1px solid #eee",
+                height: "64px"
             }}
         >
             {/* Left */}
