@@ -33,9 +33,9 @@ const menuItems = [
     { icon: <DashboardOutlinedIcon />, label: "Dashboard", path: "/dashboard" },
     {
         icon: <MovieOutlinedIcon />,
-        label: "Movies",
+        label: "Phim",
         children: [
-            { label: "All Orders", path: "#" },
+            { label: "Tất cả phim", path: "/movies" },
             { label: "Pending", path: "#" },
             { label: "Completed", path: "#" },
         ],

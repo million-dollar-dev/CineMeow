@@ -12,6 +12,8 @@ import {PersistGate} from "redux-persist/integration/react";
 import {persistor} from "./redux/store.js";
 import ProtectedLayout from "./pages/ProtectedLayout.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import MovieManagement from "./pages/MovieManagementPage.jsx";
+import MovieManagementPage from "./pages/MovieManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
                     {
                         path: "/dashboard",
                         element: <DashboardPage/>
+                    },
+                    {
+                        path: "/movies",
+                        element: <MovieManagementPage />
                     }
                 ]
             },
