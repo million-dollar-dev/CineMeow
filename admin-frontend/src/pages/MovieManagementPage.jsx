@@ -15,7 +15,6 @@ import {
 } from "@mui/x-data-grid";
 import {
     Box,
-    Avatar,
     Tooltip,
     Menu,
     Badge,
@@ -23,7 +22,7 @@ import {
     Divider,
     TextField,
     InputAdornment,
-    Button,
+    Button, Skeleton,
 } from "@mui/material";
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
@@ -32,8 +31,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import MovieModal from "../components/moviesManagement/MovieModal.jsx";
+import {useGetAllMoviesQuery} from "../services/movieService.js";
 
 const StyledQuickFilter = styled(QuickFilter)({
     display: "grid",
@@ -282,7 +282,7 @@ const columns = [
                 <Button startIcon={<EditOutlinedIcon />} variant="text" sx={{ color: "black" }}>
                     Edit
                 </Button>
-                <span style={{ color: "#999" }}>|</span>
+                <span style={{ color: "black" }}>|</span>
                 <Button startIcon={<DeleteOutlineOutlinedIcon />} variant="text" sx={{ color: "red" }}>
                     Delete
                 </Button>
@@ -294,16 +294,34 @@ const columns = [
 export default function MovieManagementPage() {
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
-        pageSize: 5, // số dòng mặc định mỗi trang
+        pageSize: 5,
     });
     const [openAddModal, setOpenAddModal] = React.useState(false);
 
+    // Query
+    const { data, isError, error, isLoading } = useGetAllMoviesQuery();
+
+    // Map dữ liệu từ API thành rows cho DataGrid
+    const movies = data?.data?.content?.map((movie) => ({
+        id: movie.id,
+        poster: movie.posterPath,
+        title: movie.title,
+        genre: movie.genres?.map(g => g.name).join(", ") || "",
+        releaseDate: movie.releaseDate,
+        duration: movie.duration,
+        status: movie.status,
+    })) ?? [];
+
+    useEffect(() => {
+        console.log(data)
+        if (isError) {
+            console.error("API Error:", error);
+        }
+    }, [isError, error, isLoading, data]);
+
     return (
         <Box className="py-2 bg-transparent min-h-screen">
-            <MovieModal
-                open={openAddModal}
-                onClose={() => setOpenAddModal(false)}
-            />
+            <MovieModal open={openAddModal} onClose={() => setOpenAddModal(false)} />
 
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
@@ -316,20 +334,37 @@ export default function MovieManagementPage() {
             </div>
 
             <Box sx={{ height: 620, width: "100%" }}>
-                <DataGrid
-                    rows={movies}
-                    columns={columns}
-                    disableRowSelectionOnClick
-                    rowHeight={160}
-                    slots={{ toolbar: CustomToolbar }}
-                    showToolbar
-                    paginationModel={paginationModel}
-                    onPaginationModelChange={setPaginationModel}
-                    pageSizeOptions={[5, 10, 20]}
-                    pagination
-                />
+                {isLoading ? (
+                    // Skeleton khi loading
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        {Array.from({ length: paginationModel.pageSize }).map((_, i) => (
+                            <Box
+                                key={i}
+                                sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                            >
+                                <Skeleton variant="rectangular" width={100} height={140} />
+                                <Skeleton variant="text" width="40%" />
+                                <Skeleton variant="text" width="20%" />
+                                <Skeleton variant="text" width="20%" />
+                                <Skeleton variant="text" width="10%" />
+                            </Box>
+                        ))}
+                    </Box>
+                ) : (
+                    <DataGrid
+                        rows={movies}
+                        columns={columns}
+                        disableRowSelectionOnClick
+                        rowHeight={160}
+                        slots={{ toolbar: CustomToolbar }}
+                        showToolbar
+                        paginationModel={paginationModel}
+                        onPaginationModelChange={setPaginationModel}
+                        pageSizeOptions={[5, 10, 20]}
+                        pagination
+                    />
+                )}
             </Box>
         </Box>
-
     );
 }
