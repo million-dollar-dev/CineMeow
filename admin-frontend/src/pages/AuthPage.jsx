@@ -3,13 +3,13 @@ import FormField from "../components/FormField.jsx";
 import {FormProvider, useForm} from "react-hook-form";
 import TextInput from "../components/FormInputs/TextInput.jsx";
 import {Alert, Button, CircularProgress} from "@mui/material";
-import {useLoginMutation} from "../services/rootApi.js";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {setTokens} from "../redux/slices/authSlice.js";
+import {useLoginMutation} from "../services/authService.js";
 
 const AuthPage = () => {
     const formSchema = yup.object().shape({

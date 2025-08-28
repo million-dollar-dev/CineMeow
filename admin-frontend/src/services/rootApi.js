@@ -1,8 +1,9 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {clearTokens, setTokens} from "../redux/slices/authSlice.js";
+import {API_BASE_URL, API_PREFIX} from "./apiConfig.js";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_BASE_URL,
+    baseUrl: `${API_BASE_URL}${API_PREFIX}`,
     prepareHeaders: (headers, {getState}) => {
         const accessToken = getState().auth.accessToken;
         if (accessToken) {
@@ -21,7 +22,7 @@ const customBaseQuery = async (args, api, extraOptions) => {
         if (refreshToken) {
             const refreshResult = await baseQuery(
                 {
-                    url: "/refresh",
+                    url: "/authentication/auth/refresh",
                     method: "POST",
                     body: { refreshToken },
                 },
@@ -47,29 +48,5 @@ const customBaseQuery = async (args, api, extraOptions) => {
 export const rootApi = createApi({
     reducerPath: 'api',
     baseQuery: customBaseQuery,
-    endpoints: (builder) => {
-        return {
-            login: builder.mutation({
-                query: ({username, password}) => {
-                    return {
-                        url: "/login",
-                        body: {username, password},
-                        method: "POST",
-                    }
-                }
-            }),
-
-            introspect: builder.mutation({
-                query: ({token}) => {
-                    return {
-                        url: "/introspect",
-                        body: {token: token},
-                        method: "POST",
-                    }
-                }
-            }),
-        }
-    }
+    endpoints: () => ({}),
 });
-
-export const {useLoginMutation, useIntrospectMutation} = rootApi;
