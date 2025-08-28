@@ -33,6 +33,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import {useState} from "react";
+import MovieModal from "../components/moviesManagement/MovieModal.jsx";
 
 const StyledQuickFilter = styled(QuickFilter)({
     display: "grid",
@@ -60,7 +61,6 @@ const StyledTextField = styled(TextField)(({ theme, ownerState }) => ({
 function CustomToolbar() {
     const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
     const exportMenuTriggerRef = React.useRef(null);
-
     return (
         <Toolbar>
             <Tooltip title="Columns">
@@ -296,14 +296,20 @@ export default function MovieManagementPage() {
         page: 0,
         pageSize: 5, // số dòng mặc định mỗi trang
     });
+    const [openAddModal, setOpenAddModal] = React.useState(false);
 
     return (
         <Box className="py-2 bg-transparent min-h-screen">
+            <MovieModal
+                open={openAddModal}
+                onClose={() => setOpenAddModal(false)}
+            />
+
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Phim</h2>
                 <div className="flex gap-4 items-center">
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" onClick={() => setOpenAddModal(true)}>
                         + Thêm mới
                     </Button>
                 </div>
