@@ -42,6 +42,7 @@ export default function MovieModal({ open, onClose, onSave }) {
         tagline: "",
         title: "",
         director: "",
+        casts: "",
         genres: [],
     });
 
@@ -68,6 +69,7 @@ export default function MovieModal({ open, onClose, onSave }) {
             tagline: "",
             title: "",
             director: "",
+            casts: "",
             genres: [],
         });
         onClose();
@@ -87,6 +89,7 @@ export default function MovieModal({ open, onClose, onSave }) {
                         <TextField label="Subtitle" name="subtitle" value={movie.subtitle} onChange={handleChange} fullWidth />
                         <TextField label="Tagline" name="tagline" value={movie.tagline} onChange={handleChange} fullWidth />
                         <TextField label="Director" name="director" value={movie.director} onChange={handleChange} fullWidth />
+                        <TextField label="Casts" name="casts" value={movie.casts} onChange={handleChange} fullWidth />
                         <TextField label="Duration (phút)" name="duration" value={movie.duration} onChange={handleChange} fullWidth />
 
                         {/* Status */}
@@ -158,7 +161,7 @@ export default function MovieModal({ open, onClose, onSave }) {
                                 name="overview"
                                 value={movie.overview}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg p-3 resize-y min-h-[200px] text-sm"
+                                className="w-full border border-gray-300 rounded-lg p-3 resize-y min-h-[240px] text-sm"
                                 placeholder="Nhập mô tả phim..."
                             />
                         </div>
