@@ -34,6 +34,8 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import {useEffect, useState} from "react";
 import MovieModal from "../components/moviesManagement/MovieModal.jsx";
 import {useGetAllMoviesQuery} from "../services/movieService.js";
+import {useDispatch} from "react-redux";
+import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 
 const StyledQuickFilter = styled(QuickFilter)({
     display: "grid",
@@ -172,162 +174,144 @@ function CustomToolbar() {
     );
 }
 
-const movies = [
-    {
-        id: 1,
-        title: "Spider-Man: Across the Spider-Verse",
-        genre: "Animation",
-        releaseDate: "2023-06-02",
-        duration: 140,
-        status: "Ended",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-    {
-        id: 2,
-        title: "Oppenheimer",
-        genre: "Drama",
-        releaseDate: "2023-07-21",
-        duration: 180,
-        status: "Now Showing",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-    {
-        id: 3,
-        title: "Barbie",
-        genre: "Comedy",
-        releaseDate: "2023-07-21",
-        duration: 120,
-        status: "Now Showing",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-    {
-        id: 4,
-        title: "Oppenheimer",
-        genre: "Drama",
-        releaseDate: "2023-07-21",
-        duration: 180,
-        status: "Now Showing",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-    {
-        id: 5,
-        title: "Barbie",
-        genre: "Comedy",
-        releaseDate: "2023-07-21",
-        duration: 120,
-        status: "Now Showing",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-    {
-        id: 6,
-        title: "Oppenheimer",
-        genre: "Drama",
-        releaseDate: "2023-07-21",
-        duration: 180,
-        status: "Now Showing",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-    {
-        id: 7,
-        title: "Barbie",
-        genre: "Comedy",
-        releaseDate: "2023-07-21",
-        duration: 120,
-        status: "Now Showing",
-        poster: "https://upload.wikimedia.org/wikipedia/vi/4/46/Interstellar_poster.jpg",
-    },
-];
 
-const columns = [
-    {
-        field: "poster",
-        headerName: "Poster",
-        headerClassName: "custom-header",
-        width: 180,
-        sortable: false,
-        renderCell: (params) => (
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                }}
-            >
-                <img
-                    src={params.value}
-                    alt="poster"
-                    style={{
-                        width: 100,
-                        height: 140,
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                    }}
-                />
-            </Box>
-        ),
-    },
-    { field: "title", headerName: "Title", flex: 1 },
-    { field: "genre", headerName: "Genre", width: 150 },
-    { field: "releaseDate", headerName: "Release Date", width: 150 },
-    { field: "duration", headerName: "Duration (min)", width: 150 },
-    { field: "status", headerName: "Status", width: 150 },
-    {
-        field: "actions",
-        headerName: "Actions",
-        width: 200,
-        renderCell: () => (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Button startIcon={<EditOutlinedIcon />} variant="text" sx={{ color: "black" }}>
-                    Edit
-                </Button>
-                <span style={{ color: "black" }}>|</span>
-                <Button startIcon={<DeleteOutlineOutlinedIcon />} variant="text" sx={{ color: "red" }}>
-                    Delete
-                </Button>
-            </Box>
-        ),
-    },
-];
 
 export default function MovieManagementPage() {
+    const dispatch = useDispatch();
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 5,
     });
-    const [openAddModal, setOpenAddModal] = React.useState(false);
+    const [openModal, setOpenModal] = React.useState(false);
+    const [modalMode, setModalMode] = useState("add");
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
     // Query
     const { data, isError, error, isLoading } = useGetAllMoviesQuery();
 
-    // Map dữ liệu từ API thành rows cho DataGrid
+    const columns = [
+        {
+            field: "poster",
+            headerName: "Poster",
+            headerClassName: "custom-header",
+            width: 180,
+            sortable: false,
+            renderCell: (params) => (
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                    }}
+                >
+                    <img
+                        src={params.value}
+                        alt="poster"
+                        style={{
+                            width: 100,
+                            height: 140,
+                            objectFit: "cover",
+                            borderRadius: "8px",
+                        }}
+                    />
+                </Box>
+            ),
+        },
+        { field: "title", headerName: "Title", flex: 1, minWidth: 200 },
+        { field: "genre", headerName: "Genre", width: 200 },
+        { field: "releaseDate", headerName: "Release Date", width: 150 },
+        { field: "duration", headerName: "Duration (min)", width: 150 },
+        { field: "status", headerName: "Status", width: 150 },
+        {
+            field: "actions",
+            headerName: "Actions",
+            width: 200,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true, // 👈 không cho user ẩn cột này
+            renderCell: (params) => (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Button
+                        startIcon={<EditOutlinedIcon />}
+                        variant="text"
+                        sx={{ color: "black" }}
+                        onClick={() => handleEditClick(params.row.fullData)} // truyền nguyên row đầy đủ
+                    >
+                        Tùy chỉnh
+                    </Button>
+                    <span style={{ color: "black" }}>|</span>
+                    <Button
+                        startIcon={<DeleteOutlineOutlinedIcon />}
+                        variant="text"
+                        sx={{ color: "red" }}
+                        // onClick={() => handleDeleteClick(params.row)}
+                    >
+                        Xóa
+                    </Button>
+                </Box>
+            ),
+        },
+    ];
+
+// Map dữ liệu từ API thành rows cho DataGrid
     const movies = data?.data?.content?.map((movie) => ({
+        // các field hiển thị
         id: movie.id,
         poster: movie.posterPath,
         title: movie.title,
-        genre: movie.genres?.map(g => g.name).join(", ") || "",
+        genre: movie.genres?.map((g) => g.name).join(", ") || "",
         releaseDate: movie.releaseDate,
         duration: movie.duration,
         status: movie.status,
+        fullData: movie,
     })) ?? [];
+
+    const handleAddClick = () => {
+        setModalMode("add");
+        setSelectedMovie(null);
+        setOpenModal(true);
+    };
+
+    const handleEditClick = (movie) => {
+        setModalMode("edit");
+        setSelectedMovie(movie);
+        setOpenModal(true);
+        console.log(movie)
+    };
+
+    const handleSave = (movie, mode) => {
+        if (mode === "add") {
+            console.log("Thêm:", movie);
+            // gọi API thêm
+        } else if (mode === "edit") {
+            console.log("Sửa:", movie);
+            // gọi API update
+        }
+    };
 
     useEffect(() => {
         console.log(data)
         if (isError) {
-            console.error("API Error:", error);
+            dispatch(openSnackbar({message: error.data.error, type: "error"}));
         }
     }, [isError, error, isLoading, data]);
 
     return (
         <Box className="py-2 bg-transparent min-h-screen">
-            <MovieModal open={openAddModal} onClose={() => setOpenAddModal(false)} />
+            <MovieModal open={openModal}
+                        onClose={() => setOpenModal(false)}
+                        onSave={handleSave}
+                        mode={modalMode}
+                        movieData={selectedMovie}
+            />
 
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Phim</h2>
                 <div className="flex gap-4 items-center">
-                    <Button variant="contained" color="primary" onClick={() => setOpenAddModal(true)}>
+                    <Button variant="contained" color="primary" onClick={() => handleAddClick()}>
                         + Thêm mới
                     </Button>
                 </div>
