@@ -61,9 +61,7 @@ export default function MovieModal({open, onClose, onSave, mode = "add", movieDa
     };
 
     useEffect(() => {
-        console.log(movieData);
         setMovie(movieData || EMPTY_MOVIE);
-        console.log('movie: ' + movie);
     }, [movieData, open]);
 
     return (

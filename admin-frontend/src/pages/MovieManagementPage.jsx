@@ -294,7 +294,8 @@ export default function MovieManagementPage() {
     useEffect(() => {
         console.log(data)
         if (isError) {
-            dispatch(openSnackbar({message: error.data.error, type: "error"}));
+            console.log(error)
+            dispatch(openSnackbar({message: error?.error, type: "error"}));
         }
     }, [isError, error, isLoading, data]);
 
