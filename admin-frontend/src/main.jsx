@@ -32,13 +32,13 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "/movies",
-                        element: <MovieManagementPage />
+                        element: <MovieManagementPage/>
                     }
                 ]
             },
             {
                 path: "/auth",
-                element: <AuthPage />
+                element: <AuthPage/>
             }
         ]
     }
@@ -52,5 +52,4 @@ createRoot(document.getElementById('root')).render(
             </ThemeProvider>
         </Provider>
     </PersistGate>
-
 )

@@ -137,9 +137,9 @@ const Topbar = () => {
 
     return (
         <Box
-            className="flex items-center justify-between px-4 py-4 !bg-[#F1F4F9] text-gray-800 rounded-lg"
+            className="flex items-center justify-between px-10 py-4 !bg-transparent text-black"
             sx={{
-                height: "64px"
+                height: "64px",
             }}
         >
             {/* Left */}
@@ -192,7 +192,7 @@ const Topbar = () => {
                 </CustomIconButton>
 
                 {/* Account Button */}
-                <Button onClick={handleAccMenuOpen}>
+                <Button onClick={handleAccMenuOpen} sx={{px: 2}}>
                     <Avatar src="https://i.pravatar.cc/150?img=8" sx={{ width: 48, height: 48 }} />
                     <div className="ml-2 text-left">
                         <Typography variant="body2">Admin</Typography>

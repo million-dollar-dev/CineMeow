@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
+    Autocomplete,
     Button,
-    MenuItem,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     FormControl,
     InputLabel,
+    MenuItem,
     Select,
-    Checkbox,
-    Autocomplete,
+    TextField,
 } from "@mui/material";
+import MovieStatusChip from "./MovieStatusChip.jsx";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
@@ -27,24 +28,26 @@ const GENRES = [
     "Thriller",
 ];
 
-export default function MovieModal({ open, onClose, onSave }) {
-    const [movie, setMovie] = useState({
-        backdrop_path: "",
-        duration: "",
-        country: "",
-        original_language: "",
-        overview: "",
-        poster_path: "",
-        rating: "",
-        release_date: "",
-        status: "",
-        subtitle: "",
-        tagline: "",
-        title: "",
-        director: "",
-        casts: "",
-        genres: [],
-    });
+const EMPTY_MOVIE = {
+    backdropPath: "",
+    duration: "",
+    originCountry: "",
+    originalLanguage: "",
+    overview: "",
+    posterPath: "",
+    rating: "",
+    releaseDate: "",
+    status: "",
+    subtitle: "",
+    tagline: "",
+    title: "",
+    director: "",
+    casts: [],
+    genres: [],
+};
+
+export default function MovieModal({open, onClose, mode = "add", movieData}) {
+    const [movie, setMovie] = useState(EMPTY_MOVIE);
 
     const handleChange = (e) => {
         setMovie({
@@ -54,43 +57,43 @@ export default function MovieModal({ open, onClose, onSave }) {
     };
 
     const handleSave = () => {
-        onSave(movie);
-        setMovie({
-            backdrop_path: "",
-            duration: "",
-            country: "",
-            original_language: "",
-            overview: "",
-            poster_path: "",
-            rating: "",
-            release_date: "",
-            status: "",
-            subtitle: "",
-            tagline: "",
-            title: "",
-            director: "",
-            casts: "",
-            genres: [],
-        });
         onClose();
     };
+
+    useEffect(() => {
+        setMovie(movieData || EMPTY_MOVIE);
+    }, [movieData, open]);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle className="text-xl font-semibold text-gray-700">
-                🎬 Thêm phim mới
+                {mode === "add" && "🎬 Thêm phim mới"}
+                {mode === "edit" && "✏️ Chỉnh sửa phim"}
             </DialogTitle>
             <DialogContent className="!p-4">
                 {/* Grid chính */}
                 <div className="grid grid-cols-2 gap-6">
                     {/* Cột trái */}
                     <div className="flex flex-col gap-4">
-                        <TextField label="Title" name="title" value={movie.title} onChange={handleChange} fullWidth />
-                        <TextField label="Subtitle" name="subtitle" value={movie.subtitle} onChange={handleChange} fullWidth />
-                        <TextField label="Tagline" name="tagline" value={movie.tagline} onChange={handleChange} fullWidth />
-                        <TextField label="Director" name="director" value={movie.director} onChange={handleChange} fullWidth />
-                        <TextField label="Casts" name="casts" value={movie.casts} onChange={handleChange} fullWidth />
-                        <TextField label="Duration (phút)" name="duration" value={movie.duration} onChange={handleChange} fullWidth />
+                        <TextField label="Title" name="title" value={movie.title} onChange={handleChange} fullWidth/>
+                        <TextField label="Subtitle" name="subtitle" value={movie.subtitle} onChange={handleChange}
+                                   fullWidth/>
+                        <TextField label="Tagline" name="tagline" value={movie.tagline} onChange={handleChange}
+                                   fullWidth/>
+                        <TextField label="Director" name="director" value={movie.director} onChange={handleChange}
+                                   fullWidth/>
+                        <TextField
+                            label="Casts"
+                            name="casts"
+                            value={Array.isArray(movie.casts) ? movie.casts.map((g) => g.name).join(", ") : movie.casts || ""}
+                            onChange={(e) => setMovie({
+                                ...movie,
+                                casts: e.target.value // lưu tạm string
+                            })}
+                            fullWidth
+                        />
+                        <TextField label="Duration (phút)" name="duration" value={movie.duration}
+                                   onChange={handleChange} fullWidth/>
 
                         {/* Status */}
                         <FormControl fullWidth variant="outlined" className="mb-2">
@@ -102,12 +105,16 @@ export default function MovieModal({ open, onClose, onSave }) {
                                 value={movie.status}
                                 onChange={handleChange}
                                 label="Status"
+                                renderValue={(selected) => <MovieStatusChip status={selected} />}
                             >
                                 {STATUS_OPTIONS.map((opt) => (
-                                    <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+                                    <MenuItem key={opt} value={opt}>
+                                        <MovieStatusChip status={opt} />
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
+
 
                         {/* Rating */}
                         <FormControl fullWidth variant="outlined">
@@ -129,30 +136,34 @@ export default function MovieModal({ open, onClose, onSave }) {
 
                     {/* Cột phải */}
                     <div className="flex flex-col gap-4">
-                        <TextField label="Country" name="country" value={movie.country} onChange={handleChange} fullWidth />
-                        <TextField label="Original Language" name="original_language" value={movie.original_language} onChange={handleChange} fullWidth />
+                        <TextField label="Country" name="country" value={movie.originCountry} onChange={handleChange}
+                                   fullWidth/>
+                        <TextField label="Original Language" name="original_language" value={movie.originalLanguage}
+                                   onChange={handleChange} fullWidth/>
                         <TextField
                             label="Release Date"
                             name="release_date"
                             type="date"
-                            value={movie.release_date}
+                            value={movie.releaseDate}
                             onChange={handleChange}
                             fullWidth
-                            InputLabelProps={{ shrink: true }}
+                            InputLabelProps={{shrink: true}}
                         />
                         <Autocomplete
                             multiple
                             options={GENRES}
-                            value={movie.genres}
+                            getOptionLabel={(option) => option.name}
+                            value={movie.genres || []}
                             onChange={(e, newValue) => setMovie({ ...movie, genres: newValue })}
                             renderOption={(props, option, { selected }) => (
                                 <li {...props}>
                                     <Checkbox checked={selected} />
-                                    {option}
+                                    {option.name} {/* ✅ hiển thị name thay vì object */}
                                 </li>
                             )}
                             renderInput={(params) => <TextField {...params} label="Genres" />}
                         />
+
 
                         {/* Overview cuối cột phải */}
                         <div className="flex flex-col flex-1">
@@ -174,13 +185,14 @@ export default function MovieModal({ open, onClose, onSave }) {
                         <TextField
                             label="Poster Path"
                             name="poster_path"
-                            value={movie.poster_path}
+                            value={movie.posterPath}
                             onChange={handleChange}
                             fullWidth
                         />
-                        {movie.poster_path && (
+                        {movie.posterPath && (
                             <div className="rounded-lg overflow-hidden shadow-md">
-                                <img src={movie.poster_path} alt="Poster Preview" className="w-full max-h-64 object-contain" />
+                                <img src={movie.posterPath} alt="Poster Preview"
+                                     className="w-full max-h-64 object-contain"/>
                             </div>
                         )}
                     </div>
@@ -188,13 +200,14 @@ export default function MovieModal({ open, onClose, onSave }) {
                         <TextField
                             label="Backdrop Path"
                             name="backdrop_path"
-                            value={movie.backdrop_path}
+                            value={movie.backdropPath}
                             onChange={handleChange}
                             fullWidth
                         />
-                        {movie.backdrop_path && (
+                        {movie.backdropPath && (
                             <div className="rounded-lg overflow-hidden shadow-md">
-                                <img src={movie.backdrop_path} alt="Backdrop Preview" className="w-full max-h-64 object-cover" />
+                                <img src={movie.backdropPath} alt="Backdrop Preview"
+                                     className="w-full max-h-64 object-cover"/>
                             </div>
                         )}
                     </div>
@@ -203,10 +216,10 @@ export default function MovieModal({ open, onClose, onSave }) {
 
             <DialogActions>
                 <Button onClick={onClose} color="error" variant="outlined">
-                    Hủy
+                    Đóng
                 </Button>
                 <Button onClick={handleSave} color="primary" variant="contained">
-                    Lưu
+                    {mode === "add" ? "Lưu" : "Cập nhật"}
                 </Button>
             </DialogActions>
         </Dialog>
