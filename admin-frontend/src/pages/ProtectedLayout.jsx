@@ -19,7 +19,7 @@ const ProtectedLayout = () => {
             {/* Content */}
             <div className="flex flex-col flex-1 min-w-0">
                 <Topbar />
-                <main className="flex-1 bg-[#F1F4F9] px-4 overflow-y-auto overflow-x-hidden">
+                <main className="flex-1 bg-[#F1F4F9] px-10 overflow-y-auto overflow-x-hidden">
                     <Outlet />
                 </main>
             </div>

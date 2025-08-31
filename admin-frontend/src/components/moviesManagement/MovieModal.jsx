@@ -13,6 +13,7 @@ import {
     Select,
     TextField,
 } from "@mui/material";
+import MovieStatusChip from "./MovieStatusChip.jsx";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
@@ -45,7 +46,7 @@ const EMPTY_MOVIE = {
     genres: [],
 };
 
-export default function MovieModal({open, onClose, onSave, mode = "add", movieData}) {
+export default function MovieModal({open, onClose, mode = "add", movieData}) {
     const [movie, setMovie] = useState(EMPTY_MOVIE);
 
     const handleChange = (e) => {
@@ -56,7 +57,6 @@ export default function MovieModal({open, onClose, onSave, mode = "add", movieDa
     };
 
     const handleSave = () => {
-        onSave(movie, mode);
         onClose();
     };
 
@@ -105,12 +105,16 @@ export default function MovieModal({open, onClose, onSave, mode = "add", movieDa
                                 value={movie.status}
                                 onChange={handleChange}
                                 label="Status"
+                                renderValue={(selected) => <MovieStatusChip status={selected} />}
                             >
                                 {STATUS_OPTIONS.map((opt) => (
-                                    <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+                                    <MenuItem key={opt} value={opt}>
+                                        <MovieStatusChip status={opt} />
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
+
 
                         {/* Rating */}
                         <FormControl fullWidth variant="outlined">
