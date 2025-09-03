@@ -1,19 +1,22 @@
-import React, {useEffect, useState} from "react";
 import {
-    Autocomplete,
-    Button,
-    Checkbox,
     Dialog,
-    DialogActions,
-    DialogContent,
     DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
     FormControl,
     InputLabel,
-    MenuItem,
     Select,
-    TextField,
+    MenuItem,
+    Checkbox, FormHelperText, TextareaAutosize,
 } from "@mui/material";
-import MovieStatusChip from "./MovieStatusChip.jsx";
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Autocomplete from "@mui/material/Autocomplete";
+import MovieStatusChip from "./MovieStatusChip";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
@@ -29,199 +32,353 @@ const GENRES = [
 ];
 
 const EMPTY_MOVIE = {
-    backdropPath: "",
-    duration: "",
-    originCountry: "",
-    originalLanguage: "",
-    overview: "",
-    posterPath: "",
-    rating: "",
-    releaseDate: "",
-    status: "",
-    subtitle: "",
-    tagline: "",
-    title: "",
-    director: "",
-    casts: [],
+    // backdropPath: "",
+    // duration: "",
+    // originCountry: "",
+    // originalLanguage: "",
+    // overview: "",
+    // posterPath: "",
+    // rating: "",
+    // releaseDate: "",
+    // status: "",
+    // subtitle: "",
+    // tagline: "",
+    // title: "",
+    // director: "",
+    // casts: [],
+    // genres: [],
+
+    title: "Avengers: Endgame",
+    subtitle: "The Final Battle",
+    tagline: "Part of the journey is the end",
+    director: "Anthony Russo, Joe Russo",
+    duration: "181",
+    status: "RELEASED",
+    rating: "PG13",
+    releaseDate: "2019-04-26",
+    overview: "Trận chiến cuối cùng chống lại Thanos để cứu vũ trụ.",
+    originCountry: "USA",
+    originalLanguage: "English",
+    posterPath: "https://image.tmdb.org/t/p/original/jiZsghGFHmeINTkjp3v1ZfuXfCO.jpg",
+    backdropPath: "https://image.tmdb.org/t/p/original/8btfz81bOJ2lC7cujYBTw03wzg3.jpg",
+    casts: ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson"],
     genres: [],
 };
 
-export default function MovieModal({open, onClose, mode = "add", movieData}) {
-    const [movie, setMovie] = useState(EMPTY_MOVIE);
+const movieSchema = yup.object().shape({
+    title: yup.string().required("Vui lòng nhập tên phim"),
+    subtitle: yup.string().required("Vui lòng nhập subtitle"),
+    tagline: yup.string().required("Vui lòng nhập tagline"),
+    director: yup.string().required("Vui lòng nhập đạo diễn"),
+    duration: yup
+        .number()
+        .typeError("Thời lượng phải là số")
+        .required("Vui lòng nhập thời lượng"),
+    status: yup.string().required("Chọn trạng thái"),
+    originCountry: yup.string().required("Điền quốc gia"),
+    originalLanguage: yup.string().required("Điền ngôn ngữ"),
+    rating: yup.string().required("Chọn phân loại độ tuổi"),
+    releaseDate: yup.string().required("Chọn ngày phát hành"),
+    overview: yup.string().required("Nhập mô tả phim"),
+    genres: yup
+        .array()
+        .of(yup.string())
+        .min(1, "Chọn ít nhất 1 thể loại"),
+    posterPath: yup
+        .string()
+        .url("Phải là đường dẫn hợp lệ")
+        .required("Vui lòng nhập poster"),
+    backdropPath: yup
+        .string()
+        .url("Phải là đường dẫn hợp lệ")
+        .nullable(),
+});
 
-    const handleChange = (e) => {
-        setMovie({
-            ...movie,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSave = () => {
-        onClose();
-    };
+export default function MovieModal({ open, onClose, mode = "add", movieData, onSave }) {
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors },
+        register,
+    } = useForm({
+        resolver: yupResolver(movieSchema),
+        defaultValues: EMPTY_MOVIE,
+    });
 
     useEffect(() => {
-        setMovie(movieData || EMPTY_MOVIE);
-    }, [movieData, open]);
+        reset(movieData || EMPTY_MOVIE);
+    }, [movieData, open, reset]);
+
+    const onSubmit = (data) => {
+        // if (onSave) onSave(data); // gửi dữ liệu ra ngoài
+        console.log(data);
+        onClose();
+    };
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle className="text-xl font-semibold text-gray-700">
-                {mode === "add" && "🎬 Thêm phim mới"}
-                {mode === "edit" && "✏️ Chỉnh sửa phim"}
+                {mode === "add" ? "🎬 Thêm phim mới" : "✏️ Chỉnh sửa phim"}
             </DialogTitle>
-            <DialogContent className="!p-4">
-                {/* Grid chính */}
-                <div className="grid grid-cols-2 gap-6">
-                    {/* Cột trái */}
-                    <div className="flex flex-col gap-4">
-                        <TextField label="Title" name="title" value={movie.title} onChange={handleChange} fullWidth/>
-                        <TextField label="Subtitle" name="subtitle" value={movie.subtitle} onChange={handleChange}
-                                   fullWidth/>
-                        <TextField label="Tagline" name="tagline" value={movie.tagline} onChange={handleChange}
-                                   fullWidth/>
-                        <TextField label="Director" name="director" value={movie.director} onChange={handleChange}
-                                   fullWidth/>
-                        <TextField
-                            label="Casts"
-                            name="casts"
-                            value={Array.isArray(movie.casts) ? movie.casts.map((g) => g.name).join(", ") : movie.casts || ""}
-                            onChange={(e) => setMovie({
-                                ...movie,
-                                casts: e.target.value // lưu tạm string
-                            })}
-                            fullWidth
-                        />
-                        <TextField label="Duration (phút)" name="duration" value={movie.duration}
-                                   onChange={handleChange} fullWidth/>
 
-                        {/* Status */}
-                        <FormControl fullWidth variant="outlined" className="mb-2">
-                            <InputLabel id="status-label">Status</InputLabel>
-                            <Select
-                                labelId="status-label"
-                                id="status-select"
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <DialogContent className="!p-4">
+                    {/* Grid chính */}
+                    <div className="grid grid-cols-2 gap-6">
+                        {/* Cột trái */}
+                        <div className="flex flex-col gap-4">
+                            <TextField
+                                label="Title"
+                                {...register("title")}
+                                error={!!errors.title}
+                                helperText={errors.title?.message}
+                                fullWidth
+                            />
+
+                            <TextField
+                                label="Subtitle"
+                                {...register("subtitle")}
+                                error={!!errors.subtitle}
+                                helperText={errors.subtitle?.message}
+                                fullWidth
+                            />
+
+                            <TextField
+                                label="Tagline"
+                                {...register("tagline")}
+                                fullWidth
+                                error={!!errors.tagline}
+                                helperText={errors.tagline?.message}
+                            />
+
+                            <TextField
+                                label="Director"
+                                {...register("director")}
+                                error={!!errors.director}
+                                helperText={errors.director?.message}
+                                fullWidth
+                            />
+
+                            {/* Casts (tạm lưu string, bạn có thể nâng cấp sau thành array) */}
+                            <TextField label="Casts (phân cách bằng dấu phẩy)" {...register("casts")} fullWidth />
+
+                            <TextField
+                                label="Duration (phút)"
+                                {...register("duration")}
+                                error={!!errors.duration}
+                                helperText={errors.duration?.message}
+                                fullWidth
+                            />
+
+                            {/* Status */}
+                            <Controller
                                 name="status"
-                                value={movie.status}
-                                onChange={handleChange}
-                                label="Status"
-                                renderValue={(selected) => <MovieStatusChip status={selected} />}
-                            >
-                                {STATUS_OPTIONS.map((opt) => (
-                                    <MenuItem key={opt} value={opt}>
-                                        <MovieStatusChip status={opt} />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                control={control}
+                                render={({ field }) => (
+                                    <FormControl fullWidth error={!!errors.status}>
+                                        <InputLabel id="status-label">Status</InputLabel>
+                                        <Select
+                                            {...field}
+                                            labelId="status-label"
+                                            id="status-select"
+                                            label="Status"
+                                            renderValue={(selected) => <MovieStatusChip status={selected} />}
+                                        >
+                                            {STATUS_OPTIONS.map((opt) => (
+                                                <MenuItem key={opt} value={opt}>
+                                                    <MovieStatusChip status={opt} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                        <FormHelperText>{errors.status?.message}</FormHelperText>
+                                    </FormControl>
+                                )}
+                            />
 
-
-                        {/* Rating */}
-                        <FormControl fullWidth variant="outlined">
-                            <InputLabel id="rating-label">Rating</InputLabel>
-                            <Select
-                                labelId="rating-label"
-                                id="rating-select"
+                            {/* Rating */}
+                            <Controller
                                 name="rating"
-                                value={movie.rating}
-                                onChange={handleChange}
-                                label="Rating"
-                            >
-                                {RATING_OPTIONS.map((opt) => (
-                                    <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </div>
-
-                    {/* Cột phải */}
-                    <div className="flex flex-col gap-4">
-                        <TextField label="Country" name="country" value={movie.originCountry} onChange={handleChange}
-                                   fullWidth/>
-                        <TextField label="Original Language" name="original_language" value={movie.originalLanguage}
-                                   onChange={handleChange} fullWidth/>
-                        <TextField
-                            label="Release Date"
-                            name="release_date"
-                            type="date"
-                            value={movie.releaseDate}
-                            onChange={handleChange}
-                            fullWidth
-                            InputLabelProps={{shrink: true}}
-                        />
-                        <Autocomplete
-                            multiple
-                            options={GENRES}
-                            getOptionLabel={(option) => option.name}
-                            value={movie.genres || []}
-                            onChange={(e, newValue) => setMovie({ ...movie, genres: newValue })}
-                            renderOption={(props, option, { selected }) => (
-                                <li {...props}>
-                                    <Checkbox checked={selected} />
-                                    {option.name} {/* ✅ hiển thị name thay vì object */}
-                                </li>
-                            )}
-                            renderInput={(params) => <TextField {...params} label="Genres" />}
-                        />
-
-
-                        {/* Overview cuối cột phải */}
-                        <div className="flex flex-col flex-1">
-                            <label className="block text-gray-700 font-medium mb-2">Overview</label>
-                            <textarea
-                                name="overview"
-                                value={movie.overview}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg p-3 resize-y min-h-[240px] text-sm"
-                                placeholder="Nhập mô tả phim..."
+                                control={control}
+                                render={({ field }) => (
+                                    <FormControl fullWidth error={!!errors.rating}>
+                                        <InputLabel id="rating-label">Rating</InputLabel>
+                                        <Select
+                                            {...field}
+                                            labelId="rating-label"
+                                            id="rating-select"
+                                            label="Rating"
+                                        >
+                                            {RATING_OPTIONS.map((opt) => (
+                                                <MenuItem key={opt} value={opt}>
+                                                    {opt}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                        <FormHelperText>{errors.rating?.message}</FormHelperText>
+                                    </FormControl>
+                                )}
                             />
                         </div>
-                    </div>
-                </div>
 
-                {/* Hình ảnh (Poster & Backdrop) */}
-                <div className="grid grid-cols-2 gap-6 mt-6">
-                    <div className="flex flex-col gap-2">
-                        <TextField
-                            label="Poster Path"
-                            name="poster_path"
-                            value={movie.posterPath}
-                            onChange={handleChange}
-                            fullWidth
-                        />
-                        {movie.posterPath && (
-                            <div className="rounded-lg overflow-hidden shadow-md">
-                                <img src={movie.posterPath} alt="Poster Preview"
-                                     className="w-full max-h-64 object-contain"/>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <TextField
-                            label="Backdrop Path"
-                            name="backdrop_path"
-                            value={movie.backdropPath}
-                            onChange={handleChange}
-                            fullWidth
-                        />
-                        {movie.backdropPath && (
-                            <div className="rounded-lg overflow-hidden shadow-md">
-                                <img src={movie.backdropPath} alt="Backdrop Preview"
-                                     className="w-full max-h-64 object-cover"/>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </DialogContent>
+                        {/* Cột phải */}
+                        <div className="flex flex-col gap-4">
+                            <TextField
+                                label="Country"
+                                {...register("originCountry")}
+                                error={!!errors.originCountry}
+                                helperText={errors.originCountry?.message}
+                                fullWidth
+                            />
 
-            <DialogActions>
-                <Button onClick={onClose} color="error" variant="outlined">
-                    Đóng
-                </Button>
-                <Button onClick={handleSave} color="primary" variant="contained">
-                    {mode === "add" ? "Lưu" : "Cập nhật"}
-                </Button>
-            </DialogActions>
+                            <TextField
+                                label="Original
+                                Language" {...register("originalLanguage")}
+                                error={!!errors.originalLanguage}
+                                helperText={errors.originalLanguage?.message}
+                                fullWidth
+                            />
+
+                            <Controller
+                                name="releaseDate"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        type="date"
+                                        label="Release Date"
+                                        InputLabelProps={{ shrink: true }}
+                                        error={!!errors.releaseDate}
+                                        helperText={errors.releaseDate?.message}
+                                        fullWidth
+                                    />
+                                )}
+                            />
+
+                            <Controller
+                                name="genres"
+                                control={control}
+                                render={({ field }) => (
+                                    <Autocomplete
+                                        multiple
+                                        options={GENRES}
+                                        value={field.value || []}
+                                        onChange={(_, newValue) => field.onChange(newValue)}
+                                        renderOption={(props, option, { selected }) => (
+                                            <li {...props}>
+                                                <Checkbox checked={selected} />
+                                                {option}
+                                            </li>
+                                        )}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Genres"
+                                                error={!!errors.genres}
+                                                helperText={errors.genres?.message}
+                                            />
+                                        )}
+                                    />
+                                )}
+                            />
+
+                            <Controller
+                                name="overview"
+                                control={control}
+                                render={({ field }) => (
+                                    <div className="flex flex-col">
+                                        <label className="text-gray-700 font-medium mb-1">Overview</label>
+                                        <TextareaAutosize
+                                            {...field}
+                                            minRows={6}
+                                            placeholder="Nhập mô tả phim..."
+                                            style={{
+                                                width: "100%",
+                                                padding: "8px 12px",
+                                                border: errors.overview ? "2px solid #f44336" : "1px solid #ccc",
+                                                borderRadius: "4px",
+                                                fontSize: "14px",
+                                                resize: "vertical",
+                                                minHeight: "150px",
+                                                maxHeight: "248px",
+                                            }}
+                                        />
+                                        {errors.overview && (
+                                            <FormHelperText error>{errors.overview.message}</FormHelperText>
+                                        )}
+                                    </div>
+                                )}
+                            />
+
+
+                        </div>
+                    </div>
+
+                    {/* Hình ảnh (Poster & Backdrop) */}
+                    <div className="grid grid-cols-2 gap-6 mt-6">
+                        {/* Poster */}
+                        <Controller
+                            name="posterPath"
+                            control={control}
+                            render={({ field }) => (
+                                <div className="flex flex-col gap-2">
+                                    <TextField
+                                        {...field}
+                                        label="Poster Path"
+                                        fullWidth
+                                        error={!!errors.posterPath}
+                                        helperText={errors.posterPath?.message}
+                                    />
+                                    {field.value && (
+                                        <div className="rounded-lg overflow-hidden shadow-md">
+                                            <img
+                                                src={field.value}
+                                                alt="Poster Preview"
+                                                className="w-full max-h-64 object-contain"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        />
+
+                        {/* Backdrop */}
+                        <Controller
+                            name="backdropPath"
+                            control={control}
+                            render={({ field }) => (
+                                <div className="flex flex-col gap-2">
+                                    <TextField
+                                        {...field}
+                                        label="Backdrop Path"
+                                        fullWidth
+                                        error={!!errors.backdropPath}
+                                        helperText={errors.backdropPath?.message}
+                                    />
+                                    {field.value && (
+                                        <div className="rounded-lg overflow-hidden shadow-md">
+                                            <img
+                                                src={field.value}
+                                                alt="Backdrop Preview"
+                                                className="w-full max-h-64 object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        />
+                    </div>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={onClose} color="error" variant="outlined">
+                        Đóng
+                    </Button>
+                    <Button type="submit" color="primary" variant="contained">
+                        {mode === "add" ? "Lưu" : "Cập nhật"}
+                    </Button>
+                </DialogActions>
+            </form>
         </Dialog>
     );
 }

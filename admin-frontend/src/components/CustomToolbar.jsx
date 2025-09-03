@@ -1,7 +1,6 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import {
-    DataGrid,
     Toolbar,
     ToolbarButton,
     ColumnsPanelTrigger,
@@ -22,7 +21,7 @@ import {
     Divider,
     TextField,
     InputAdornment,
-    Button, Skeleton, Grid, Typography,
+    Button
 } from "@mui/material";
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
@@ -58,11 +57,11 @@ export default function CustomToolbar({ handleAddClick }) {
     const exportMenuTriggerRef = React.useRef(null);
 
     return (
-        <Toolbar sx={{ justifyContent: "space-between", px: 2, py: 2 }}>
+        <Toolbar sx={{ justifyContent: "space-between", px: 2, py: 4 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Tooltip title="Columns">
                     <ColumnsPanelTrigger render={<ToolbarButton />}>
-                        <ViewColumnOutlinedIcon fontSize="small" />
+                        <ViewColumnOutlinedIcon fontSize="medium" />
                     </ColumnsPanelTrigger>
                 </Tooltip>
 
@@ -75,7 +74,7 @@ export default function CustomToolbar({ handleAddClick }) {
                                     color="primary"
                                     variant="dot"
                                 >
-                                    <FilterListOutlinedIcon fontSize="small" />
+                                    <FilterListOutlinedIcon fontSize="medium" />
                                 </Badge>
                             </ToolbarButton>
                         )}
@@ -98,7 +97,7 @@ export default function CustomToolbar({ handleAddClick }) {
                         aria-expanded={exportMenuOpen ? "true" : undefined}
                         onClick={() => setExportMenuOpen(true)}
                     >
-                        <FileDownloadOutlinedIcon fontSize="small" />
+                        <FileDownloadOutlinedIcon fontSize="medium" />
                     </ToolbarButton>
                 </Tooltip>
 
@@ -135,7 +134,7 @@ export default function CustomToolbar({ handleAddClick }) {
                                     color="default"
                                     aria-disabled={state.expanded}
                                 >
-                                    <SearchIcon fontSize="small" />
+                                    <SearchIcon fontSize="medium" />
                                 </StyledToolbarButton>
                             </Tooltip>
                         )}
@@ -153,7 +152,7 @@ export default function CustomToolbar({ handleAddClick }) {
                                     input: {
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <SearchIcon fontSize="small" />
+                                                <SearchIcon fontSize="medium" />
                                             </InputAdornment>
                                         ),
                                         endAdornment: state.value ? (
@@ -164,7 +163,7 @@ export default function CustomToolbar({ handleAddClick }) {
                                                     aria-label="Clear search"
                                                     material={{ sx: { marginRight: -0.75 } }}
                                                 >
-                                                    <CancelIcon fontSize="small" />
+                                                    <CancelIcon fontSize="medium" />
                                                 </QuickFilterClear>
                                             </InputAdornment>
                                         ) : null,
@@ -187,7 +186,7 @@ export default function CustomToolbar({ handleAddClick }) {
                     borderRadius: 1,
                 }}
             >
-                + Thêm mới
+                Thêm mới
             </Button>
         </Toolbar>
     );

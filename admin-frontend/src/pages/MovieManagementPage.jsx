@@ -105,6 +105,42 @@ export default function MovieManagementPage() {
         },
     ];
 
+    const stats = [
+        {
+            title: "Movies",
+            value: "120",
+            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
+            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            bgColor: "#1976d2",
+            iconColor: "#1976d2",
+            loading: true
+        },
+        {
+            title: "Users",
+            value: "5.4K",
+            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
+            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            bgColor: "#9c27b0",
+            iconColor: "#9c27b0",
+        },
+        {
+            title: "Reviews",
+            value: "3.2K",
+            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
+            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            bgColor: "#f57c00",
+            iconColor: "#f57c00",
+        },
+        {
+            title: "Revenue",
+            value: "$240K",
+            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
+            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            bgColor: "#2e7d32",
+            iconColor: "#2e7d32",
+        },
+    ];
+
     // Map data
     const movies = data?.data?.content?.map((movie) => ({
         id: movie.id,
@@ -150,46 +186,16 @@ export default function MovieManagementPage() {
             </div>
 
             <Box sx={{ py: 3 }}>
-                <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <StatCard
-                            title="Movies"
-                            value="120"
-                            icon={<PeopleAltOutlinedIcon fontSize="medium"/>}
-                            bigIcon={<PeopleAltOutlinedIcon fontSize="inherit"/>}
-                            color="#1976d2"
-                        />
-                    </Grid>
+                <Grid container
+                      spacing={3}
 
-                    <Grid item xs={12} sm={6} md={3}>
-                        <StatCard
-                            title="Movies"
-                            value="120"
-                            icon={<PeopleAltOutlinedIcon fontSize="medium"/>}
-                            bigIcon={<PeopleAltOutlinedIcon fontSize="inherit"/>}
-                            color="#1976d2"
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={3}>
-                        <StatCard
-                            title="Movies"
-                            value="120"
-                            icon={<PeopleAltOutlinedIcon fontSize="medium"/>}
-                            bigIcon={<PeopleAltOutlinedIcon fontSize="inherit"/>}
-                            color="#1976d2"
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={3}>
-                        <StatCard
-                            title="Movies"
-                            value="120"
-                            icon={<PeopleAltOutlinedIcon fontSize="medium"/>}
-                            bigIcon={<PeopleAltOutlinedIcon fontSize="inherit"/>}
-                            color="#1976d2"
-                        />
-                    </Grid>
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                    {stats.map((stat, idx) => (
+                        <Grid item xs={12} sm={6} md={3} key={idx}>
+                            <StatCard {...stat} loading={isLoading}/>
+                        </Grid>
+                    ))}
                 </Grid>
             </Box>
 
