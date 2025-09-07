@@ -11,16 +11,17 @@ import {
     MenuItem,
     Checkbox, FormHelperText, TextareaAutosize,
 } from "@mui/material";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Autocomplete from "@mui/material/Autocomplete";
 import MovieStatusChip from "./MovieStatusChip";
+import {useGetAllGenresQuery} from "../../services/genreService.js";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
-const GENRES = [
+var GENRES = [
     "Action",
     "Comedy",
     "Drama",
@@ -30,6 +31,7 @@ const GENRES = [
     "Sci-Fi",
     "Thriller",
 ];
+
 
 const EMPTY_MOVIE = {
     // backdropPath: "",
@@ -82,7 +84,7 @@ const movieSchema = yup.object().shape({
     overview: yup.string().required("Nhập mô tả phim"),
     genres: yup
         .array()
-        .of(yup.string())
+        .of(yup.number())
         .min(1, "Chọn ít nhất 1 thể loại"),
     posterPath: yup
         .string()
@@ -110,8 +112,10 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
         reset(movieData || EMPTY_MOVIE);
     }, [movieData, open, reset]);
 
+    const { data: genresData = [], isLoading } = useGetAllGenresQuery();
+    const genres = genresData.data ?? [];
+    console.log('gd', genres);
     const onSubmit = (data) => {
-        // if (onSave) onSave(data); // gửi dữ liệu ra ngoài
         console.log(data);
         onClose();
     };
@@ -258,28 +262,34 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                             <Controller
                                 name="genres"
                                 control={control}
-                                render={({ field }) => (
-                                    <Autocomplete
-                                        multiple
-                                        options={GENRES}
-                                        value={field.value || []}
-                                        onChange={(_, newValue) => field.onChange(newValue)}
-                                        renderOption={(props, option, { selected }) => (
-                                            <li {...props}>
-                                                <Checkbox checked={selected} />
-                                                {option}
-                                            </li>
-                                        )}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Genres"
-                                                error={!!errors.genres}
-                                                helperText={errors.genres?.message}
-                                            />
-                                        )}
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    return (
+                                        <Autocomplete
+                                            multiple
+                                            options={genres}
+                                            getOptionLabel={(option) => option.name}
+                                            value={genres.filter((g) => field.value?.includes(g.id))}
+                                            onChange={(_, newValue) =>
+                                                field.onChange(newValue.map((g) => Number(g.id)))
+                                            }
+                                            loading={isLoading}
+                                            renderOption={(props, option, { selected }) => (
+                                                <li {...props}>
+                                                    <Checkbox checked={selected} />
+                                                    {option.name}
+                                                </li>
+                                            )}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Genres"
+                                                    error={!!errors.genres}
+                                                    helperText={errors.genres?.message}
+                                                />
+                                            )}
+                                        />
+                                    );
+                                }}
                             />
 
                             <Controller

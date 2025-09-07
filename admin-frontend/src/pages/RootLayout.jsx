@@ -3,10 +3,14 @@ import  {Outlet} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {Alert, Snackbar} from "@mui/material";
 import {closeSnackbar} from "../redux/slices/snackbarSlice.js";
+import {useGetAllGenresQuery} from "../services/genreService.js";
 const RootLayout = () => {
     const {open, type, message} = useSelector((state) => {
         return state.snackbar;
     });
+
+    const { data: genres } = useGetAllGenresQuery();
+
     const dispatch = useDispatch();
     return (
         <div>
