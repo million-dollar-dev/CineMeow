@@ -14,9 +14,10 @@ import {useDispatch} from "react-redux";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
-import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
-import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
+import FiberNewOutlinedIcon from '@mui/icons-material/FiberNewOutlined';
+import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
+import MovieCreationOutlinedIcon from '@mui/icons-material/MovieCreationOutlined';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
 import MovieStatusChip from "../components/moviesManagement/MovieStatusChip.jsx";
@@ -107,42 +108,42 @@ export default function MovieManagementPage() {
 
     const stats = [
         {
-            title: "Movies",
+            title: "Phim",
             value: "120",
-            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
-            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            icon: <MovieCreationOutlinedIcon fontSize="medium" />,
+            bigIcon: <MovieCreationOutlinedIcon fontSize="inherit" />,
             bgColor: "#1976d2",
             iconColor: "#1976d2",
             loading: true
         },
         {
-            title: "Users",
-            value: "5.4K",
-            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
-            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            title: "Đang chiếu",
+            value: "11",
+            icon: <PlayCircleOutlinedIcon fontSize="medium" />,
+            bigIcon: <PlayCircleOutlinedIcon fontSize="inherit" />,
             bgColor: "#9c27b0",
             iconColor: "#9c27b0",
         },
         {
-            title: "Reviews",
+            title: "Sắp chiếu",
             value: "3.2K",
-            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
-            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            icon: <FiberNewOutlinedIcon fontSize="medium" />,
+            bigIcon: <FiberNewOutlinedIcon fontSize="inherit" />,
             bgColor: "#f57c00",
             iconColor: "#f57c00",
         },
         {
-            title: "Revenue",
+            title: "Đã phát hành",
             value: "$240K",
-            icon: <PeopleAltOutlinedIcon fontSize="medium" />,
-            bigIcon: <PeopleAltOutlinedIcon fontSize="inherit" />,
+            icon: <ScheduleOutlinedIcon fontSize="medium" />,
+            bigIcon: <ScheduleOutlinedIcon fontSize="inherit" />,
             bgColor: "#2e7d32",
             iconColor: "#2e7d32",
         },
     ];
 
     // Map data
-    const movies = data?.data?.content?.map((movie) => ({
+    const movies = data?.data?.map((movie) => ({
         id: movie.id,
         poster: movie.posterPath,
         title: movie.title,
@@ -166,7 +167,7 @@ export default function MovieManagementPage() {
     };
 
     useEffect(() => {
-        console.log(data)
+        console.log(data?.data.length);
         if (isError) {
             dispatch(openSnackbar({message: error?.error, type: "error"}));
         }
