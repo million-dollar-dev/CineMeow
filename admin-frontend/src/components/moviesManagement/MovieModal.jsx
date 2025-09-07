@@ -1,26 +1,34 @@
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
     Button,
-    TextField,
+    Checkbox,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     FormControl,
+    FormHelperText,
     InputLabel,
-    Select,
     MenuItem,
-    Checkbox, FormHelperText, TextareaAutosize,
+    Select,
+    TextareaAutosize,
+    TextField,
 } from "@mui/material";
-import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import {useEffect} from "react";
+import {Controller, useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Autocomplete from "@mui/material/Autocomplete";
 import MovieStatusChip from "./MovieStatusChip";
+import {useGetAllGenresQuery} from "../../services/genreService.js";
+import {useCreateMovieMutation, useUpdateMovieMutation} from "../../services/movieService.js";
+import {useDispatch} from "react-redux";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
+import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
-const GENRES = [
+var GENRES = [
     "Action",
     "Comedy",
     "Drama",
@@ -30,6 +38,7 @@ const GENRES = [
     "Sci-Fi",
     "Thriller",
 ];
+
 
 const EMPTY_MOVIE = {
     // backdropPath: "",
@@ -61,6 +70,7 @@ const EMPTY_MOVIE = {
     originalLanguage: "English",
     posterPath: "https://image.tmdb.org/t/p/original/jiZsghGFHmeINTkjp3v1ZfuXfCO.jpg",
     backdropPath: "https://image.tmdb.org/t/p/original/8btfz81bOJ2lC7cujYBTw03wzg3.jpg",
+    trailerUrl: "https://www.youtube.com/watch?v=AJDEu1-nSTI&list=RDAJDEu1-nSTI&index=1",
     casts: ["Robert Downey Jr.", "Chris Evans", "Scarlett Johansson"],
     genres: [],
 };
@@ -82,7 +92,7 @@ const movieSchema = yup.object().shape({
     overview: yup.string().required("Nhập mô tả phim"),
     genres: yup
         .array()
-        .of(yup.string())
+        .of(yup.number())
         .min(1, "Chọn ít nhất 1 thể loại"),
     posterPath: yup
         .string()
@@ -94,12 +104,13 @@ const movieSchema = yup.object().shape({
         .nullable(),
 });
 
-export default function MovieModal({ open, onClose, mode = "add", movieData, onSave }) {
+export default function MovieModal({open, onClose, mode = "add", movieData, onSave}) {
     const {
         control,
         handleSubmit,
         reset,
-        formState: { errors },
+        setError,
+        formState: {errors},
         register,
     } = useForm({
         resolver: yupResolver(movieSchema),
@@ -107,14 +118,56 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
     });
 
     useEffect(() => {
-        reset(movieData || EMPTY_MOVIE);
+        if (movieData) {
+            reset({
+                ...movieData,
+                genres: movieData.genres?.map((g) => Number(g.id ?? g)) || []
+            });
+        } else {
+            reset(EMPTY_MOVIE);
+        }
     }, [movieData, open, reset]);
 
-    const onSubmit = (data) => {
-        // if (onSave) onSave(data); // gửi dữ liệu ra ngoài
-        console.log(data);
+    const {data: genresData = [], isLoading} = useGetAllGenresQuery();
+    const genres = genresData.data ?? [];
+
+    const dispatch = useDispatch();
+
+    const [
+        createMovie,
+        {isLoading: isCreating, isError: isCreateError, error: createError},
+    ] = useCreateMovieMutation();
+
+    const [
+        updateMovie,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdateMovieMutation();
+
+    useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
+
+    const onSubmit = async (data) => {
+        const payload = {
+            ...data,
+            casts: Array.isArray(data.casts)
+                ? data.casts
+                : (data.casts || "")
+                    .split(",")
+                    .map((c) => c.trim())
+                    .filter(Boolean), // loại bỏ chuỗi rỗng
+        };
+
+        if (mode === "add") {
+            await createMovie(payload).unwrap();
+            dispatch(openSnackbar({message: "Thêm phim thành công!", type: "success"}));
+        } else {
+            await updateMovie({id: movieData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật phim thành công!", type: "success"}));
+        }
         onClose();
+
     };
+
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -161,7 +214,7 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                             />
 
                             {/* Casts (tạm lưu string, bạn có thể nâng cấp sau thành array) */}
-                            <TextField label="Casts (phân cách bằng dấu phẩy)" {...register("casts")} fullWidth />
+                            <TextField label="Casts (phân cách bằng dấu phẩy)" {...register("casts")} fullWidth/>
 
                             <TextField
                                 label="Duration (phút)"
@@ -175,7 +228,7 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                             <Controller
                                 name="status"
                                 control={control}
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormControl fullWidth error={!!errors.status}>
                                         <InputLabel id="status-label">Status</InputLabel>
                                         <Select
@@ -183,11 +236,11 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                                             labelId="status-label"
                                             id="status-select"
                                             label="Status"
-                                            renderValue={(selected) => <MovieStatusChip status={selected} />}
+                                            renderValue={(selected) => <MovieStatusChip status={selected}/>}
                                         >
                                             {STATUS_OPTIONS.map((opt) => (
                                                 <MenuItem key={opt} value={opt}>
-                                                    <MovieStatusChip status={opt} />
+                                                    <MovieStatusChip status={opt}/>
                                                 </MenuItem>
                                             ))}
                                         </Select>
@@ -200,7 +253,7 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                             <Controller
                                 name="rating"
                                 control={control}
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormControl fullWidth error={!!errors.rating}>
                                         <InputLabel id="rating-label">Rating</InputLabel>
                                         <Select
@@ -242,12 +295,12 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                             <Controller
                                 name="releaseDate"
                                 control={control}
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <TextField
                                         {...field}
                                         type="date"
                                         label="Release Date"
-                                        InputLabelProps={{ shrink: true }}
+                                        InputLabelProps={{shrink: true}}
                                         error={!!errors.releaseDate}
                                         helperText={errors.releaseDate?.message}
                                         fullWidth
@@ -258,34 +311,40 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                             <Controller
                                 name="genres"
                                 control={control}
-                                render={({ field }) => (
-                                    <Autocomplete
-                                        multiple
-                                        options={GENRES}
-                                        value={field.value || []}
-                                        onChange={(_, newValue) => field.onChange(newValue)}
-                                        renderOption={(props, option, { selected }) => (
-                                            <li {...props}>
-                                                <Checkbox checked={selected} />
-                                                {option}
-                                            </li>
-                                        )}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Genres"
-                                                error={!!errors.genres}
-                                                helperText={errors.genres?.message}
-                                            />
-                                        )}
-                                    />
-                                )}
+                                render={({field}) => {
+                                    return (
+                                        <Autocomplete
+                                            multiple
+                                            options={genres}
+                                            getOptionLabel={(option) => option.name}
+                                            value={genres.filter((g) => field.value?.includes(g.id))}
+                                            onChange={(_, newValue) =>
+                                                field.onChange(newValue.map((g) => Number(g.id)))
+                                            }
+                                            loading={isLoading}
+                                            renderOption={(props, option, {selected}) => (
+                                                <li {...props}>
+                                                    <Checkbox checked={selected}/>
+                                                    {option.name}
+                                                </li>
+                                            )}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Genres"
+                                                    error={!!errors.genres}
+                                                    helperText={errors.genres?.message}
+                                                />
+                                            )}
+                                        />
+                                    );
+                                }}
                             />
 
                             <Controller
                                 name="overview"
                                 control={control}
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <div className="flex flex-col">
                                         <label className="text-gray-700 font-medium mb-1">Overview</label>
                                         <TextareaAutosize
@@ -320,7 +379,7 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                         <Controller
                             name="posterPath"
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <div className="flex flex-col gap-2">
                                     <TextField
                                         {...field}
@@ -346,7 +405,7 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                         <Controller
                             name="backdropPath"
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <div className="flex flex-col gap-2">
                                     <TextField
                                         {...field}
@@ -374,7 +433,17 @@ export default function MovieModal({ open, onClose, mode = "add", movieData, onS
                     <Button onClick={onClose} color="error" variant="outlined">
                         Đóng
                     </Button>
-                    <Button type="submit" color="primary" variant="contained">
+                    <Button
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                        disabled={isCreating || isUpdating}
+                        startIcon={
+                            (isCreating || isUpdating) && (
+                                <CircularProgress size={20} color="inherit"/>
+                            )
+                        }
+                    >
                         {mode === "add" ? "Lưu" : "Cập nhật"}
                     </Button>
                 </DialogActions>

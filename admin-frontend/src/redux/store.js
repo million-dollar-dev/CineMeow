@@ -12,7 +12,7 @@ const persistConfig = {
     key: "root",
     version: 1,
     storage,
-    blacklist: [rootApi.reducerPath, sidebarSlice, snackbarSlice]
+    blacklist: [rootApi.reducerPath, "sidebar", "snackbar"]
 };
 
 const persistedReducer = persistReducer(
