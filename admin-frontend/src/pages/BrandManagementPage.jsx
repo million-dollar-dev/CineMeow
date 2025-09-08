@@ -3,41 +3,63 @@ import { DataGrid } from "@mui/x-data-grid";
 import {
     Box,
     Button,
-    Grid
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import {useEffect, useState} from "react";
 import MovieModal from "../components/moviesManagement/MovieModal.jsx";
-import {useGetAllMoviesQuery} from "../services/movieService.js";
-import {useDispatch} from "react-redux";
-import {openSnackbar} from "../redux/slices/snackbarSlice.js";
-import StatCard from "../components/OverviewStats/StatCard.jsx";
-import FiberNewOutlinedIcon from '@mui/icons-material/FiberNewOutlined';
-import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
-import MovieCreationOutlinedIcon from '@mui/icons-material/MovieCreationOutlined';
-import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
-import MovieStatusChip from "../components/moviesManagement/MovieStatusChip.jsx";
+import {useState} from "react";
 
 export default function BrandManagementPage() {
-    const dispatch = useDispatch();
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 5,
     });
-    const [openModal, setOpenModal] = React.useState(false);
-    const [modalMode, setModalMode] = useState("add");
-    const [selectedMovie, setSelectedMovie] = useState(null);
 
-    // Query
-    //const { data, isError, error, isLoading } = useGetAllMoviesQuery();
+    const brands = [
+        {
+            "id": 1,
+            "name": "CGV Cinemas",
+            "logo_url": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
+            "description": "CGV là chuỗi rạp chiếu phim lớn nhất Việt Nam, mang đến trải nghiệm điện ảnh hiện đại với nhiều phòng chiếu đặc biệt như IMAX, 4DX.",
+            "employees": 2000
+        },
+        {
+            "id": 2,
+            "name": "Galaxy Cinema",
+            "logo_url": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
+            "description": "Galaxy Cinema nổi bật với giá vé phải chăng và chất lượng dịch vụ tốt, là lựa chọn yêu thích của giới trẻ tại các thành phố lớn.",
+            "employees": 800
+        },
+        {
+            "id": 3,
+            "name": "Lotte Cinema",
+            "logo_url": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
+            "description": "Lotte Cinema là thương hiệu rạp chiếu phim đến từ Hàn Quốc, chú trọng sự thoải mái và không gian thân thiện cho khán giả.",
+            "employees": 1200
+        },
+        {
+            "id": 4,
+            "name": "BHD Star Cineplex",
+            "logo_url": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
+            "description": "BHD Star là chuỗi rạp phát triển nhanh chóng tại Việt Nam, với hệ thống rạp chiếu hiện đại và dịch vụ đa dạng.",
+            "employees": 600
+        },
+        {
+            "id": 5,
+            "name": "Cinestar",
+            "logo_url": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
+            "description": "Cinestar tập trung vào phân khúc giá vé bình dân, đem lại trải nghiệm điện ảnh chất lượng cho sinh viên và giới trẻ.",
+            "employees": 350
+        }
+    ];
+
 
     const columns = [
         {
-            field: "poster",
-            headerName: "Poster",
+            field: "logo_url",
+            headerName: "Logo",
             headerClassName: "custom-header",
             width: 180,
             sortable: false,
@@ -53,27 +75,22 @@ export default function BrandManagementPage() {
                 >
                     <img
                         src={params.value}
-                        alt="poster"
+                        alt="logo"
                         style={{
                             width: 100,
-                            height: 140,
+                            height: 100,
                             objectFit: "cover",
                             borderRadius: "8px",
+                            borderWidth: "2px",
+                            borderColor: "black",
                         }}
                     />
                 </Box>
             ),
         },
-        { field: "title", headerName: "Title", flex: 1, minWidth: 200 },
-        { field: "genre", headerName: "Genre", width: 200 },
-        { field: "releaseDate", headerName: "Release Date", width: 100 },
-        { field: "duration", headerName: "Duration (min)", width: 120 },
-        {
-            field: "status",
-            headerName: "Status",
-            width: 160,
-            renderCell: (params) => <MovieStatusChip status={params.value} />,
-        },
+        { field: "name", headerName: "Name", flex: 1, minWidth: 50 },
+        { field: "description", headerName: "Description", width: 550 },
+        { field: "employees", headerName: "Employees", width: 100 },
         {
             field: "actions",
             headerName: "Actions",
@@ -81,13 +98,12 @@ export default function BrandManagementPage() {
             sortable: false,
             filterable: false,
             disableColumnMenu: true,
-            renderCell: (params) => (
+            renderCell: () => (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Button
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
-                        onClick={() => handleEditClick(params.row.fullData)} // truyền nguyên row đầy đủ
                     >
                         Tùy chỉnh
                     </Button>
@@ -96,7 +112,6 @@ export default function BrandManagementPage() {
                         startIcon={<DeleteOutlineOutlinedIcon />}
                         variant="text"
                         sx={{ color: "red" }}
-                        // onClick={() => handleDeleteClick(params.row)}
                     >
                         Xóa
                     </Button>
@@ -104,107 +119,12 @@ export default function BrandManagementPage() {
             ),
         },
     ];
-
-
-
-    // Map data
-    const movies = data?.data?.map((movie) => ({
-        id: movie.id,
-        poster: movie.posterPath,
-        title: movie.title,
-        genre: movie.genres?.map((g) => g.name).join(", ") || "",
-        releaseDate: movie.releaseDate,
-        duration: movie.duration,
-        status: movie.status,
-        fullData: movie,
-    })) ?? [];
-
-    const totalMovies = movies.length;
-    const nowShowing = movies.filter(m => m.status === "NOW_PLAYING").length;
-    const comingSoon = movies.filter(m => m.status === "COMING_SOON").length;
-    const released = movies.filter(m => m.status === "RELEASED").length;
-
-    const stats = [
-        {
-            title: "Phim",
-            value: totalMovies,
-            icon: <MovieCreationOutlinedIcon fontSize="medium" />,
-            bigIcon: <MovieCreationOutlinedIcon fontSize="inherit" />,
-            bgColor: "#1976d2",
-            iconColor: "#1976d2",
-            loading: true
-        },
-        {
-            title: "Đang chiếu",
-            value: nowShowing,
-            icon: <PlayCircleOutlinedIcon fontSize="medium" />,
-            bigIcon: <PlayCircleOutlinedIcon fontSize="inherit" />,
-            bgColor: "#2e7d32",
-            iconColor: "#2e7d32",
-        },
-        {
-            title: "Sắp chiếu",
-            value: comingSoon,
-            icon: <FiberNewOutlinedIcon fontSize="medium" />,
-            bigIcon: <FiberNewOutlinedIcon fontSize="inherit" />,
-            bgColor: "#f57c00",
-            iconColor: "#f57c00",
-        },
-        {
-            title: "Đã phát hành",
-            value: released,
-            icon: <ScheduleOutlinedIcon fontSize="medium" />,
-            bigIcon: <ScheduleOutlinedIcon fontSize="inherit" />,
-            bgColor: 'black',
-            iconColor: 'black',
-        },
-    ];
-
-    const handleAddClick = () => {
-        setModalMode("add");
-        setSelectedMovie(null);
-        setOpenModal(true);
-    };
-
-    const handleEditClick = (movie) => {
-        setModalMode("edit");
-        setSelectedMovie(movie);
-        setOpenModal(true);
-    };
-
-    useEffect(() => {
-        console.log(data?.data.length);
-        if (isError) {
-            dispatch(openSnackbar({message: error?.error, type: "error"}));
-        }
-    }, [isError, error, isLoading, data]);
-
+    const isLoading = false;
     return (
         <Box className="py-2 min-h-screen">
-            <MovieModal open={openModal}
-                        onClose={() => setOpenModal(false)}
-                        mode={modalMode}
-                        movieData={selectedMovie}
-            />
-
-            {/* Header */}
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-extrabold text-black">Quản Lý Phim</h2>
+                <h2 className="text-2xl font-extrabold text-black">Quản Lý Thương Hiệu</h2>
             </div>
-
-            <Box sx={{ py: 3 }}>
-                <Grid container
-                      spacing={3}
-
-                      sx={{ display: "flex", justifyContent: "space-between" }}
-                >
-                    {stats.map((stat, idx) => (
-                        <Grid item xs={12} sm={6} md={3} key={idx}>
-                            <StatCard {...stat} loading={isLoading}/>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
 
             <Box sx={{ height: 630, width: "100%" }}>
                 {isLoading ? (
@@ -212,11 +132,11 @@ export default function BrandManagementPage() {
                 ) : (
                     <DataGrid
                         sx={{borderRadius: 4}}
-                        rows={movies}
+                        rows={brands}
                         columns={columns}
                         disableRowSelectionOnClick
                         rowHeight={160}
-                        slots={{ toolbar: () => <CustomToolbar handleAddClick={handleAddClick} /> }}
+                        slots={{ toolbar: () => <CustomToolbar /> }}
                         showToolbar
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}
