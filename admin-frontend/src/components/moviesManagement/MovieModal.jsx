@@ -104,7 +104,7 @@ const movieSchema = yup.object().shape({
         .nullable(),
 });
 
-export default function MovieModal({open, onClose, mode = "add", movieData, onSave}) {
+export default function MovieModal({open, onClose, mode = "add", movieData}) {
     const {
         control,
         handleSubmit,
