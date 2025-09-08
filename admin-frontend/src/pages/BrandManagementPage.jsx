@@ -21,7 +21,7 @@ import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
 import MovieStatusChip from "../components/moviesManagement/MovieStatusChip.jsx";
 
-export default function MovieManagementPage() {
+export default function BrandManagementPage() {
     const dispatch = useDispatch();
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
@@ -32,7 +32,7 @@ export default function MovieManagementPage() {
     const [selectedMovie, setSelectedMovie] = useState(null);
 
     // Query
-    const { data, isError, error, isLoading } = useGetAllMoviesQuery();
+    //const { data, isError, error, isLoading } = useGetAllMoviesQuery();
 
     const columns = [
         {

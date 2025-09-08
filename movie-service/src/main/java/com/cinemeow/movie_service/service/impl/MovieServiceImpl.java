@@ -54,6 +54,13 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieResponse> getAll() {
+        return movieRepository.findAll().stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
+    }
+
+    @Override
     public PagedResponse<List<MovieResponse>> getMovies(int pageNo, int pageSize, String sortBy) {
         int page = Math.max(0, pageNo - 1);
 

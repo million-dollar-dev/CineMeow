@@ -14,6 +14,9 @@ import ProtectedLayout from "./pages/ProtectedLayout.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import MovieManagement from "./pages/MovieManagementPage.jsx";
 import MovieManagementPage from "./pages/MovieManagementPage.jsx";
+import BrandManagementPage from "./pages/BrandManagementPage.jsx";
+import CinemaManagementPage from "./pages/CinemaManagementPage.jsx";
+import RoomPage from "./pages/RoomPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -33,6 +36,18 @@ const router = createBrowserRouter([
                     {
                         path: "/movies",
                         element: <MovieManagementPage/>
+                    },
+                    {
+                        path: "/brands",
+                        element: <BrandManagementPage/>
+                    },
+                    {
+                        path: "/cinemas",
+                        element: <CinemaManagementPage/>
+                    },
+                    {
+                        path: "/rooms",
+                        element: <RoomPage/>
                     }
                 ]
             },

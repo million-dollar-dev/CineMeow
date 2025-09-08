@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -82,6 +83,17 @@ public class MovieController {
     ) {
         return BaseResponse.<PagedResponse>builder()
                 .data(movieService.getMovies(pageNo, pageSize, sortBy))
+                .build();
+    }
+
+    @Operation(
+            summary = "Get list of all movies",
+            description = "Returns list of all movies"
+    )
+    @GetMapping("/all")
+    public BaseResponse<List<MovieResponse>> getAll() {
+        return BaseResponse.<List<MovieResponse>>builder()
+                .data(movieService.getAll())
                 .build();
     }
 
