@@ -12,6 +12,7 @@ import java.util.List;
 public interface MovieService {
     MovieResponse create(MovieRequest request);
     MovieResponse getById(String id);
+    List<MovieResponse> getAll();
     PagedResponse<List<MovieResponse>> getMovies(int pageNo, int pageSize, String sortBy);
     MovieResponse update(String id, MovieRequest request);
     PagedResponse<List<MovieResponse>> searchMovies(Pageable pageable, String[] filters);

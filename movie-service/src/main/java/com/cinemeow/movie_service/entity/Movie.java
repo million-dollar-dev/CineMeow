@@ -53,6 +53,9 @@ public class Movie {
     @Column(name = "poster_path")
     String posterPath;
 
+    @Column(name = "trailer_url")
+    String trailerUrl;
+
     @Column(name = "release_date", nullable = false)
     LocalDate releaseDate;
 

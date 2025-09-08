@@ -1,25 +1,9 @@
-import React, { useState, useEffect } from "react";
-import {
-    Box,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Collapse,
-    Tooltip,
-} from "@mui/material";
-import {
-    Dashboard,
-    ShoppingCart,
-    People,
-    Settings,
-    BarChart,
-    ExpandLess,
-    ExpandMore,
-} from "@mui/icons-material";
-import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { toggle } from "../redux/slices/sidebarSlice.js";
+import React, {useEffect, useState} from "react";
+import {Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText, Tooltip,} from "@mui/material";
+import {ExpandLess, ExpandMore, Settings,} from "@mui/icons-material";
+import {NavLink} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {toggle} from "../redux/slices/sidebarSlice.js";
 import CustomIconButton from "./CustomIconButton";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import MovieOutlinedIcon from '@mui/icons-material/MovieOutlined';
@@ -30,27 +14,31 @@ import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 
 const menuItems = [
-    { icon: <DashboardOutlinedIcon />, label: "Dashboard", path: "/dashboard" },
+    {icon: <DashboardOutlinedIcon/>, label: "Dashboard", path: "/dashboard"},
     {
-        icon: <MovieOutlinedIcon />,
+        icon: <MovieOutlinedIcon/>,
         label: "Phim",
-        children: [
-            { label: "Tất cả phim", path: "/movies" },
-            { label: "Pending", path: "#" },
-            { label: "Completed", path: "#" },
-        ],
+        path: "/movies"
     },
-    { icon: <CameraOutdoorOutlinedIcon />, label: "Cinemas", path: "#" },
-    { icon: <ConfirmationNumberOutlinedIcon />, label: "Tickets", path: "/reports" },
-    { icon: <LoyaltyOutlinedIcon />, label: "Promotions", path:"/promotions" },
-    { icon : <LibraryBooksOutlinedIcon/>, label: "Reviews", path: "/reviews" },
-    { icon: <PeopleOutlinedIcon />, label: "Accounts", path: "/reports" },
     {
-        icon: <Settings />,
+        icon: <CameraOutdoorOutlinedIcon/>,
+        label: "Rạp",
+        children: [
+            {label: "Thương hiệu", path: "/brands"},
+            {label: "Rạp", path: "/cinemas"},
+            {label: "Phòng vé", path: "/rooms"},
+        ]
+    },
+    {icon: <ConfirmationNumberOutlinedIcon/>, label: "Tickets", path: "/reports"},
+    {icon: <LoyaltyOutlinedIcon/>, label: "Promotions", path: "/promotions"},
+    {icon: <LibraryBooksOutlinedIcon/>, label: "Reviews", path: "/reviews"},
+    {icon: <PeopleOutlinedIcon/>, label: "Accounts", path: "/reports"},
+    {
+        icon: <Settings/>,
         label: "Settings",
         children: [
-            { label: "Profile", path: "/settings/profile" },
-            { label: "Security", path: "/settings/security" },
+            {label: "Profile", path: "/settings/profile"},
+            {label: "Security", path: "/settings/security"},
         ],
     },
 ];
@@ -90,8 +78,12 @@ const Sidebar = () => {
         >
             {/* Logo */}
             <div className="flex items-center justify-center px-4 py-6">
-                <div className="w-10 h-10 text-black rounded-xl flex items-center justify-center text-lg font-bold shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M96 160C149 160 192 203 192 256L192 341.8C221.7 297.1 269.8 265.6 325.4 257.8C351 317.8 410.6 359.9 480 359.9C490.9 359.9 501.6 358.8 512 356.8L512 544C512 561.7 497.7 576 480 576C462.3 576 448 561.7 448 544L448 403.2L312 512L368 512C385.7 512 400 526.3 400 544C400 561.7 385.7 576 368 576L224 576C171 576 128 533 128 480L128 256C128 239.4 115.4 225.8 99.3 224.2L92.7 223.9C76.6 222.2 64 208.6 64 192C64 174.3 78.3 160 96 160zM565.8 67.2C576.2 58.5 592 65.9 592 79.5L592 192C592 253.9 541.9 304 480 304C418.1 304 368 253.9 368 192L368 79.5C368 65.9 383.8 58.5 394.2 67.2L448 112L512 112L565.8 67.2zM432 172C421 172 412 181 412 192C412 203 421 212 432 212C443 212 452 203 452 192C452 181 443 172 432 172zM528 172C517 172 508 181 508 192C508 203 517 212 528 212C539 212 548 203 548 192C548 181 539 172 528 172z"/></svg>
+                <div
+                    className="w-10 h-10 text-black rounded-xl flex items-center justify-center text-lg font-bold shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                        <path
+                            d="M96 160C149 160 192 203 192 256L192 341.8C221.7 297.1 269.8 265.6 325.4 257.8C351 317.8 410.6 359.9 480 359.9C490.9 359.9 501.6 358.8 512 356.8L512 544C512 561.7 497.7 576 480 576C462.3 576 448 561.7 448 544L448 403.2L312 512L368 512C385.7 512 400 526.3 400 544C400 561.7 385.7 576 368 576L224 576C171 576 128 533 128 480L128 256C128 239.4 115.4 225.8 99.3 224.2L92.7 223.9C76.6 222.2 64 208.6 64 192C64 174.3 78.3 160 96 160zM565.8 67.2C576.2 58.5 592 65.9 592 79.5L592 192C592 253.9 541.9 304 480 304C418.1 304 368 253.9 368 192L368 79.5C368 65.9 383.8 58.5 394.2 67.2L448 112L512 112L565.8 67.2zM432 172C421 172 412 181 412 192C412 203 421 212 432 212C443 212 452 203 452 192C452 181 443 172 432 172zM528 172C517 172 508 181 508 192C508 203 517 212 528 212C539 212 548 203 548 192C548 181 539 172 528 172z"/>
+                    </svg>
 
                 </div>
                 {
@@ -108,7 +100,7 @@ const Sidebar = () => {
                                 <Tooltip title={!expanded ? item.label : ""} placement="right">
                                     <ListItemButton
                                         onClick={() => handleMenuClick(item.label)}
-                                        className="rounded-lg hover:bg-blue-50 transition !text-black"
+                                        className="rounded-lg hover:bg-blue-50 transition !text-black !bg-red"
                                     >
                                         {expanded ? (
                                             <>
@@ -116,10 +108,10 @@ const Sidebar = () => {
                                                     {item.icon}
                                                 </ListItemIcon>
                                                 <ListItemText
-                                                    sx={{ color: "black" }}
+                                                    sx={{color: "black"}}
                                                     primary={item.label}
                                                 />
-                                                {openMenu === item.label ? <ExpandLess /> : <ExpandMore />}
+                                                {openMenu === item.label ? <ExpandLess/> : <ExpandMore/>}
                                             </>
                                         ) : (
                                             <CustomIconButton>{item.icon}</CustomIconButton>
@@ -133,15 +125,15 @@ const Sidebar = () => {
                                             <NavLink
                                                 key={cIdx}
                                                 to={child.path}
-                                                className={({ isActive }) =>
+                                                className={({isActive}) =>
                                                     `block ${
-                                                        isActive ? "bg-blue-100 text-blue-600" : "text-gray-600"
+                                                        isActive ? "text-blue-600" : "text-gray-600"
                                                     }`
                                                 }
                                             >
                                                 <ListItemButton
-                                                    sx={{ pl: expanded ? 6 : 2 }}
-                                                    className="rounded-lg hover:bg-blue-50 transition"
+                                                    sx={{pl: expanded ? 6 : 2}}
+                                                    className="rounded-lg !hover:bg-black transition"
                                                 >
                                                     {expanded && (
                                                         <ListItemText
@@ -161,7 +153,7 @@ const Sidebar = () => {
                             <Tooltip title={!expanded ? item.label : ""} placement="right">
                                 <NavLink
                                     to={item.path}
-                                    className={({ isActive }) =>
+                                    className={({isActive}) =>
                                         `block ${isActive ? "text-blue-600" : "!text-black"}`
                                     }
                                 >
@@ -172,7 +164,7 @@ const Sidebar = () => {
                                                     {item.icon}
                                                 </ListItemIcon>
                                                 <ListItemText
-                                                    sx={{ color: "black" }}
+                                                    sx={{color: "black"}}
                                                     primary={item.label}
                                                 />
                                             </>

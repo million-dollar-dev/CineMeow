@@ -24,6 +24,7 @@ public class MovieResponse {
     String originalLanguage;
     String overview;
     String posterPath;
+    String trailerUrl;
     LocalDate releaseDate;
     Integer duration;
     String status;

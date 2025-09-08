@@ -21,7 +21,6 @@ public class MovieRequest {
     MovieRating rating;
 
     @NotBlank(message = "Backdrop path is required")
-    @Pattern(regexp = "^/.*\\.jpg$", message = "Backdrop path must be a valid image path ending with .jpg")
     String backdropPath;
 
     @NotEmpty(message = "At least one genre is required")
@@ -31,7 +30,6 @@ public class MovieRequest {
     String originCountry;
 
     @NotBlank(message = "Original language is required")
-    @Size(min = 2, max = 3, message = "Original language must be 2-3 characters")
     String originalLanguage;
 
     @NotBlank(message = "Overview is required")
@@ -39,8 +37,9 @@ public class MovieRequest {
     String overview;
 
     @NotBlank(message = "Poster path is required")
-    @Pattern(regexp = "^/.*\\.jpg$", message = "Poster path must be a valid image path ending with .jpg")
     String posterPath;
+
+    String trailerUrl;
 
     @NotNull(message = "Release date is required")
     LocalDate releaseDate;
@@ -61,7 +60,6 @@ public class MovieRequest {
     String title;
 
     @NotBlank(message = "Subtitle is required")
-    @Size(min = 2, max = 10, message = "Subtitle must be between 2 and 10 characters")
     String subtitle;
 
     @NotBlank(message = "Director must not be blank")
