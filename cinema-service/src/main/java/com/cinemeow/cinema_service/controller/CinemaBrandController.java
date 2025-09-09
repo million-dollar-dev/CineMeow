@@ -4,6 +4,10 @@ import com.cinemeow.cinema_service.dto.request.CinemaBrandRequest;
 import com.cinemeow.cinema_service.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.CinemaBrandResponse;
 import com.cinemeow.cinema_service.service.CinemaBrandService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +20,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/brands")
+@Tag(name = "Cinema Brand Management", description = "APIs for managing cinema brands")
 public class CinemaBrandController {
     CinemaBrandService cinemaBrandService;
 
+    @Operation(
+            summary = "Create new cinema brand",
+            description = "Tạo mới một thương hiệu rạp phim")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request body")
+    })
     @PostMapping
     public BaseResponse<CinemaBrandResponse> create(@Valid @RequestBody CinemaBrandRequest request) {
         return BaseResponse.<CinemaBrandResponse>builder()
@@ -26,6 +38,10 @@ public class CinemaBrandController {
                 .build();
     }
 
+    @Operation(summary = "Get all cinema brands", description = "Lấy danh sách tất cả thương hiệu rạp phim")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fetched successfully")
+    })
     @GetMapping
     public BaseResponse<List<CinemaBrandResponse>> getAll() {
         return BaseResponse.<List<CinemaBrandResponse>>builder()
@@ -33,6 +49,11 @@ public class CinemaBrandController {
                 .build();
     }
 
+    @Operation(summary = "Update cinema brand by ID", description = "Cập nhật thông tin thương hiệu theo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Brand not found")
+    })
     @PutMapping("/{id}")
     public BaseResponse<CinemaBrandResponse> update(
             @PathVariable String id,
@@ -43,6 +64,10 @@ public class CinemaBrandController {
                 .build();
     }
 
+    @Operation(summary = "Delete cinema brand by ID", description = "Xóa thương hiệu rạp phim theo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deleted successfully"),
+    })
     @DeleteMapping("/{id}")
     public BaseResponse<Void> delete(@PathVariable String id) {
         cinemaBrandService.delete(id);
