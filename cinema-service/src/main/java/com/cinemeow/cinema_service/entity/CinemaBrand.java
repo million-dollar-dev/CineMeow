@@ -25,4 +25,10 @@ public class CinemaBrand {
 
     @Column(name = "logo_url")
     String logoUrl;
+
+    @Column(name = "employee_count")
+    int employeeCount;
+
+    @Column(name = "background_url")
+    String backgroundUrl;
 }

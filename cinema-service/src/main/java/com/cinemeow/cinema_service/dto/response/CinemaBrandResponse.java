@@ -14,4 +14,6 @@ public class CinemaBrandResponse {
     String name;
     String description;
     String logoUrl;
+    int employeeCount;
+    String backgroundUrl;
 }
