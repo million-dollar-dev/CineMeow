@@ -9,14 +9,6 @@ export const genreApi = rootApi.injectEndpoints({
                 url: `${CONTEXT_PATH}/genres`,
             }),
         }),
-
-        introspect: builder.mutation({
-            query: ({ token }) => ({
-                url: `${CONTEXT_PATH}/auth/introspect`,
-                method: "POST",
-                body: { token },
-            }),
-        }),
     }),
 });
 

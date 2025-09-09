@@ -76,28 +76,61 @@ const EMPTY_MOVIE = {
 };
 
 const movieSchema = yup.object().shape({
-    title: yup.string().required("Vui lòng nhập tên phim"),
-    subtitle: yup.string().required("Vui lòng nhập subtitle"),
-    tagline: yup.string().required("Vui lòng nhập tagline"),
-    director: yup.string().required("Vui lòng nhập đạo diễn"),
+    title: yup
+        .string()
+        .required("Vui lòng nhập tên phim"),
+
+    subtitle: yup
+        .string()
+        .required("Vui lòng nhập subtitle"),
+
+    tagline: yup
+        .string()
+        .required("Vui lòng nhập tagline"),
+
+    director: yup
+        .string()
+        .required("Vui lòng nhập đạo diễn"),
+
     duration: yup
         .number()
         .typeError("Thời lượng phải là số")
         .required("Vui lòng nhập thời lượng"),
-    status: yup.string().required("Chọn trạng thái"),
-    originCountry: yup.string().required("Điền quốc gia"),
-    originalLanguage: yup.string().required("Điền ngôn ngữ"),
-    rating: yup.string().required("Chọn phân loại độ tuổi"),
-    releaseDate: yup.string().required("Chọn ngày phát hành"),
-    overview: yup.string().required("Nhập mô tả phim"),
+
+    status: yup
+        .string()
+        .required("Chọn trạng thái"),
+
+    originCountry: yup
+        .string()
+        .required("Điền quốc gia"),
+
+    originalLanguage: yup
+        .string()
+        .required("Điền ngôn ngữ"),
+
+    rating: yup
+        .string()
+        .required("Chọn phân loại độ tuổi"),
+
+    releaseDate: yup
+        .string()
+        .required("Chọn ngày phát hành"),
+
+    overview: yup
+        .string()
+        .required("Nhập mô tả phim"),
+
     genres: yup
         .array()
         .of(yup.number())
         .min(1, "Chọn ít nhất 1 thể loại"),
+
     posterPath: yup
         .string()
         .url("Phải là đường dẫn hợp lệ")
         .required("Vui lòng nhập poster"),
+
     backdropPath: yup
         .string()
         .url("Phải là đường dẫn hợp lệ")
