@@ -105,8 +105,6 @@ export default function MovieManagementPage() {
         },
     ];
 
-
-
     // Map data
     const movies = data?.data?.map((movie) => ({
         id: movie.id,
@@ -173,7 +171,6 @@ export default function MovieManagementPage() {
     };
 
     useEffect(() => {
-        console.log(data?.data.length);
         if (isError) {
             dispatch(openSnackbar({message: error?.error, type: "error"}));
         }

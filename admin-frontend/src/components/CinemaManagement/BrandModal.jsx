@@ -13,17 +13,50 @@ import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {useEffect} from "react";
+import {useDispatch} from "react-redux";
+import useFormServerErrors from "../../hooks/useFormServerErrors.js";
+import {useCreateBrandMutation, useUpdateBrandMutation} from "../../services/brandService.js";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 
 const EMPTY_BRAND = {
-    name: "EMPTY_BRAND",
-    description: "Description",
-    logoUrl: "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170617-637584231772974269.png",
-    employees: 111,
-    bgUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
+    name: "CGV Cinemas",
+    logoUrl: "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
+    description: "CGV là chuỗi rạp chiếu phim lớn nhất Việt Nam, mang đến trải nghiệm điện ảnh hiện đại với nhiều phòng chiếu đặc biệt như IMAX, 4DX.",
+    employeeCount: 2000,
+    backgroundUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
 };
 
 const brandSchema = yup.object().shape({
+    name: yup
+        .string()
+        .required("Tên thương hiệu là bắt buộc")
+        .min(2, "Tên thương hiệu phải có ít nhất 2 ký tự")
+        .max(100, "Tên thương hiệu không được vượt quá 100 ký tự"),
 
+    description: yup
+        .string()
+        .required("Mô tả là bắt buộc")
+        .max(500, "Mô tả không được vượt quá 500 ký tự"),
+
+    logoUrl: yup
+        .string()
+        .url("Logo phải là một URL hợp lệ")
+        .required("Logo là bắt buộc"),
+
+    employeeCount: yup
+        .number()
+        .transform((value, originalValue) =>
+            String(originalValue).trim() === "" ? null : value
+        )
+        .nullable()
+        .required("Số lượng nhân viên là bắt buộc")
+        .min(1, "Số nhân viên phải lớn hơn 0")
+        .integer("Số nhân viên phải là số nguyên"),
+
+    backgroundUrl: yup
+        .string()
+        .url("Background phải là một URL hợp lệ")
+        .required("Background là bắt buộc"),
 });
 
 export default function BrandModal({open, onClose, mode = "add", brandData}) {
@@ -39,6 +72,20 @@ export default function BrandModal({open, onClose, mode = "add", brandData}) {
         defaultValues: EMPTY_BRAND,
     });
 
+    const dispatch = useDispatch();
+    const [
+        createBrand,
+        {isLoading: isCreating, isError: isCreateError, error: createError},
+    ] = useCreateBrandMutation();
+
+    const [
+        updateBrand,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdateBrandMutation();
+
+    useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
+
     useEffect(() => {
         if (brandData) {
             reset({
@@ -50,9 +97,18 @@ export default function BrandModal({open, onClose, mode = "add", brandData}) {
     }, [brandData, open, reset]);
 
     const onSubmit = async (data) => {
-        console.log(data);
-        onClose();
+        const payload = {
+            ...data
+        };
 
+        if (mode === "add") {
+            await createBrand(payload).unwrap();
+            dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+        } else {
+            await updateBrand({id: brandData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
+        }
+        onClose();
     };
 
     return (
@@ -77,9 +133,10 @@ export default function BrandModal({open, onClose, mode = "add", brandData}) {
 
                             <TextField
                                 label="Total Empoloyees"
-                                {...register("employees")}
-                                error={!!errors.employees}
-                                helperText={errors.employees?.message}
+                                type="number"
+                                {...register("employeeCount")}
+                                error={!!errors.employeeCount}
+                                helperText={errors.employeeCount?.message}
                                 fullWidth
                             />
 
@@ -130,7 +187,7 @@ export default function BrandModal({open, onClose, mode = "add", brandData}) {
                                             <img
                                                 src={field.value}
                                                 alt="Logo Preview"
-                                                className="max-w-64 max-h-64 object-contain border rounded-lg"
+                                                className="max-w-40 max-h-40 object-contain border rounded-lg"
                                             />
                                         </div>
 
@@ -140,16 +197,16 @@ export default function BrandModal({open, onClose, mode = "add", brandData}) {
                         />
 
                         <Controller
-                            name="bgUrl"
+                            name="backgroundUrl"
                             control={control}
                             render={({field}) => (
                                 <div className="flex flex-col gap-2">
                                     <TextField
                                         {...field}
-                                        label="bgUrl"
+                                        label="backgroundUrl"
                                         fullWidth
-                                        error={!!errors.bgUrl}
-                                        helperText={errors.bgUrl?.message}
+                                        error={!!errors.backgroundUrl}
+                                        helperText={errors.backgroundUrl?.message}
                                     />
                                     {field.value && (
                                         <div className="rounded-lg overflow-hidden shadow-md">
@@ -174,11 +231,11 @@ export default function BrandModal({open, onClose, mode = "add", brandData}) {
                         type="submit"
                         color="primary"
                         variant="contained"
-                        // disabled={isCreating || isUpdating}
+                        disabled={isCreating || isUpdating}
                         startIcon={
-                            // (isCreating || isUpdating) && (
+                            (isCreating || isUpdating) && (
                                 <CircularProgress size={20} color="inherit"/>
-                            //)
+                            )
                         }
                     >
                         {mode === "add" ? "Lưu" : "Cập nhật"}

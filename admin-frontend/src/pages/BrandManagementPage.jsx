@@ -8,58 +8,17 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import BrandModal from "../components/CinemaManagement/BrandModal.jsx";
+import {useGetAllBrandsQuery} from "../services/brandService.js";
+import {openSnackbar} from "../redux/slices/snackbarSlice.js";
+import {useDispatch} from "react-redux";
 
 export default function BrandManagementPage() {
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 5,
     });
-
-    const brands = [
-        {
-            "id": 1,
-            "name": "CGV Cinemas",
-            "logoUrl": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
-            "description": "CGV là chuỗi rạp chiếu phim lớn nhất Việt Nam, mang đến trải nghiệm điện ảnh hiện đại với nhiều phòng chiếu đặc biệt như IMAX, 4DX.",
-            "employees": 2000,
-            bgUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
-        },
-        {
-            "id": 2,
-            "name": "Galaxy Cinema",
-            "logoUrl": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
-            "description": "Galaxy Cinema nổi bật với giá vé phải chăng và chất lượng dịch vụ tốt, là lựa chọn yêu thích của giới trẻ tại các thành phố lớn.",
-            "employees": 800,
-            bgUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
-        },
-        {
-            "id": 3,
-            "name": "Lotte Cinema",
-            "logoUrl": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
-            "description": "Lotte Cinema là thương hiệu rạp chiếu phim đến từ Hàn Quốc, chú trọng sự thoải mái và không gian thân thiện cho khán giả.",
-            "employees": 1200,
-            bgUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
-        },
-        {
-            "id": 4,
-            "name": "BHD Star Cineplex",
-            "logoUrl": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
-            "description": "BHD Star là chuỗi rạp phát triển nhanh chóng tại Việt Nam, với hệ thống rạp chiếu hiện đại và dịch vụ đa dạng.",
-            "employees": 600,
-            bgUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
-        },
-        {
-            "id": 5,
-            "name": "Cinestar",
-            "logoUrl": "https://homepage.momocdn.net/cinema/momo-upload-api-211123095138-637732578984425272.png",
-            "description": "Cinestar tập trung vào phân khúc giá vé bình dân, đem lại trải nghiệm điện ảnh chất lượng cho sinh viên và giới trẻ.",
-            "employees": 350,
-            bgUrl: "https://media.vneconomy.vn/images/upload/2024/04/02/galaxy.png",
-        }
-    ];
-
 
     const columns = [
         {
@@ -82,8 +41,8 @@ export default function BrandManagementPage() {
                         src={params.value}
                         alt="logo"
                         style={{
-                            width: 100,
-                            height: 100,
+                            width: 80,
+                            height: 80,
                             objectFit: "cover",
                             borderRadius: "8px",
                             borderWidth: "2px",
@@ -95,9 +54,9 @@ export default function BrandManagementPage() {
         },
         { field: "name", headerName: "Name", flex: 1, minWidth: 50 },
         { field: "description", headerName: "Description", width: 350 },
-        { field: "employees", headerName: "Employees", width: 100 },
+        { field: "employeeCount", headerName: "Employees", width: 100 },
         {
-            field: "bgUrl",
+            field: "backgroundUrl",
             headerName: "Background",
             headerClassName: "custom-header",
             width: 200,
@@ -155,11 +114,13 @@ export default function BrandManagementPage() {
             ),
         },
     ];
-
-    const isLoading = false;
+    const dispatch = useDispatch();
     const [openModal, setOpenModal] = React.useState(false);
     const [modalMode, setModalMode] = useState("add");
     const [selectedBrand, setSelectedBrand] = useState(null);
+
+    const {data: brandResponse, isError, error, isLoading} = useGetAllBrandsQuery();
+    const brands = brandResponse?.data ?? [];
 
     const handleAddClick = () => {
         setModalMode("add");
@@ -169,10 +130,16 @@ export default function BrandManagementPage() {
 
     const handleEditClick = (brand) => {
         setModalMode("edit");
-        console.log(brand);
         setSelectedBrand(brand);
         setOpenModal(true);
     };
+
+    useEffect(() => {
+        if (isError) {
+            dispatch(openSnackbar({message: error?.error, type: "error"}));
+        }
+    }, [isError, error, isLoading, brandResponse]);
+
     return (
         <Box className="py-2 min-h-screen">
             <BrandModal open={openModal}
@@ -181,7 +148,7 @@ export default function BrandManagementPage() {
                         brandData={selectedBrand}
             />
 
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center my-4">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Thương Hiệu</h2>
             </div>
 
