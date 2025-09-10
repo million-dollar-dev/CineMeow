@@ -29,7 +29,6 @@ export const movieApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Movies"],
         }),
-
     }),
 });
 

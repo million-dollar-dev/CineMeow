@@ -125,25 +125,35 @@ const Sidebar = () => {
                                             <NavLink
                                                 key={cIdx}
                                                 to={child.path}
-                                                className={({isActive}) =>
-                                                    `block ${
-                                                        isActive ? "text-blue-600" : "text-gray-600"
-                                                    }`
-                                                }
+                                                end
+                                                className="block"
                                             >
-                                                <ListItemButton
-                                                    sx={{pl: expanded ? 6 : 2}}
-                                                    className="rounded-lg !hover:bg-black transition"
-                                                >
-                                                    {expanded && (
-                                                        <ListItemText
-                                                            primary={child.label}
-                                                            primaryTypographyProps={{
-                                                                className: "!text-[1vw] text-black",
-                                                            }}
-                                                        />
-                                                    )}
-                                                </ListItemButton>
+                                                {({ isActive }) => (
+                                                    <ListItemButton
+                                                        sx={{ pl: expanded ? 6 : 2 }}
+                                                        className={`!rounded-lg !transition !relative ${
+                                                            isActive
+                                                                ? "!bg-gray-100 !font-semibold !text-black" // nền xám nhạt + chữ đen đậm
+                                                                : "!hover:bg-gray-100 !text-gray-700"
+                                                        }`}
+                                                    >
+                                                        {/* Border bên phải khi active */}
+                                                        {isActive && (
+                                                            <span className="absolute right-0 top-0 h-full w-1 bg-black rounded-l"></span>
+                                                        )}
+
+                                                        {expanded && (
+                                                            <ListItemText
+                                                                primary={child.label}
+                                                                primaryTypographyProps={{
+                                                                    className: `!text-[1vw] ${
+                                                                        isActive ? "!text-black !font-bold" : "!text-gray-800"
+                                                                    }`,
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </ListItemButton>
+                                                )}
                                             </NavLink>
                                         ))}
                                     </List>
@@ -153,25 +163,39 @@ const Sidebar = () => {
                             <Tooltip title={!expanded ? item.label : ""} placement="right">
                                 <NavLink
                                     to={item.path}
-                                    className={({isActive}) =>
-                                        `block ${isActive ? "text-blue-600" : "!text-black"}`
-                                    }
+                                    end
+                                    className="block"
                                 >
-                                    <ListItemButton className="rounded-lg hover:bg-blue-50 transition">
-                                        {expanded ? (
-                                            <>
-                                                <ListItemIcon className="!text-black">
-                                                    {item.icon}
-                                                </ListItemIcon>
-                                                <ListItemText
-                                                    sx={{color: "black"}}
-                                                    primary={item.label}
-                                                />
-                                            </>
-                                        ) : (
-                                            <CustomIconButton>{item.icon}</CustomIconButton>
-                                        )}
-                                    </ListItemButton>
+                                    {({ isActive }) => (
+                                        <ListItemButton
+                                            className={`rounded-lg transition relative ${
+                                                isActive
+                                                    ? "!bg-gray-100 !text-black !font-semibold"
+                                                    : "!hover:bg-blue-50 !text-black"
+                                            }`}
+                                        >
+                                            {/* Border phải màu đen khi active */}
+                                            {isActive && (
+                                                <span className="absolute right-0 top-0 h-full w-1 bg-black rounded-l"></span>
+                                            )}
+
+                                            {expanded ? (
+                                                <>
+                                                    <ListItemIcon className="!text-black">{item.icon}</ListItemIcon>
+                                                    <ListItemText
+                                                        primary={item.label}
+                                                        primaryTypographyProps={{
+                                                            className: isActive
+                                                                ? "!text-black !font-bold"
+                                                                : "text-black",
+                                                        }}
+                                                    />
+                                                </>
+                                            ) : (
+                                                <CustomIconButton>{item.icon}</CustomIconButton>
+                                            )}
+                                        </ListItemButton>
+                                    )}
                                 </NavLink>
                             </Tooltip>
                         )}
