@@ -9,12 +9,74 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
 import {useState} from "react";
+import CinemaModal from "../components/CinemaManagement/CinemaModal.jsx";
 
 export default function CinemaManagementPage() {
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 5,
     });
+
+    const rooms = [
+        {
+            id: "room-1",
+            name: "Phòng chiếu 1",
+            seatCount: 120,
+            type: "Standard",
+            status: "Active",
+        },
+        {
+            id: "room-2",
+            name: "Phòng chiếu 2",
+            seatCount: 80,
+            type: "VIP",
+            status: "Active",
+        },
+        {
+            id: "room-3",
+            name: "Phòng chiếu 3",
+            seatCount: 200,
+            type: "IMAX",
+            status: "Active",
+        },
+        {
+            id: "room-4",
+            name: "Phòng chiếu 4",
+            seatCount: 100,
+            type: "Standard",
+            status: "Maintenance",
+        },
+        {
+            id: "room-4",
+            name: "Phòng chiếu 4",
+            seatCount: 100,
+            type: "Standard",
+            status: "Maintenance",
+        },
+        {
+            id: "room-4",
+            name: "Phòng chiếu 4",
+            seatCount: 100,
+            type: "Standard",
+            status: "Maintenance",
+        },
+        {
+            id: "room-4",
+            name: "Phòng chiếu 4",
+            seatCount: 100,
+            type: "Standard",
+            status: "Maintenance",
+        },
+        {
+            id: "room-4",
+            name: "Phòng chiếu 4",
+            seatCount: 100,
+            type: "Standard",
+            status: "Maintenance",
+        },
+
+    ];
+
 
     const columns = [
         {
@@ -64,8 +126,9 @@ export default function CinemaManagementPage() {
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
+                        onClick={() => handleEditClick()}
                     >
-                        Tùy chỉnh
+                        Chi tiết
                     </Button>
                     <span style={{ color: "black" }}>|</span>
                     <Button
@@ -148,12 +211,31 @@ export default function CinemaManagementPage() {
         }
     ]
 
-
+    const [openModal, setOpenModal] = React.useState(false);
+    const [modalMode, setModalMode] = useState("add");
+    const [selectedCinema, setSelectedCinema] = useState(null);
     const isLoading = false;
+
+    const handleAddClick = () => {
+        setModalMode("add");
+        setSelectedCinema(null);
+        setOpenModal(true);
+    };
+
+    const handleEditClick = () => {
+        setModalMode("edit");
+        setSelectedCinema(cinemas[0]);
+        setOpenModal(true);
+    };
 
     return (
         <Box className="py-2 min-h-screen">
-
+            <CinemaModal open={openModal}
+                        onClose={() => setOpenModal(false)}
+                        mode={modalMode}
+                        brandData={selectedCinema}
+                        rooms={rooms}
+            />
             <div className="flex justify-between items-center my-4">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Rạp Phim</h2>
             </div>
@@ -168,7 +250,7 @@ export default function CinemaManagementPage() {
                         columns={columns}
                         disableRowSelectionOnClick
                         rowHeight={160}
-                        slots={{ toolbar: () => <CustomToolbar /> }}
+                        slots={{ toolbar: () => <CustomToolbar handleAddClick={handleAddClick}/> }}
                         showToolbar
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}
