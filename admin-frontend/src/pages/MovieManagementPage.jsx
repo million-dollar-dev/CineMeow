@@ -31,7 +31,6 @@ export default function MovieManagementPage() {
     const [modalMode, setModalMode] = useState("add");
     const [selectedMovie, setSelectedMovie] = useState(null);
 
-    // Query
     const { data, isError, error, isLoading } = useGetAllMoviesQuery();
 
     const columns = [
@@ -87,7 +86,7 @@ export default function MovieManagementPage() {
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
-                        onClick={() => handleEditClick(params.row.fullData)} // truyền nguyên row đầy đủ
+                        onClick={() => handleEditClick(params.row.fullData)}
                     >
                         Tùy chỉnh
                     </Button>

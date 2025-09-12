@@ -78,7 +78,6 @@ export default function CinemaManagementPage() {
 
     ];
 
-
     const columns = [
         {
             field: "brand",
@@ -121,13 +120,13 @@ export default function CinemaManagementPage() {
             sortable: false,
             filterable: false,
             disableColumnMenu: true,
-            renderCell: () => (
+            renderCell: (params) => (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Button
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
-                        onClick={() => handleEditClick()}
+                        onClick={() => handleEditClick(params.row)}
                     >
                         Chi tiết
                     </Button>
@@ -156,7 +155,7 @@ export default function CinemaManagementPage() {
                 "name": "CGV",
                 "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
             },
-            "imageUrl": "https://www.cgv.vn/media/wysiwyg/Aeon_TanPhu.jpg",
+            "imageUrl": "https://static.nutscdn.com/vimg/1920-0/e16420e2ebceda97f1ba2c6bdba7fe1f.webp",
             totalRoom: 1,
         },
         {
@@ -169,7 +168,7 @@ export default function CinemaManagementPage() {
                 "name": "CGV",
                 "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
             },
-            "imageUrl": "https://www.cgv.vn/media/wysiwyg/Vincom_DongKhoi.jpg",
+            "imageUrl": "https://static.nutscdn.com/vimg/1920-0/e16420e2ebceda97f1ba2c6bdba7fe1f.webp",
             totalRoom: 1,
         },
         {
@@ -182,7 +181,7 @@ export default function CinemaManagementPage() {
                 "name": "Galaxy Cinema",
                 "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
             },
-            "imageUrl": "https://galaxycine.vn/media/2022/7/12/nguyen-du-1_1657604007340.jpg",
+            "imageUrl": "https://static.nutscdn.com/vimg/1920-0/e16420e2ebceda97f1ba2c6bdba7fe1f.webp",
             totalRoom: 1,
         },
         {
@@ -195,7 +194,7 @@ export default function CinemaManagementPage() {
                 "name": "Lotte Cinema",
                 "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
             },
-            "imageUrl": "https://lottecinemavn.com/media/2023/3/12/lotte-govap_1678603920530.jpg",
+            "imageUrl": "https://static.nutscdn.com/vimg/1920-0/e16420e2ebceda97f1ba2c6bdba7fe1f.webp",
             totalRoom: 1,
         },
         {
@@ -208,7 +207,7 @@ export default function CinemaManagementPage() {
                 "name": "Beta Cinemas",
                 "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
             },
-            "imageUrl": "https://betacinemas.vn/media/2022/11/24/thanh-xuan_1669260178246.jpg",
+            "imageUrl": "https://static.nutscdn.com/vimg/1920-0/e16420e2ebceda97f1ba2c6bdba7fe1f.webp",
             totalRoom: 1,
         }
     ]
@@ -225,9 +224,10 @@ export default function CinemaManagementPage() {
         setOpenModal(true);
     };
 
-    const handleEditClick = () => {
+    const handleEditClick = (cinema) => {
         setModalMode("edit");
-        setSelectedCinema(cinemas[0]);
+        console.log(cinema);
+        setSelectedCinema(cinema);
         setOpenModal(true);
     };
 
@@ -240,7 +240,7 @@ export default function CinemaManagementPage() {
             <CinemaModal open={openModal}
                         onClose={() => setOpenModal(false)}
                         mode={modalMode}
-                        brandData={selectedCinema}
+                        cinemaData={selectedCinema}
                         rooms={rooms}
             />
 

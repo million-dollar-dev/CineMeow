@@ -4,12 +4,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {Alert, Snackbar} from "@mui/material";
 import {closeSnackbar} from "../redux/slices/snackbarSlice.js";
 import {useGetAllGenresQuery} from "../services/genreService.js";
+import {useGetAllBrandsQuery} from "../services/brandService.js";
 const RootLayout = () => {
     const {open, type, message} = useSelector((state) => {
         return state.snackbar;
     });
 
     const { data: genres } = useGetAllGenresQuery();
+    const {data: brands} = useGetAllBrandsQuery();
 
     const dispatch = useDispatch();
     return (
