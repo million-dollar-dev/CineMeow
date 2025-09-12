@@ -10,6 +10,7 @@ import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
 import {useState} from "react";
 import CinemaModal from "../components/CinemaManagement/CinemaModal.jsx";
+import RoomModal from "../components/CinemaManagement/RoomModal.jsx";
 
 export default function CinemaManagementPage() {
     const [paginationModel, setPaginationModel] = useState({
@@ -135,6 +136,7 @@ export default function CinemaManagementPage() {
                         startIcon={<DeleteOutlineOutlinedIcon />}
                         variant="text"
                         sx={{ color: "red" }}
+                        onClick={() => handleDeleteClick()}
                     >
                         Xóa
                     </Button>
@@ -212,6 +214,7 @@ export default function CinemaManagementPage() {
     ]
 
     const [openModal, setOpenModal] = React.useState(false);
+    const [openRoomModal, setOpenRoomModal] = React.useState(false);
     const [modalMode, setModalMode] = useState("add");
     const [selectedCinema, setSelectedCinema] = useState(null);
     const isLoading = false;
@@ -228,6 +231,10 @@ export default function CinemaManagementPage() {
         setOpenModal(true);
     };
 
+    const handleDeleteClick = () => {
+        setOpenRoomModal(true);
+    }
+
     return (
         <Box className="py-2 min-h-screen">
             <CinemaModal open={openModal}
@@ -235,6 +242,11 @@ export default function CinemaManagementPage() {
                         mode={modalMode}
                         brandData={selectedCinema}
                         rooms={rooms}
+            />
+
+            <RoomModal
+                open={openRoomModal}
+                onClose={() => setOpenRoomModal(false)}
             />
             <div className="flex justify-between items-center my-4">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Rạp Phim</h2>
