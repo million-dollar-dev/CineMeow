@@ -8,9 +8,13 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CinemaModal from "../components/CinemaManagement/CinemaModal.jsx";
 import RoomModal from "../components/CinemaManagement/RoomModal.jsx";
+import {useGetAllBrandsQuery} from "../services/brandService.js";
+import {useGetAllCinemasQuery} from "../services/cinemaService.js";
+import {openSnackbar} from "../redux/slices/snackbarSlice.js";
+import {useDispatch} from "react-redux";
 
 export default function CinemaManagementPage() {
     const [paginationModel, setPaginationModel] = useState({
@@ -78,7 +82,6 @@ export default function CinemaManagementPage() {
 
     ];
 
-
     const columns = [
         {
             field: "brand",
@@ -121,13 +124,13 @@ export default function CinemaManagementPage() {
             sortable: false,
             filterable: false,
             disableColumnMenu: true,
-            renderCell: () => (
+            renderCell: (params) => (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Button
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
-                        onClick={() => handleEditClick()}
+                        onClick={() => handleEditClick(params.row)}
                     >
                         Chi tiết
                     </Button>
@@ -145,79 +148,15 @@ export default function CinemaManagementPage() {
         },
     ];
 
-    const cinemas = [
-        {
-            "id": "cinema-1",
-            "name": "CGV Aeon Mall Tân Phú",
-            "address": "30 Bờ Bao Tân Thắng, Tân Phú",
-            "city": "Hồ Chí Minh",
-            "brand": {
-                "id": "brand-1",
-                "name": "CGV",
-                "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
-            },
-            "imageUrl": "https://www.cgv.vn/media/wysiwyg/Aeon_TanPhu.jpg",
-            totalRoom: 1,
-        },
-        {
-            "id": "cinema-2",
-            "name": "CGV Vincom Đồng Khởi",
-            "address": "72 Lê Thánh Tôn, Quận 1",
-            "city": "Hồ Chí Minh",
-            "brand": {
-                "id": "brand-1",
-                "name": "CGV",
-                "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
-            },
-            "imageUrl": "https://www.cgv.vn/media/wysiwyg/Vincom_DongKhoi.jpg",
-            totalRoom: 1,
-        },
-        {
-            "id": "cinema-3",
-            "name": "Galaxy Nguyễn Du",
-            "address": "116 Nguyễn Du, Quận 1",
-            "city": "Hồ Chí Minh",
-            "brand": {
-                "id": "brand-2",
-                "name": "Galaxy Cinema",
-                "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
-            },
-            "imageUrl": "https://galaxycine.vn/media/2022/7/12/nguyen-du-1_1657604007340.jpg",
-            totalRoom: 1,
-        },
-        {
-            "id": "cinema-4",
-            "name": "Lotte Cinema Gò Vấp",
-            "address": "242 Nguyễn Văn Lượng, Gò Vấp",
-            "city": "Hồ Chí Minh",
-            "brand": {
-                "id": "brand-3",
-                "name": "Lotte Cinema",
-                "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
-            },
-            "imageUrl": "https://lottecinemavn.com/media/2023/3/12/lotte-govap_1678603920530.jpg",
-            totalRoom: 1,
-        },
-        {
-            "id": "cinema-5",
-            "name": "Beta Cinemas Thanh Xuân",
-            "address": "Tầng 3, TTTM Mỹ Đình Plaza 2, Hà Nội",
-            "city": "Hà Nội",
-            "brand": {
-                "id": "brand-4",
-                "name": "Beta Cinemas",
-                "logoUrl": "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png"
-            },
-            "imageUrl": "https://betacinemas.vn/media/2022/11/24/thanh-xuan_1669260178246.jpg",
-            totalRoom: 1,
-        }
-    ]
-
+    const dispatch = useDispatch();
     const [openModal, setOpenModal] = React.useState(false);
     const [openRoomModal, setOpenRoomModal] = React.useState(false);
     const [modalMode, setModalMode] = useState("add");
     const [selectedCinema, setSelectedCinema] = useState(null);
-    const isLoading = false;
+
+    const {data: cinemaResponse, isError, error, isLoading} = useGetAllCinemasQuery();
+    const cinemas = cinemaResponse?.data ?? [];
+
 
     const handleAddClick = () => {
         setModalMode("add");
@@ -225,9 +164,10 @@ export default function CinemaManagementPage() {
         setOpenModal(true);
     };
 
-    const handleEditClick = () => {
+    const handleEditClick = (cinema) => {
         setModalMode("edit");
-        setSelectedCinema(cinemas[0]);
+        console.log(cinema);
+        setSelectedCinema(cinema);
         setOpenModal(true);
     };
 
@@ -235,12 +175,18 @@ export default function CinemaManagementPage() {
         setOpenRoomModal(true);
     }
 
+    useEffect(() => {
+        if (isError) {
+            dispatch(openSnackbar({message: error?.error, type: "error"}));
+        }
+    }, [isError, error, isLoading, cinemaResponse]);
+
     return (
         <Box className="py-2 min-h-screen">
             <CinemaModal open={openModal}
                         onClose={() => setOpenModal(false)}
                         mode={modalMode}
-                        brandData={selectedCinema}
+                        cinemaData={selectedCinema}
                         rooms={rooms}
             />
 

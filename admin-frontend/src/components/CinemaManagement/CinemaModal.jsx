@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Modal,
     Box,
@@ -9,15 +9,21 @@ import {
     Card,
     CardContent,
     Typography,
-    Grid, CardActions, CardHeader, Chip, MenuItem, CircularProgress, DialogActions,
+    Grid, CardActions, CardHeader, Chip, MenuItem, CircularProgress, DialogActions, DialogTitle, DialogContent, Dialog,
 } from "@mui/material";
 import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import {useDispatch} from "react-redux";
+import useFormServerErrors from "../../hooks/useFormServerErrors.js";
+import {useCreateCinemaMutation, useUpdateCinemaMutation} from "../../services/cinemaService.js";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
+import {useGetAllBrandsQuery} from "../../services/brandService.js";
 
 const EMPTY_CINEMA = {
     name: "",
     address: "",
+    brandId: "",
     city: "",
     imageUrl: ""
 }
@@ -48,63 +54,101 @@ const cinemaSchema = yup.object().shape({
         .required("Ảnh rạp là bắt buộc"),
 });
 
-const brands = [
-    { id: "brand-1", name: "CGV", logoUrl: "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png" },
-    { id: "brand-2", name: "Galaxy", logoUrl: "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png" },
-    { id: "brand-3", name: "Lotte", logoUrl: "https://homepage.momocdn.net/cinema/momo-amazone-s3-api-240829164527-638605467276820522.png" },
-];
-
-export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = "add" }) {
+export default function CinemaModal({ open, onClose, cinemaData, rooms = [], mode = "add" }) {
     const [tab, setTab] = useState(0);
-    const [formData, setFormData] = useState(cinema || {});
 
     const {
         control,
         handleSubmit,
-        reset,
         setError,
         formState: {errors},
+        reset,
         watch
     } = useForm({
         resolver: yupResolver(cinemaSchema),
-        defaultValues: EMPTY_CINEMA,
+        defaultValues: {
+            ...EMPTY_CINEMA,
+            brandId: cinemaData?.brand?.id || ""
+        },
     });
 
     const imageValue = watch("imageUrl");
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const dispatch = useDispatch();
 
-    const handleSave = () => {
-        console.log("Save data:", formData);
-        // gọi API create hoặc update cinema ở đây
+    const {data: brandResponse, isError, error, isLoading} = useGetAllBrandsQuery();
+    const brands = brandResponse?.data ?? [];
+
+    const [
+        createCinema,
+        {isLoading: isCreating, isError: isCreateError, error: createError},
+    ] = useCreateCinemaMutation();
+
+    const [
+        updateCinema,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdateCinemaMutation();
+
+    useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
+
+    useEffect(() => {
+        if (cinemaData) {
+            reset({
+                ...EMPTY_CINEMA,
+                ...cinemaData,
+                brandId: cinemaData.brand.id,
+            });
+        } else {
+            reset(EMPTY_CINEMA);
+        }
+    }, [cinemaData, open, reset]);
+
+    useEffect(() => {
+        if (isError) {
+            dispatch(openSnackbar({message: error?.error, type: "error"}));
+        }
+    }, [isError, error, isLoading, brandResponse]);
+
+    const onSubmit = async (data) => {
+        const payload = {
+            ...data
+        };
+
+        if (mode === "add") {
+            await createCinema(payload).unwrap();
+            dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+            console.log(payload)
+        } else {
+            console.log(payload)
+            await updateCinema({id: cinemaData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
+        }
         onClose();
     };
 
+
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box
-                sx={{
-                    bgcolor: "white",
-                    width: 980,
-                    margin: "30px auto",
-                    borderRadius: 2,
-                    p: 3,
-                    boxShadow: 24,
-                }}
-            >
-                {/* Tabs chỉ xuất hiện nếu mode === "edit" */}
-                {mode === "edit" && (
+        <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+            {/* Title */}
+            {mode === "edit" ? (
+                <DialogTitle>
                     <Tabs value={tab} onChange={(e, val) => setTab(val)}>
                         <Tab label="Thông tin rạp" />
                         <Tab label="Phòng chiếu" />
                     </Tabs>
-                )}
+                </DialogTitle>
+            ) : (
+                <DialogTitle className="text-xl font-semibold text-gray-700">
+                    Thêm mới rạp
+                </DialogTitle>
+            )}
 
+            {/* Nội dung */}
+            <DialogContent dividers>
                 {/* Tab Thông tin */}
                 {(mode === "add" || tab === 0) && (
-                    <form onSubmit={handleSubmit(handleSave)}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid grid-cols-2 gap-6 mt-4">
                             {/* Tên rạp */}
                             <Controller
@@ -151,21 +195,6 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                                 )}
                             />
 
-                            {/* Ảnh đại diện */}
-                            <Controller
-                                name="imageUrl"
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        label="Ảnh đại diện"
-                                        fullWidth
-                                        error={!!errors.imageUrl}
-                                        helperText={errors.imageUrl?.message}
-                                    />
-                                )}
-                            />
-
                             {/* Brand select */}
                             <Controller
                                 name="brandId"
@@ -207,28 +236,32 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                                                 </Box>
                                             </MenuItem>
                                         ))}
+
+                                        {
+                                            brands.length === 0 && (
+                                                <MenuItem>
+                                                    <p>Không có dữ liệu</p>
+                                                </MenuItem>
+                                            )
+                                        }
                                     </TextField>
                                 )}
                             />
 
-                            {/* Backdrop Path */}
+                            {/* Image */}
                             <Controller
                                 name="imageUrl"
                                 control={control}
                                 render={({ field }) => (
-                                    <div className="flex flex-col gap-2">
-                                        <TextField
-                                            {...field}
-                                            label="Image"
-                                            fullWidth
-                                            error={!!errors.imageUrl}
-                                            helperText={errors.imageUrl?.message}
-                                        />
-                                    </div>
+                                    <TextField
+                                        {...field}
+                                        label="Image"
+                                        fullWidth
+                                        error={!!errors.imageUrl}
+                                        helperText={errors.imageUrl?.message}
+                                    />
                                 )}
                             />
-
-
                         </div>
 
                         {imageValue && (
@@ -241,7 +274,6 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                             </div>
                         )}
 
-                        {/* Buttons */}
                         <DialogActions>
                             <Button onClick={onClose} color="error" variant="outlined">
                                 Đóng
@@ -250,10 +282,11 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                                 type="submit"
                                 color="primary"
                                 variant="contained"
+                                disabled={isCreating || isUpdating}
                                 startIcon={
-
+                                    (isCreating || isUpdating) && (
                                         <CircularProgress size={20} color="inherit"/>
-
+                                    )
                                 }
                             >
                                 {mode === "add" ? "Lưu" : "Cập nhật"}
@@ -262,11 +295,11 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                     </form>
                 )}
 
-                {/* Tab Phòng chiếu (chỉ hiện khi edit) */}
+                {/* Tab Phòng chiếu */}
                 {mode === "edit" && tab === 1 && (
                     <>
                         <Box sx={{ maxHeight: 460, overflowY: "auto", pr: 1 }}>
-                            <Grid container spacing={2} sx={{ p: 2 }} alignItems="stretch">
+                            <Grid container spacing={2} justifyContent="center">
                                 {rooms.map((room, idx) => (
                                     <Grid item xs={12} sm={6} md={4} key={idx}>
                                         <Card
@@ -334,8 +367,8 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                                     </Grid>
                                 ))}
                             </Grid>
-
                         </Box>
+
                         <DialogActions>
                             <Button onClick={onClose} color="error" variant="outlined">
                                 Đóng
@@ -344,13 +377,20 @@ export default function CinemaModal({ open, onClose, cinema, rooms = [], mode = 
                                 type="submit"
                                 color="primary"
                                 variant="contained"
+                                disabled={isCreating || isUpdating}
+                                startIcon={
+                                    (isCreating || isUpdating) && (
+                                        <CircularProgress size={20} color="inherit"/>
+                                    )
+                                }
                             >
-                                Thêm mới
+                                {mode === "add" ? "Lưu" : "Cập nhật"}
                             </Button>
                         </DialogActions>
                     </>
                 )}
-            </Box>
-        </Modal>
+            </DialogContent>
+        </Dialog>
     );
+
 }

@@ -28,18 +28,6 @@ import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
-var GENRES = [
-    "Action",
-    "Comedy",
-    "Drama",
-    "Fantasy",
-    "Horror",
-    "Romance",
-    "Sci-Fi",
-    "Thriller",
-];
-
-
 const EMPTY_MOVIE = {
     // backdropPath: "",
     // duration: "",
