@@ -23,7 +23,7 @@ export const brandApi = rootApi.injectEndpoints({
 
         updateCinema: builder.mutation({
             query: ({ id, ...payload }) => ({
-                url: `${CONTEXT_PATH}/brands/${id}`,
+                url: `${CONTEXT_PATH}/cinemas/detail/${id}`,
                 method: "PUT",
                 body: payload,
             }),

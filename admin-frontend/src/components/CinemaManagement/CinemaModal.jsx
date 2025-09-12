@@ -120,6 +120,7 @@ export default function CinemaModal({ open, onClose, cinemaData, rooms = [], mod
             dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
             console.log(payload)
         } else {
+            console.log(payload)
             await updateCinema({id: cinemaData.id, ...payload}).unwrap();
             dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
         }
@@ -281,8 +282,11 @@ export default function CinemaModal({ open, onClose, cinemaData, rooms = [], mod
                                 type="submit"
                                 color="primary"
                                 variant="contained"
+                                disabled={isCreating || isUpdating}
                                 startIcon={
-                                    <CircularProgress size={20} color="inherit" />
+                                    (isCreating || isUpdating) && (
+                                        <CircularProgress size={20} color="inherit"/>
+                                    )
                                 }
                             >
                                 {mode === "add" ? "Lưu" : "Cập nhật"}
