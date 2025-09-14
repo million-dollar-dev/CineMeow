@@ -14,6 +14,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import SeatMapTab from "./SeatMapTab.jsx";
 
 const schema = yup.object().shape({
     name: yup.string().required("Tên phòng là bắt buộc"),
@@ -179,11 +180,7 @@ export default function RoomModal({ open, onClose, mode = "add" }) {
 
                     {/* Tab 2 - Sơ đồ ghế */}
                     {tab === 1 && (
-                        <Box sx={{ p: 2 }}>
-                            <Typography variant="body1">
-                                🪑 Sơ đồ ghế sẽ được hiển thị ở đây (grid seats).
-                            </Typography>
-                        </Box>
+                        <SeatMapTab />
                     )}
 
                     {/* Tab 3 - Suất chiếu */}
