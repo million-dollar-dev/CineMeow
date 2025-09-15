@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -31,4 +34,11 @@ public class Cinema {
 
     @Column(name = "image_url")
     String imageUrl;
+
+    @OneToMany(
+            mappedBy = "cinema",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<Room> rooms = new ArrayList<>();
 }

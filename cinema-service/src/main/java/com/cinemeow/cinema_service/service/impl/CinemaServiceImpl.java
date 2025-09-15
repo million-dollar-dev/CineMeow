@@ -2,6 +2,7 @@ package com.cinemeow.cinema_service.service.impl;
 
 import com.cinemeow.cinema_service.dto.request.CinemaRequest;
 import com.cinemeow.cinema_service.dto.response.CinemaDetailResponse;
+import com.cinemeow.cinema_service.entity.Cinema;
 import com.cinemeow.cinema_service.exception.AppException;
 import com.cinemeow.cinema_service.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.CinemaMapper;
@@ -60,5 +61,11 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     public void delete(String id) {
         cinemaRepository.deleteById(id);
+    }
+
+    @Override
+    public Cinema getCinemaById(String id) {
+        return cinemaRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_EXISTED));
     }
 }

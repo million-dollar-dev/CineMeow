@@ -3,7 +3,9 @@ package com.cinemeow.cinema_service.controller;
 import com.cinemeow.cinema_service.dto.request.CinemaRequest;
 import com.cinemeow.cinema_service.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.CinemaDetailResponse;
+import com.cinemeow.cinema_service.dto.response.RoomResponse;
 import com.cinemeow.cinema_service.service.CinemaService;
+import com.cinemeow.cinema_service.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +27,7 @@ import java.util.List;
 @Tag(name = "Cinema Management", description = "APIs for managing cinemas")
 public class CinemaController {
     CinemaService cinemaService;
+    RoomService roomService;
 
     @Operation(
             summary = "Create a new cinema",
@@ -109,6 +112,21 @@ public class CinemaController {
         cinemaService.delete(id);
         return BaseResponse.<Void>builder()
                 .message("Delete successfully!")
+                .build();
+    }
+
+    @Operation(
+            summary = "Get all rooms in a cinema",
+            description = "Retrieves a list of all rooms belonging to a specific cinema by its ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Rooms retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = RoomResponse.class))),
+            }
+    )
+    @GetMapping("/{cinemaId}/rooms")
+    public BaseResponse<List<RoomResponse>> getRooms(@PathVariable String cinemaId) {
+        return BaseResponse.<List<RoomResponse>>builder()
+                .data(roomService.getRoomsByCinemaId(cinemaId))
                 .build();
     }
 }
