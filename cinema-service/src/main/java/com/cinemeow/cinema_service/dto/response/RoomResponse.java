@@ -1,6 +1,7 @@
 package com.cinemeow.cinema_service.dto.response;
 
-import com.cinemeow.cinema_service.entity.CinemaBrand;
+import com.cinemeow.cinema_service.entity.Cinema;
+import com.cinemeow.cinema_service.enums.RoomType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,11 +11,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CinemaDetailResponse {
+public class RoomResponse {
     String id;
     String name;
-    String address;
-    String city;
-    CinemaBrand brand;
-    String imageUrl;
+    RoomType type;
+    String cinemaId;
+    String cinemaName;
 }

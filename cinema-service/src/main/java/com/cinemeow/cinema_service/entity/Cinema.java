@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -32,7 +35,10 @@ public class Cinema {
     @Column(name = "image_url")
     String imageUrl;
 
-    @Column(name = "total_room")
-    @Builder.Default
-    int totalRoom = 0;
+    @OneToMany(
+            mappedBy = "cinema",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<Room> rooms = new ArrayList<>();
 }

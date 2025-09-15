@@ -25,6 +25,4 @@ public class CinemaRequest {
 
     @NotBlank(message = "Brand's image must be not blank")
     String imageUrl;
-
-    int totalRoom;
 }
