@@ -31,4 +31,8 @@ public class Cinema {
 
     @Column(name = "image_url")
     String imageUrl;
+
+    @Column(name = "total_room")
+    @Builder.Default
+    int totalRoom = 0;
 }

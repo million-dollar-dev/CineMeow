@@ -17,4 +17,5 @@ public class CinemaDetailResponse {
     String city;
     CinemaBrand brand;
     String imageUrl;
+    int totalRoom;
 }
