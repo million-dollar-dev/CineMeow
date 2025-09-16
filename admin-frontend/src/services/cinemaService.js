@@ -29,11 +29,18 @@ export const brandApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Cinemas"],
         }),
+
+        getRooms: builder.query({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/cinemas/${id}/rooms`,
+            })
+        }),
     }),
 });
 
 export const {
     useGetAllCinemasQuery,
     useCreateCinemaMutation,
-    useUpdateCinemaMutation
+    useUpdateCinemaMutation,
+    useGetRoomsQuery,
 } = brandApi;
