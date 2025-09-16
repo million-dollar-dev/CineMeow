@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Modal,
     Box,
@@ -8,47 +8,76 @@ import {
     Typography,
     TextField,
     Button,
-    MenuItem,
+    MenuItem, CircularProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import SeatMapTab from "./SeatMapTab.jsx";
+import { ROOM_TYPES, ROOM_STATUSES } from "../../constants/roomOptions.js";
+import {useDispatch} from "react-redux";
+import {useCreateBrandMutation, useUpdateBrandMutation} from "../../services/brandService.js";
+import useFormServerErrors from "../../hooks/useFormServerErrors.js";
+import {useCreateRoomMutation} from "../../services/roomService.js";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 
 const schema = yup.object().shape({
     name: yup.string().required("Tên phòng là bắt buộc"),
     type: yup.string().required("Loại phòng là bắt buộc"),
     status: yup.string().required("Trạng thái là bắt buộc"),
-    seatCount: yup
-        .number()
-        .typeError("Sức chứa phải là số")
-        .positive("Sức chứa phải > 0")
-        .integer("Sức chứa phải là số nguyên")
-        .required("Sức chứa là bắt buộc"),
-    description: yup.string().nullable(),
 });
 
-export default function RoomModal({ open, onClose, mode = "add" }) {
+const EMPTY_ROOM = {
+    name: "",
+    type: "",
+    status: "INACTIVE",
+}
+
+export default function RoomModal({ open, onClose, mode = "add", roomData, cinemaId }) {
     const [tab, setTab] = useState(0);
 
     const {
         control,
         handleSubmit,
         formState: { errors },
+        reset,
+        setError,
     } = useForm({
         resolver: yupResolver(schema),
-        defaultValues: {
-            name: "",
-            type: "",
-            status: "Active",
-            seatCount: "",
-            description: "",
-        },
+        defaultValues: EMPTY_ROOM,
     });
 
-    const onSubmit = (data) => {
-        console.log("Room data:", data);
+    const dispatch = useDispatch();
+    const [
+        createRoom,
+        {isLoading: isCreating, isError: isCreateError, error: createError},
+    ] = useCreateRoomMutation();
+
+    useFormServerErrors(isCreateError, createError, setError);
+
+    useEffect(() => {
+        if (roomData) {
+            reset({
+                ...roomData,
+                cinemaId: cinemaId,
+            });
+        } else {
+            reset(EMPTY_ROOM);
+        }
+    }, [roomData, open, reset]);
+
+    const onSubmit = async (data) => {
+        const payload = {
+            ...data,
+            cinemaId: cinemaId,
+        };
+
+        if (mode === "add") {
+            await createRoom(payload).unwrap();
+            dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+            // console.log(payload);
+        }
         onClose();
     };
 
@@ -108,7 +137,6 @@ export default function RoomModal({ open, onClose, mode = "add" }) {
                                     )}
                                 />
 
-                                {/* Loại phòng */}
                                 <Controller
                                     name="type"
                                     control={control}
@@ -121,10 +149,11 @@ export default function RoomModal({ open, onClose, mode = "add" }) {
                                             helperText={errors.type?.message}
                                             fullWidth
                                         >
-                                            <MenuItem value="2D">2D</MenuItem>
-                                            <MenuItem value="3D">3D</MenuItem>
-                                            <MenuItem value="IMAX">IMAX</MenuItem>
-                                            <MenuItem value="VIP">VIP</MenuItem>
+                                            {ROOM_TYPES.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
                                         </TextField>
                                     )}
                                 />
@@ -142,28 +171,15 @@ export default function RoomModal({ open, onClose, mode = "add" }) {
                                             helperText={errors.status?.message}
                                             fullWidth
                                         >
-                                            <MenuItem value="Active">Active</MenuItem>
-                                            <MenuItem value="Maintenance">Maintenance</MenuItem>
-                                            <MenuItem value="Inactive">Inactive</MenuItem>
+                                            {ROOM_STATUSES.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
                                         </TextField>
                                     )}
                                 />
 
-                                {/* Sức chứa */}
-                                <Controller
-                                    name="seatCount"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            label="Sức chứa"
-                                            type="number"
-                                            error={!!errors.seatCount}
-                                            helperText={errors.seatCount?.message}
-                                            fullWidth
-                                        />
-                                    )}
-                                />
                             </div>
 
                             {/* Buttons */}
@@ -171,7 +187,16 @@ export default function RoomModal({ open, onClose, mode = "add" }) {
                                 <Button onClick={onClose} sx={{ mr: 2 }}>
                                     Hủy
                                 </Button>
-                                <Button type="submit" variant="contained">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    disabled={isCreating}
+                                    startIcon={
+                                        (isCreating) && (
+                                            <CircularProgress size={20} color="inherit"/>
+                                        )
+                                    }
+                                >
                                     {mode === "add" ? "Thêm" : "Lưu"}
                                 </Button>
                             </Box>
