@@ -17,10 +17,9 @@ import * as yup from "yup";
 import SeatMapTab from "./SeatMapTab.jsx";
 import { ROOM_TYPES, ROOM_STATUSES } from "../../constants/roomOptions.js";
 import {useDispatch} from "react-redux";
-import {useCreateBrandMutation, useUpdateBrandMutation} from "../../services/brandService.js";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
-import {useCreateRoomMutation} from "../../services/roomService.js";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
+import {useCreateRoomMutation} from "../../services/cinemaService.js";
 
 const schema = yup.object().shape({
     name: yup.string().required("Tên phòng là bắt buộc"),
@@ -76,7 +75,7 @@ export default function RoomModal({ open, onClose, mode = "add", roomData, cinem
         if (mode === "add") {
             await createRoom(payload).unwrap();
             dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
-            // console.log(payload);
+            console.log(payload);
         }
         onClose();
     };

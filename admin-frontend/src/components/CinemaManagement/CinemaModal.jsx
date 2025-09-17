@@ -16,7 +16,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {useDispatch} from "react-redux";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
-import {useCreateCinemaMutation, useUpdateCinemaMutation} from "../../services/cinemaService.js";
+import {useCreateCinemaMutation, useGetRoomsQuery, useUpdateCinemaMutation} from "../../services/cinemaService.js";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 import {useGetAllBrandsQuery} from "../../services/brandService.js";
 import ListRoomTab from "./ListRoomTab.jsx";
@@ -55,7 +55,7 @@ const cinemaSchema = yup.object().shape({
         .required("Ảnh rạp là bắt buộc"),
 });
 
-export default function CinemaModal({ open, onClose, cinemaData, rooms = [], mode = "add" }) {
+export default function CinemaModal({ open, onClose, cinemaData, mode = "add" }) {
     const [tab, setTab] = useState(0);
 
     const {
@@ -79,6 +79,8 @@ export default function CinemaModal({ open, onClose, cinemaData, rooms = [], mod
 
     const {data: brandResponse, isError, error, isLoading} = useGetAllBrandsQuery();
     const brands = brandResponse?.data ?? [];
+    const {data: roomResponse = [], error: errorRooms, isError: isErrorRooms} = useGetRoomsQuery(cinemaData?.id);
+    const rooms = roomResponse?.data ?? [];
 
     const [
         createCinema,
@@ -104,6 +106,12 @@ export default function CinemaModal({ open, onClose, cinemaData, rooms = [], mod
             reset(EMPTY_CINEMA);
         }
     }, [cinemaData, open, reset]);
+
+    useEffect(() => {
+        if (isErrorRooms) {
+            dispatch(openSnackbar({message: errorRooms?.error, type: "error"}));
+        }
+    }, [errorRooms, roomResponse]);
 
     useEffect(() => {
         if (isError) {

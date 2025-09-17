@@ -11,7 +11,6 @@ import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
 import {useEffect, useState} from "react";
 import CinemaModal from "../components/CinemaManagement/CinemaModal.jsx";
 import RoomModal from "../components/CinemaManagement/RoomModal.jsx";
-import {useGetAllBrandsQuery} from "../services/brandService.js";
 import {useGetAllCinemasQuery} from "../services/cinemaService.js";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 import {useDispatch} from "react-redux";
@@ -21,66 +20,6 @@ export default function CinemaManagementPage() {
         page: 0,
         pageSize: 5,
     });
-
-    const rooms = [
-        {
-            id: "room-1",
-            name: "Phòng chiếu 1",
-            seatCount: 120,
-            type: "Standard",
-            status: "Active",
-        },
-        {
-            id: "room-2",
-            name: "Phòng chiếu 2",
-            seatCount: 80,
-            type: "VIP",
-            status: "Active",
-        },
-        {
-            id: "room-3",
-            name: "Phòng chiếu 3",
-            seatCount: 200,
-            type: "IMAX",
-            status: "Active",
-        },
-        {
-            id: "room-4",
-            name: "Phòng chiếu 4",
-            seatCount: 100,
-            type: "Standard",
-            status: "Maintenance",
-        },
-        {
-            id: "room-4",
-            name: "Phòng chiếu 4",
-            seatCount: 100,
-            type: "Standard",
-            status: "Maintenance",
-        },
-        {
-            id: "room-4",
-            name: "Phòng chiếu 4",
-            seatCount: 100,
-            type: "Standard",
-            status: "Maintenance",
-        },
-        {
-            id: "room-4",
-            name: "Phòng chiếu 4",
-            seatCount: 100,
-            type: "Standard",
-            status: "Maintenance",
-        },
-        {
-            id: "room-4",
-            name: "Phòng chiếu 4",
-            seatCount: 100,
-            type: "Standard",
-            status: "Maintenance",
-        },
-
-    ];
 
     const columns = [
         {
@@ -187,7 +126,6 @@ export default function CinemaManagementPage() {
                         onClose={() => setOpenModal(false)}
                         mode={modalMode}
                         cinemaData={selectedCinema}
-                        rooms={rooms}
             />
 
             <RoomModal
