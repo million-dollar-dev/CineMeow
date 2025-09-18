@@ -19,7 +19,8 @@ import { ROOM_TYPES, ROOM_STATUSES } from "../../constants/roomOptions.js";
 import {useDispatch} from "react-redux";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
-import {useCreateRoomMutation} from "../../services/cinemaService.js";
+import {useCreateRoomMutation, useUpdateRoomMutation} from "../../services/cinemaService.js";
+import {useUpdateBrandMutation} from "../../services/brandService.js";
 
 const schema = yup.object().shape({
     name: yup.string().required("Tên phòng là bắt buộc"),
@@ -52,8 +53,14 @@ export default function RoomModal({ open, onClose, mode = "add", roomData, cinem
         createRoom,
         {isLoading: isCreating, isError: isCreateError, error: createError},
     ] = useCreateRoomMutation();
+    const [
+        updateRoom,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdateRoomMutation();
+
 
     useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
 
     useEffect(() => {
         if (roomData) {
@@ -76,6 +83,9 @@ export default function RoomModal({ open, onClose, mode = "add", roomData, cinem
             await createRoom(payload).unwrap();
             dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
             console.log(payload);
+        } else {
+            await updateRoom({id: roomData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
         }
         onClose();
     };
@@ -189,9 +199,9 @@ export default function RoomModal({ open, onClose, mode = "add", roomData, cinem
                                 <Button
                                     type="submit"
                                     variant="contained"
-                                    disabled={isCreating}
+                                    disabled={isCreating || isUpdating}
                                     startIcon={
-                                        (isCreating) && (
+                                        (isCreating || isUpdating) && (
                                             <CircularProgress size={20} color="inherit"/>
                                         )
                                     }
