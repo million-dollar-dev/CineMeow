@@ -13,9 +13,13 @@ import lombok.experimental.FieldDefaults;
 public class CinemaBrandRequest {
     @NotBlank(message = "Brand's name must be not blank")
     String name;
+
     String description;
+
     @NotBlank(message = "Brand's logo must be not blank")
     String logoUrl;
+
     int employeeCount;
+
     String backgroundUrl;
 }
