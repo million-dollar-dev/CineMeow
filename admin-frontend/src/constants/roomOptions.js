@@ -10,3 +10,9 @@ export const ROOM_STATUSES = [
     { value: "INACTIVE", label: "Inactive" },
     { value: "MAINTENANCE", label: "Maintenance" },
 ];
+
+export const getRoomTypeLabel = (value) =>
+    ROOM_TYPES.find((item) => item.value === value)?.label || value;
+
+export const getRoomStatusLabel = (value) =>
+    ROOM_STATUSES.find((item) => item.value === value)?.label || value;

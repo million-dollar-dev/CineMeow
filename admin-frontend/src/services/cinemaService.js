@@ -3,7 +3,7 @@ import { rootApi } from "./rootApi";
 const CONTEXT_PATH = 'cinema';
 
 export const brandApi = rootApi.injectEndpoints({
-    tagTypes: ["Cinemas"],
+    tagTypes: ["Cinemas", "Rooms"],
     endpoints: (builder) => ({
         getAllCinemas: builder.query({
             query: () => ({
@@ -33,7 +33,30 @@ export const brandApi = rootApi.injectEndpoints({
         getRooms: builder.query({
             query: (id) => ({
                 url: `${CONTEXT_PATH}/cinemas/${id}/rooms`,
-            })
+            }),
+            providesTags: (result, error, id) => [{ type: "Rooms", id }],
+        }),
+
+        createRoom: builder.mutation({
+            query: (payload) => ({
+                url: `${CONTEXT_PATH}/rooms`,
+                method: "POST",
+                body: payload,
+            }),
+            invalidatesTags: (result, error, { cinemaId }) => [
+                { type: "Rooms", id: cinemaId },
+            ],
+        }),
+
+        updateRoom: builder.mutation({
+            query: ({ id, ...payload }) => ({
+                url: `${CONTEXT_PATH}/rooms/${id}`,
+                method: "PUT",
+                body: payload,
+            }),
+            invalidatesTags: (result, error, { cinemaId }) => [
+                { type: "Rooms", id: cinemaId },
+            ],
         }),
     }),
 });
@@ -43,4 +66,6 @@ export const {
     useCreateCinemaMutation,
     useUpdateCinemaMutation,
     useGetRoomsQuery,
+    useCreateRoomMutation,
+    useUpdateRoomMutation
 } = brandApi;
