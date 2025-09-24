@@ -13,7 +13,7 @@ public interface RoomService {
     RoomResponse getById(String id);
     void delete(String id);
     List<RoomResponse> getRoomsByCinemaId(String cinemaId);
-    SeatMapResponse createSeatMap(SeatMapRequest request);
+    SeatMapResponse createSeatMap(String roomId, SeatMapRequest request);
     SeatMapResponse getSeatMap(String id);
     SeatMapResponse updateSeatMap(String roomId, SeatMapRequest request);
 }

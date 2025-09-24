@@ -8,6 +8,7 @@ import com.cinemeow.cinema_service.dto.response.SeatMapResponse;
 import com.cinemeow.cinema_service.dto.response.SeatResponse;
 import com.cinemeow.cinema_service.entity.Room;
 import com.cinemeow.cinema_service.entity.Seat;
+import com.cinemeow.cinema_service.enums.SeatStatus;
 import com.cinemeow.cinema_service.exception.AppException;
 import com.cinemeow.cinema_service.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.RoomMapper;
@@ -16,6 +17,7 @@ import com.cinemeow.cinema_service.repository.RoomRepository;
 import com.cinemeow.cinema_service.repository.SeatRepository;
 import com.cinemeow.cinema_service.service.CinemaService;
 import com.cinemeow.cinema_service.service.RoomService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,8 +44,6 @@ public class RoomServiceImpl implements RoomService {
     SeatMapper seatMapper;
 
     CinemaService cinemaService;
-
-
 
     @Override
     public RoomResponse create(RoomRequest request) {
@@ -89,12 +91,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public SeatMapResponse createSeatMap(SeatMapRequest request) {
-        var room =  roomRepository.findById(request.getRoomId())
+    public SeatMapResponse createSeatMap(String roomId, SeatMapRequest request) {
+        var room =  roomRepository.findById(roomId)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
 
         for (SeatRequest seatRequest : request.getSeats()) {
             var aSeat = seatMapper.toSeat(seatRequest);
+            aSeat.setRoom(room);
             room.getSeats().add(aSeat);
         }
 
@@ -106,13 +109,52 @@ public class RoomServiceImpl implements RoomService {
     public SeatMapResponse getSeatMap(String id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
-
         return toSeatMapResponse(room);
     }
 
+    @Transactional
     @Override
     public SeatMapResponse updateSeatMap(String roomId, SeatMapRequest request) {
-        return null;
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
+
+        Map<Long, Seat> existingSeats = seatRepository.findAllByRoomId(roomId)
+                .stream()
+                .collect(Collectors.toMap(Seat::getId, s -> s));
+
+        // Update or create new seats
+        for (SeatRequest s : request.getSeats()) {
+            if (s.getSeatId() != null && existingSeats.containsKey(s.getSeatId())) {
+                Seat seat = existingSeats.get(s.getSeatId());
+                seatMapper.update(seat, s);
+                log.info("Seat with id " + s.getSeatId() + " has been updated");
+            } else {
+                Seat newSeat = new Seat();
+                newSeat.setRowIndex(s.getRowIndex());
+                newSeat.setColIndex(s.getColIndex());
+                newSeat.setType(s.getType());
+                newSeat.setStatus(s.getStatus());
+                newSeat.setRoom(room);
+                room.getSeats().add(newSeat);
+                log.info("add new Seat");
+            }
+        }
+
+        // Soft delete seats not included
+        Set<Long> requestSeatIds = request.getSeats().stream()
+                .map(SeatRequest::getSeatId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        for (Seat seat : existingSeats.values()) {
+            if (!requestSeatIds.contains(seat.getId())) {
+                seat.setStatus(SeatStatus.DELETED);
+            }
+        }
+
+        roomRepository.save(room);
+
+        return toSeatMapResponse(room);
     }
 
     private SeatMapResponse toSeatMapResponse(Room room) {

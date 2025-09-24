@@ -14,9 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SeatMapRequest {
-    @NotNull(message = "Room id must be not null")
-    String roomId;
-
     @NotNull(message = "Row must be not null")
     Integer rows;
 
