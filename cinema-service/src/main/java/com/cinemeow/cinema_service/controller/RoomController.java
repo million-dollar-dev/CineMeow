@@ -1,8 +1,10 @@
 package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.request.RoomRequest;
+import com.cinemeow.cinema_service.dto.request.SeatMapRequest;
 import com.cinemeow.cinema_service.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.RoomResponse;
+import com.cinemeow.cinema_service.dto.response.SeatMapResponse;
 import com.cinemeow.cinema_service.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -86,6 +88,60 @@ public class RoomController {
         roomService.delete(id);
         return BaseResponse.<Void>builder()
                 .message("Delete successfully!")
+                .build();
+    }
+
+    @Operation(
+            summary = "Create seat map for a room",
+            description = "Creates a new seat map for a given room.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Seat map created successfully",
+                            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Room not found")
+            }
+    )
+    @PostMapping("/{id}/seats")
+    public BaseResponse<SeatMapResponse> createSeatMap(
+            @PathVariable String id,
+            @Valid @RequestBody SeatMapRequest request
+    ) {
+        return BaseResponse.<SeatMapResponse>builder()
+                .data(roomService.createSeatMap(id, request))
+                .build();
+    }
+
+    @Operation(
+            summary = "Update seat map of a room",
+            description = "Updates the seat map for a given room.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Seat map created successfully",
+                            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Room not found")
+            }
+    )
+    @PutMapping("/{id}/seats")
+    public BaseResponse<SeatMapResponse> updateSeatMap(
+            @PathVariable String id,
+            @Valid @RequestBody SeatMapRequest request
+    ) {
+        return BaseResponse.<SeatMapResponse>builder()
+                .data(roomService.updateSeatMap(id, request))
+                .build();
+    }
+
+    @Operation(
+            summary = "Get seat map of a room",
+            description = "Retrieves the current seat map for a given room.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Seat map created successfully",
+                            content = @Content(schema = @Schema(implementation = BaseResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Room not found")
+            }
+    )
+    @GetMapping("/{id}/seats")
+    public BaseResponse<SeatMapResponse> getSeatMap(@PathVariable String id) {
+        return BaseResponse.<SeatMapResponse>builder()
+                .data(roomService.getSeatMap(id))
                 .build();
     }
 }
