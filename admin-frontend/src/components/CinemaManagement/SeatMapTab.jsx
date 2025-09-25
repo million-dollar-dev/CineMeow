@@ -1,23 +1,56 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Button, Typography, Box, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import Legend from "../SeatMapTab/Legend.jsx";
 import SeatToolPanel from "../SeatMapTab/SeatToolPanel.jsx";
 import SeatGrid from "../SeatMapTab/SeatGrid.jsx";
 import SeatStats from "../SeatMapTab/SeatStats.jsx";
+import {useGetSeatMapQuery} from "../../services/cinemaService.js";
 
 
-export default function SeatMapTab() {
+export default function SeatMapTab({roomId}) {
     const [showEditor, setShowEditor] = useState(false);
     const [rows, setRows] = useState(6);
     const [cols, setCols] = useState(8);
     const [seatType, setSeatType] = useState("normal");
 
+    const {data: seatResponse = [], error, isError, isLoading} = useGetSeatMapQuery(roomId);
+
     const [seats, setSeats] = useState(
         Array.from({ length: 6 }, () =>
-            Array.from({ length: 8 }, () => "normal")
+            Array.from({ length: 8 }, () => ({
+                seatId: null,
+                type: "NORMAL",
+                status: "ACTIVE",
+            }))
         )
     );
+
+    useEffect(() => {
+        if (seatResponse?.data?.seats) {
+            const seatList = seatResponse.data.seats;
+
+            const maxRow = Math.max(...seatList.map(s => s.rowIndex)) + 1;
+            const maxCol = Math.max(...seatList.map(s => s.colIndex)) + 1;
+
+            // Tạo ma trận seats dạng object { seatId, type }
+            const newSeats = Array.from({ length: maxRow }, (_, r) =>
+                Array.from({ length: maxCol }, (_, c) => {
+                    const seat = seatList.find(s => s.rowIndex === r && s.colIndex === c);
+                    return seat
+                        ? { seatId: seat.id, type: seat.type, status: seat.status }
+                        : { seatId: null, type: "EMPTY", status: "ACTIVE" };
+                })
+            );
+
+            setSeats(newSeats);
+            setRows(maxRow);
+            setCols(maxCol);
+
+            console.log('seat List', seats)
+        }
+    }, [seatResponse]);
+
 
     const handleSeatClick = (r, c) => {
         if (!showEditor) return;
@@ -26,6 +59,10 @@ export default function SeatMapTab() {
         );
         setSeats(newSeats);
     };
+
+    const handleSaveSeatMap = () => {
+        console.log('request: ', seats)
+    }
 
     const countSeats = (type) => seats.flat().filter((s) => s === type).length;
 
@@ -44,6 +81,7 @@ export default function SeatMapTab() {
                             setSeats={setSeats}
                             setSeatType={setSeatType}
                             seatType={seatType}
+                            handleSaveClick={handleSaveSeatMap()}
                         />
                     )}
                     <SeatGrid seats={seats} handleSeatClick={handleSeatClick} />

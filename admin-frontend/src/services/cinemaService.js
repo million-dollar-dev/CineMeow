@@ -58,6 +58,12 @@ export const brandApi = rootApi.injectEndpoints({
                 { type: "Rooms", id: cinemaId },
             ],
         }),
+
+        getSeatMap: builder.query({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/rooms/${id}/seats`,
+            }),
+        }),
     }),
 });
 
@@ -67,5 +73,6 @@ export const {
     useUpdateCinemaMutation,
     useGetRoomsQuery,
     useCreateRoomMutation,
-    useUpdateRoomMutation
+    useUpdateRoomMutation,
+    useGetSeatMapQuery,
 } = brandApi;

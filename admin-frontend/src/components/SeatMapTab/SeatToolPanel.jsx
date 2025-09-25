@@ -9,7 +9,6 @@ import {
     Tooltip,
     Paper,
 } from "@mui/material";
-import StraightenIcon from "@mui/icons-material/Straighten";
 import EventSeatIcon from "@mui/icons-material/EventSeat";
 import WeekendIcon from "@mui/icons-material/Weekend";
 import StarIcon from "@mui/icons-material/Star";
@@ -18,15 +17,19 @@ import BuildIcon from "@mui/icons-material/Build";
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
-export default function SeatToolPanel({
-                                          rows,
-                                          cols,
-                                          setRows,
-                                          setCols,
-                                          setSeats,
-                                          setSeatType,
-                                          seatType,
-                                      }) {
+export default function SeatToolPanel(
+    {
+        rows,
+        cols,
+        setRows,
+        setCols,
+        setSeats,
+        setSeatType,
+        seatType,
+        handleSaveClick,
+    })
+{
+
     return (
         <Paper
             elevation={3}
@@ -43,7 +46,9 @@ export default function SeatToolPanel({
         >
             <Tooltip title="Lưu" placement="right">
                 <IconButton>
-                    <SaveOutlinedIcon />
+                    <SaveOutlinedIcon
+                        onClick={() => handleSaveClick()}
+                    />
                 </IconButton>
             </Tooltip>
 
@@ -70,11 +75,26 @@ export default function SeatToolPanel({
                     size="small"
                     variant="outlined"
                     onClick={() =>
-                        setSeats(
-                            Array.from({ length: rows }, () =>
-                                Array.from({ length: cols }, () => "normal")
-                            )
-                        )
+                        setSeats((prevSeats) => {
+                            const newSeats = [];
+
+                            for (let r = 0; r < rows; r++) {
+                                const row = [];
+
+                                for (let c = 0; c < cols; c++) {
+                                    // Nếu ghế cũ còn tồn tại
+                                    if (prevSeats[r]?.[c]) {
+                                        row.push(prevSeats[r][c]);
+                                    } else {
+                                        row.push({ seatId: null, type: "NORMAL" });
+                                    }
+                                }
+
+                                newSeats.push(row);
+                            }
+
+                            return newSeats;
+                        })
                     }
                     sx={{ mt: 1 }}
                 >
