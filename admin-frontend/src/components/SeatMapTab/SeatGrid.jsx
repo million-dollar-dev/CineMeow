@@ -2,21 +2,17 @@ import React from "react";
 import {Typography} from "@mui/material";
 
 export default function SeatGrid({ seats, handleSeatClick }) {
-    const rows = seats.length;
     const cols = seats[0]?.length || 0;
 
     const getRowLabel = (index) =>
         String.fromCharCode("A".charCodeAt(0) + index);
 
-    // Hàm trả về màu theo type
     const getSeatClass = (seat) => {
         switch (seat.type) {
             case "NORMAL":
                 return "bg-gray-300";
             case "COUPLE":
                 return "bg-pink-400";
-            case "VIP":
-                return "bg-yellow-400";
             case "EMPTY":
                 return "bg-transparent border border-gray-300";
             default:

@@ -47,7 +47,7 @@ export default function SeatToolPanel(
             <Tooltip title="Lưu" placement="right">
                 <IconButton>
                     <SaveOutlinedIcon
-                        onClick={() => handleSaveClick()}
+                        onClick={handleSaveClick}
                     />
                 </IconButton>
             </Tooltip>
@@ -108,7 +108,7 @@ export default function SeatToolPanel(
             <Tooltip title="Ghế thường" placement="right">
                 <IconButton
                     color={seatType === "normal" ? "primary" : "default"}
-                    onClick={() => setSeatType("normal")}
+                    onClick={() => setSeatType("NORMAL")}
                 >
                     <EventSeatIcon />
                 </IconButton>
@@ -117,36 +117,18 @@ export default function SeatToolPanel(
             <Tooltip title="Ghế couple" placement="right">
                 <IconButton
                     color={seatType === "couple" ? "primary" : "default"}
-                    onClick={() => setSeatType("couple")}
+                    onClick={() => setSeatType("COUPLE")}
                 >
                     <WeekendIcon />
-                </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Ghế VIP" placement="right">
-                <IconButton
-                    color={seatType === "vip" ? "primary" : "default"}
-                    onClick={() => setSeatType("vip")}
-                >
-                    <StarIcon />
                 </IconButton>
             </Tooltip>
 
             <Tooltip title="Chỗ trống" placement="right">
                 <IconButton
                     color={seatType === "empty" ? "primary" : "default"}
-                    onClick={() => setSeatType("empty")}
+                    onClick={() => setSeatType("EMPTY")}
                 >
                     <BlockIcon />
-                </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Ghế bảo trì" placement="right">
-                <IconButton
-                    color={seatType === "maintenance" ? "primary" : "default"}
-                    onClick={() => setSeatType("maintenance")}
-                >
-                    <BuildIcon />
                 </IconButton>
             </Tooltip>
         </Paper>

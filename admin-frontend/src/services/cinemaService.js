@@ -64,6 +64,14 @@ export const brandApi = rootApi.injectEndpoints({
                 url: `${CONTEXT_PATH}/rooms/${id}/seats`,
             }),
         }),
+
+        updateSeatMap: builder.mutation({
+            query: ({ id, ...payload }) => ({
+                url: `${CONTEXT_PATH}/rooms/${id}/seats`,
+                method: "PUT",
+                body: payload,
+            }),
+        }),
     }),
 });
 
@@ -75,4 +83,5 @@ export const {
     useCreateRoomMutation,
     useUpdateRoomMutation,
     useGetSeatMapQuery,
+    useUpdateSeatMapMutation,
 } = brandApi;

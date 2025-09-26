@@ -5,17 +5,24 @@ import Legend from "../SeatMapTab/Legend.jsx";
 import SeatToolPanel from "../SeatMapTab/SeatToolPanel.jsx";
 import SeatGrid from "../SeatMapTab/SeatGrid.jsx";
 import SeatStats from "../SeatMapTab/SeatStats.jsx";
-import {useGetSeatMapQuery} from "../../services/cinemaService.js";
+import {useGetSeatMapQuery, useUpdateSeatMapMutation} from "../../services/cinemaService.js";
+import {useDispatch} from "react-redux";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 
 
 export default function SeatMapTab({roomId}) {
     const [showEditor, setShowEditor] = useState(false);
     const [rows, setRows] = useState(6);
     const [cols, setCols] = useState(8);
-    const [seatType, setSeatType] = useState("normal");
+    const [seatType, setSeatType] = useState("NORMAL");
+
+    const dispatch = useDispatch();
 
     const {data: seatResponse = [], error, isError, isLoading} = useGetSeatMapQuery(roomId);
-
+    const [
+        updateSeatMap,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdateSeatMapMutation();
     const [seats, setSeats] = useState(
         Array.from({ length: 6 }, () =>
             Array.from({ length: 8 }, () => ({
@@ -25,6 +32,33 @@ export default function SeatMapTab({roomId}) {
             }))
         )
     );
+
+    const buildSeatMapRequest = (seatMatrix) => {
+        const rows = seatMatrix.length;
+        const columns = seatMatrix[0]?.length || 0;
+
+        const seats = [];
+
+        seatMatrix.forEach((row, rowIndex) => {
+            row.forEach((seat, colIndex) => {
+                if (seat) {
+                    seats.push({
+                        seatId: seat.seatId ?? null,
+                        rowIndex,
+                        colIndex,
+                        type: seat.type,
+                        status: seat.status,
+                    });
+                }
+            });
+        });
+
+        return {
+            rows,
+            columns,
+            seats,
+        };
+    }
 
     useEffect(() => {
         if (seatResponse?.data?.seats) {
@@ -54,17 +88,37 @@ export default function SeatMapTab({roomId}) {
 
     const handleSeatClick = (r, c) => {
         if (!showEditor) return;
+
         const newSeats = seats.map((row, i) =>
-            row.map((seat, j) => (i === r && j === c ? seatType : seat))
+            row.map((seat, j) =>
+                i === r && j === c
+                    ? {
+                        ...seat,
+                        type: seatType,
+                        status: 'ACTIVE'
+                    }
+                    : seat
+            )
         );
+
         setSeats(newSeats);
     };
 
-    const handleSaveSeatMap = () => {
-        console.log('request: ', seats)
-    }
+    const handleSaveClick = async () => {
+        try {
+            const payload = buildSeatMapRequest(seats);
+            console.log("save request: ", payload);
 
-    const countSeats = (type) => seats.flat().filter((s) => s === type).length;
+            await updateSeatMap({id: roomId, ...payload}).unwrap();
+
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
+        } catch (err) {
+            console.error("Update seat map failed", err);
+            dispatch(openSnackbar({message: error, type: "error"}));
+        }
+    };
+
+    const countSeats = (type) => seats.flat().filter((s) => s.type === type).length;
 
     return (
         <div className="grid grid-cols-3 gap-6 p-6 bg-gray-100 min-h-[80vh]">
@@ -81,7 +135,7 @@ export default function SeatMapTab({roomId}) {
                             setSeats={setSeats}
                             setSeatType={setSeatType}
                             seatType={seatType}
-                            handleSaveClick={handleSaveSeatMap()}
+                            handleSaveClick={handleSaveClick}
                         />
                     )}
                     <SeatGrid seats={seats} handleSeatClick={handleSeatClick} />
