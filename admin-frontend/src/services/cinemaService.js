@@ -58,6 +58,22 @@ export const brandApi = rootApi.injectEndpoints({
                 { type: "Rooms", id: cinemaId },
             ],
         }),
+
+        getSeatMap: builder.query({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/rooms/${id}/seats`,
+            }),
+            providesTags: (result, error, id) => [{ type: "SeatMap", id }],
+        }),
+
+        updateSeatMap: builder.mutation({
+            query: ({ id, ...payload }) => ({
+                url: `${CONTEXT_PATH}/rooms/${id}/seats`,
+                method: "PUT",
+                body: payload,
+            }),
+            invalidatesTags: (result, error, { id }) => [{ type: "SeatMap", id }],
+        }),
     }),
 });
 
@@ -67,5 +83,7 @@ export const {
     useUpdateCinemaMutation,
     useGetRoomsQuery,
     useCreateRoomMutation,
-    useUpdateRoomMutation
+    useUpdateRoomMutation,
+    useGetSeatMapQuery,
+    useUpdateSeatMapMutation,
 } = brandApi;

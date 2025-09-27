@@ -7,10 +7,9 @@ import BuildIcon from "@mui/icons-material/Build";
 import ChairIcon from "@mui/icons-material/Chair";
 
 export default function SeatStats({ seats, countSeats }) {
-    const totalSeats = seats.flat().filter((s) => s !== "empty").length;
-    const normal = countSeats("normal");
-    const couple = countSeats("couple");
-    const maintenance = countSeats("maintenance");
+    const totalSeats = seats.flat().filter((s) => s.type !== "EMPTY").length;
+    const normal = countSeats("NORMAL");
+    const couple = countSeats("COUPLE");
 
     const stats = [
         {
@@ -24,12 +23,6 @@ export default function SeatStats({ seats, countSeats }) {
             value: couple,
             color: "#ec4899",
             icon: <WeekendIcon />,
-        },
-        {
-            label: "Bảo trì",
-            value: maintenance,
-            color: "#ef4444",
-            icon: <BuildIcon />,
         },
     ];
 

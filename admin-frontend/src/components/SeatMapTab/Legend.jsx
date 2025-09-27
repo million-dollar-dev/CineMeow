@@ -10,13 +10,7 @@ export default function Legend() {
                 <div className="w-4 h-4 bg-pink-400 rounded" /> Ghế couple
             </div>
             <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-yellow-400 rounded" /> Ghế VIP
-            </div>
-            <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-transparent border border-gray-400" /> Chỗ trống
-            </div>
-            <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-red-500 rounded" /> Bảo trì
+                <div className="w-4 h-4 bg-white border border-gray-400 rounded" /> Chỗ trống
             </div>
         </div>
     );

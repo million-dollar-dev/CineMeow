@@ -214,7 +214,7 @@ export default function RoomModal({ open, onClose, mode = "add", roomData, cinem
 
                     {/* Tab 2 - Sơ đồ ghế */}
                     {tab === 1 && (
-                        <SeatMapTab />
+                        <SeatMapTab roomId={roomData.id} />
                     )}
 
                     {/* Tab 3 - Suất chiếu */}
