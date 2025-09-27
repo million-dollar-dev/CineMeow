@@ -63,6 +63,7 @@ export const brandApi = rootApi.injectEndpoints({
             query: (id) => ({
                 url: `${CONTEXT_PATH}/rooms/${id}/seats`,
             }),
+            providesTags: (result, error, id) => [{ type: "SeatMap", id }],
         }),
 
         updateSeatMap: builder.mutation({
@@ -71,6 +72,7 @@ export const brandApi = rootApi.injectEndpoints({
                 method: "PUT",
                 body: payload,
             }),
+            invalidatesTags: (result, error, { id }) => [{ type: "SeatMap", id }],
         }),
     }),
 });

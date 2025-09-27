@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Button, Typography, Box, Divider } from "@mui/material";
+import {Button, Typography, Box, Divider, CircularProgress} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import Legend from "../SeatMapTab/Legend.jsx";
 import SeatToolPanel from "../SeatMapTab/SeatToolPanel.jsx";
@@ -120,6 +120,14 @@ export default function SeatMapTab({roomId}) {
 
     const countSeats = (type) => seats.flat().filter((s) => s.type === type).length;
 
+    if (isLoading) {
+        return (
+            <Box className="flex justify-center items-center h-full">
+                <CircularProgress />
+            </Box>
+        );
+    }
+
     return (
         <div className="grid grid-cols-3 gap-6 p-6 bg-gray-100 min-h-[80vh]">
             {/* LEFT */}
@@ -139,6 +147,11 @@ export default function SeatMapTab({roomId}) {
                         />
                     )}
                     <SeatGrid seats={seats} handleSeatClick={handleSeatClick} />
+                    {isUpdating && (
+                        <Box className="absolute inset-0 flex justify-center items-center bg-white/50">
+                            <CircularProgress />
+                        </Box>
+                    )}
                 </Box>
             </div>
 

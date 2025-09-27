@@ -10,7 +10,6 @@ export default function SeatStats({ seats, countSeats }) {
     const totalSeats = seats.flat().filter((s) => s.type !== "EMPTY").length;
     const normal = countSeats("NORMAL");
     const couple = countSeats("COUPLE");
-    const maintenance = countSeats("maintenance");
 
     const stats = [
         {
@@ -24,12 +23,6 @@ export default function SeatStats({ seats, countSeats }) {
             value: couple,
             color: "#ec4899",
             icon: <WeekendIcon />,
-        },
-        {
-            label: "Bảo trì",
-            value: maintenance,
-            color: "#ef4444",
-            icon: <BuildIcon />,
         },
     ];
 
