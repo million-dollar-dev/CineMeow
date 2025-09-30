@@ -12,11 +12,10 @@ import {PersistGate} from "redux-persist/integration/react";
 import {persistor} from "./redux/store.js";
 import ProtectedLayout from "./pages/ProtectedLayout.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
-import MovieManagement from "./pages/MovieManagementPage.jsx";
 import MovieManagementPage from "./pages/MovieManagementPage.jsx";
 import BrandManagementPage from "./pages/BrandManagementPage.jsx";
 import CinemaManagementPage from "./pages/CinemaManagementPage.jsx";
-import RoomPage from "./pages/RoomPage.jsx";
+import ShowtimePage from "./pages/ShowtimePage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -46,8 +45,8 @@ const router = createBrowserRouter([
                         element: <CinemaManagementPage/>
                     },
                     {
-                        path: "/rooms",
-                        element: <RoomPage/>
+                        path: "/showtimes",
+                        element: <ShowtimePage/>
                     }
                 ]
             },

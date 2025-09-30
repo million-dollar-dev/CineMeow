@@ -12,6 +12,7 @@ import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumb
 import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
 const menuItems = [
     {icon: <DashboardOutlinedIcon/>, label: "Dashboard", path: "/dashboard"},
@@ -26,9 +27,9 @@ const menuItems = [
         children: [
             {label: "Thương hiệu", path: "/brands"},
             {label: "Rạp", path: "/cinemas"},
-            {label: "Phòng vé", path: "/rooms"},
         ]
     },
+    {icon: <CalendarMonthOutlinedIcon/>, label: "Xuất chiếu", path: "/showtimes"},
     {icon: <ConfirmationNumberOutlinedIcon/>, label: "Tickets", path: "/reports"},
     {icon: <LoyaltyOutlinedIcon/>, label: "Promotions", path: "/promotions"},
     {icon: <LibraryBooksOutlinedIcon/>, label: "Reviews", path: "/reviews"},
