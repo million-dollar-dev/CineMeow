@@ -11,12 +11,17 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    TextField, Typography,
+    TextField,
+    Typography,
 } from "@mui/material";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
-import {useGetAllCinemasQuery} from "../../services/cinemaService.js";
+import {useGetAllCinemasQuery, useGetRoomsQuery} from "../../services/cinemaService.js";
+import {useDispatch} from "react-redux";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
+import * as yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
 
 // Dữ liệu mẫu
 const movies = [
@@ -28,35 +33,81 @@ const movies = [
     {
         id: "m2",
         title: "Inception",
-        posterUrl: "https://m.media-amazon.com/images/I/91G6klI-N1L._AC_SL1500_.jpg",
+        posterUrl: "https://static.nutscdn.com/vimg/100-0/3c42915d9af0eb6a87bd236d90336ae8.jpg",
     },
 ];
 
-const rooms = [
-    { id: "r1", name: "Phòng 1 - 2D", cinemaId: "c1" },
-    { id: "r2", name: "Phòng 2 - IMAX", cinemaId: "c1" },
-    { id: "r3", name: "Phòng 3 - 3D", cinemaId: "c2" },
-];
+const EMPTY_SHOWTIME = {
+    status: '',
+    cinemaId: '',
+    roomId: '',
+    movieId: '',
+};
 
+const showtimeSchema = yup.object().shape({
+    movieId: yup
+        .string()
+        .required("Vui lòng chọn phim"),
+    cinemaId: yup
+        .string()
+        .required("Vui lòng chọn rạp phim"),
+    roomId: yup
+        .string()
+        .required("Vui lòng chọn phòng chiếu"),
+    startTime: yup
+        .date()
+        .typeError("Vui lòng chọn thời gian hợp lệ")
+        .min(new Date(), "Thời gian chiếu phải lớn hơn hiện tại")
+        .required("Vui lòng chọn thời gian chiếu"),
+    status: yup
+        .string()
+        .oneOf(["COMING_SOON", "NOW_SHOWING", "ENDED"], "Trạng thái không hợp lệ")
+        .required("Vui lòng chọn trạng thái"),
+});
 
 export default function ShowtimeModal({open, onClose, mode = "add", showtimeData}) {
     const {
         control,
         handleSubmit,
-        watch,
         reset,
-        setError,
+        setValue,
         formState: {errors},
     } = useForm({
-
+        resolver: yupResolver(showtimeSchema),
+        defaultValues: EMPTY_SHOWTIME
     });
 
-    const {data: cinemaResponse,
-        isError: cinemaIsErring,
-        error: cinemaError,
-        isLoading: cinemaisLoading} = useGetAllCinemasQuery();
-    const cinemas = cinemaResponse?.data ?? [];
+    const dispatch = useDispatch();
+    const [selectedCinemaId, setSelectedCinemaId] = useState(null);
+    const {
+        data: cinemaResponse = [],
+        isLoading: isLoadingCinemas,
+        isError: isErrorCinemas,
+        isSuccess: isSuccessCinemas,
+        error: errorCinemas,
+    } = useGetAllCinemasQuery();
+    const cinemas = cinemaResponse?.data || [];
 
+    const {
+        data: roomResponse = [],
+        isLoading: isLoadingRooms,
+        isError: isErrorRooms,
+        isSuccess: isSuccessRooms,
+        error: errorRooms,
+    } = useGetRoomsQuery(selectedCinemaId, { skip: !selectedCinemaId });
+    const rooms = roomResponse?.data || [];
+
+    useEffect(() => {
+        if (isErrorCinemas) {
+            dispatch(openSnackbar({ message: errorCinemas?.data?.message || "Không thể tải rạp!", type: "error" }));
+        }
+    }, [isSuccessCinemas, isErrorCinemas, errorCinemas, dispatch]);
+
+    useEffect(() => {
+        if (isErrorRooms) {
+            dispatch(openSnackbar({ message: errorRooms?.data?.message || "Không thể tải phòng!", type: "error" }));
+        }
+    }, [isSuccessRooms, isErrorRooms, errorRooms, dispatch]);
 
     useEffect(() => {
         if (showtimeData) {
@@ -64,10 +115,11 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                 ...showtimeData,
             });
         } else {
-            // reset(EMPTY_MOVIE);
+            reset(EMPTY_SHOWTIME);
         }
     }, [showtimeData, open, reset]);
 
+    console.log('cinam', cinemas)
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -91,11 +143,11 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                             control={control}
                             render={({ field }) => (
                                 <Autocomplete
-                                    {...field}
+                                    value={movies.find((m) => m.id === field.value) || null} // ánh xạ id -> object
+                                    onChange={(_, newValue) => field.onChange(newValue?.id || null)} // chỉ lưu id vào form
                                     options={movies}
                                     getOptionLabel={(option) => option.title || ""}
                                     isOptionEqualToValue={(option, value) => option.id === value?.id}
-                                    onChange={(_, newValue) => field.onChange(newValue?.id || null)} // chỉ lưu id
                                     renderOption={(props, option) => (
                                         <li {...props} key={option.id}>
                                             <Box display="flex" alignItems="center" gap={2}>
@@ -126,65 +178,86 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                         />
 
 
-                        {/* Chọn rạp */}
+                        {/* Chọn Rạp */}
                         <Controller
                             name="cinemaId"
                             control={control}
                             render={({ field }) => (
-                                <Autocomplete
-                                    {...field}
-                                    options={cinemas} // danh sách rạp
-                                    getOptionLabel={(option) => option.name || ""} // hiển thị tên rạp
-                                    isOptionEqualToValue={(option, value) => option.id === value?.id}
-                                    onChange={(_, newValue) => field.onChange(newValue?.id || null)} // lưu id vào form
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Rạp phim"
-                                            error={!!errors.cinemaId}
-                                            helperText={errors.cinemaId?.message}
-                                        />
-                                    )}
-                                />
+                                <FormControl fullWidth error={!!errors.cinemaId}>
+                                    <InputLabel id="cinema-label">Rạp phim</InputLabel>
+                                    <Select
+                                        {...field}
+                                        labelId="cinema-label"
+                                        label="Rạp phim"
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            setSelectedCinemaId(e.target.value);
+                                            setValue("roomId", "");
+                                        }}
+                                    >
+                                        {isLoadingCinemas ? (
+                                            <MenuItem disabled>
+                                                <CircularProgress size={20} />
+                                            </MenuItem>
+                                        ) : cinemas.length === 0 ? (
+                                            <MenuItem disabled>Không có lựa chọn</MenuItem>
+                                        ) : (
+                                            cinemas.map((cinema) => (
+                                                <MenuItem key={cinema.id} value={cinema.id}>
+                                                    {cinema.name}
+                                                </MenuItem>
+                                            ))
+                                        )}
+                                    </Select>
+                                    <FormHelperText>{errors.cinemaId?.message}</FormHelperText>
+                                </FormControl>
                             )}
                         />
 
-
-                        {/* Chọn phòng chiếu */}
+                        {/* Chọn Phòng */}
                         <Controller
                             name="roomId"
                             control={control}
                             render={({ field }) => (
                                 <FormControl fullWidth error={!!errors.roomId}>
                                     <InputLabel id="room-label">Phòng chiếu</InputLabel>
-                                    <Select {...field}
-                                            labelId="room-label"
-                                            id="room-select"
-                                            label="Phòng Chiếu"
+                                    <Select
+                                        {...field}
+                                        labelId="room-label"
+                                        label="Phòng chiếu"
+                                        value={rooms.some(r => r.id === field.value) ? field.value : ""} // ✅ fix out-of-range
                                     >
-                                        {rooms
-                                            .filter((room) => room.cinemaId === watch("cinemaId")) // lọc theo rạp đã chọn
-                                            .map((room) => (
+                                        {isLoadingRooms ? (
+                                            <MenuItem disabled>
+                                                <CircularProgress size={20} />
+                                            </MenuItem>
+                                        ) : rooms.length === 0 ? (
+                                            <MenuItem disabled>Không có lựa chọn</MenuItem>
+                                        ) : (
+                                            rooms.map((room) => (
                                                 <MenuItem key={room.id} value={room.id}>
                                                     {room.name}
                                                 </MenuItem>
-                                            ))}
+                                            ))
+                                        )}
                                     </Select>
                                     <FormHelperText>{errors.roomId?.message}</FormHelperText>
                                 </FormControl>
                             )}
                         />
 
+
+
                         {/* Chọn thời gian suất chiếu */}
                         <Controller
                             name="startTime"
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <TextField
                                     {...field}
                                     type="datetime-local"
                                     label="Thời gian chiếu"
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{shrink: true}}
                                     error={!!errors.startTime}
                                     helperText={errors.startTime?.message}
                                     fullWidth
@@ -195,7 +268,7 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                         <Controller
                             name="status"
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormControl fullWidth error={!!errors.status}>
                                     <InputLabel id="status-label">Trạng thái</InputLabel>
                                     <Select
@@ -203,6 +276,7 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                                         labelId="status-label"
                                         id="status-select"
                                         label="Trạng thái"
+                                        value={field.value || ''}
                                     >
                                         <MenuItem value="COMING_SOON">Sắp chiếu</MenuItem>
                                         <MenuItem value="NOW_SHOWING">Đang chiếu</MenuItem>
