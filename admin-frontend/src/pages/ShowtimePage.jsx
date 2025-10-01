@@ -15,6 +15,7 @@ import MovieCreationOutlinedIcon from '@mui/icons-material/MovieCreationOutlined
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import MovieStatusChip from "../components/moviesManagement/MovieStatusChip.jsx";
+import ShowtimeModal from "../components/ShowtimeManagement/ShowtimeModal.jsx";
 
 export default function ShowtimePage() {
     const [paginationModel, setPaginationModel] = useState({
@@ -181,9 +182,21 @@ export default function ShowtimePage() {
         }
     ]
 
-
+    const [openModal, setOpenModal] = useState(false);
+    const [mode, setMode] = useState("add");
+    const [selectedShowtime, setselectedShowtime] = useState(null);
+    const handleAddClick = () => {
+        setMode("add");
+        setselectedShowtime(null);
+        setOpenModal(true);
+    }
     return (
         <Box className="py-2 min-h-screen">
+            <ShowtimeModal open={openModal}
+                           onClose={() => setOpenModal(false)}
+                           mode={mode}
+                           showtimeData={selectedShowtime}
+            />
             {/* Header */}
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Xuất Chiếu</h2>
@@ -210,7 +223,7 @@ export default function ShowtimePage() {
                         columns={columns}
                         disableRowSelectionOnClick
                         rowHeight={160}
-                        slots={{ toolbar: () => <CustomToolbar /> }}
+                        slots={{ toolbar: () => <CustomToolbar handleAddClick={handleAddClick} /> }}
                         showToolbar
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}
