@@ -24,10 +24,11 @@ import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useGetAllMoviesQuery} from "../../services/movieService.js";
 import dayjs from "dayjs";
-import {useCreateShowtimeMutation} from "../../services/showtimeService.js";
+import {useCreateShowtimeMutation, useUpdateShowtimeMutation} from "../../services/showtimeService.js";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 import {SHOWTIME_STATUS_CONFIG} from "../../constants/showtimeStatus.js";
 import StatusChip from "../StatusChip.jsx";
+import {useUpdateBrandMutation} from "../../services/brandService.js";
 
 const EMPTY_SHOWTIME = {
     status: '',
@@ -120,16 +121,6 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
         }
     }, [isSuccessMovies, isErrorMovies, errorMovies, dispatch]);
 
-    useEffect(() => {
-        if (showtimeData) {
-            reset({
-                ...showtimeData,
-            });
-        } else {
-            reset(EMPTY_SHOWTIME);
-        }
-    }, [showtimeData, open, reset]);
-
     const selectedMovieId = useWatch({ control, name: "movieId" });
     const selectedMovie = movies.find((m) => m.id === selectedMovieId);
 
@@ -138,7 +129,13 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
         {isLoading: isCreating, isError: isCreateError, error: createError},
     ] = useCreateShowtimeMutation();
 
+    const [
+        updateShowtime,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdateShowtimeMutation();
+
     useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
 
     const onSubmit = async (data) => {
         const payload = {
@@ -151,10 +148,22 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
         if (mode === "add") {
             await createShowtime(payload).unwrap();
             dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+        } else {
+            await updateShowtime({id: showtimeData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
         }
         onClose();
-
     };
+
+    useEffect(() => {
+        if (showtimeData) {
+            reset({
+                ...showtimeData,
+            });
+        } else {
+            reset(EMPTY_SHOWTIME);
+        }
+    }, [showtimeData, open, reset]);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -363,9 +372,9 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                         type="submit"
                         color="primary"
                         variant="contained"
-                        disabled={isCreating}
+                        disabled={isCreating || isUpdating}
                         startIcon={
-                            (isCreating) && (
+                            (isCreating || isUpdating) && (
                                 <CircularProgress size={20} color="inherit"/>
                             )
                         }

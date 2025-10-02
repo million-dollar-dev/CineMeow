@@ -30,7 +30,7 @@ export default function ShowtimePage() {
 
     const [mode, setMode] = useState("add");
 
-    const [selectedShowtime, setselectedShowtime] = useState(null);
+    const [selectedShowtime, setSelectedShowtime] = useState(null);
 
     const columns = [
         {
@@ -79,12 +79,13 @@ export default function ShowtimePage() {
             sortable: false,
             filterable: false,
             disableColumnMenu: true,
-            renderCell: () => (
+            renderCell: (params) => (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Button
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
+                        onClick={() => handleEditClick(params.row)}
                     >
                         Tùy chỉnh
                     </Button>
@@ -153,13 +154,15 @@ export default function ShowtimePage() {
 
     ];
 
-
-
-
+    const handleEditClick = (showtime) => {
+        setMode("edit");
+        setSelectedShowtime(showtime);
+        setOpenModal(true);
+    };
 
     const handleAddClick = () => {
         setMode("add");
-        setselectedShowtime(null);
+        setSelectedShowtime(null);
         setOpenModal(true);
     }
     return (
