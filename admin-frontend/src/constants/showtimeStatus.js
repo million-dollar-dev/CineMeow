@@ -1,15 +1,22 @@
-
-export const SHOWTIME_STATUS = {
-    AVAILABLE: "AVAILABLE",   // còn bán vé
-    SOLD_OUT: "SOLD_OUT",     // hết vé
-    CANCELLED: "CANCELLED",   // hủy suất chiếu
-    FINISHED: "FINISHED",     // đã kết thúc
+export const SHOWTIME_STATUS_CONFIG = {
+    AVAILABLE: {
+        value: "AVAILABLE",
+        label: "Đang mở bán",
+        color: "success", // xanh
+    },
+    SOLD_OUT: {
+        value: "SOLD_OUT",
+        label: "Hết vé",
+        color: "warning", // vàng cam
+    },
+    CANCELLED: {
+        value: "CANCELLED",
+        label: "Hủy",
+        color: "primary", // xanh dương
+    },
+    FINISHED: {
+        value: "FINISHED",
+        label: "Đã kết thúc",
+        color: "default", // xám
+    },
 };
-
-// Nếu muốn dùng cho select hiển thị label:
-export const SHOWTIME_STATUS_OPTIONS = [
-    { value: SHOWTIME_STATUS.AVAILABLE, label: "Còn vé" },
-    { value: SHOWTIME_STATUS.SOLD_OUT, label: "Hết vé" },
-    { value: SHOWTIME_STATUS.CANCELLED, label: "Hủy suất chiếu" },
-    { value: SHOWTIME_STATUS.FINISHED, label: "Đã kết thúc" },
-];

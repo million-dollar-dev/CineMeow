@@ -19,7 +19,8 @@ import MovieCreationOutlinedIcon from '@mui/icons-material/MovieCreationOutlined
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
 import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
-import MovieStatusChip from "../components/moviesManagement/MovieStatusChip.jsx";
+import StatusChip from "../components/StatusChip.jsx";
+import {MOVIE_STATUS_CONFIG} from "../constants/movieStatus.js";
 
 export default function MovieManagementPage() {
     const dispatch = useDispatch();
@@ -71,7 +72,7 @@ export default function MovieManagementPage() {
             field: "status",
             headerName: "Status",
             width: 160,
-            renderCell: (params) => <MovieStatusChip status={params.value} />,
+            renderCell: (params) => <StatusChip status={params.value} configs={MOVIE_STATUS_CONFIG}/>,
         },
         {
             field: "actions",

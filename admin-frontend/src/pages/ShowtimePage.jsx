@@ -10,12 +10,15 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import {useState} from "react";
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import FiberNewOutlinedIcon from '@mui/icons-material/FiberNewOutlined';
-import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
-import MovieCreationOutlinedIcon from '@mui/icons-material/MovieCreationOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
-import MovieStatusChip from "../components/moviesManagement/MovieStatusChip.jsx";
+import StatusChip from "../components/StatusChip.jsx";
 import ShowtimeModal from "../components/ShowtimeManagement/ShowtimeModal.jsx";
+import {useGetAllShowtimesQuery} from "../services/showtimeService.js";
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
+import {SHOWTIME_STATUS_CONFIG} from "../constants/showtimeStatus.js";
 
 export default function ShowtimePage() {
     const [paginationModel, setPaginationModel] = useState({
@@ -23,9 +26,15 @@ export default function ShowtimePage() {
         pageSize: 5,
     });
 
+    const [openModal, setOpenModal] = useState(false);
+
+    const [mode, setMode] = useState("add");
+
+    const [selectedShowtime, setselectedShowtime] = useState(null);
+
     const columns = [
         {
-            field: "poster",
+            field: "posterPath",
             headerName: "Poster",
             headerClassName: "custom-header",
             width: 180,
@@ -61,7 +70,7 @@ export default function ShowtimePage() {
             field: "status",
             headerName: "Status",
             width: 160,
-            renderCell: (params) => <MovieStatusChip status={params.value} />,
+            renderCell: (params) => <StatusChip status={params.value} configs={SHOWTIME_STATUS_CONFIG}/>,
         },
         {
             field: "actions",
@@ -93,98 +102,61 @@ export default function ShowtimePage() {
         },
     ];
 
+    const {data: showtimeResponse, isError, error, isLoading} = useGetAllShowtimesQuery();
+    const showtimes = showtimeResponse?.data ?? [];
+
+    const todayDate = new Date().toISOString().split("T")[0];
+
+    const total = showtimes.length;
+    const available = showtimes.filter(s => s.status === "AVAILABLE").length;
+    const todayShowtimes = showtimes.filter(s => {
+        const startDate = new Date(s.startTime).toISOString().split("T")[0];
+        return startDate === todayDate;
+    });
+
+    const finishedToday = todayShowtimes.filter(s => s.status === "FINISHED").length;
+
     const stats = [
         {
-            title: "Phim",
-            value: 11,
-            icon: <MovieCreationOutlinedIcon fontSize="medium" />,
-            bigIcon: <MovieCreationOutlinedIcon fontSize="inherit" />,
+            title: "Tổng suất chiếu",
+            value: total,
+            icon: <CalendarMonthOutlinedIcon fontSize="medium" />,
+            bigIcon: <CalendarMonthOutlinedIcon fontSize="inherit" />,
             bgColor: "#1976d2",
             iconColor: "#1976d2",
             loading: true
         },
         {
-            title: "Đang chiếu",
-            value: 11,
-            icon: <PlayCircleOutlinedIcon fontSize="medium" />,
-            bigIcon: <PlayCircleOutlinedIcon fontSize="inherit" />,
+            title: "Đang mở bán",
+            value: available,
+            icon: <SlideshowOutlinedIcon fontSize="medium" />,
+            bigIcon: <SlideshowOutlinedIcon fontSize="inherit" />,
             bgColor: "#2e7d32",
             iconColor: "#2e7d32",
         },
         {
-            title: "Sắp chiếu",
-            value: 11,
-            icon: <FiberNewOutlinedIcon fontSize="medium" />,
-            bigIcon: <FiberNewOutlinedIcon fontSize="inherit" />,
-            bgColor: "#f57c00",
-            iconColor: "#f57c00",
-        },
-        {
-            title: "Đã phát hành",
-            value: 11,
+            title: "Tổng suất chiếu hôm nay",
+            value: todayShowtimes.length,
             icon: <ScheduleOutlinedIcon fontSize="medium" />,
             bigIcon: <ScheduleOutlinedIcon fontSize="inherit" />,
             bgColor: 'black',
             iconColor: 'black',
         },
+        {
+            title: "Hoàn thành hôm nay",
+            value: finishedToday,
+            icon: <EventAvailableOutlinedIcon fontSize="medium" />,
+            bigIcon: <EventAvailableOutlinedIcon fontSize="inherit" />,
+            bgColor: "#f57c00",
+            iconColor: "#f57c00",
+        },
+
     ];
 
-    const showtimes = [
-        {
-            "id": "showtime-1",
-            "poster": "https://static.nutscdn.com/vimg/300-0/5b50f729f259f428490d4bc9fb27d213.webp",
-            "movieTitle": "Avengers: Endgame",
-            "cinemaName": "CGV Aeon Mall Tân Phú",
-            "roomName": "Phòng chiếu 1",
-            "startTime": "2025-10-01T14:00:00",
-            "endTime": "2025-10-01T16:45:00",
-            "status": "ACTIVE"
-        },
-        {
-            "id": "showtime-2",
-            "poster": "https://static.nutscdn.com/vimg/300-0/5b50f729f259f428490d4bc9fb27d213.webp",
-            "movieTitle": "Inside Out 2",
-            "cinemaName": "BHD Star Bitexco",
-            "roomName": "Phòng chiếu 2",
-            "startTime": "2025-10-01T17:00:00",
-            "endTime": "2025-10-01T18:40:00",
-            "status": "ACTIVE"
-        },
-        {
-            "id": "showtime-3",
-            "poster": "https://static.nutscdn.com/vimg/300-0/5b50f729f259f428490d4bc9fb27d213.webp",
-            "movieTitle": "The Batman",
-            "cinemaName": "Lotte Cinema Gò Vấp",
-            "roomName": "Phòng chiếu IMAX",
-            "startTime": "2025-10-02T19:00:00",
-            "endTime": "2025-10-02T21:45:00",
-            "status": "CANCELLED"
-        },
-        {
-            "id": "showtime-4",
-            "poster": "https://static.nutscdn.com/vimg/300-0/5b50f729f259f428490d4bc9fb27d213.webp",
-            "movieTitle": "Kung Fu Panda 4",
-            "cinemaName": "Galaxy Nguyễn Du",
-            "roomName": "Phòng chiếu 5",
-            "startTime": "2025-10-03T09:30:00",
-            "endTime": "2025-10-03T11:10:00",
-            "status": "UPCOMING"
-        },
-        {
-            "id": "showtime-5",
-            "poster": "https://static.nutscdn.com/vimg/300-0/5b50f729f259f428490d4bc9fb27d213.webp",
-            "movieTitle": "Oppenheimer",
-            "cinemaName": "CGV Vincom Đồng Khởi",
-            "roomName": "Phòng chiếu 3",
-            "startTime": "2025-10-03T20:00:00",
-            "endTime": "2025-10-03T23:00:00",
-            "status": "ACTIVE"
-        }
-    ]
 
-    const [openModal, setOpenModal] = useState(false);
-    const [mode, setMode] = useState("add");
-    const [selectedShowtime, setselectedShowtime] = useState(null);
+
+
+
     const handleAddClick = () => {
         setMode("add");
         setselectedShowtime(null);

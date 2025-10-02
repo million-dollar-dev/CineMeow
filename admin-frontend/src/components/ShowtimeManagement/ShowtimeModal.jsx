@@ -22,11 +22,12 @@ import {useDispatch} from "react-redux";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {SHOWTIME_STATUS_OPTIONS} from "../../constants/showtimeStatus.js";
 import {useGetAllMoviesQuery} from "../../services/movieService.js";
 import dayjs from "dayjs";
 import {useCreateShowtimeMutation} from "../../services/showtimeService.js";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
+import {SHOWTIME_STATUS_CONFIG} from "../../constants/showtimeStatus.js";
+import StatusChip from "../StatusChip.jsx";
 
 const EMPTY_SHOWTIME = {
     status: '',
@@ -334,10 +335,13 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                             render={({field}) => (
                                 <FormControl fullWidth error={!!errors.status}>
                                     <InputLabel id="status-label">Trạng thái</InputLabel>
-                                    <Select {...field} label="Trạng thái">
-                                        {SHOWTIME_STATUS_OPTIONS.map((opt) => (
+                                    <Select {...field}
+                                            label="Trạng thái"
+                                            renderValue={(selected) => <StatusChip status={selected} configs={SHOWTIME_STATUS_CONFIG}/>}
+                                    >
+                                        {Object.values(SHOWTIME_STATUS_CONFIG).map((opt) => (
                                             <MenuItem key={opt.value} value={opt.value}>
-                                                {opt.label}
+                                                <StatusChip status={opt.value} configs={SHOWTIME_STATUS_CONFIG}/>
                                             </MenuItem>
                                         ))}
                                     </Select>

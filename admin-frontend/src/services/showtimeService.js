@@ -3,11 +3,13 @@ import { rootApi } from "./rootApi";
 const CONTEXT_PATH = 'showtime';
 
 export const showtimeApi = rootApi.injectEndpoints({
+    tagTypes: ["Showtimes"],
     endpoints: (builder) => ({
         getAllShowtimes: builder.query({
             query: () => ({
                 url: `${CONTEXT_PATH}/showtimes`,
             }),
+            providesTags: ["Showtimes"],
         }),
 
         createShowtime: builder.mutation({
@@ -16,6 +18,7 @@ export const showtimeApi = rootApi.injectEndpoints({
                 method: "POST",
                 body: payload,
             }),
+            invalidatesTags: ["Showtimes"],
         }),
     }),
 });
