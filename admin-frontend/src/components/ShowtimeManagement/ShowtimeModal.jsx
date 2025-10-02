@@ -15,7 +15,7 @@ import {
     Typography,
 } from "@mui/material";
 import {useEffect, useState} from "react";
-import {Controller, useForm} from "react-hook-form";
+import {Controller, useForm, useWatch} from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import {useGetAllCinemasQuery, useGetRoomsQuery} from "../../services/cinemaService.js";
 import {useDispatch} from "react-redux";
@@ -23,26 +23,18 @@ import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {SHOWTIME_STATUS_OPTIONS} from "../../constants/showtimeStatus.js";
-
-// Dữ liệu mẫu
-const movies = [
-    {
-        id: "m1",
-        title: "Avengers: Endgame",
-        posterUrl: "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg",
-    },
-    {
-        id: "m2",
-        title: "Inception",
-        posterUrl: "https://static.nutscdn.com/vimg/100-0/3c42915d9af0eb6a87bd236d90336ae8.jpg",
-    },
-];
+import {useGetAllMoviesQuery} from "../../services/movieService.js";
+import dayjs from "dayjs";
+import {useCreateShowtimeMutation} from "../../services/showtimeService.js";
+import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 
 const EMPTY_SHOWTIME = {
     status: '',
     cinemaId: '',
     roomId: '',
     movieId: '',
+    startTime: '',
+    endTime: '',
 };
 
 const showtimeSchema = yup.object().shape({
@@ -62,7 +54,6 @@ const showtimeSchema = yup.object().shape({
         .required("Vui lòng chọn thời gian chiếu"),
     status: yup
         .string()
-        .oneOf(["COMING_SOON", "NOW_SHOWING", "ENDED"], "Trạng thái không hợp lệ")
         .required("Vui lòng chọn trạng thái"),
 });
 
@@ -72,6 +63,7 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
         handleSubmit,
         reset,
         setValue,
+        setError,
         formState: {errors},
     } = useForm({
         resolver: yupResolver(showtimeSchema),
@@ -79,7 +71,9 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
     });
 
     const dispatch = useDispatch();
+
     const [selectedCinemaId, setSelectedCinemaId] = useState(null);
+
     const {
         data: cinemaResponse = [],
         isLoading: isLoadingCinemas,
@@ -98,6 +92,15 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
     } = useGetRoomsQuery(selectedCinemaId, { skip: !selectedCinemaId });
     const rooms = roomResponse?.data || [];
 
+    const {
+        data: movieResponse = [],
+        isError: isErrorMovies,
+        isSuccess: isSuccessMovies,
+        error: errorMovies,
+        isLoading: isLoadingMovies,
+    } = useGetAllMoviesQuery();
+    const movies = movieResponse?.data || [];
+
     useEffect(() => {
         if (isErrorCinemas) {
             dispatch(openSnackbar({ message: errorCinemas?.data?.message || "Không thể tải rạp!", type: "error" }));
@@ -111,6 +114,12 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
     }, [isSuccessRooms, isErrorRooms, errorRooms, dispatch]);
 
     useEffect(() => {
+        if (isErrorMovies) {
+            dispatch(openSnackbar({ message: errorCinemas?.data?.message || "Không thể tải phim!", type: "error" }));
+        }
+    }, [isSuccessMovies, isErrorMovies, errorMovies, dispatch]);
+
+    useEffect(() => {
         if (showtimeData) {
             reset({
                 ...showtimeData,
@@ -120,14 +129,31 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
         }
     }, [showtimeData, open, reset]);
 
-    console.log('cinam', cinemas)
+    const selectedMovieId = useWatch({ control, name: "movieId" });
+    const selectedMovie = movies.find((m) => m.id === selectedMovieId);
+
+    const [
+        createShowtime,
+        {isLoading: isCreating, isError: isCreateError, error: createError},
+    ] = useCreateShowtimeMutation();
+
+    useFormServerErrors(isCreateError, createError, setError);
 
     const onSubmit = async (data) => {
-        console.log(data);
+        const payload = {
+            ...data,
+            startTime: dayjs(data.startTime).format("YYYY-MM-DDTHH:mm:ss"),
+            endTime: dayjs(data.endTime).format("YYYY-MM-DDTHH:mm:ss"),
+        };
+        console.log(payload);
+
+        if (mode === "add") {
+            await createShowtime(payload).unwrap();
+            dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+        }
         onClose();
 
     };
-
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -144,7 +170,7 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                             control={control}
                             render={({ field }) => (
                                 <Autocomplete
-                                    value={movies.find((m) => m.id === field.value) || null} // ánh xạ id -> object
+                                    value={movies.find((m) => m.id === field.value) || null}
                                     onChange={(_, newValue) => field.onChange(newValue?.id || null)} // chỉ lưu id vào form
                                     options={movies}
                                     getOptionLabel={(option) => option.title || ""}
@@ -153,7 +179,7 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                                         <li {...props} key={option.id}>
                                             <Box display="flex" alignItems="center" gap={2}>
                                                 <img
-                                                    src={option.posterUrl}
+                                                    src={option.posterPath}
                                                     alt={option.title}
                                                     style={{
                                                         width: 50,
@@ -261,18 +287,46 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                         <Controller
                             name="startTime"
                             control={control}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <TextField
                                     {...field}
                                     type="datetime-local"
                                     label="Thời gian chiếu"
-                                    InputLabelProps={{shrink: true}}
+                                    InputLabelProps={{ shrink: true }}
                                     error={!!errors.startTime}
                                     helperText={errors.startTime?.message}
                                     fullWidth
+                                    onChange={(e) => {
+                                        const value = e.target.value; // dạng YYYY-MM-DDTHH:mm
+                                        field.onChange(value);
+
+                                        if (selectedMovie?.duration && value) {
+                                            const end = dayjs(value).add(selectedMovie.duration, "minute");
+                                            // format đúng cho datetime-local
+                                            setValue("endTime", end.format("YYYY-MM-DDTHH:mm"));
+                                        }
+                                    }}
                                 />
                             )}
                         />
+
+                        <Controller
+                            name="endTime"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    type="datetime-local"
+                                    label="Thời gian kết thúc"
+                                    InputLabelProps={{ shrink: true }}
+                                    error={!!errors.endTime}
+                                    helperText={errors.endTime?.message}
+                                    fullWidth
+                                    disabled
+                                />
+                            )}
+                        />
+
 
                         <Controller
                             name="status"
@@ -305,6 +359,12 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                         type="submit"
                         color="primary"
                         variant="contained"
+                        disabled={isCreating}
+                        startIcon={
+                            (isCreating) && (
+                                <CircularProgress size={20} color="inherit"/>
+                            )
+                        }
                     >
                         {mode === "add" ? "Lưu" : "Cập nhật"}
                     </Button>
