@@ -19,12 +19,13 @@ import {Controller, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Autocomplete from "@mui/material/Autocomplete";
-import MovieStatusChip from "./MovieStatusChip";
+import StatusChip from "../StatusChip.jsx";
 import {useGetAllGenresQuery} from "../../services/genreService.js";
 import {useCreateMovieMutation, useUpdateMovieMutation} from "../../services/movieService.js";
 import {useDispatch} from "react-redux";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
+import {MOVIE_STATUS_CONFIG} from "../../constants/movieStatus.js";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
 const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
@@ -257,11 +258,11 @@ export default function MovieModal({open, onClose, mode = "add", movieData}) {
                                             labelId="status-label"
                                             id="status-select"
                                             label="Status"
-                                            renderValue={(selected) => <MovieStatusChip status={selected}/>}
+                                            renderValue={(selected) => <StatusChip status={selected} configs={MOVIE_STATUS_CONFIG}/>}
                                         >
                                             {STATUS_OPTIONS.map((opt) => (
                                                 <MenuItem key={opt} value={opt}>
-                                                    <MovieStatusChip status={opt}/>
+                                                    <StatusChip status={opt} configs={MOVIE_STATUS_CONFIG}/>
                                                 </MenuItem>
                                             ))}
                                         </Select>
