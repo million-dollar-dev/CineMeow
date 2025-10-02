@@ -32,3 +32,8 @@ openapi:
     server: http://localhost:8083/showtime
     title: Showtime Service
     version: 1.0.0
+
+app:
+  services:
+    cinema-service: http://localhost:8084/cinema
+    movie-service: http://localhost:8082/movie
