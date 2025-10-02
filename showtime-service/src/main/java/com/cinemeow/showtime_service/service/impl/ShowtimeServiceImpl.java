@@ -1,6 +1,10 @@
 package com.cinemeow.showtime_service.service.impl;
 
+import com.cinemeow.showtime_service.client.CinemaClient;
+import com.cinemeow.showtime_service.client.MovieClient;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
+import com.cinemeow.showtime_service.dto.response.MovieResponse;
+import com.cinemeow.showtime_service.dto.response.RoomResponse;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
 import com.cinemeow.showtime_service.entity.Showtime;
 import com.cinemeow.showtime_service.exception.AppException;
@@ -30,7 +34,12 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ShowtimeServiceImpl implements ShowtimeService {
     ShowtimeRepository showtimeRepository;
+
     ShowtimeMapper showtimeMapper;
+
+    MovieClient movieClient;
+
+    CinemaClient cinemaClient;
 
     @Override
     public ShowtimeResponse create(ShowtimeRequest request) {
@@ -111,6 +120,16 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     private ShowtimeResponse buildFullShowtimeResponse(Showtime showtime) {
         ShowtimeResponse response = showtimeMapper.toShowtimeResponse(showtime);
+
+        MovieResponse movie = movieClient.getById(showtime.getMovieId()).getData();
+        response.setMovieTitle(movie.getTitle());
+        response.setPosterPath(movie.getPosterPath());
+
+        RoomResponse room = cinemaClient.getById(showtime.getRoomId()).getData();
+        response.setRoomName(room.getName());
+        response.setCinemaId(room.getCinemaId());
+        response.setCinemaName(room.getCinemaName());
+
         return response;
     }
 

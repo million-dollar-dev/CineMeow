@@ -69,7 +69,7 @@ public class RoomController {
             }
     )
     @GetMapping("/{id}")
-    public BaseResponse<RoomResponse> getInfo(@PathVariable String id) {
+    public BaseResponse<RoomResponse> getById(@PathVariable String id) {
         return BaseResponse.<RoomResponse>builder()
                 .data(roomService.getById(id))
                 .build();

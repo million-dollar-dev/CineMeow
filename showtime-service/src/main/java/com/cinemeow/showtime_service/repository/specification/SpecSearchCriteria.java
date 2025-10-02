@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import static com.cinemeow.movie_service.repository.specification.SearchOperation.*;
+import static com.cinemeow.showtime_service.repository.specification.SearchOperation.*;
 
 @Getter
 @Setter

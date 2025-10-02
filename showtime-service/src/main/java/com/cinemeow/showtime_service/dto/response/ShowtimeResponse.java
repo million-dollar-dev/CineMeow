@@ -19,6 +19,8 @@ public class ShowtimeResponse {
 
     String movieTitle;
 
+    String posterPath;
+
     String cinemaId;
 
     String cinemaName;

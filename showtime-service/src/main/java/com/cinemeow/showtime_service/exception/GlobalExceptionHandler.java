@@ -1,8 +1,6 @@
 package com.cinemeow.showtime_service.exception;
 
-import com.cinemeow.cinema_service.dto.response.BaseResponse;
-import com.cinemeow.cinema_service.exception.AppException;
-import com.cinemeow.cinema_service.exception.ErrorCode;
+import com.cinemeow.showtime_service.dto.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
