@@ -20,10 +20,20 @@ export const showtimeApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Showtimes"],
         }),
+
+        updateShowtime: builder.mutation({
+            query: ({ id, ...payload }) => ({
+                url: `${CONTEXT_PATH}/showtimes/${id}`,
+                method: "PUT",
+                body: payload,
+            }),
+            invalidatesTags: ["Showtimes"],
+        }),
     }),
 });
 
 export const {
     useGetAllShowtimesQuery,
     useCreateShowtimeMutation,
+    useUpdateShowtimeMutation,
 } = showtimeApi;
