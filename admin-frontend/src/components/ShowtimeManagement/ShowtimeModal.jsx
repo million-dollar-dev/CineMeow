@@ -22,6 +22,7 @@ import {useDispatch} from "react-redux";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
+import {SHOWTIME_STATUS_OPTIONS} from "../../constants/showtimeStatus.js";
 
 // Dữ liệu mẫu
 const movies = [
@@ -183,36 +184,44 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                             name="cinemaId"
                             control={control}
                             render={({ field }) => (
-                                <FormControl fullWidth error={!!errors.cinemaId}>
-                                    <InputLabel id="cinema-label">Rạp phim</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="cinema-label"
-                                        label="Rạp phim"
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setSelectedCinemaId(e.target.value);
-                                            setValue("roomId", "");
-                                        }}
-                                    >
-                                        {isLoadingCinemas ? (
-                                            <MenuItem disabled>
-                                                <CircularProgress size={20} />
-                                            </MenuItem>
-                                        ) : cinemas.length === 0 ? (
-                                            <MenuItem disabled>Không có lựa chọn</MenuItem>
-                                        ) : (
-                                            cinemas.map((cinema) => (
-                                                <MenuItem key={cinema.id} value={cinema.id}>
-                                                    {cinema.name}
-                                                </MenuItem>
-                                            ))
-                                        )}
-                                    </Select>
-                                    <FormHelperText>{errors.cinemaId?.message}</FormHelperText>
-                                </FormControl>
+                                <Autocomplete
+                                    value={cinemas.find((c) => c.id === field.value) || null} // ánh xạ id -> object
+                                    onChange={(_, newValue) => {
+                                        field.onChange(newValue?.id || null); // lưu id vào form
+                                        setSelectedCinemaId(newValue?.id || null); // trigger load rooms
+                                        setValue("roomId", ""); // reset roomId khi đổi rạp
+                                    }}
+                                    options={cinemas}
+                                    getOptionLabel={(option) => option.name || ""}
+                                    loading={isLoadingCinemas}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.name}
+                                        </li>
+                                    )}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Rạp phim"
+                                            error={!!errors.cinemaId}
+                                            helperText={errors.cinemaId?.message}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <>
+                                                        {isLoadingCinemas ? (
+                                                            <CircularProgress size={20} />
+                                                        ) : null}
+                                                        {params.InputProps.endAdornment}
+                                                    </>
+                                                ),
+                                            }}
+                                        />
+                                    )}
+                                />
                             )}
                         />
+
 
                         {/* Chọn Phòng */}
                         <Controller
@@ -271,17 +280,14 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                             render={({field}) => (
                                 <FormControl fullWidth error={!!errors.status}>
                                     <InputLabel id="status-label">Trạng thái</InputLabel>
-                                    <Select
-                                        {...field}
-                                        labelId="status-label"
-                                        id="status-select"
-                                        label="Trạng thái"
-                                        value={field.value || ''}
-                                    >
-                                        <MenuItem value="COMING_SOON">Sắp chiếu</MenuItem>
-                                        <MenuItem value="NOW_SHOWING">Đang chiếu</MenuItem>
-                                        <MenuItem value="ENDED">Đã chiếu</MenuItem>
+                                    <Select {...field} label="Trạng thái">
+                                        {SHOWTIME_STATUS_OPTIONS.map((opt) => (
+                                            <MenuItem key={opt.value} value={opt.value}>
+                                                {opt.label}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
+
                                     <FormHelperText>{errors.status?.message}</FormHelperText>
                                 </FormControl>
                             )}
