@@ -5,7 +5,6 @@ import {Link} from "react-router-dom";
 import TextInput from "../components/FormInputs/TextInput.jsx";
 import FormField from "../components/FormField.jsx";
 import {FormProvider, useForm} from "react-hook-form";
-import {useRegisterMutation} from "../services/rootApi.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
 
@@ -26,7 +25,7 @@ const RegisterPage = () => {
         resolver: yupResolver(schema)
     });
 
-    const [register, {data = {}, isError, error, isSuccess, isLoading}] = useRegisterMutation();
+    // const [register, {data = {}, isError, error, isSuccess, isLoading}] = useRegisterMutation();
     const onSubmit = (formData) => {
         console.log(formData);
         //register(formData);

@@ -1,26 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import PaginateIndicator from "./PaginateIndicator.jsx";
 import Movie from "./Movie.jsx";
+import {useGetAllMoviesQuery} from "../../services/movieService.js";
 
 const FeatureMovies = () => {
-    const [movies, setMovies] = useState([]);
     const [activeMovieId, setActiveMovieId] = React.useState();
     const [isFading, setIsFading] = useState(false);
-    useEffect(() => {
-        fetch("https://api.themoviedb.org/3/trending/movie/day?language=en-US", {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZjYzZGE3N2NiMGM3MjBhYzA5YWEyNzUwM2U2NWRlZiIsIm5iZiI6MTc1MTA5NzczMC4xODcsInN1YiI6IjY4NWZhMTgyMzllNDRlYmMxZWRlYmM0MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.lkquOyV3pva_h3EMIUppdPCWuLRHj9D-j-Wo3IOZFHk",
 
-            },
-        }).then(async (res) => {
-            const data = await res.json();
-            const popularMovies = data.results.slice(0, 4);
-            setActiveMovieId(popularMovies[0].id);
-            setMovies(popularMovies);
-        })
-    }, []);
+    const { data: movieResponse, isError, error, isLoading } = useGetAllMoviesQuery();
+    const movies = movieResponse?.data.slice(0, 4) || [];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -37,7 +25,9 @@ const FeatureMovies = () => {
 
         return () => clearInterval(interval);
     }, [movies]);
+
     const activeMovie = movies.find(m => m.id === activeMovieId);
+
     return (
         <div className="relative overflow-hidden min-h-[60vh] bg-black mb-[2vw]">
             <div

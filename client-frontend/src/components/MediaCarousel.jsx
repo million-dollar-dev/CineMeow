@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import useEmblaCarousel from "embla-carousel-react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronLeft, faChevronRight, faPlay} from "@fortawesome/free-solid-svg-icons";
+import {faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import CircularProgressBar from "./CircularProgressBar.jsx";
 import RatingCard from "./RatingCard.jsx";
 import ButtonPlay from "./utils/ButtonPlay.jsx";
