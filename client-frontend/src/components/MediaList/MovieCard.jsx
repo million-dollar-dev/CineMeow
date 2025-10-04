@@ -10,14 +10,14 @@ const MovieCard = ({item}) => {
             <div className="border border-slate-600 rounded-lg relative group overflow-hidden bg-black">
                 <div className="relative">
                     <div className="absolute inset-2 z-2">
-                        <RatingCard rating={"13+"} />
+                        <RatingCard rating={item?.rating} />
                     </div>
                     <div>
                         <ButtonPlay />
                     </div>
                     <img
                         className="rounded-lg transform transition-transform duration-300 group-hover:scale-105"
-                        src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                        src={item?.posterPath}
                         alt=""
                     />
                 </div>
@@ -32,8 +32,8 @@ const MovieCard = ({item}) => {
                                     : 'red'
                         }
                     />
-                    <p className="font-bold mt-2 truncate">{item.title}</p>
-                    <p className="text-gray-300">{item.release_date}</p>
+                    <p className="font-bold mt-2 truncate">{item?.title}</p>
+                    <p className="text-gray-300">{item?.releaseDate}</p>
                 </div>
             </div>
 

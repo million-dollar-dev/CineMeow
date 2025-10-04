@@ -1,17 +1,37 @@
-import React from 'react';
+import React from "react";
 
-const CinemaBrandSelector = ({name}) => {
+const CinemaBrandSelector = ({ name, logoUrl, handleClick, isSelected = false }) => {
     return (
-        <button className="px-[1.2vw] py-[0.4vw] bg-white text-black hover:opacity-95 max-w-[7vw] max-h-[7vw] rounded-lg">
-            <div className="flex items-center justify-between flex-col gap-[0.2vw]">
-                <div className="w-[4vw] h-[4vw] border-2 border-gray-400 rounded-lg overflow-hidden flex items-center justify-center">
+        <button
+            onClick={handleClick}
+            className={`relative group transition-all duration-300 ease-out rounded-2xl 
+                flex flex-col items-center justify-between p-[1vw] w-[7.6vw] h-[7.6vw] 
+                ${isSelected
+                ? "bg-[#1f1f1f] ring-2 ring-[#7f5af0] scale-105"
+                : "bg-[#121212] hover:bg-[#1a1a1a] hover:scale-105"
+            }`}
+        >
+            {/* Hiệu ứng viền phát sáng nhẹ */}
+            <div
+                className={`absolute inset-0 rounded-2xl blur-md opacity-0 group-hover:opacity-40 transition-all duration-300 
+                    ${isSelected ? "bg-[#7f5af0]" : "bg-transparent"}`}
+            />
+
+            {/* Nội dung */}
+            <div className="relative z-10 flex flex-col items-center justify-center gap-[0.5vw]">
+                <div className="w-[4vw] h-[4vw] bg-white/10 rounded-xl flex items-center justify-center overflow-hidden border border-gray-700">
                     <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/CGV_logo.svg/1200px-CGV_logo.svg.png"
-                        alt="CGV Logo"
-                        className="w-full h-full object-contain"
+                        src={logoUrl}
+                        alt={name}
+                        className="w-[3.5vw] h-[3.5vw] object-contain transition-transform duration-300 group-hover:scale-110"
                     />
                 </div>
-                <p className="text-[1vw] font-semibold truncate w-full text-center">{name}</p>
+                <p
+                    className={`text-[0.9vw] font-semibold text-center truncate transition-all duration-300 
+                        ${isSelected ? "text-white" : "text-gray-300 group-hover:text-white"}`}
+                >
+                    {name}
+                </p>
             </div>
         </button>
     );

@@ -5,28 +5,29 @@ import Banner from "../components/MovieDetail/Banner.jsx";
 import ShowtimesList from "../components/MovieDetail/ShowtimesList.jsx";
 import NowPlayingList from "../components/MovieDetail/NowPlayingList.jsx";
 import ReviewList from "../components/MovieDetail/ReviewList.jsx";
+import {useGetMovieQuery} from "../services/movieService.js";
+import {useSearchShowtimesQuery} from "../services/showtimeService.js";
+import dayjs from "dayjs";
 
 const MovieDetailPage = () => {
     const {movieId} = useParams();
-    const [movieInfo, setMovieInfo] = useState();
-    const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        setIsLoading(true);
-        fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZjYzZGE3N2NiMGM3MjBhYzA5YWEyNzUwM2U2NWRlZiIsIm5iZiI6MTc1MTA5NzczMC4xODcsInN1YiI6IjY4NWZhMTgyMzllNDRlYmMxZWRlYmM0MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.lkquOyV3pva_h3EMIUppdPCWuLRHj9D-j-Wo3IOZFHk",
 
-            },
-        }).then(async (res) => {
-            const data = await res.json();
-            console.log(data);
-            setMovieInfo(data);
-        }).catch((err) => {
-            console.log(err);
-        }).finally(() => setIsLoading(false));
-    }, [movieId]);
+    const {data: movie, isError, Error, isLoading} = useGetMovieQuery(movieId);
+
+    const startDate = dayjs("2025-10-03T16:10:00");
+    const { data: showtimesList = [],
+        isError: isShowtimeError,
+        error: showtimeError,
+        isLoading: showtimeLoading,
+    } = useSearchShowtimesQuery({
+        page: 0,
+        size: 10,
+        sort: "startTime,asc",
+        filters: [
+            `movieId:"${movieId}"`,
+            `startTime>"${startDate.format("YYYY-MM-DDTHH:mm:ss")}"`,
+        ],
+    });
 
     if (isLoading) {
         return <Loading />
@@ -34,10 +35,10 @@ const MovieDetailPage = () => {
 
     return (
         <div className="bg-black">
-            <Banner movieInfo={movieInfo}/>
+            <Banner movieInfo={movie}/>
             <div className="flex mx-auto max-w-screen-xl">
                 <div className="flex-[2]">
-                    <ShowtimesList />
+                    <ShowtimesList showtimes={showtimesList} />
                     <div className="border-t border-1 border-gray-light my-[3vw]"></div>
                     <ReviewList/>
                 </div>

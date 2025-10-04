@@ -1,11 +1,33 @@
 
-import Header from "../components/Header.jsx";
 import FeatureMovies from "../components/FeatureMovies/index.jsx";
 import MediaList from "../components/MediaList/index.jsx";
 import Promotions from "../components/PromotionSection.jsx";
-import Footer from "../components/Footer.jsx";
+import {useSearchMoviesQuery} from "../services/movieService.js";
 
 function HomePage() {
+    const { data: nowPlayingList = [],
+        isError: isNowPlayingError,
+        error: nowPlayingError,
+        isLoading: nowPlayingLoading,
+    } = useSearchMoviesQuery({
+        page: 0,
+        size: 15,
+        sort: "releaseDate,desc",
+        filters: ['status:"NOW_PLAYING"'],
+    });
+
+    const { data: commingSoonList = [],
+        isError: isCommingSoonError,
+        error: commingSoonError,
+        isLoading: commingSoonLoading,
+    } = useSearchMoviesQuery({
+        page: 0,
+        size: 10,
+        sort: "releaseDate,desc",
+        filters: ['status:"COMING_SOON"'],
+    });
+
+    
 
     return (
         <div className="bg-black">
@@ -13,10 +35,10 @@ function HomePage() {
             <FeatureMovies/>
             <MediaList
                 title="Phim đang chiếu"
-                url="https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"/>
+                mediaList={nowPlayingList}/>
             <MediaList
                 title="Phim sắp chiếu"
-                url="https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1"/>
+                mediaList={commingSoonList}/>
             <Promotions/>
 
         </div>
