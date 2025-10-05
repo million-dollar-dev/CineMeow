@@ -13,6 +13,9 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -39,6 +42,23 @@ public class ShowtimeSpecification implements Specification<Showtime> {
             } catch (IllegalArgumentException ex) {
                 return builder.disjunction();
             }
+        }
+
+        if ("startTime".equalsIgnoreCase(key)) {
+            LocalDateTime dateTime;
+            try {
+                dateTime = LocalDateTime.parse(value.toString());
+            } catch (Exception ex) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                dateTime = LocalDateTime.parse(value.toString(), formatter);
+            }
+
+            return switch (criteria.getOperation()) {
+                case EQUALITY -> builder.equal(root.get(key), dateTime);
+                case GREATER_THAN -> builder.greaterThan(root.get(key), dateTime);
+                case LESS_THAN -> builder.lessThan(root.get(key), dateTime);
+                default -> builder.conjunction();
+            };
         }
 
         return switch (criteria.getOperation()) {

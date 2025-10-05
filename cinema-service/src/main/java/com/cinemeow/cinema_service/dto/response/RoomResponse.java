@@ -18,4 +18,7 @@ public class RoomResponse {
     RoomStatus status;
     String cinemaId;
     String cinemaName;
+    String cinemaAddress;
+    String brandId;
+    String brandName;
 }

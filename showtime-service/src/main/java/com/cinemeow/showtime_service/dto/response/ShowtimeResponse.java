@@ -21,6 +21,12 @@ public class ShowtimeResponse {
 
     String posterPath;
 
+    String brandId;
+
+    String brandName;
+
+    String cinemaAddress;
+
     String cinemaId;
 
     String cinemaName;

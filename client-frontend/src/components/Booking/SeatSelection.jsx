@@ -1,9 +1,6 @@
 import React, { useMemo, useState } from "react";
 
-const SeatSelection = ({ seats = [] }) => {
-    const [selectedSeats, setSelectedSeats] = useState([]);
-
-    // Nhóm ghế theo hàng (rowIndex)
+const SeatSelection = ({ seats = [], selectedSeats = [], onToggleSeat }) => {
     const groupedSeats = useMemo(() => {
         const rows = {};
         if (!Array.isArray(seats)) return rows;
@@ -14,16 +11,6 @@ const SeatSelection = ({ seats = [] }) => {
         return rows;
     }, [seats]);
 
-    const toggleSeat = (seat) => {
-        if (seat.type === "EMPTY" || seat.status !== "ACTIVE") return;
-
-        setSelectedSeats((prev) =>
-            prev.includes(seat.id)
-                ? prev.filter((id) => id !== seat.id)
-                : [...prev, seat.id]
-        );
-    };
-
     const getSeatStyle = (seat) => {
         if (seat.type === "EMPTY") return "invisible";
         if (seat.status !== "ACTIVE")
@@ -31,8 +18,7 @@ const SeatSelection = ({ seats = [] }) => {
         if (selectedSeats.includes(seat.id))
             return "bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white shadow-[0_0_10px_rgba(127,90,240,0.6)] scale-105";
         if (seat.type === "COUPLE")
-            return "bg-[#1f1f1f] border-1 border-lime  hover:scale-105 transition-all duration-200";
-
+            return "bg-[#1f1f1f] border-1 border-lime hover:scale-105 transition-all duration-200";
         return "bg-[#1f1f1f] border border-gray-600 hover:bg-[#2b2b2b] text-gray-300 hover:text-white transition-all duration-200 hover:scale-105";
     };
 
@@ -46,8 +32,6 @@ const SeatSelection = ({ seats = [] }) => {
         );
     }
 
-    const maxCols = Math.max(...seats.map((s) => s.colIndex)) + 1;
-
     return (
         <div className="flex flex-col items-center my-[2vw] text-white">
             {/* Màn hình */}
@@ -60,26 +44,25 @@ const SeatSelection = ({ seats = [] }) => {
 
             {/* Ghế */}
             <div className="relative">
-                {/* Dãy ghế */}
                 <div className="flex flex-col gap-[0.8vw]">
                     {Object.keys(groupedSeats)
                         .sort((a, b) => a - b)
                         .map((rowIndex) => (
                             <div key={rowIndex} className="flex items-center justify-center">
-                                {/* Chữ hàng (A, B, C...) */}
+                                {/* Chữ hàng */}
                                 <p className="text-gray-400 w-[2vw] text-center mr-[0.5vw] text-[0.8vw] font-medium">
                                     {alphabet[rowIndex] || "?"}
                                 </p>
 
-                                {/* Render từng ghế */}
-                                <div className="flex gap-[0.5vw] justify-center">
+                                {/* Các ghế trong hàng */}
+                                <div className="flex gap-[0.6vw] justify-center">
                                     {groupedSeats[rowIndex]
                                         .sort((a, b) => a.colIndex - b.colIndex)
                                         .map((seat) => (
                                             <button
                                                 key={seat.id}
-                                                onClick={() => toggleSeat(seat)}
-                                                className={`w-[2.2vw] h-[2.2vw] rounded-md flex items-center justify-center text-[0.7vw] font-semibold ${getSeatStyle(
+                                                onClick={() => onToggleSeat(seat)}
+                                                className={`w-[2.5vw] h-[2.5vw] rounded-md flex items-center justify-center text-[0.8vw] font-semibold ${getSeatStyle(
                                                     seat
                                                 )}`}
                                             >

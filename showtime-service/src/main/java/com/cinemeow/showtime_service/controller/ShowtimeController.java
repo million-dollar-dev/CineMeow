@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -131,12 +132,13 @@ public class ShowtimeController {
             }
     )
     @GetMapping("/search")
-    public BaseResponse<List<ShowtimeResponse>> searchMovies(
+    public BaseResponse<List<ShowtimeResponse>> searchShowtime(
             @Parameter(description = "List of filters, e.g. movieId=123, cinemaId=456")
+            Pageable pageable,
             @RequestParam(required = false) String[] filters
     ) {
         return BaseResponse.<List<ShowtimeResponse>>builder()
-                .data(showtimeService.searchShowtime(filters))
+                .data(showtimeService.searchShowtime(pageable, filters))
                 .build();
     }
 }

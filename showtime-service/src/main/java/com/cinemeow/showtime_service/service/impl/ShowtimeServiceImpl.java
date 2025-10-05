@@ -82,9 +82,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
-    public List<ShowtimeResponse> searchShowtime(String[] filters) {
+    public List<ShowtimeResponse> searchShowtime(Pageable pageable, String[] filters) {
         log.info("Search params: {}", Arrays.toString(filters));
-        List<Showtime> showtimes = new ArrayList<>();
+        Page<Showtime> showtimePage;
         if (filters != null && filters.length > 0) {
             ShowtimeSpecificationBuilder builder = new ShowtimeSpecificationBuilder();
 
@@ -108,13 +108,13 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 }
             }
             Specification<Showtime> spec = builder.build();
-            showtimes = showtimeRepository.findAll(spec);
+            showtimePage = showtimeRepository.findAll(spec, pageable);
         } else {
-            showtimes = showtimeRepository.findAll();
+            showtimePage = showtimeRepository.findAll(pageable);
         }
 
-        return showtimes.stream()
-                .map(showtimeMapper::toShowtimeResponse)
+        return showtimePage.stream()
+                .map(this::buildFullShowtimeResponse)
                 .toList();
     }
 
@@ -129,6 +129,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         response.setRoomName(room.getName());
         response.setCinemaId(room.getCinemaId());
         response.setCinemaName(room.getCinemaName());
+        response.setCinemaAddress(room.getCinemaAddress());
+        response.setBrandId(room.getBrandId());
+        response.setBrandName(room.getBrandName());
 
         return response;
     }

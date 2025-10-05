@@ -71,8 +71,12 @@ public class RoomServiceImpl implements RoomService {
         var room = roomRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
         var response = roomMapper.toCinemaRoomResponse(room);
-        response.setCinemaId(room.getCinema().getId());
-        response.setCinemaName(room.getCinema().getName());
+        var cinema = room.getCinema();
+        response.setCinemaId(cinema.getId());
+        response.setCinemaName(cinema.getName());
+        response.setCinemaAddress(cinema.getAddress());
+        response.setBrandId(cinema.getBrand().getId());
+        response.setBrandName(cinema.getBrand().getName());
         return response;
     }
 

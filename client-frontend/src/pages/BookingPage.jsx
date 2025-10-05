@@ -38,6 +38,16 @@ const BookingPage = () => {
 
     const [selectedSeats, setSelectedSeats] = useState([]);
 
+    const handleToggleSeat = (seat) => {
+        if (seat.type === "EMPTY" || seat.status !== "ACTIVE") return;
+
+        setSelectedSeats((prev) =>
+            prev.includes(seat.id)
+                ? prev.filter((id) => id !== seat.id)
+                : [...prev, seat.id]
+        );
+    };
+
     useEffect(() => {
         window.scrollTo({
             top: 500,
@@ -85,7 +95,11 @@ const BookingPage = () => {
             <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row gap-[2vw] pt-[1vw] pb-[4vw] px-[2vw]">
                 {/* Cột trái - Sơ đồ ghế */}
                 <div className="lg:w-3/4 w-full flex flex-col items-center bg-[#121212] rounded-2xl p-[2vw] shadow-[0_0_25px_rgba(127,90,240,0.05)] border border-[#1f1f1f]">
-                    <SeatSelection seats={seatMapResponse?.seats} />
+                    <SeatSelection
+                        seats={seatMapResponse?.seats}
+                        selectedSeats={selectedSeats}
+                        onToggleSeat={handleToggleSeat}
+                    />
                 </div>
 
                 {/* Cột phải - Thông tin & thanh toán */}
