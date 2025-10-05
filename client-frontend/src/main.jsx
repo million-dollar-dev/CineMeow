@@ -8,7 +8,7 @@ import RootLayout from "./pages/RootLayout.jsx";
 import ShowtimesPage from "./pages/ShowtimesPage.jsx";
 import NowPlayingPage from "./pages/NowPlayingPage.jsx";
 import CommingSoon from "./pages/CommingSoonPage.jsx";
-import CinemaPage from "./pages/CinemaPage.jsx";
+import BrandPage from "./pages/BrandPage.jsx";
 import MoviesPage from "./pages/MoviesPage.jsx";
 import ReviewPage from "./pages/ReviewPage.jsx";
 import MovieReviewPage from "./pages/MovieReviewPage.jsx";
@@ -51,8 +51,8 @@ const router = createBrowserRouter([
                 element: <CommingSoon />,
             },
             {
-                path: "/cinema/:cinemaId",
-                element: <CinemaPage />,
+                path: "/brands/:brandId",
+                element: <BrandPage />,
             },
             {
                 path: "/movies",

@@ -10,7 +10,10 @@ const MiniCardList = ({movie, index}) => {
                     <div className="relative">
                         <img src={movie?.posterPath} alt={movie?.title}
                              className="border-gray-900 rounded-md border-1"/>
-                        <p className="absolute bottom-1 left-1 font-extrabold text-[2vw] italic">{index + 1}</p>
+                        <p className="absolute bottom-1 left-1 text-[2vw] font-extrabold italic text-white drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">
+                            {index + 1}
+                        </p>
+
                     </div>
                 </div>
                 <div className="flex gap-[0.4vw] flex-col">
@@ -29,7 +32,6 @@ const MiniCardList = ({movie, index}) => {
                         {movie?.genres.map((g) => g.name).join(" · ")}
                     </p>
                 </div>
-
             </div>
         </div>
     );

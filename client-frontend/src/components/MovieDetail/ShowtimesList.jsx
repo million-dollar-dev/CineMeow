@@ -8,13 +8,14 @@ import ButtonMore from "../utils/ButtonMore.jsx";
 import {useGetAllBrandsQuery} from "../../services/brandService.js";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+
 dayjs.locale("vi");
 
-const ShowtimesList = ({ showtimes = [] }) => {
+const ShowtimesList = ({showtimes = []}) => {
     const startDate = dayjs("2025-10-04T16:10:00");
 
     const days = useMemo(() => {
-        return Array.from({ length: 7 }, (_, i) => {
+        return Array.from({length: 7}, (_, i) => {
             const date = startDate.add(i, "day");
             return {
                 iso: date.format("YYYY-MM-DDTHH:mm:ss"),
@@ -24,13 +25,12 @@ const ShowtimesList = ({ showtimes = [] }) => {
         });
     }, [startDate]);
 
-    const { data: brandsData = [] } = useGetAllBrandsQuery();
+    const {data: brandsData = []} = useGetAllBrandsQuery();
 
     const [selectedBrandId, setSelectedBrandId] = useState("all");
     const [selectedDate, setSelectedDate] = useState(days[0].displayDate);
     const [groupedShowtimes, setGroupedShowtimes] = useState({});
 
-    // ✅ Dùng useMemo để tránh loop khi showtimes hoặc brandsData bị thay đổi reference
     const memoizedShowtimes = useMemo(() => showtimes, [JSON.stringify(showtimes)]);
     const memoizedBrands = useMemo(() => brandsData, [JSON.stringify(brandsData)]);
 
@@ -86,42 +86,35 @@ const ShowtimesList = ({ showtimes = [] }) => {
         setSelectedBrandId(brand === "all" ? "all" : brand.id);
 
     return (
-        <div className="text-white bg-[#0d0d0d] min-h-screen py-[2vw] px-[1vw]">
+        <div className="text-white min-h-screen py-[2vw]">
             {/* Header */}
             <div className="flex justify-between items-center mb-[1vw]">
-                <p className="font-bold text-[1.8vw] text-[#eaeaea] tracking-wide">🎞️ Lịch chiếu</p>
+                <p className="font-bold text-[1.8vw] text-[#eaeaea] tracking-wide flex items-center gap-[0.6vw]">
+                    Lịch chiếu
+                </p>
 
                 <div className="flex gap-[0.6vw]">
-                    <button
-                        className="
-            flex items-center gap-[0.8vw]
-            bg-[#7f5af0] text-white px-[1vw] py-[0.6vw]
-            rounded-full font-medium transition-all duration-300
-            hover:bg-[#9f7bff] active:scale-95 shadow-[0_0_10px_rgba(127,90,240,0.5)]
-          "
+                    <button className="flex items-center gap-[0.8vw] bg-[#7f5af0] text-white px-[1vw] py-[0.6vw]
+                    rounded-full font-medium transition-all duration-300 hover:bg-[#9f7bff] active:scale-95
+                    shadow-[0_0_10px_rgba(127,90,240,0.5)]"
                     >
-                        <FontAwesomeIcon icon={faLocationDot} />
+                        <FontAwesomeIcon icon={faLocationDot}/>
                         Hồ Chí Minh
-                        <FontAwesomeIcon icon={faChevronDown} className="ml-[0.4vw]" />
+                        <FontAwesomeIcon icon={faChevronDown} className="ml-[0.4vw]"/>
                     </button>
 
-                    <button
-                        className="
-            flex items-center gap-[0.6vw]
-            bg-transparent border border-[#7f5af0] text-[#7f5af0]
-            px-[1vw] py-[0.6vw] rounded-full font-medium transition-all duration-300
-            hover:bg-[#7f5af0] hover:text-white active:scale-95
-          "
+                    <button className="flex items-center gap-[0.6vw] bg-transparent border border-[#7f5af0]
+                    text-[#7f5af0] px-[1vw] py-[0.6vw] rounded-full font-medium transition-all duration-300
+                    hover:bg-[#7f5af0] hover:text-white active:scale-95"
                     >
-                        <FontAwesomeIcon icon={faLocationCrosshairs} />
+                        <FontAwesomeIcon icon={faLocationCrosshairs}/>
                         Gần bạn
                     </button>
                 </div>
             </div>
 
             {/* Content */}
-            <div className="border border-[#1e1e1e] bg-[#141414] rounded-2xl shadow-lg my-[2vw]">
-
+            <div className="border border-[#1f1f1f] bg-[#141414] rounded-2xl shadow-[0_0_20px_rgba(127,90,240,0.15)] my-[2vw]">
                 {/* Bộ chọn ngày */}
                 <div className="flex justify-between gap-[1vw] overflow-x-auto px-[2vw] py-[1.6vw] scrollbar-hide">
                     {days.map((d) => (
@@ -135,11 +128,12 @@ const ShowtimesList = ({ showtimes = [] }) => {
                     ))}
                 </div>
 
-                {/* ĐƯỜNG PHÂN CÁCH GIỮA NGÀY & BRAND */}
-                <div className="mx-[2vw] my-[0.6vw] h-[1px] bg-gradient-to-r from-transparent via-[#7f5af0]/40 to-transparent" />
+                {/* Divider */}
+                <div className="mx-[2vw] my-[0.6vw] h-[1px] bg-gradient-to-r from-transparent via-[#7f5af0]/40 to-transparent"/>
 
-                {/* Bộ chọn thương hiệu */}
-                <div className="flex flex-wrap justify-center gap-[1.2vw] px-[2vw] pb-[2vw] pt-[1vw]">
+                {/* Bộ chọn brand */}
+                <div className="flex flex-wrap justify-center gap-[1.2vw]
+                      px-[2vw] pb-[2vw] pt-[1vw]">
                     <CinemaBrandSelector
                         key="all"
                         name="Tất cả"
@@ -165,7 +159,7 @@ const ShowtimesList = ({ showtimes = [] }) => {
                             Chưa có suất chiếu nào cho ngày này 🎭
                         </div>
                     ) : (
-                        Object.values(groupedShowtimes).map(({ cinemaInfo, showtimes }) => (
+                        Object.values(groupedShowtimes).map(({cinemaInfo, showtimes}) => (
                             <ShowtimesSelector
                                 key={cinemaInfo.id}
                                 name={cinemaInfo.name}
@@ -177,14 +171,12 @@ const ShowtimesList = ({ showtimes = [] }) => {
                     )}
 
                     <div className="flex justify-center mt-[2vw]">
-                        <ButtonMore />
+                        <ButtonMore/>
                     </div>
                 </div>
             </div>
         </div>
     );
-
-
 };
 
 

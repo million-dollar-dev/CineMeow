@@ -1,20 +1,16 @@
 import React from "react";
 import dayjs from "dayjs";
 
-const MovieDateSelector = ({ day, date, handleClick, isSelected }) => {
+const MovieDateSelector = ({day, date, handleClick, isSelected}) => {
     return (
         <button
             onClick={handleClick}
-            className={`
-                w-[7vw] h-[7vw] rounded-2xl p-[1vw]
-                flex flex-col items-center justify-center gap-[0.4vw]
-                border transition-all duration-300 shadow-md
-                ${
-                isSelected
-                    ? "bg-[#7f5af0] border-[#a48afc] text-white shadow-[0_0_20px_rgba(127,90,240,0.6)] scale-105"
-                    : "bg-[#1a1a1a] border-[#2a2a2a] text-gray-300 hover:border-[#7f5af0] hover:text-white hover:scale-105"
+            className={`flex flex-col items-center justify-center px-[1vw] py-[0.8vw] w-[7vw] rounded-xl transition-all duration-300 shadow-sm
+            ${isSelected
+                ? "bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white shadow-[0_0_10px_rgba(127,90,240,0.5)] scale-105"
+                : "bg-[#1e1e1e] text-[#b8b8b8] hover:bg-[#252525] hover:text-[#d8c6ff]"
             }
-            `}
+    `}
         >
             <p className="text-[0.9vw] font-medium  uppercase">
                 {day}
