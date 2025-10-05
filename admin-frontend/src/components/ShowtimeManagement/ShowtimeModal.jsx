@@ -52,7 +52,7 @@ const showtimeSchema = yup.object().shape({
     startTime: yup
         .date()
         .typeError("Vui lòng chọn thời gian hợp lệ")
-        .min(new Date(), "Thời gian chiếu phải lớn hơn hiện tại")
+        // .min(new Date(), "Thời gian chiếu phải lớn hơn hiện tại")
         .required("Vui lòng chọn thời gian chiếu"),
     status: yup
         .string()

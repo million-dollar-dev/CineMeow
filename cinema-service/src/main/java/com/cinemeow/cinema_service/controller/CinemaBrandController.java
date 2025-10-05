@@ -49,6 +49,17 @@ public class CinemaBrandController {
                 .build();
     }
 
+    @Operation(summary = "Get brand by id", description = "Lấy danh sách tất cả thương hiệu rạp phim")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fetched successfully")
+    })
+    @GetMapping("/{id}")
+    public BaseResponse<CinemaBrandResponse> getById(@PathVariable String id) {
+        return BaseResponse.<CinemaBrandResponse>builder()
+                .data(cinemaBrandService.getById(id))
+                .build();
+    }
+
     @Operation(summary = "Update cinema brand by ID", description = "Cập nhật thông tin thương hiệu theo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updated successfully"),

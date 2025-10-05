@@ -11,5 +11,6 @@ public interface CinemaBrandService {
     List<CinemaBrandResponse> getAll();
     CinemaBrandResponse updateById(String id, CinemaBrandRequest request);
     void delete(String id);
+    CinemaBrandResponse getById(String id);
     CinemaBrand findById(String id);
 }

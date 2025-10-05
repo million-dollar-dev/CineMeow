@@ -1,11 +1,11 @@
 package com.cinemeow.movie_service.enums;
 
 public enum MovieRating {
-    G,
-    PG,
-    PG13,
-    R,
-    NC17,
+    G,  //General
+    PG, //Parental Guidance
+    PG13, //Parents Strongly Cautioned
+    R,  // Restricted
+    NC17,   // Adults Only
     C13
 }
 

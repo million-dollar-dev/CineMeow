@@ -12,5 +12,5 @@ public interface ShowtimeService {
     ShowtimeResponse getById(String id);
     ShowtimeResponse updateById(String id, ShowtimeRequest request);
     void delete(String id);
-    List<ShowtimeResponse> searchShowtime(String[] filters);
+    List<ShowtimeResponse> searchShowtime(Pageable pageable, String[] filters);
 }

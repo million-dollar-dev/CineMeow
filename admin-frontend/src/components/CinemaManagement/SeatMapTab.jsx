@@ -23,6 +23,7 @@ export default function SeatMapTab({roomId}) {
         updateSeatMap,
         {isLoading: isUpdating, isError: isUpdateError, error: updateError},
     ] = useUpdateSeatMapMutation();
+
     const [seats, setSeats] = useState(
         Array.from({ length: 6 }, () =>
             Array.from({ length: 8 }, () => ({
@@ -46,8 +47,8 @@ export default function SeatMapTab({roomId}) {
                         seatId: seat.seatId ?? null,
                         rowIndex,
                         colIndex,
-                        type: seat.type,
-                        status: seat.status,
+                        type: seat.type ?? "NORMAL",
+                        status: seat.status ?? "ACTIVE", // ✅ Luôn đảm bảo có status hợp lệ
                     });
                 }
             });
@@ -58,33 +59,38 @@ export default function SeatMapTab({roomId}) {
             columns,
             seats,
         };
-    }
+    };
 
     useEffect(() => {
         if (seatResponse?.data?.seats) {
             const seatList = seatResponse.data.seats;
 
-            const maxRow = Math.max(...seatList.map(s => s.rowIndex)) + 1;
-            const maxCol = Math.max(...seatList.map(s => s.colIndex)) + 1;
+            const maxRow = Math.max(...seatList.map((s) => s.rowIndex)) + 1;
+            const maxCol = Math.max(...seatList.map((s) => s.colIndex)) + 1;
 
-            // Tạo ma trận seats dạng object { seatId, type }
             const newSeats = Array.from({ length: maxRow }, (_, r) =>
                 Array.from({ length: maxCol }, (_, c) => {
-                    const seat = seatList.find(s => s.rowIndex === r && s.colIndex === c);
-                    return seat
-                        ? { seatId: seat.id, type: seat.type, status: seat.status }
-                        : { seatId: null, type: "EMPTY", status: "ACTIVE" };
+                    const seat = seatList.find(
+                        (s) => s.rowIndex === r && s.colIndex === c
+                    );
+
+                    if (seat) {
+                        return {
+                            seatId: seat.id,
+                            type: seat.type ?? "NORMAL",
+                            status: seat.status ?? "ACTIVE", // ✅ Gán mặc định nếu null
+                        };
+                    }
+
+                    return { seatId: null, type: "EMPTY", status: "ACTIVE" };
                 })
             );
 
             setSeats(newSeats);
             setRows(maxRow);
             setCols(maxCol);
-
-            console.log('seat List', seats)
         }
     }, [seatResponse]);
-
 
     const handleSeatClick = (r, c) => {
         if (!showEditor) return;
@@ -94,8 +100,8 @@ export default function SeatMapTab({roomId}) {
                 i === r && j === c
                     ? {
                         ...seat,
-                        type: seatType,
-                        status: 'ACTIVE'
+                        type: seatType ?? seat.type ?? "NORMAL",
+                        status: "ACTIVE", // ✅ Đảm bảo luôn ACTIVE khi sửa
                     }
                     : seat
             )
@@ -107,16 +113,14 @@ export default function SeatMapTab({roomId}) {
     const handleSaveClick = async () => {
         try {
             const payload = buildSeatMapRequest(seats);
-            console.log("save request: ", payload);
-
-            await updateSeatMap({id: roomId, ...payload}).unwrap();
-
-            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
+            await updateSeatMap({ id: roomId, ...payload }).unwrap();
+            dispatch(openSnackbar({ message: "Cập nhật thành công!", type: "success" }));
         } catch (err) {
             console.error("Update seat map failed", err);
-            dispatch(openSnackbar({message: error, type: "error"}));
+            dispatch(openSnackbar({ message: "Lỗi cập nhật sơ đồ ghế", type: "error" }));
         }
     };
+
 
     const countSeats = (type) => seats.flat().filter((s) => s.type === type).length;
 

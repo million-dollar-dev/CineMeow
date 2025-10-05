@@ -52,6 +52,11 @@ public class CinemaBrandServiceImpl implements CinemaBrandService {
     }
 
     @Override
+    public CinemaBrandResponse getById(String id) {
+        return cinemaBrandMapper.toCinemaBrandResponse(this.findById(id));
+    }
+
+    @Override
     public CinemaBrand findById(String id) {
         return cinemaBrandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));

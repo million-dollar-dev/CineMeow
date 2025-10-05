@@ -14,4 +14,7 @@ public class RoomResponse {
     String name;
     String cinemaId;
     String cinemaName;
+    String cinemaAddress;
+    String brandId;
+    String brandName;
 }
