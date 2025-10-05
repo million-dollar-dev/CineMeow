@@ -37,11 +37,21 @@ const MovieDetailPage = () => {
         <div className="bg-black">
             <Banner movieInfo={movie}/>
             <div className="flex mx-auto max-w-screen-xl">
-                <div className="flex-[2]">
-                    <ShowtimesList showtimes={showtimesList} />
-                    <div className="border-t border-1 border-gray-light my-[3vw]"></div>
-                    <ReviewList/>
+                <div className="flex-[2] flex flex-col gap-[3vw]">
+                    {/* Showtime List */}
+                    <div>
+                        <ShowtimesList showtimes={showtimesList} />
+                    </div>
+
+                    {/* Đường phân cách fancy */}
+                    <div className="mx-[1vw] h-[1px] bg-gradient-to-r from-transparent via-[#7f5af0]/40 to-transparent" />
+
+                    {/* Review List */}
+                    <div>
+                        <ReviewList />
+                    </div>
                 </div>
+
                 <div className="flex-1">
                     <div className="">
                         <NowPlayingList/>

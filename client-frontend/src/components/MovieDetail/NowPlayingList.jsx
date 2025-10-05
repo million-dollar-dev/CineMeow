@@ -22,10 +22,6 @@ const NowPlayingList = () => {
                     <MiniCardList movie={item} key={item.id} index={index} />
                 ))
             }
-
-
-
-
         </div>
     );
 };
