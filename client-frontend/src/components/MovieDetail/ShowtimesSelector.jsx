@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import TimeSelector from "./TimeSelector";
 
 const ShowtimesSelector = ({ name, address, showtimes, logoUrl }) => {
@@ -13,7 +13,7 @@ const ShowtimesSelector = ({ name, address, showtimes, logoUrl }) => {
             >
                 <div className="flex items-center gap-[1vw]">
                     <div className="w-[3vw] h-[3vw] bg-[#0d0d0d] rounded-lg flex items-center justify-center">
-                        <img src={logoUrl} alt={name} className="w-full h-full object-contain" />
+                        <img src={logoUrl} alt={name} className="w-full h-full object-contain rounded-lg" />
                     </div>
                     <div>
                         <p className="text-[1.2vw] font-semibold text-[#fff]">{name}</p>

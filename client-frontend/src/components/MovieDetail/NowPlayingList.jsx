@@ -1,6 +1,7 @@
 import React from 'react';
 import MiniCardList from "../MediaList/MiniCardList.jsx";
 import {useSearchMoviesQuery} from "../../services/movieService.js";
+import {Link} from "react-router-dom";
 
 const NowPlayingList = () => {
     const { data: nowPlayingList = [],
@@ -19,7 +20,9 @@ const NowPlayingList = () => {
             <p className="font-bold text-[1.8vw]">Phim đang chiếu</p>
             {
                 nowPlayingList.map((item, index) => (
-                    <MiniCardList movie={item} key={item.id} index={index} />
+                   <Link to={`/movie/${item.id}`} key={item.id}>
+                       <MiniCardList movie={item} key={item.id} index={index} />
+                   </Link>
                 ))
             }
         </div>
