@@ -55,15 +55,14 @@ const ShowtimesList = ({showtimes = []}) => {
             if (!cinemaId) return acc;
 
             if (!acc[cinemaId]) {
-                const brandLogo =
-                    memoizedBrands.find((b) => b.id === selectedBrandId)?.logoUrl || null;
+                const brandLogo = memoizedBrands.find((b) => b.id === showtime.brandId)?.logoUrl || null;
 
                 acc[cinemaId] = {
                     cinemaInfo: {
                         id: showtime.cinemaId,
                         name: showtime.cinemaName,
                         address: showtime.cinemaAddress,
-                        logo: brandLogo,
+                        logoUrl: brandLogo,
                     },
                     showtimes: [],
                 };
@@ -84,6 +83,8 @@ const ShowtimesList = ({showtimes = []}) => {
     const handleSelectDate = (date) => setSelectedDate(date);
     const handleSelectBrand = (brand) =>
         setSelectedBrandId(brand === "all" ? "all" : brand.id);
+
+    console.log(groupedShowtimes);
 
     return (
         <div className="text-white min-h-screen py-[2vw]">

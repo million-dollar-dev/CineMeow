@@ -16,14 +16,13 @@ export const brandApi = rootApi.injectEndpoints({
             query: (id) => ({
                 url: `${CONTEXT_PATH}/cinemas/${id}/rooms`,
             }),
-            providesTags: (result, error, id) => [{ type: "Rooms", id }],
         }),
 
         getSeatMap: builder.query({
             query: (id) => ({
                 url: `${CONTEXT_PATH}/rooms/${id}/seats`,
             }),
-            providesTags: (result, error, id) => [{ type: "SeatMap", id }],
+            transformResponse: (response) => response.data,
         }),
     }),
 });

@@ -5,156 +5,158 @@ import Banner from "../components/MovieDetail/Banner.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import Promotions from "../components/PromotionSection.jsx";
+import {useGetShowtimeQuery} from "../services/showtimeService.js";
+import {useGetMovieQuery} from "../services/movieService.js";
+import {useGetSeatMapQuery} from "../services/cinemaService.js";
+import SeatSelection from "../components/Booking/SeatSelection.jsx";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
 
 const BookingPage = () => {
-    const {movieId} = useParams();
-    const [movieInfo, setMovieInfo] = useState();
-    const [isLoading, setIsLoading] = useState(false);
+    const {showtimeId} = useParams();
 
-    const rows = ["A", "B", "C", "D", "E", "F"];
-    const seatsPerRow = 12;
+    const {
+        data: showtime,
+        isLoading: loadingShowtime,
+        isError: isShowtimeError,
+        error: showtimeError
+    } = useGetShowtimeQuery(showtimeId);
+
+    const {
+        data: movie,
+        isLoading: loadingMovie,
+        isError: isMovieError,
+        error: movieError
+    } = useGetMovieQuery(showtime?.movieId, {skip: !showtime?.movieId});
+
+    const {
+        data: seatMapResponse,
+        isLoading: loadingSeatMap,
+        isError: isSeatMapError,
+        error: setMapError
+    } = useGetSeatMapQuery(showtime?.roomId, {skip: !showtime?.roomId});
+
     const [selectedSeats, setSelectedSeats] = useState([]);
 
-    const toggleSeat = (seat) => {
-        setSelectedSeats((prev) =>
-            prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
-        );
-    };
     useEffect(() => {
         window.scrollTo({
             top: 500,
-            behavior: "smooth", // cuộn mượt
+            behavior: "smooth",
         });
     }, []);
-    useEffect(() => {
-        console.log(movieId);
-        setIsLoading(true);
-        fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZjYzZGE3N2NiMGM3MjBhYzA5YWEyNzUwM2U2NWRlZiIsIm5iZiI6MTc1MTA5NzczMC4xODcsInN1YiI6IjY4NWZhMTgyMzllNDRlYmMxZWRlYmM0MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.lkquOyV3pva_h3EMIUppdPCWuLRHj9D-j-Wo3IOZFHk",
 
-            },
-        }).then(async (res) => {
-            const data = await res.json();
-            console.log(data);
-            setMovieInfo(data);
-        }).catch((err) => {
-            console.log(err);
-        }).finally(() => setIsLoading(false));
-    }, [movieId]);
-
-    if (isLoading) {
+    if (loadingShowtime) {
         return <Loading/>
     }
 
     return (
-        <div className="bg-black text-white">
-            <Banner movieInfo={movieInfo}/>
-            <div className="bg-gray-dark flex items-center justify-center py-[1vw]" >
-                <div className="px-[2vw] py-[1vw]">
-                    <p>Rạp</p>
-                    <p className="text-gray-light">CGV Hùng Vương Plaza</p>
+        <div className="bg-[#0b0b0b] text-white min-h-screen">
+            {/* Banner phim */}
+            <Banner movieInfo={movie} />
+
+            {/* Thông tin rạp */}
+            <div className="bg-[#141414] flex items-center justify-center py-[1vw] border-b border-[#1f1f1f]">
+                <div className="px-[2vw] py-[1vw] text-center">
+                    <p className="text-gray-400 text-[0.9vw]">Rạp</p>
+                    <p className="font-semibold text-[1vw] text-[#eaeaea]">
+                        {showtime?.cinemaName}
+                    </p>
                 </div>
-                <div className="px-[2vw] py-[1vw] border-x">
-                    <p>Rạp</p>
-                    <p className="text-gray-light">CGV Hùng Vương Plaza</p>
+                <div className="px-[2vw] py-[1vw] border-x border-[#2a2a2a] text-center">
+                    <p className="text-gray-400 text-[0.9vw]">Phòng chiếu</p>
+                    <p className="font-semibold text-[1vw] text-[#eaeaea]">
+                        {showtime?.roomName}
+                    </p>
                 </div>
-                <div className="px-[2vw] py-[1vw]">
-                    <p>Rạp</p>
-                    <p className="text-gray-light">CGV Hùng Vương Plaza</p>
+                <div className="px-[2vw] py-[1vw] text-center">
+                    <p className="text-gray-400 text-[0.9vw]">Suất chiếu</p>
+                    <p className="font-semibold text-[1vw] text-[#eaeaea]">
+                        {dayjs(showtime?.startTime).format("HH:mm DD/MM/YYYY")}
+                    </p>
                 </div>
             </div>
-            <p className="text-center font-bold text-[2vw] py-[2vw]">Chọn ghế</p>
-            <div className="max-w-screen-xl mx-auto flex pt-[2vw] pb-[4vw]">
-                {/* Cột phải - Sơ đồ */}
-                <div className="w-3/4 flex flex-col items-center">
-                    {/* Legend */}
-                    <div className="flex gap-6 mb-6 justify-between">
-                        <div className="flex gap-4">
-                            <Legend color="border-blue-400" label="Normal"/>
-                            <Legend color="border-green-400" label="Deluxe"/>
-                            <Legend color="border-yellow-400" label="Super"/>
-                        </div>
-                        <div className="flex gap-4">
-                            <Legend color="bg-blue-800" label="Sold"/>
-                            <Legend color="border-white" label="Available"/>
-                            <Legend color="bg-violet" label="Selected"/>
-                        </div>
-                    </div>
 
-                    {/* Màn hình cong */}
-                    <div className="w-full max-w-3xl mb-6">
-                        <div className="bg-gradient-to-b from-white to-transparent h-8 rounded-t-full"></div>
-                        <p className="text-center text-sm mt-1">MÀN HÌNH</p>
-                    </div>
+            {/* Tiêu đề */}
+            <p className="text-center font-extrabold text-[1.8vw] py-[2vw] tracking-wide text-[#f5f5f5]">
+                🎟️ Chọn ghế ngồi
+            </p>
 
-                    {/* Ghế */}
-                    <div className="space-y-2">
-                        {rows.map((row) => (
-                            <div key={row} className="flex items-center gap-2">
-                                <span className="w-4">{row}</span>
-                                <div className="flex gap-2">
-                                    {Array.from({length: seatsPerRow}, (_, i) => {
-                                        const seatNumber = `${row}${i + 1}`;
-                                        const isSelected = selectedSeats.includes(seatNumber);
-                                        const isSold = false;
-                                        return (
-                                            <button
-                                                key={seatNumber}
-                                                onClick={() => !isSold && toggleSeat(seatNumber)}
-                                                className={`w-10 h-10 border rounded-sm text-sm flex items-center justify-center
-                        ${
-                                                    isSold
-                                                        ? "bg-blue-800 cursor-not-allowed"
-                                                        : isSelected
-                                                            ? "bg-violet text-white"
-                                                            : "border-white hover:bg-white hover:text-black"
-                                                }`}
-                                            >
-                                                {i + 1}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                                <span className="w-4">{row}</span>
+            {/* Bố cục chính */}
+            <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row gap-[2vw] pt-[1vw] pb-[4vw] px-[2vw]">
+                {/* Cột trái - Sơ đồ ghế */}
+                <div className="lg:w-3/4 w-full flex flex-col items-center bg-[#121212] rounded-2xl p-[2vw] shadow-[0_0_25px_rgba(127,90,240,0.05)] border border-[#1f1f1f]">
+                    <SeatSelection seats={seatMapResponse?.seats} />
+                </div>
+
+                {/* Cột phải - Thông tin & thanh toán */}
+                <div className="lg:w-1/4 w-full bg-[#181818] border border-[#2a2a2a] rounded-2xl p-[1.8vw] flex flex-col justify-between shadow-[0_0_20px_rgba(127,90,240,0.08)]">
+                    <div>
+                        <h2 className="text-[1.2vw] font-semibold mb-4 text-[#f1f1f1]">
+                            🎫 Ghế bạn đã chọn
+                        </h2>
+
+                        <div className="flex flex-wrap gap-[0.6vw] mb-6 min-h-[3vw]">
+                            {selectedSeats.length > 0 ? (
+                                selectedSeats.map((s) => (
+                                    <span
+                                        key={s}
+                                        className="bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white px-[0.9vw] py-[0.4vw] rounded-md text-[0.85vw] font-semibold shadow-[0_0_10px_rgba(127,90,240,0.6)]"
+                                    >
+                  {s}
+                </span>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 text-[0.9vw]">
+                                    Chưa chọn ghế nào.
+                                </p>
+                            )}
+                        </div>
+
+                        <button
+                            className="w-full bg-[#2a2a2a] hover:bg-[#323232] text-white py-[0.8vw] rounded-xl text-[0.9vw] font-medium mb-6 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-[0.5vw]"
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                            Thêm bắp nước
+                        </button>
+
+                        <div className="border-t border-[#333] my-4"></div>
+
+                        {/* Tổng đơn */}
+                        <div className="space-y-3 text-[1vw]">
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Giá vé</span>
+                                <span className="font-semibold text-[#f5f5f5]">45.000đ</span>
                             </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="w-1/4 bg-gray-sub p-4 rounded-lg">
-                    <h2 className="text-lg font-semibold mb-4">Ghế đã chọn</h2>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        {selectedSeats.map((s) => (
-                            <span
-                                key={s}
-                                className="bg-violet text-white px-3 py-1 rounded-md text-sm font-semibold"
-                            >
-              {s}
-            </span>
-                        ))}
-                    </div>
-                    <button className="my-4 w-full bg-gray-light text-white py-2 rounded-full">
-                        <FontAwesomeIcon icon={faPlus}/> Thêm bawps nước
-                    </button>
-                    <hr/>
-                    <div className="space-y-2 text-[1.4vw] my-4">
-                        <div className="flex justify-between font-bold">
-                            <span>Tổng đơn hàng</span>
-                            <span>
-                                100000đ
-                            </span>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Số ghế</span>
+                                <span className="font-semibold">{selectedSeats.length}</span>
+                            </div>
+                            <div className="flex justify-between font-bold text-[1.1vw] pt-2 border-t border-[#2a2a2a]">
+                                <span>Tổng cộng</span>
+                                <span className="text-[#7f5af0]">
+                {(selectedSeats.length * 45000).toLocaleString()}đ
+              </span>
+                            </div>
                         </div>
                     </div>
-                    <button className="mt-4 w-full bg-white text-black py-2 rounded-full font-semibold">
-                        Tiếp tục
+
+                    <button
+                        disabled={selectedSeats.length === 0}
+                        className={`mt-6 w-full py-[0.9vw] rounded-xl font-semibold text-[1vw] transition-all duration-300 ${
+                            selectedSeats.length === 0
+                                ? "bg-[#2a2a2a] text-gray-500 cursor-not-allowed"
+                                : "bg-gradient-to-r from-[#7f5af0] to-[#9f7bff] text-white hover:shadow-[0_0_20px_rgba(127,90,240,0.6)] active:scale-95"
+                        }`}
+                    >
+                        Tiếp tục thanh toán
                     </button>
                 </div>
             </div>
+
             <Promotions />
         </div>
     );
+
 };
 
 function Legend({color, label}) {

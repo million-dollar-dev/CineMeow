@@ -47,5 +47,5 @@ export const showtimeApi = rootApi.injectEndpoints({
 export const {
     useGetAllShowtimesQuery,
     useSearchShowtimesQuery,
-    useGetShowtimesQuery,
+    useGetShowtimeQuery,
 } = showtimeApi;

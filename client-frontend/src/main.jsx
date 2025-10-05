@@ -83,7 +83,7 @@ const router = createBrowserRouter([
                 element: <PromotionDetailPage />
             },
             {
-                path: "/showtimes/booking/:movieId",
+                path: "/showtimes/booking/:showtimeId",
                 element: <BookingPage />,
             },
             {

@@ -15,7 +15,6 @@ const FeatureMovies = () => {
     const [activeMovieId, setActiveMovieId] = useState(null);
     const [isFading, setIsFading] = useState(false);
 
-    // Sync activeMovieId khi movies thay đổi
     useEffect(() => {
         if (movies.length > 0 && !activeMovieId) {
             setActiveMovieId(movies[0].id);
