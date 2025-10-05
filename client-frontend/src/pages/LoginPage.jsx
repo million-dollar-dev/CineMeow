@@ -6,11 +6,11 @@ import TextInput from "../components/FormInputs/TextInput.jsx";
 import FormField from "../components/FormField.jsx";
 import {FormProvider, useForm} from "react-hook-form";
 import {useDispatch} from "react-redux";
-import {useLoginMutation} from "../services/rootApi.js";
 import {toast} from "react-toastify";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {setTokens} from "../redux/slices/authSlice.js";
+import {useLoginMutation} from "../services/authService.js";
 
 const RegisterPage = () => {
     const schema = yup.object().shape({
@@ -31,7 +31,7 @@ const RegisterPage = () => {
     const [login, {data = {}, isError, error, isSuccess, isLoading}] = useLoginMutation();
 
     const onSubmit = (formData) => {
-        login(formData);
+        // login(formData);
     };
 
     useEffect(() => {

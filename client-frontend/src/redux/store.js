@@ -1,11 +1,11 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
-import {rootApi} from "../services/rootApi.js";
 import {authSlice} from "./slices/authSlice.js";
 import {toastSlice} from "./slices/toastSlice.js";
 import {persistReducer, persistStore} from "redux-persist";
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist/es/constants";
 import storage from "redux-persist/lib/storage";
 import {logoutMiddleware} from "./middlewares.js";
+import {rootApi} from "../services/rootApi.js";
 
 const persistConfig = {
     key: "root",
