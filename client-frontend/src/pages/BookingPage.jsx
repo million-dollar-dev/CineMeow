@@ -109,15 +109,15 @@ const BookingPage = () => {
                             🎫 Ghế bạn đã chọn
                         </h2>
 
-                        <div className="flex flex-wrap gap-[0.6vw] mb-6 min-h-[3vw]">
+                        <div className="flex flex-wrap gap-[0.6vw] mb-6 min-h-[2.4vw]">
                             {selectedSeats.length > 0 ? (
                                 selectedSeats.map((s) => (
-                                    <span
+                                    <div
                                         key={s}
-                                        className="bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white px-[0.9vw] py-[0.4vw] rounded-md text-[0.85vw] font-semibold shadow-[0_0_10px_rgba(127,90,240,0.6)]"
+                                        className="flex items-center justify-center bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white px-[0.8vw] py-[0.3vw] rounded-md text-[0.85vw] font-semibold"
                                     >
-                  {s}
-                </span>
+                                        <p>{s}</p>
+                                    </div>
                                 ))
                             ) : (
                                 <p className="text-gray-500 text-[0.9vw]">
