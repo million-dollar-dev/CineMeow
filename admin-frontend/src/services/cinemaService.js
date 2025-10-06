@@ -3,7 +3,7 @@ import { rootApi } from "./rootApi";
 const CONTEXT_PATH = 'cinema';
 
 export const brandApi = rootApi.injectEndpoints({
-    tagTypes: ["Cinemas", "Rooms"],
+    tagTypes: ["Cinemas", "Rooms", "FnBs"],
     endpoints: (builder) => ({
         getAllCinemas: builder.query({
             query: () => ({
@@ -74,6 +74,31 @@ export const brandApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: (result, error, { id }) => [{ type: "SeatMap", id }],
         }),
+
+        getAllFnBs: builder.query({
+            query: () => ({
+                url: `${CONTEXT_PATH}/fnbs`,
+            }),
+            providesTags: ["FnBs"],
+        }),
+
+        createFnB: builder.mutation({
+            query: (payload) => ({
+                url: `${CONTEXT_PATH}/fnbs`,
+                method: "POST",
+                body: payload,
+            }),
+            invalidatesTags: ["FnBs"],
+        }),
+
+        updateFnB: builder.mutation({
+            query: ({ id, ...payload }) => ({
+                url: `${CONTEXT_PATH}/fnbs/${id}`,
+                method: "PUT",
+                body: payload,
+            }),
+            invalidatesTags: ["FnBs"],
+        }),
     }),
 });
 
@@ -86,4 +111,7 @@ export const {
     useUpdateRoomMutation,
     useGetSeatMapQuery,
     useUpdateSeatMapMutation,
+    useCreateFnBMutation,
+    useGetAllFnBsQuery,
+    useUpdateFnBMutation,
 } = brandApi;
