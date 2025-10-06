@@ -16,6 +16,7 @@ import MovieManagementPage from "./pages/MovieManagementPage.jsx";
 import BrandManagementPage from "./pages/BrandManagementPage.jsx";
 import CinemaManagementPage from "./pages/CinemaManagementPage.jsx";
 import ShowtimePage from "./pages/ShowtimePage.jsx";
+import FnBManagementPage from "./pages/FnBManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
                     {
                         path: "/showtimes",
                         element: <ShowtimePage/>
+                    },
+                    {
+                        path: "/fnb",
+                        element: <FnBManagementPage />
                     }
                 ]
             },

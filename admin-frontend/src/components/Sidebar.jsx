@@ -27,6 +27,7 @@ const menuItems = [
         children: [
             {label: "Thương hiệu", path: "/brands"},
             {label: "Rạp", path: "/cinemas"},
+            {label: "FnB", path: "/fnb"},
         ]
     },
     {icon: <CalendarMonthOutlinedIcon/>, label: "Xuất chiếu", path: "/showtimes"},
