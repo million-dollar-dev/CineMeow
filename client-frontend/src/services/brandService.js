@@ -18,10 +18,18 @@ export const brandApi = rootApi.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
+        getFnbsByBrand: builder.query({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/brands/${id}/fnbs`,
+            }),
+            transformResponse: (response) => response.data,
+        }),
+
     }),
 });
 
 export const {
     useGetAllBrandsQuery,
     useGetBrandQuery,
+    useGetFnbsByBrandQuery,
 } = brandApi;
