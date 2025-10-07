@@ -9,6 +9,7 @@ import com.cinemeow.cinema_service.dto.response.SeatResponse;
 import com.cinemeow.cinema_service.entity.Room;
 import com.cinemeow.cinema_service.entity.Seat;
 import com.cinemeow.cinema_service.enums.SeatStatus;
+import com.cinemeow.cinema_service.enums.SeatType;
 import com.cinemeow.cinema_service.exception.AppException;
 import com.cinemeow.cinema_service.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.RoomMapper;
@@ -24,10 +25,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,7 +103,10 @@ public class RoomServiceImpl implements RoomService {
             room.getSeats().add(aSeat);
         }
 
+        assignSeatLabels(room);
+
         roomRepository.save(room);
+
         return toSeatMapResponse(room);
     }
 
@@ -156,9 +157,52 @@ public class RoomServiceImpl implements RoomService {
             }
         }
 
+        assignSeatLabels(room);
+
         roomRepository.save(room);
 
         return toSeatMapResponse(room);
+    }
+
+    private void assignSeatLabels(Room room) {
+        List<Seat> seats = room.getSeats()
+                .stream()
+                .filter(seat -> seat.getStatus() != SeatStatus.DELETED)
+                .sorted(Comparator.comparingInt(Seat::getRowIndex)
+                        .thenComparingInt(Seat::getColIndex))
+                .collect(Collectors.toList());
+
+        Map<Integer, List<Seat>> seatsByRow = seats.stream()
+                .collect(Collectors.groupingBy(Seat::getRowIndex, LinkedHashMap::new, Collectors.toList()));
+
+        int logicalRow = 0;
+        for (Map.Entry<Integer, List<Seat>> entry : seatsByRow.entrySet()) {
+            List<Seat> rowSeats = entry.getValue();
+
+            boolean hasNonEmpty = rowSeats.stream().anyMatch(s -> s.getType() != SeatType.EMPTY);
+            if (!hasNonEmpty) continue;
+
+            String rowLabel = getRowLetter(logicalRow++);
+            int seatNumber = 0;
+
+            for (Seat seat : rowSeats) {
+                if (seat.getType() == SeatType.EMPTY) {
+                    seat.setLabel(null);
+                } else {
+                    seatNumber++;
+                    seat.setLabel(rowLabel + seatNumber);
+                }
+            }
+        }
+    }
+
+    private String getRowLetter(int index) {
+        StringBuilder label = new StringBuilder();
+        while (index >= 0) {
+            label.insert(0, (char) ('A' + (index % 26)));
+            index = (index / 26) - 1;
+        }
+        return label.toString();
     }
 
     private SeatMapResponse toSeatMapResponse(Room room) {

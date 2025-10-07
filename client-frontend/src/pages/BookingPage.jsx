@@ -49,11 +49,14 @@ const BookingPage = () => {
         if (seat.type === "EMPTY" || seat.status !== "ACTIVE") return;
 
         setSelectedSeats((prev) =>
-            prev.includes(seat.id)
-                ? prev.filter((id) => id !== seat.id)
-                : [...prev, seat.id]
+            prev.includes(seat)
+                ? prev.filter((s) => s.id !== seat.id)
+                : [...prev, seat]
         );
     };
+
+    console.log(selectedSeats)
+    console.log(seatMapResponse)
 
     useEffect(() => {
         window.scrollTo({

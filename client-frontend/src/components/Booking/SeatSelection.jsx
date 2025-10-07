@@ -15,7 +15,7 @@ const SeatSelection = ({ seats = [], selectedSeats = [], onToggleSeat }) => {
         if (seat.type === "EMPTY") return "invisible";
         if (seat.status !== "ACTIVE")
             return "bg-gray-700 cursor-not-allowed text-gray-500";
-        if (selectedSeats.includes(seat.id))
+        if (selectedSeats.includes(seat))
             return "bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white shadow-[0_0_10px_rgba(127,90,240,0.6)] scale-105";
         if (seat.type === "COUPLE")
             return "bg-[#1f1f1f] border-1 border-lime hover:scale-105 transition-all duration-200";
@@ -66,7 +66,7 @@ const SeatSelection = ({ seats = [], selectedSeats = [], onToggleSeat }) => {
                                                     seat
                                                 )}`}
                                             >
-                                                {seat.type !== "EMPTY" ? seat.colIndex + 1 : ""}
+                                                {seat.type !== "EMPTY" ? seat.label : ""}
                                             </button>
                                         ))}
                                 </div>

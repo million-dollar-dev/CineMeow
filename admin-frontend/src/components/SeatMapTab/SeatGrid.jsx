@@ -32,24 +32,6 @@ export default function SeatGrid({ seats, handleSeatClick }) {
                         </Typography>
                     </div>
 
-                    {/* Cột số */}
-                    <div
-                        className="grid mb-2"
-                        style={{
-                            gridTemplateColumns: `40px repeat(${cols}, minmax(0,1fr))`,
-                        }}
-                    >
-                        <div />
-                        {Array.from({ length: cols }).map((_, c) => (
-                            <div
-                                key={`col-${c}`}
-                                className="text-center text-xs font-bold text-black"
-                            >
-                                {c + 1}
-                            </div>
-                        ))}
-                    </div>
-
                     {/* Ghế + nhãn hàng */}
                     <div className="grid gap-1">
                         {seats.map((row, r) => (
@@ -70,10 +52,13 @@ export default function SeatGrid({ seats, handleSeatClick }) {
                                     <div
                                         key={`${r}-${c}`}
                                         onClick={() => handleSeatClick(r, c)}
-                                        className={`w-8 h-8 rounded cursor-pointer border ${getSeatClass(
+                                        className={`w-8 h-8 rounded cursor-pointer border flex justify-center items-center 
+                                        ${getSeatClass(
                                             seat
                                         )}`}
-                                    />
+                                    >
+                                        <p className="text-[0.8vw] font-semibold">{seat?.label}</p>
+                                    </div>
                                 ))}
                             </div>
                         ))}

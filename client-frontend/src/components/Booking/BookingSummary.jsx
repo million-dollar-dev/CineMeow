@@ -75,7 +75,7 @@ export default function BookingSummary({
                                 key={s}
                                 className="flex items-center justify-center bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white px-[0.8vw] py-[0.3vw] rounded-md text-[0.85vw] font-semibold shadow-[0_0_10px_rgba(127,90,240,0.4)]"
                             >
-                                {s}
+                                {s.label}
                             </div>
                         ))
                     ) : (

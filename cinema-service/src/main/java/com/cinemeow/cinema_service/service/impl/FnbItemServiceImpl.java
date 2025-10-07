@@ -43,6 +43,15 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
+    public List<FnbItemResponse> getByBrandId(String brandId) {
+        var brand = cinemaBrandRepository.findById(brandId)
+                .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
+        return getAll().stream()
+                .filter(s -> s.getCinemaBrand().getId().equals(brand.getId()))
+                .toList();
+    }
+
+    @Override
     public FnbItemResponse getById(String id) {
         var  fnbItem = fnbItemRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FNB_ITEM_NOT_EXISTED));

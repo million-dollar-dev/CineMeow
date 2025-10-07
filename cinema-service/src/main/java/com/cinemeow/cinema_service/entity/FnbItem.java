@@ -20,7 +20,7 @@ public class FnbItem {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     CinemaBrand cinemaBrand;
 
     @Column(nullable = false, name = "name")

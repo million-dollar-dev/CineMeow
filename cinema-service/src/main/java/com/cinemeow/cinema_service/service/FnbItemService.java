@@ -8,6 +8,7 @@ import java.util.List;
 public interface FnbItemService {
     FnbItemResponse creat(FnbItemRequest request);
     List<FnbItemResponse> getAll();
+    List<FnbItemResponse> getByBrandId(String brandId);
     FnbItemResponse getById(String id);
     FnbItemResponse updateById(String id, FnbItemRequest request);
     void deleteById(String id);

@@ -3,7 +3,9 @@ package com.cinemeow.cinema_service.controller;
 import com.cinemeow.cinema_service.dto.request.CinemaBrandRequest;
 import com.cinemeow.cinema_service.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.CinemaBrandResponse;
+import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 import com.cinemeow.cinema_service.service.CinemaBrandService;
+import com.cinemeow.cinema_service.service.FnbItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,6 +25,7 @@ import java.util.List;
 @Tag(name = "Cinema Brand Management", description = "APIs for managing cinema brands")
 public class CinemaBrandController {
     CinemaBrandService cinemaBrandService;
+    FnbItemService fnbItemService;
 
     @Operation(
             summary = "Create new cinema brand",
@@ -84,6 +87,13 @@ public class CinemaBrandController {
         cinemaBrandService.delete(id);
         return BaseResponse.<Void>builder()
                 .message("Delete successfully!")
+                .build();
+    }
+
+    @GetMapping("/{id}/fnbs")
+    public BaseResponse<List<FnbItemResponse>> getFnbs(@PathVariable String id) {
+        return BaseResponse.<List<FnbItemResponse>>builder()
+                .data(fnbItemService.getByBrandId(id))
                 .build();
     }
 }
