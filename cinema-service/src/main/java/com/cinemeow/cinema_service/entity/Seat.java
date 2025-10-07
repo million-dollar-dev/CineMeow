@@ -25,6 +25,9 @@ public class Seat {
     @Column(name = "column_index")
     int colIndex;
 
+    @Column(name = "label")
+    String label;
+
     @Enumerated(EnumType.STRING)
     SeatStatus status;
 

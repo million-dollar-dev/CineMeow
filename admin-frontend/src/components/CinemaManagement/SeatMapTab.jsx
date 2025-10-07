@@ -24,6 +24,8 @@ export default function SeatMapTab({roomId}) {
         {isLoading: isUpdating, isError: isUpdateError, error: updateError},
     ] = useUpdateSeatMapMutation();
 
+    console.log('ress', seatResponse);
+
     const [seats, setSeats] = useState(
         Array.from({ length: 6 }, () =>
             Array.from({ length: 8 }, () => ({
@@ -48,7 +50,7 @@ export default function SeatMapTab({roomId}) {
                         rowIndex,
                         colIndex,
                         type: seat.type ?? "NORMAL",
-                        status: seat.status ?? "ACTIVE", // ✅ Luôn đảm bảo có status hợp lệ
+                        status: seat.status ?? "ACTIVE",
                     });
                 }
             });
@@ -78,11 +80,12 @@ export default function SeatMapTab({roomId}) {
                         return {
                             seatId: seat.id,
                             type: seat.type ?? "NORMAL",
-                            status: seat.status ?? "ACTIVE", // ✅ Gán mặc định nếu null
+                            status: seat.status ?? "ACTIVE",
+                            label: seat.label ?? null,
                         };
                     }
 
-                    return { seatId: null, type: "EMPTY", status: "ACTIVE" };
+                    return { seatId: null, type: "EMPTY", status: "ACTIVE", label: seat.label ?? null, };
                 })
             );
 
@@ -101,7 +104,7 @@ export default function SeatMapTab({roomId}) {
                     ? {
                         ...seat,
                         type: seatType ?? seat.type ?? "NORMAL",
-                        status: "ACTIVE", // ✅ Đảm bảo luôn ACTIVE khi sửa
+                        status: "ACTIVE",
                     }
                     : seat
             )
@@ -131,6 +134,8 @@ export default function SeatMapTab({roomId}) {
             </Box>
         );
     }
+
+    console.log('seats', seats)
 
     return (
         <div className="grid grid-cols-3 gap-6 p-6 bg-gray-100 min-h-[80vh]">

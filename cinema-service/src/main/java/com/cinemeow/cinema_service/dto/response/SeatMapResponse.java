@@ -34,6 +34,7 @@ public class SeatMapResponse {
                         .colIndex(seat.getColIndex())
                         .type(seat.getType())
                         .status(seat.getStatus())
+                        .label(seat.getLabel())
                         .build())
 
                 .toList();

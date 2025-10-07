@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,  makeFinal = true)
 @RequestMapping("/fnbs")
@@ -54,7 +54,7 @@ public class FnbItemController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of F&B items",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = FnbItemResponse.class)))),
     })
-    @GetMapping("/all")
+    @GetMapping()
     public BaseResponse<List<FnbItemResponse>> getAll() {
         return BaseResponse.<List<FnbItemResponse>>builder()
                 .data(fnbItemService.getAll())

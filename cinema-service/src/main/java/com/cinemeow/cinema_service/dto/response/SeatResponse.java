@@ -15,6 +15,7 @@ public class SeatResponse {
     Long id;
     Integer rowIndex;
     Integer colIndex;
+    String label;
     SeatType type;
     SeatStatus status;
 }
