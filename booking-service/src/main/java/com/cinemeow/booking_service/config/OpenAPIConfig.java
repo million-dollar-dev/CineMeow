@@ -1,4 +1,4 @@
-package com.cinemeow.booking_servicce.config;
+package com.cinemeow.booking_service.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
