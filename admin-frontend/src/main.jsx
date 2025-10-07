@@ -17,6 +17,7 @@ import BrandManagementPage from "./pages/BrandManagementPage.jsx";
 import CinemaManagementPage from "./pages/CinemaManagementPage.jsx";
 import ShowtimePage from "./pages/ShowtimePage.jsx";
 import FnBManagementPage from "./pages/FnBManagementPage.jsx";
+import PricingManagementPage from "./pages/PricingManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -52,7 +53,12 @@ const router = createBrowserRouter([
                     {
                         path: "/fnb",
                         element: <FnBManagementPage />
+                    },
+                    {
+                        path: "/pricing",
+                        element: <PricingManagementPage />
                     }
+
                 ]
             },
             {
