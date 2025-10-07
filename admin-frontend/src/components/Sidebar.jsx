@@ -31,7 +31,14 @@ const menuItems = [
         ]
     },
     {icon: <CalendarMonthOutlinedIcon/>, label: "Xuất chiếu", path: "/showtimes"},
-    {icon: <ConfirmationNumberOutlinedIcon/>, label: "Tickets", path: "/reports"},
+    {
+        icon: <ConfirmationNumberOutlinedIcon/>,
+        label: "Vé",
+        children: [
+            {label: "Giá vé", path: "/pricing"},
+            {label: "Đặt vé", path: "/cinemas"},
+        ]
+    },
     {icon: <LoyaltyOutlinedIcon/>, label: "Promotions", path: "/promotions"},
     {icon: <LibraryBooksOutlinedIcon/>, label: "Reviews", path: "/reviews"},
     {icon: <PeopleOutlinedIcon/>, label: "Accounts", path: "/reports"},
