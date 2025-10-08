@@ -1,9 +1,15 @@
 package com.cinemeow.booking_service.repository;
 
 import com.cinemeow.booking_service.entity.TicketPrice;
+import com.cinemeow.booking_service.enums.RoomType;
+import com.cinemeow.booking_service.enums.SeatType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TicketPriceRepository extends JpaRepository<TicketPrice, String> {
+    boolean existsByBrandIdAndRoomTypeAndSeatType(String brandId, RoomType roomType, SeatType seatType);
+    List<TicketPrice> findAllByBrandId(String brandId);
 }

@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketPriceResponse {
+    String id;
+
     String brandId;
 
     String brandName;

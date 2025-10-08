@@ -76,6 +76,22 @@ public class TicketPriceController {
     }
 
     @Operation(
+            summary = "Get ticket price by Brand's id",
+            description = "Retrieves all detailed information of a specific ticket price using its brand ID."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved details",
+                    content = @Content(schema = @Schema(implementation = TicketPriceResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Ticket price not found", content = @Content),
+    })
+    @GetMapping("/brand/{id}")
+    public BaseResponse<List<TicketPriceResponse>> getByBrandId(@PathVariable String id) {
+        return BaseResponse.<List<TicketPriceResponse>>builder()
+                .data(ticketPriceService.getByBrandId(id))
+                .build();
+    }
+
+    @Operation(
             summary = "Update ticket price",
             description = "Updates an existing ticket price record by ID."
     )
@@ -102,6 +118,7 @@ public class TicketPriceController {
     })
     @DeleteMapping("/{id}")
     public BaseResponse<Void> delete(@PathVariable String id) {
+        ticketPriceService.delete(id);
         return BaseResponse.<Void>builder()
                 .message("Delete successfully!")
                 .build();

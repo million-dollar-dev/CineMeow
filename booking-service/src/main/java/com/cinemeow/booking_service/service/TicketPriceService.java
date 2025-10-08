@@ -11,4 +11,5 @@ public interface TicketPriceService {
     TicketPriceResponse getById(String id);
     TicketPriceResponse update(String id, TicketPriceRequest request);
     void delete(String id);
+    List<TicketPriceResponse> getByBrandId(String brandId);
 }

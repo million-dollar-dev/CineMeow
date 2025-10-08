@@ -6,6 +6,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 @FeignClient(
         name = "cinema-service",
         url = "${app.services.cinema-service}"
@@ -13,4 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CinemaClient {
     @GetMapping("/brands/{id}")
     BaseResponse<CinemaBrandResponse> getBrandById(@PathVariable String id);
+
+    @GetMapping("/brands")
+    BaseResponse<List<CinemaBrandResponse>> getAll();
 }
