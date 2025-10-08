@@ -12,6 +12,7 @@ import ComboPopup from "../components/Booking/ComboPopup.jsx";
 import BookingSummary from "../components/Booking/BookingSummary.jsx";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import {useGetAllPriceByBrandQuery} from "../services/bookingService.js";
 
 const BookingPage = () => {
     const { showtimeId } = useParams();
@@ -30,6 +31,10 @@ const BookingPage = () => {
         data: fnbs,
         isLoading: loadingFnb,
     } = useGetFnbsByBrandQuery(showtime?.brandId, { skip: !showtime?.brandId });
+
+    const {
+        data: price
+    } = useGetAllPriceByBrandQuery(showtime?.brandId, { skip: !showtime?.brandId });
 
     const {
         data: seatMapResponse,
@@ -56,7 +61,6 @@ const BookingPage = () => {
     };
 
     console.log(selectedSeats)
-    console.log(seatMapResponse)
 
     useEffect(() => {
         window.scrollTo({
@@ -128,6 +132,8 @@ const BookingPage = () => {
                     selectedCombos={selectedCombos}
                     setOpenPopup={setOpenPopup}
                     setSelectedCombos={setSelectedCombos}
+                    seatPrices={price}
+                    roomType={showtime?.roomType}
                 />
             </div>
 

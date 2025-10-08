@@ -1,24 +1,61 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faChair, faXmark, faTicket } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChair, faPlus, faTicket, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {useState} from "react";
+
+const ROOM_TYPES = [
+    {value: "_2D", label: "2D"},
+    {value: "_3D", label: "3D"},
+    {value: "_IMAX", label: "IMAX"},
+    {value: "_4DX", label: "4DX"},
+];
 
 export default function BookingSummary({
                                            selectedSeats = [],
                                            selectedCombos = [],
                                            setOpenPopup,
                                            setSelectedCombos,
+                                           seatPrices = [],
+                                           roomType
                                        }) {
-    const seatPrice = 45000;
     const [discountCode, setDiscountCode] = useState("");
     const [discountValue, setDiscountValue] = useState(0);
     const [errorMsg, setErrorMsg] = useState("");
+
+    console.log(roomType);
 
     const comboTotal = selectedCombos.reduce(
         (sum, combo) => sum + (combo.price || 0) * (combo.quantity || 0),
         0
     );
 
-    const subtotal = selectedSeats.length * seatPrice + comboTotal;
+    const groupedSeats = selectedSeats.reduce((acc, seat) => {
+        const matchedPrice = seatPrices.find(
+            (p) => p.seatType === seat.type && p.roomType === roomType
+        );
+
+        console.log("matchedPrice", matchedPrice);
+
+        const key = `${seat.type}-${seat.roomType}`;
+        if (!acc[key]) {
+            acc[key] = {
+                seatType: seat.type,
+                roomType: seat.roomType,
+                price: matchedPrice?.price || 0,
+                seats: [],
+            };
+        }
+        acc[key].seats.push(seat);
+        return acc;
+    }, {});
+
+    const seatGroups = Object.values(groupedSeats);
+    const seatTotal = seatGroups.reduce(
+        (sum, g) => sum + g.price * g.seats.length,
+        0
+    );
+
+
+    const subtotal = seatTotal + comboTotal;
     const totalPrice = Math.max(subtotal - discountValue, 0);
 
     const validCodes = {
@@ -45,7 +82,7 @@ export default function BookingSummary({
             prev
                 .map((c) =>
                     c.id === id
-                        ? { ...c, quantity: Math.max(0, (c.quantity || 1) + delta) }
+                        ? {...c, quantity: Math.max(0, (c.quantity || 1) + delta)}
                         : c
                 )
                 .filter((c) => c.quantity > 0)
@@ -57,32 +94,24 @@ export default function BookingSummary({
     };
 
     return (
-        <div className="lg:w-2/5 w-full bg-[#181818] border border-[#2a2a2a] rounded-2xl p-[1.8vw] flex flex-col justify-between shadow-[0_0_25px_rgba(127,90,240,0.08)]">
+        <div
+            className="lg:w-2/5 w-full bg-[#181818] border border-[#2a2a2a] rounded-2xl p-[1.8vw] flex flex-col justify-between shadow-[0_0_25px_rgba(127,90,240,0.08)]">
             <div className="space-y-6">
                 {/* 🪑 Tiêu đề */}
                 <div className="flex items-center gap-2">
-                    <FontAwesomeIcon icon={faChair} className="text-[#9f7bff]" />
+                    <FontAwesomeIcon icon={faChair} className="text-[#9f7bff]"/>
                     <h2 className="text-[1.2vw] font-semibold text-[#f1f1f1]">
                         Ghế bạn đã chọn
                     </h2>
                 </div>
 
                 {/* 💺 Danh sách ghế */}
-                <div className="flex flex-wrap gap-[0.6vw] min-h-[3vw] bg-[#202020] p-[0.8vw] rounded-xl border border-[#2a2a2a]">
-                    {selectedSeats.length > 0 ? (
-                        selectedSeats.map((s) => (
-                            <div
-                                key={s}
-                                className="flex items-center justify-center bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white px-[0.8vw] py-[0.3vw] rounded-md text-[0.85vw] font-semibold shadow-[0_0_10px_rgba(127,90,240,0.4)]"
-                            >
-                                {s.label}
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-500 text-[0.9vw] italic">
-                            Chưa chọn ghế nào.
-                        </p>
-                    )}
+                <div
+                    className="flex flex-wrap gap-[0.6vw] min-h-[3vw] bg-[#202020] p-[0.8vw] rounded-xl border border-[#2a2a2a]"
+                > {selectedSeats.length > 0 ? (selectedSeats.map((s) => (
+                    <div key={s}
+                         className="flex items-center justify-center bg-gradient-to-br from-[#7f5af0] to-[#9f7bff] text-white px-[0.8vw] py-[0.3vw] rounded-md text-[0.85vw] font-semibold shadow-[0_0_10px_rgba(127,90,240,0.4)]"> {s.label} </div>))) : (
+                    <p className="text-gray-500 text-[0.9vw] italic"> Chưa chọn ghế nào. </p>)}
                 </div>
 
                 {/* 🍿 Combo đã chọn */}
@@ -135,17 +164,16 @@ export default function BookingSummary({
                                 className="absolute top-2 right-2 text-gray-400 hover:text-red-400 transition-colors"
                                 title="Xóa combo"
                             >
-                                <FontAwesomeIcon icon={faXmark} />
+                                <FontAwesomeIcon icon={faXmark}/>
                             </button>
                         </div>
                     ))}
 
-                    {/* ➕ Nút thêm combo */}
                     <button
                         className="w-full bg-[#2a2a2a] hover:bg-[#323232] text-white py-[0.8vw] rounded-xl text-[0.9vw] font-medium transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-[0.5vw] shadow-[0_0_10px_rgba(0,0,0,0.2)]"
                         onClick={() => setOpenPopup(true)}
                     >
-                        <FontAwesomeIcon icon={faPlus} />
+                        <FontAwesomeIcon icon={faPlus}/>
                         <span>Thêm combo bắp nước</span>
                     </button>
                 </div>
@@ -153,7 +181,7 @@ export default function BookingSummary({
                 {/* 🎟️ Ô nhập mã giảm giá */}
                 <div className="border-t border-[#2a2a2a] pt-4">
                     <div className="flex items-center gap-2 mb-2">
-                        <FontAwesomeIcon icon={faTicket} className="text-[#9f7bff]" />
+                        <FontAwesomeIcon icon={faTicket} className="text-[#9f7bff]"/>
                         <span className="text-white font-semibold text-[1vw]">
               Mã giảm giá
             </span>
@@ -181,20 +209,35 @@ export default function BookingSummary({
                     )}
                 </div>
 
-                {/* 💰 Tổng kết giá */}
                 <div className="border-t border-[#333] pt-4 space-y-3 text-[1vw]">
-                    <div className="flex justify-between">
-                        <span className="text-gray-400">Giá vé</span>
-                        <span className="font-semibold text-[#f5f5f5]">
-              {seatPrice.toLocaleString("vi-VN")}đ
-            </span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-400">Số ghế</span>
-                        <span className="font-semibold text-[#f5f5f5]">
-              {selectedSeats.length}
-            </span>
-                    </div>
+                    {seatGroups.length > 0 ? (
+                        <div className="bg-[#202020] p-[0.8vw] rounded-xl border border-[#2a2a2a] overflow-hidden">
+                            <table className="w-full text-sm text-gray-300">
+                                <thead>
+                                <tr className="text-gray-400 text-left border-b border-[#333]">
+                                    <th className="p-2">Loại ghế</th>
+                                    <th className="p-2 text-center">Số lượng</th>
+                                    <th className="p-2 text-right">Giá vé</th>
+                                    <th className="p-2 text-right">Thành tiền</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {seatGroups.map((g, idx) => (
+                                    <tr key={idx} className="border-b border-[#2a2a2a] hover:bg-[#2a2a2a] transition">
+                                        <td className="p-2">{g.seatType}</td>
+                                        <td className="p-2 text-center">{g.seats.length}</td>
+                                        <td className="p-2 text-right">{g.price.toLocaleString("vi-VN")} ₫</td>
+                                        <td className="p-2 text-right text-[#9f7bff] font-semibold">
+                                            {(g.price * g.seats.length).toLocaleString("vi-VN")} ₫
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <p className="text-gray-500 italic text-[0.9vw]">Chưa chọn ghế nào.</p>
+                    )}
                     {selectedCombos.length > 0 && (
                         <div className="flex justify-between">
                             <span className="text-gray-400">Combo</span>
@@ -218,7 +261,6 @@ export default function BookingSummary({
                 </div>
             </div>
 
-            {/* 🔘 Nút thanh toán */}
             <button
                 disabled={selectedSeats.length === 0}
                 className={`mt-8 w-full py-[0.9vw] rounded-xl font-semibold text-[1vw] transition-all duration-300 ${
