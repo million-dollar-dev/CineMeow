@@ -54,12 +54,20 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         var ticketPrice = ticketPriceRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TICKET_PRICE_NOT_EXISTED));
         ticketPriceMapper.update(ticketPrice, request);
+        ticketPriceRepository.save(ticketPrice);
         return enrichWithBrandInfo(ticketPrice);
     }
 
     @Override
     public void delete(String id) {
         ticketPriceRepository.deleteById(id);
+    }
+
+    @Override
+    public List<TicketPriceResponse> getByBrandId(String brandId) {
+        return ticketPriceRepository.findAllByBrandId(brandId).stream()
+                .map(this::enrichWithBrandInfo)
+                .toList();
     }
 
     private TicketPriceResponse enrichWithBrandInfo(TicketPrice ticketPrice) {

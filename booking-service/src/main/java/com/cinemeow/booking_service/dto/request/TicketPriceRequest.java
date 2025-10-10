@@ -25,6 +25,6 @@ public class TicketPriceRequest {
     @NotNull(message = "Room's type must not be null")
     RoomType roomType;
 
-    @NotBlank(message = "Price must not be blank")
+    @NotNull(message = "Price must not be null")
     BigDecimal price;
 }
