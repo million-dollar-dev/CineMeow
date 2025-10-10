@@ -132,6 +132,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         response.setCinemaAddress(room.getCinemaAddress());
         response.setBrandId(room.getBrandId());
         response.setBrandName(room.getBrandName());
+        response.setRoomType(room.getType());
 
         return response;
     }

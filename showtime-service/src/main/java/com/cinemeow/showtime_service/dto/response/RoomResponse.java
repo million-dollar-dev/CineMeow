@@ -1,5 +1,6 @@
 package com.cinemeow.showtime_service.dto.response;
 
+import com.cinemeow.showtime_service.enums.RoomType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,6 +15,7 @@ public class RoomResponse {
     String name;
     String cinemaId;
     String cinemaName;
+    RoomType type;
     String cinemaAddress;
     String brandId;
     String brandName;
