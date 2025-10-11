@@ -14,8 +14,8 @@ import java.util.List;
 public class SeatController {
     SeatService seatService;
 
-    @PostMapping("/seats")
-    public List<SeatResponse> getAvailableSeats(@RequestBody List<Long> seatIds) {
+    @PostMapping("/check")
+    public List<SeatResponse> checkAvailableSeats(@RequestBody List<Long> seatIds) {
         return seatService.checkAvailableSeats(seatIds);
     }
 

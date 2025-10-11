@@ -1,8 +1,10 @@
 package com.cinemeow.booking_service.service.impl;
 
+import com.cinemeow.booking_service.client.CinemaClient;
 import com.cinemeow.booking_service.client.ShowtimeClient;
 import com.cinemeow.booking_service.dto.request.BookingRequest;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
+import com.cinemeow.booking_service.dto.response.SeatResponse;
 import com.cinemeow.booking_service.dto.response.ShowtimeResponse;
 import com.cinemeow.booking_service.enums.ShowtimeStatus;
 import com.cinemeow.booking_service.exception.AppException;
@@ -25,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
     BookingMapper bookingMapper;
 
     ShowtimeClient showtimeClient;
+    private final CinemaClient cinemaClient;
 
     @Override
     public BookingResponse create(BookingRequest request) {
@@ -32,6 +35,10 @@ public class BookingServiceImpl implements BookingService {
 
         if (showtime.getStatus() != ShowtimeStatus.AVAILABLE)
             throw new AppException(ErrorCode.SHOWTIME_NOT_AVAILABLE);
+
+        List<SeatResponse> seats = cinemaClient.checkAvailableSeats(request.getSeatIds());
+        if (seats.size() != request.getSeatIds().size())
+            throw new AppException(ErrorCode.INVALID_SEAT);
 
 
 

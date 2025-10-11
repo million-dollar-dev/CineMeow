@@ -45,7 +45,7 @@ public class BookingRequest {
 
     @NotEmpty(message = "Seats list cannot be empty")
     @Valid
-    List<SeatSelectionRequest> seats;
+    List<Long> seatIds;
 
     @Valid
     List<FnbOrderRequest> fnbItems;

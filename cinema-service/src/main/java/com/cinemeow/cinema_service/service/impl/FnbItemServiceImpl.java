@@ -1,7 +1,10 @@
 package com.cinemeow.cinema_service.service.impl;
 
+import com.cinemeow.cinema_service.dto.request.FnbCalculateRequest;
 import com.cinemeow.cinema_service.dto.request.FnbItemRequest;
+import com.cinemeow.cinema_service.dto.response.FnbCalculateResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
+import com.cinemeow.cinema_service.entity.FnbItem;
 import com.cinemeow.cinema_service.exception.AppException;
 import com.cinemeow.cinema_service.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.FnbItemMapper;
@@ -14,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,5 +78,36 @@ public class FnbItemServiceImpl implements FnbItemService {
     @Override
     public void deleteById(String id) {
         fnbItemRepository.deleteById(id);
+    }
+
+    @Override
+    public FnbCalculateResponse calculate(FnbCalculateRequest request) {
+        BigDecimal total = BigDecimal.ZERO;
+        List<FnbCalculateResponse.ItemDetail> details = new ArrayList<>();
+
+        for (FnbCalculateRequest.SelectedFnbItem item : request.getItems()) {
+            FnbItem fnb = fnbItemRepository.findByIdAndBrandId(item.getFnbItemId(), request.getBrandId())
+                    .orElseThrow(() -> new AppException(ErrorCode.FNB_ITEM_NOT_EXISTED));
+
+            BigDecimal subtotal = fnb.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+
+            FnbCalculateResponse.ItemDetail detail = FnbCalculateResponse.ItemDetail
+                    .builder()
+                    .id(fnb.getId())
+                    .name(fnb.getName())
+                    .quantity(item.getQuantity())
+                    .unitPrice(fnb.getPrice())
+                    .subtotal(subtotal)
+                    .build();
+
+            details.add(detail);
+
+            total = total.add(subtotal);
+        }
+
+        return FnbCalculateResponse.builder()
+                .items(details)
+                .totalPrice(total)
+                .build();
     }
 }
