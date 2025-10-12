@@ -1,7 +1,9 @@
 package com.cinemeow.booking_service.service.impl;
 
 import com.cinemeow.booking_service.client.CinemaClient;
+import com.cinemeow.booking_service.dto.request.CalculatePriceRequest;
 import com.cinemeow.booking_service.dto.request.TicketPriceRequest;
+import com.cinemeow.booking_service.dto.response.CalculatePriceResponse;
 import com.cinemeow.booking_service.dto.response.CinemaBrandResponse;
 import com.cinemeow.booking_service.dto.response.TicketPriceResponse;
 import com.cinemeow.booking_service.entity.TicketPrice;
@@ -16,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,6 +71,21 @@ public class TicketPriceServiceImpl implements TicketPriceService {
         return ticketPriceRepository.findAllByBrandId(brandId).stream()
                 .map(this::enrichWithBrandInfo)
                 .toList();
+    }
+
+    @Override
+    public BigDecimal calculatePrice(CalculatePriceRequest request) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (CalculatePriceRequest.SelectedSeat s: request.getItems()) {
+            var seatPrice = ticketPriceRepository
+                    .findByBrandIdAndRoomTypeAndSeatType(s.getBrandId(), s.getRoomType(), s.getSeatType())
+                    .orElseThrow(() -> new AppException(ErrorCode.TICKET_PRICE_NOT_EXISTED));
+
+            totalPrice.add(seatPrice.getPrice());
+        }
+
+        return totalPrice;
     }
 
     private TicketPriceResponse enrichWithBrandInfo(TicketPrice ticketPrice) {
