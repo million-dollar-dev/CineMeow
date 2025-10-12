@@ -1,6 +1,8 @@
 package com.cinemeow.cinema_service.service;
 
+import com.cinemeow.cinema_service.dto.request.FnbCalculateRequest;
 import com.cinemeow.cinema_service.dto.request.FnbItemRequest;
+import com.cinemeow.cinema_service.dto.response.FnbCalculateResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 
 import java.util.List;
@@ -12,4 +14,5 @@ public interface FnbItemService {
     FnbItemResponse getById(String id);
     FnbItemResponse updateById(String id, FnbItemRequest request);
     void deleteById(String id);
+    FnbCalculateResponse calculate(FnbCalculateRequest request);
 }

@@ -25,14 +25,4 @@ public class FnbOrderRequest {
     @NotNull(message = "Unit price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Unit price must be greater than 0")
     BigDecimal unitPrice;
-
-    @DecimalMin(value = "0.0", inclusive = true, message = "Total price cannot be negative")
-    BigDecimal totalPrice;
-
-    @AssertTrue(message = "Total price must equal unit price * quantity")
-    public boolean isTotalValid() {
-        if (unitPrice == null) return true;
-        BigDecimal expected = unitPrice.multiply(BigDecimal.valueOf(quantity));
-        return totalPrice != null && totalPrice.compareTo(expected) == 0;
-    }
 }

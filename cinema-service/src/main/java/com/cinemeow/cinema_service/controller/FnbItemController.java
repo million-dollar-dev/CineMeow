@@ -1,7 +1,9 @@
 package com.cinemeow.cinema_service.controller;
 
+import com.cinemeow.cinema_service.dto.request.FnbCalculateRequest;
 import com.cinemeow.cinema_service.dto.request.FnbItemRequest;
 import com.cinemeow.cinema_service.dto.response.BaseResponse;
+import com.cinemeow.cinema_service.dto.response.FnbCalculateResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 import com.cinemeow.cinema_service.service.FnbItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -110,5 +112,11 @@ public class FnbItemController {
         return BaseResponse.<Void>builder()
                 .message("Delete successfully!")
                 .build();
+    }
+
+
+    @PostMapping("/calculate")
+    public FnbCalculateResponse calculate(@Valid @RequestBody FnbCalculateRequest request) {
+        return fnbItemService.calculate(request);
     }
 }
