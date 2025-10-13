@@ -26,10 +26,6 @@ public class BookingRequest {
     @NotBlank(message = "Showtime ID is required")
     String showtimeId;
 
-    @NotNull(message = "Total price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Total price must be greater than 0")
-    BigDecimal totalPrice;
-
     @DecimalMin(value = "0.0", inclusive = true, message = "Discount amount cannot be negative")
     BigDecimal discountAmount = BigDecimal.ZERO;
 
