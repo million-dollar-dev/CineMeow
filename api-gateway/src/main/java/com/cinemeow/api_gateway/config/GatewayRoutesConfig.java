@@ -58,6 +58,11 @@ public class GatewayRoutesConfig {
                         .filters(f -> f.stripPrefix(2))
                         .uri("http://localhost:8087"))
 
+                .route("promotion-service", r -> r
+                        .path(apiPrefix + "/promotion/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri("http://localhost:8088"))
+
                 .build();
     }
 }

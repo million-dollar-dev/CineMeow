@@ -1,0 +1,34 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /promotion
+
+spring:
+  application:
+    name: promotion-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cinemeow_promotion
+    username: postgres
+    password: sa123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: promotion-service
+    server: http://localhost:8088/promotion
+    title: Promotion Service
+    version: 1.0.0
