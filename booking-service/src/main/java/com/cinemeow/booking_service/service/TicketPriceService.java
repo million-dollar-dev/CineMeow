@@ -4,6 +4,7 @@ import com.cinemeow.booking_service.dto.request.CalculatePriceRequest;
 import com.cinemeow.booking_service.dto.request.TicketPriceRequest;
 import com.cinemeow.booking_service.dto.response.CalculatePriceResponse;
 import com.cinemeow.booking_service.dto.response.TicketPriceResponse;
+import com.cinemeow.booking_service.enums.RoomType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,5 +16,6 @@ public interface TicketPriceService {
     TicketPriceResponse update(String id, TicketPriceRequest request);
     void delete(String id);
     List<TicketPriceResponse> getByBrandId(String brandId);
-    BigDecimal calculatePrice(CalculatePriceRequest request);
+    CalculatePriceResponse calculatePrice(CalculatePriceRequest request);
+    BigDecimal calculatePrice(List<Long> seatIds, String brandId, RoomType roomType);
 }

@@ -2,10 +2,7 @@ package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.response.SeatResponse;
 import com.cinemeow.cinema_service.service.SeatService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,6 +10,11 @@ import java.util.List;
 @RequestMapping("/seats")
 public class SeatController {
     SeatService seatService;
+
+    @GetMapping("/{id}")
+    public SeatResponse getSeatById(@PathVariable Long id) {
+        return seatService.getSeatById(id);
+    }
 
     @PostMapping("/check")
     public List<SeatResponse> checkAvailableSeats(@RequestBody List<Long> seatIds) {

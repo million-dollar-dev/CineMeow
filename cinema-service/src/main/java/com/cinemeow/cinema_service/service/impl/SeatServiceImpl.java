@@ -26,6 +26,13 @@ public class SeatServiceImpl implements SeatService {
     SeatMapper seatMapper;
 
     @Override
+    public SeatResponse getSeatById(Long id) {
+        var seat = seatRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_AVAILABLE));
+        return null;
+    }
+
+    @Override
     public List<SeatResponse> checkAvailableSeats(List<Long> seatIds) {
         return seatRepository.findByIdInAndStatus(seatIds, SeatStatus.AVAILABLE)
                 .stream()
@@ -36,7 +43,7 @@ public class SeatServiceImpl implements SeatService {
     @Transactional
     @Override
     public void lockSeats(List<Long> seatIds) {
-        List<Seat> seats = seatRepository.findAllById(seatIds);
+        List<Seat> seats = seatRepository.findAllByIdIn(seatIds);
         for (Seat seat : seats) {
             if (seat.getStatus() != SeatStatus.AVAILABLE) {
                 throw new AppException(ErrorCode.SEAT_NOT_AVAILABLE);
@@ -48,7 +55,7 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public void unlockSeats(List<Long> seatIds) {
-        List<Seat> seats = seatRepository.findAllById(seatIds);
+        List<Seat> seats = seatRepository.findAllByIdIn(seatIds);
         for (Seat seat : seats) {
             if (seat.getStatus() == SeatStatus.LOCKED) {
                 seat.setStatus(SeatStatus.AVAILABLE);
@@ -59,7 +66,7 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public void confirmSeats(List<Long> seatIds) {
-        List<Seat> seats = seatRepository.findAllById(seatIds);
+        List<Seat> seats = seatRepository.findAllByIdIn(seatIds);
         for (Seat seat : seats) {
             if (seat.getStatus() != SeatStatus.LOCKED) {
                 throw new AppException(ErrorCode.SEAT_NOT_LOCKED);

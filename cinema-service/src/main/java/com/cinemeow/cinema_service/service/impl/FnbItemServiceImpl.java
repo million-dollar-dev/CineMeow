@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,5 +110,17 @@ public class FnbItemServiceImpl implements FnbItemService {
                 .items(details)
                 .totalPrice(total)
                 .build();
+    }
+
+    @Override
+    public BigDecimal calculate(Map<String, Integer> items) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (Map.Entry<String, Integer> entry : items.entrySet()) {
+            var aItem = fnbItemRepository.findById(entry.getKey())
+                    .orElseThrow(() -> new AppException(ErrorCode.FNB_ITEM_NOT_EXISTED));
+            BigDecimal subtotal = aItem.getPrice().multiply(BigDecimal.valueOf(entry.getValue()));
+            totalPrice = totalPrice.add(subtotal);
+        }
+        return totalPrice;
     }
 }

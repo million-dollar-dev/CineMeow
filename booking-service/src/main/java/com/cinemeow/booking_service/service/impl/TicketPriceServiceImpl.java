@@ -7,6 +7,7 @@ import com.cinemeow.booking_service.dto.response.CalculatePriceResponse;
 import com.cinemeow.booking_service.dto.response.CinemaBrandResponse;
 import com.cinemeow.booking_service.dto.response.TicketPriceResponse;
 import com.cinemeow.booking_service.entity.TicketPrice;
+import com.cinemeow.booking_service.enums.RoomType;
 import com.cinemeow.booking_service.exception.AppException;
 import com.cinemeow.booking_service.exception.ErrorCode;
 import com.cinemeow.booking_service.mapper.TicketPriceMapper;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,18 +76,44 @@ public class TicketPriceServiceImpl implements TicketPriceService {
     }
 
     @Override
-    public BigDecimal calculatePrice(CalculatePriceRequest request) {
+    public CalculatePriceResponse calculatePrice(CalculatePriceRequest request) {
         BigDecimal totalPrice = BigDecimal.ZERO;
-
+        List<CalculatePriceResponse.SelectedSeat> items = new ArrayList<>();
         for (CalculatePriceRequest.SelectedSeat s: request.getItems()) {
             var seatPrice = ticketPriceRepository
                     .findByBrandIdAndRoomTypeAndSeatType(s.getBrandId(), s.getRoomType(), s.getSeatType())
                     .orElseThrow(() -> new AppException(ErrorCode.TICKET_PRICE_NOT_EXISTED));
+            var aSeatResponse = CalculatePriceResponse.SelectedSeat
+                    .builder()
+                    .seatId(s.getSeatId())
+                    .label(s.getLabel())
+                    .seatType(s.getSeatType())
+                    .price(seatPrice.getPrice())
+                    .build();
+
+            items.add(aSeatResponse);
 
             totalPrice.add(seatPrice.getPrice());
         }
 
-        return totalPrice;
+        return CalculatePriceResponse.builder()
+                .seatPrices(items)
+                .total(totalPrice)
+                .build();
+    }
+
+    @Override
+    public BigDecimal calculatePrice(List<Long> seatIds, String brandId, RoomType roomType) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (Long seatId : seatIds) {
+            var seat = cinemaClient.getSeatById(seatId);
+            var seatPrice = ticketPriceRepository
+                    .findByBrandIdAndRoomTypeAndSeatType(brandId, roomType, seat.getType())
+                    .orElseThrow(() -> new AppException(ErrorCode.TICKET_PRICE_NOT_EXISTED));
+
+            totalPrice.add(seatPrice.getPrice());
+        }
+        return  totalPrice;
     }
 
     private TicketPriceResponse enrichWithBrandInfo(TicketPrice ticketPrice) {

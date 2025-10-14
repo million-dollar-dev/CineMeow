@@ -36,6 +36,9 @@ public class CalculatePriceRequest {
         @NotNull(message = "Seat's type must not be null")
         SeatType seatType;
 
+        @NotBlank(message = "Label must is not blank")
+        String label;
+
         @NotNull(message = "Room's type must not be null")
         RoomType roomType;
     }

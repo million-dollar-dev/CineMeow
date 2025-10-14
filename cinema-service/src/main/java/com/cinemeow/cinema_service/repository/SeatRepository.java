@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SeatRepository extends JpaRepository<Seat,Integer> {
-    List<Seat> findAllById(List<Long> ids);
+public interface SeatRepository extends JpaRepository<Seat, Long> {
+    List<Seat> findAllByIdIn(List<Long> ids);
     List<Seat> findAllByRoomId(String roomId);
     List<Seat> findByIdInAndStatus(List<Long> ids, SeatStatus status);
 }

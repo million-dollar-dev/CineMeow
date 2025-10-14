@@ -5,7 +5,9 @@ import com.cinemeow.cinema_service.dto.request.FnbItemRequest;
 import com.cinemeow.cinema_service.dto.response.FnbCalculateResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface FnbItemService {
     FnbItemResponse creat(FnbItemRequest request);
@@ -15,4 +17,5 @@ public interface FnbItemService {
     FnbItemResponse updateById(String id, FnbItemRequest request);
     void deleteById(String id);
     FnbCalculateResponse calculate(FnbCalculateRequest request);
+    BigDecimal calculate(Map<String, Integer> items);
 }

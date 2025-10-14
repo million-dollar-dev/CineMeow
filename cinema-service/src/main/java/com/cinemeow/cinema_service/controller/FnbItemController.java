@@ -20,7 +20,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -118,5 +120,10 @@ public class FnbItemController {
     @PostMapping("/calculate")
     public FnbCalculateResponse calculate(@Valid @RequestBody FnbCalculateRequest request) {
         return fnbItemService.calculate(request);
+    }
+
+    @PostMapping("/internal/calculate")
+    public BigDecimal calculate(Map<String, Integer> items) {
+        return fnbItemService.calculate(items);
     }
 }
