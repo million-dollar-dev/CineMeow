@@ -8,7 +8,7 @@ import {
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import {useEffect, useState} from "react";
-import MovieModal from "../components/moviesManagement/MovieModal.jsx";
+import MovieModal from "../components/MovieManagement/MovieModal.jsx";
 import {useGetAllMoviesQuery} from "../services/movieService.js";
 import {useDispatch} from "react-redux";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
@@ -18,7 +18,7 @@ import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined';
 import MovieCreationOutlinedIcon from '@mui/icons-material/MovieCreationOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
-import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
+import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import {MOVIE_STATUS_CONFIG} from "../constants/movieStatus.js";
 

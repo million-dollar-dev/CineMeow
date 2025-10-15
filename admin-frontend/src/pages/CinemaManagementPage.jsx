@@ -7,7 +7,7 @@ import {
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CustomToolbar from "../components/CustomToolbar.jsx";
-import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
+import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import {useEffect, useState} from "react";
 import CinemaModal from "../components/CinemaManagement/CinemaModal.jsx";
 import RoomModal from "../components/CinemaManagement/RoomModal.jsx";
