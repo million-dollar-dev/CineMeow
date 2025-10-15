@@ -28,7 +28,6 @@ import {useCreateShowtimeMutation, useUpdateShowtimeMutation} from "../../servic
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 import {SHOWTIME_STATUS_CONFIG} from "../../constants/showtimeStatus.js";
 import StatusChip from "../StatusChip.jsx";
-import {useUpdateBrandMutation} from "../../services/brandService.js";
 
 const EMPTY_SHOWTIME = {
     status: '',
@@ -270,7 +269,7 @@ export default function ShowtimeModal({open, onClose, mode = "add", showtimeData
                                         {...field}
                                         labelId="room-label"
                                         label="Phòng chiếu"
-                                        value={rooms.some(r => r.id === field.value) ? field.value : ""} // ✅ fix out-of-range
+                                        value={rooms.some(r => r.id === field.value) ? field.value : ""}
                                     >
                                         {isLoadingRooms ? (
                                             <MenuItem disabled>

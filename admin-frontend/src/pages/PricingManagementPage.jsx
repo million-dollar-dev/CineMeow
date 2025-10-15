@@ -5,7 +5,7 @@ import {
     Button,
 } from "@mui/material";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import TableSkeleton from "../components/moviesManagement/TableSkeleton.jsx";
+import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import {useEffect, useState} from "react";
 import BrandModal from "../components/CinemaManagement/BrandModal.jsx";
 import {useGetAllBrandsQuery} from "../services/brandService.js";
