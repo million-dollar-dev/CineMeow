@@ -39,7 +39,7 @@ const menuItems = [
             {label: "Đặt vé", path: "/cinemas"},
         ]
     },
-    {icon: <LoyaltyOutlinedIcon/>, label: "Promotions", path: "/promotions"},
+    {icon: <LoyaltyOutlinedIcon/>, label: "Ưu đãi", path: "/promotion"},
     {icon: <LibraryBooksOutlinedIcon/>, label: "Reviews", path: "/reviews"},
     {icon: <PeopleOutlinedIcon/>, label: "Accounts", path: "/reports"},
     {
