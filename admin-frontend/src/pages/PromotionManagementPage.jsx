@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Button} from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -11,129 +11,22 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import BooleanChip from "../components/BooleanChip.jsx";
 import PromotionModal from "../components/PromotionManagement/PromotionModal.jsx";
-
-const promotions = [
-    {
-        "id": 1,
-        "code": "PROMO2025_MEM",
-        "name": "Giảm giá Tết 2025 cho thành viên",
-        "description": "Khuyến mãi 20% cho tất cả thành viên dịp Tết 2025.",
-        "type": "PERCENTAGE",
-        "value": 20,
-        "minOrderValue": 100000,
-        "usageLimit": 100,
-        "status": "INACTIVE",
-        "startDate": "2025-01-01T00:00:00",
-        "endDate": "2025-02-01T23:59:59",
-        "forGuest": false,
-        "applyFnb": true,
-        "applyTicket": true,
-        "conditions": [
-            {
-                "type": "USER_TYPE",
-                "value": "MEMBER"
-            }
-        ]
-    },
-    {
-        "id": 12,
-        "code": "PROMO2025_NEW",
-        "name": "Ưu đãi cho khách hàng mới 2025",
-        "description": "Giảm 50.000đ cho đơn hàng đầu tiên của khách mới.",
-        "type": "FIXED_AMOUNT",
-        "value": 50000,
-        "minOrderValue": 200000,
-        "usageLimit": 500,
-        "status": "ACTIVE",
-        "startDate": "2025-01-05T00:00:00",
-        "endDate": "2025-06-30T23:59:59",
-        "forGuest": true,
-        "applyFnb": false,
-        "applyTicket": true,
-        "conditions": [
-            {
-                "type": "USER_TYPE",
-                "value": "NEW_USER"
-            }
-        ]
-    },
-    {
-        "id": 13,
-        "code": "PROMO2025_FNB",
-        "name": "Giảm 10% cho dịch vụ ẩm thực",
-        "description": "Khuyến mãi 10% cho các đơn hàng F&B tại rạp.",
-        "type": "PERCENTAGE",
-        "value": 10,
-        "minOrderValue": 50000,
-        "usageLimit": 300,
-        "status": "ACTIVE",
-        "startDate": "2025-02-01T00:00:00",
-        "endDate": "2025-04-30T23:59:59",
-        "forGuest": true,
-        "applyFnb": true,
-        "applyTicket": false,
-        "conditions": [
-            {
-                "type": "CATEGORY",
-                "value": "FOOD_BEVERAGE"
-            }
-        ]
-    },
-    {
-        "id": 11,
-        "code": "PROMO2025_TICKET",
-        "name": "Giảm giá vé xem phim buổi sáng",
-        "description": "Giảm 25% cho các suất chiếu trước 12h trưa.",
-        "type": "PERCENTAGE",
-        "value": 25,
-        "minOrderValue": 0,
-        "usageLimit": 200,
-        "status": "ACTIVE",
-        "startDate": "2025-03-01T00:00:00",
-        "endDate": "2025-12-31T23:59:59",
-        "forGuest": true,
-        "applyFnb": false,
-        "applyTicket": true,
-        "conditions": [
-            {
-                "type": "SHOWTIME",
-                "value": "BEFORE_NOON"
-            }
-        ]
-    },
-    {
-        "id": 10,
-        "code": "PROMO2025_VIP",
-        "name": "Ưu đãi đặc biệt cho thành viên VIP",
-        "description": "Giảm 30% cho thành viên VIP, áp dụng cả vé và combo.",
-        "type": "PERCENTAGE",
-        "value": 30,
-        "minOrderValue": 150000,
-        "usageLimit": 50,
-        "status": "INACTIVE",
-        "startDate": "2025-05-01T00:00:00",
-        "endDate": "2025-06-01T23:59:59",
-        "forGuest": false,
-        "applyFnb": true,
-        "applyTicket": true,
-        "conditions": [
-            {
-                "type": "USER_TIER",
-                "value": "VIP"
-            }
-        ]
-    }
-]
-
+import {useGetAllPromotionsQuery} from "../services/promotionService.js";
+import {openSnackbar} from "../redux/slices/snackbarSlice.js";
+import {useDispatch} from "react-redux";
 
 const PromotionManagementPage = () => {
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: 5,
     });
+    const dispatch = useDispatch();
     const [openModal, setOpenModal] = React.useState(false);
     const [modalMode, setModalMode] = useState("add");
     const [selectedItem, setSelectedItem] = useState(null);
+
+    const {data: promotions, isLoading, isError, error} = useGetAllPromotionsQuery();
+
     const columns = [
         { field: "code", headerName: "Mã", flex: 1, minWidth: 70 },
         { field: "name", headerName: "Tên", flex: 1, minWidth: 180 },
@@ -289,7 +182,12 @@ const PromotionManagementPage = () => {
         setOpenModal(true);
     };
 
-    const isLoading = false;
+    useEffect(() => {
+        if (isError) {
+            dispatch(openSnackbar({message: error?.error, type: "error"}));
+        }
+    }, [isError, error, isLoading, promotions]);
+
     return (
         <Box className="py-2 min-h-screen">
             <PromotionModal

@@ -10,6 +10,7 @@ export const brandApi = rootApi.injectEndpoints({
                 url: `${CONTEXT_PATH}/promotions`,
             }),
             providesTags: ["Promotions"],
+            transformResponse: (response) => response.data,
         }),
 
         createPromotion: builder.mutation({
