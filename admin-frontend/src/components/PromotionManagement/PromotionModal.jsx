@@ -21,7 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect } from "react";
 import {useDispatch} from "react-redux";
-import {useCreatePromotionMutation} from "../../services/promotionService.js";
+import {useCreatePromotionMutation, useUpdatePromotionMutation} from "../../services/promotionService.js";
 import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 
@@ -88,6 +88,11 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
         {isLoading: isCreating, isError: isCreateError, error: createError}
     ] = useCreatePromotionMutation();
 
+    const [
+        updatePromotion,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdatePromotionMutation();
+
     useEffect(() => {
         if (itemData) {
             reset({
@@ -99,6 +104,7 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
     }, [itemData, reset]);
 
     useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
 
     const onSubmit = async (data) => {
         const payload = {
@@ -110,6 +116,9 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
         if (mode === "add") {
             await createPromotion(payload).unwrap();
             dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+        } else {
+            await updatePromotion({id: itemData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
         }
         onClose();
     };
@@ -363,6 +372,11 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                             }}
                         >
                             <Controller
+                                name={`conditions.${index}.id`}
+                                control={control}
+                                render={({ field }) => <input type="hidden" {...field} />}
+                            />
+                            <Controller
                                 name={`conditions.${index}.type`}
                                 control={control}
                                 render={({ field }) => (
@@ -415,9 +429,9 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                     type="submit"
                     variant="contained"
                     color="primary"
-                    disabled={isCreating}
+                    disabled={isCreating || isUpdating}
                     startIcon={
-                        (isCreating) && (
+                        (isCreating || isUpdating) && (
                             <CircularProgress size={20} color="inherit"/>
                         )
                     }

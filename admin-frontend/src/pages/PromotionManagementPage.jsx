@@ -154,6 +154,7 @@ const PromotionManagementPage = () => {
                         startIcon={<EditOutlinedIcon />}
                         variant="text"
                         sx={{ color: "black" }}
+                        onClick={() => handleEditClick(params.row)}
                     >
                         Tùy chỉnh
                     </Button>
@@ -180,6 +181,7 @@ const PromotionManagementPage = () => {
         setModalMode("edit");
         setSelectedItem(item);
         setOpenModal(true);
+        console.log(selectedItem)
     };
 
     useEffect(() => {
@@ -194,6 +196,7 @@ const PromotionManagementPage = () => {
                 mode={modalMode}
                 onClose={() => setOpenModal(false)}
                 open={openModal}
+                itemData={selectedItem}
             />
             <div className="flex justify-between items-center my-4">
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Ưu đãi</h2>
