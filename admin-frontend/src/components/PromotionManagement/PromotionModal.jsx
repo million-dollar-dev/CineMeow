@@ -5,89 +5,57 @@ import {
     DialogActions,
     TextField,
     Button,
-    MenuItem,
-    IconButton,
     Typography,
     Box,
     Divider,
-    Switch,
-    FormControlLabel, FormGroup, FormLabel, Checkbox,
+    MenuItem,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    IconButton, CircularProgress,
 } from "@mui/material";
+import { Add, Delete } from "@mui/icons-material";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Add, Delete } from "@mui/icons-material";
 import { useEffect } from "react";
+import {useDispatch} from "react-redux";
+import {useCreatePromotionMutation, useUpdatePromotionMutation} from "../../services/promotionService.js";
+import useFormServerErrors from "../../hooks/useFormServerErrors.js";
+import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 
-// ✅ Validation schema
-const schema = yup.object({
+// Mock data enums
+const PROMOTION_TYPES = [
+    { label: "Giảm theo %", value: "PERCENTAGE" },
+    { label: "Giảm theo số tiền", value: "FIXED_AMOUNT" },
+];
+const STATUS_OPTIONS = [
+    { label: "Kích hoạt", value: "ACTIVE" },
+    { label: "Chưa kích hoạt", value: "INACTIVE" },
+];
+const CONDITION_TYPES = [
+    { label: "Loại ghế", value: "SEAT_TYPE" },
+    { label: "Thương hiệu", value: "BRAND" },
+    { label: "Ngày trong tuần", value: "DAY_OF_WEEK" },
+];
+
+
+const schema = yup.object().shape({
     code: yup.string().required("Mã khuyến mãi không được để trống"),
     name: yup.string().required("Tên chương trình không được để trống"),
-    description: yup.string().nullable(),
-    type: yup.string().required("Chọn loại khuyến mãi"),
-    value: yup
-        .number()
-        .typeError("Phải là số")
-        .positive("Giá trị > 0")
-        .required("Nhập giá trị khuyến mãi"),
-    minOrderValue: yup
-        .number()
-        .typeError("Phải là số")
-        .min(0, "Không được âm")
-        .required("Nhập giá trị đơn hàng tối thiểu"),
-    usageLimit: yup
-        .number()
-        .typeError("Phải là số")
-        .min(0, "Không được âm")
-        .nullable(),
-    status: yup.string().required("Chọn trạng thái"),
-    startDate: yup.date().required("Chọn ngày bắt đầu"),
-    endDate: yup
-        .date()
-        .required("Chọn ngày kết thúc")
-        .min(yup.ref("startDate"), "Ngày kết thúc phải sau ngày bắt đầu"),
-    forGuest: yup.boolean(),
-    applyFnb: yup.boolean(),
-    applyTicket: yup.boolean(),
-    conditions: yup.array().of(
-        yup.object({
-            type: yup.string().required("Chọn loại điều kiện"),
-            operator: yup.string().required("Chọn toán tử"),
-            value: yup.string().required("Nhập giá trị"),
-        })
-    ),
+    type: yup.string().required("Chọn loại giảm giá"),
+    value: yup.number().positive().required("Giá trị giảm không hợp lệ"),
+    startDate: yup.string().required("Chọn ngày bắt đầu"),
+    endDate: yup.string().required("Chọn ngày kết thúc"),
 });
-
-// 🧩 Enum mẫu
-const PROMOTION_TYPES = [
-    { value: "PERCENTAGE", label: "Giảm theo %" },
-    { value: "AMOUNT", label: "Giảm theo số tiền" },
-];
-
-const STATUS_OPTIONS = [
-    { value: "ACTIVE", label: "Hoạt động" },
-    { value: "INACTIVE", label: "Ngưng hoạt động" },
-];
-
-const CONDITION_TYPES = [
-    { value: "SEAT_TYPE", label: "Loại ghế" },
-    { value: "ROOM_TYPE", label: "Loại phòng" },
-    { value: "BRAND", label: "Rạp chiếu" },
-    { value: "DAY_OF_WEEK", label: "Thứ trong tuần" },
-];
-
-const OPERATORS = [
-    { value: "EQUALS", label: "=" },
-    { value: "IN", label: "IN" },
-    { value: "GREATER_THAN", label: ">" },
-    { value: "LESS_THAN", label: "<" },
-];
 
 export default function PromotionModal({ open, onClose, mode = "add", itemData }) {
     const {
         control,
         handleSubmit,
         reset,
+        setError,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(schema),
@@ -114,6 +82,17 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
         name: "conditions",
     });
 
+    const dispatch = useDispatch();
+    const [
+        createPromotion,
+        {isLoading: isCreating, isError: isCreateError, error: createError}
+    ] = useCreatePromotionMutation();
+
+    const [
+        updatePromotion,
+        {isLoading: isUpdating, isError: isUpdateError, error: updateError},
+    ] = useUpdatePromotionMutation();
+
     useEffect(() => {
         if (itemData) {
             reset({
@@ -124,8 +103,23 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
         }
     }, [itemData, reset]);
 
-    const onSubmit = (data) => {
-        console.log("✅ Dữ liệu gửi đi:", data);
+    useFormServerErrors(isCreateError, createError, setError);
+    useFormServerErrors(isUpdateError, updateError, setError);
+
+    const onSubmit = async (data) => {
+        const payload = {
+            ...data
+        };
+
+        console.log(payload)
+
+        if (mode === "add") {
+            await createPromotion(payload).unwrap();
+            dispatch(openSnackbar({message: "Thêm thành công!", type: "success"}));
+        } else {
+            await updatePromotion({id: itemData.id, ...payload}).unwrap();
+            dispatch(openSnackbar({message: "Cập nhật thành công!", type: "success"}));
+        }
         onClose();
     };
 
@@ -136,6 +130,10 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
             fullWidth
             maxWidth="md"
             scroll="paper"
+            PaperProps={{
+                component: "form",
+                onSubmit: handleSubmit(onSubmit),
+            }}
             sx={{
                 "& .MuiDialog-paper": {
                     height: "90vh",
@@ -144,7 +142,7 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                 },
             }}
         >
-            {/* 🧭 Header cố định */}
+            {/* Header cố định */}
             <DialogTitle
                 sx={{
                     position: "sticky",
@@ -157,15 +155,8 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                 {mode === "add" ? "Thêm khuyến mãi mới" : "Chỉnh sửa khuyến mãi"}
             </DialogTitle>
 
-            {/* 🧱 Content scroll */}
-            <DialogContent
-                sx={{
-                    flex: 1,
-                    overflowY: "auto",
-                    p: 3,
-                }}
-            >
-                {/* --- Thông tin khuyến mãi --- */}
+            {/* Nội dung form */}
+            <DialogContent sx={{ flex: 1, overflowY: "auto", p: 3 }}>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                     Thông tin khuyến mãi
                 </Typography>
@@ -244,8 +235,6 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                                 {...field}
                                 type="number"
                                 label="Đơn hàng tối thiểu (VNĐ)"
-                                error={!!errors.minOrderValue}
-                                helperText={errors.minOrderValue?.message}
                                 fullWidth
                             />
                         )}
@@ -258,8 +247,6 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                                 {...field}
                                 type="number"
                                 label="Giới hạn lượt dùng"
-                                error={!!errors.usageLimit}
-                                helperText={errors.usageLimit?.message}
                                 fullWidth
                             />
                         )}
@@ -297,37 +284,22 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                         )}
                     />
 
-                    {/* Hàng 5: Trạng thái + Nhóm checkbox */}
-                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <Controller
-                            name="status"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    select
-                                    label="Trạng thái"
-                                    error={!!errors.status}
-                                    helperText={errors.status?.message}
-                                    fullWidth
-                                >
-                                    {STATUS_OPTIONS.map((opt) => (
-                                        <MenuItem key={opt.value} value={opt.value}>
-                                            {opt.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            )}
-                        />
-                    </Box>
+                    {/* Hàng 5: Trạng thái + Checkbox */}
+                    <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }) => (
+                            <TextField {...field} select label="Trạng thái" fullWidth>
+                                {STATUS_OPTIONS.map((opt) => (
+                                    <MenuItem key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        )}
+                    />
 
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                        }}
-                    >
+                    <Box>
                         <FormLabel sx={{ fontWeight: 600, mb: 1 }}>Áp dụng cho:</FormLabel>
                         <FormGroup row sx={{ justifyContent: "space-evenly" }}>
                             <Controller
@@ -376,8 +348,6 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                                 multiline
                                 rows={3}
                                 fullWidth
-                                error={!!errors.description}
-                                helperText={errors.description?.message}
                             />
                         )}
                     />
@@ -396,22 +366,21 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                             key={field.id}
                             sx={{
                                 display: "grid",
-                                gridTemplateColumns: "2fr 1fr 2fr 40px",
+                                gridTemplateColumns: "2fr 2fr 40px",
                                 gap: 2,
                                 alignItems: "center",
                             }}
                         >
                             <Controller
+                                name={`conditions.${index}.id`}
+                                control={control}
+                                render={({ field }) => <input type="hidden" {...field} />}
+                            />
+                            <Controller
                                 name={`conditions.${index}.type`}
                                 control={control}
                                 render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        select
-                                        label="Loại điều kiện"
-                                        error={!!errors.conditions?.[index]?.type}
-                                        helperText={errors.conditions?.[index]?.type?.message}
-                                    >
+                                    <TextField {...field} select label="Loại điều kiện">
                                         {CONDITION_TYPES.map((opt) => (
                                             <MenuItem key={opt.value} value={opt.value}>
                                                 {opt.label}
@@ -420,40 +389,13 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                                     </TextField>
                                 )}
                             />
-
-                            <Controller
-                                name={`conditions.${index}.operator`}
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        select
-                                        label="Toán tử"
-                                        error={!!errors.conditions?.[index]?.operator}
-                                        helperText={errors.conditions?.[index]?.operator?.message}
-                                    >
-                                        {OPERATORS.map((op) => (
-                                            <MenuItem key={op.value} value={op.value}>
-                                                {op.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                )}
-                            />
-
                             <Controller
                                 name={`conditions.${index}.value`}
                                 control={control}
                                 render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        label="Giá trị"
-                                        error={!!errors.conditions?.[index]?.value}
-                                        helperText={errors.conditions?.[index]?.value?.message}
-                                    />
+                                    <TextField {...field} label="Giá trị" />
                                 )}
                             />
-
                             <IconButton color="error" onClick={() => remove(index)}>
                                 <Delete />
                             </IconButton>
@@ -463,14 +405,14 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                     <Button
                         variant="outlined"
                         startIcon={<Add />}
-                        onClick={() => append({ type: "", operator: "", value: "" })}
+                        onClick={() => append({ type: "", value: "" })}
                     >
                         Thêm điều kiện
                     </Button>
                 </Box>
             </DialogContent>
 
-            {/* 🧭 Footer cố định */}
+            {/* Footer cố định */}
             <DialogActions
                 sx={{
                     position: "sticky",
@@ -483,7 +425,17 @@ export default function PromotionModal({ open, onClose, mode = "add", itemData }
                 <Button onClick={onClose} color="error" variant="outlined">
                     Đóng
                 </Button>
-                <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={isCreating || isUpdating}
+                    startIcon={
+                        (isCreating || isUpdating) && (
+                            <CircularProgress size={20} color="inherit"/>
+                        )
+                    }
+                >
                     {mode === "add" ? "Lưu" : "Cập nhật"}
                 </Button>
             </DialogActions>
