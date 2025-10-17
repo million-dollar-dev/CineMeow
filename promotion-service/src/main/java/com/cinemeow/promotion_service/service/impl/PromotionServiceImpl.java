@@ -1,18 +1,27 @@
 package com.cinemeow.promotion_service.service.impl;
 
+import com.cinemeow.promotion_service.dto.request.PromotionConditionRequest;
 import com.cinemeow.promotion_service.dto.request.PromotionRequest;
 import com.cinemeow.promotion_service.dto.response.PromotionResponse;
+import com.cinemeow.promotion_service.entity.Promotion;
+import com.cinemeow.promotion_service.entity.PromotionCondition;
 import com.cinemeow.promotion_service.exception.AppException;
 import com.cinemeow.promotion_service.exception.ErrorCode;
 import com.cinemeow.promotion_service.mapper.PromotionMapper;
+import com.cinemeow.promotion_service.repository.PromotionConditionRepository;
 import com.cinemeow.promotion_service.repository.PromotionRepository;
 import com.cinemeow.promotion_service.service.PromotionService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +30,15 @@ public class PromotionServiceImpl implements PromotionService {
 
     PromotionRepository promotionRepository;
     PromotionMapper promotionMapper;
+    PromotionConditionRepository promotionConditionRepository;
 
     @Override
     public PromotionResponse create(PromotionRequest request) {
         var promotion = promotionMapper.toPromotion(request);
+        if (promotion.getConditions() != null) {
+            promotion.getConditions()
+                    .forEach(condition -> condition.setPromotion(promotion));
+        }
         promotionRepository.save(promotion);
         return promotionMapper.toPromotionResponse(promotion);
     }
@@ -44,12 +58,27 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
+    @Transactional
     public PromotionResponse update(String id, PromotionRequest request) {
-        var promotion = promotionRepository.findById(id)
+        Promotion promotion = promotionRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PROMOTION_NOT_EXISTED));
 
         promotionMapper.update(promotion, request);
+
+        promotion.getConditions().clear();
+
+        if (request.getConditions() != null) {
+            for (PromotionConditionRequest condReq : request.getConditions()) {
+                PromotionCondition condition = new PromotionCondition();
+                condition.setType(condReq.getType());
+                condition.setValue(condReq.getValue());
+                condition.setPromotion(promotion);
+                promotion.getConditions().add(condition);
+            }
+        }
+
         promotionRepository.save(promotion);
+
         return promotionMapper.toPromotionResponse(promotion);
     }
 

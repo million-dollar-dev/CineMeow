@@ -13,6 +13,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PromotionConditionRequest {
+    String id;
+
     @NotNull(message = "Condition's type must be not null")
     ConditionType type;
 

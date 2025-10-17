@@ -1,5 +1,6 @@
 package com.cinemeow.promotion_service.dto.request;
 
+import com.cinemeow.promotion_service.enums.PromotionStatus;
 import com.cinemeow.promotion_service.enums.PromotionType;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -43,6 +44,9 @@ public class PromotionRequest {
 
     @NotNull(message = "Promotion's end date must be not null")
     LocalDateTime endDate;
+
+    @NotNull(message = "Status must be not null")
+    PromotionStatus status;
 
     boolean forGuest;
 

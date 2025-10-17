@@ -49,7 +49,8 @@ public class Promotion {
     LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    PromotionStatus status;
+    @Builder.Default
+    PromotionStatus status = PromotionStatus.INACTIVE;
 
     boolean forGuest;
     boolean applyFnb;
