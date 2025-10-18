@@ -14,6 +14,8 @@ import PromotionModal from "../components/PromotionManagement/PromotionModal.jsx
 import {useGetAllPromotionsQuery} from "../services/promotionService.js";
 import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 import {useDispatch} from "react-redux";
+import StatusChip from "../components/StatusChip.jsx";
+import {PROMOTION_STATUS_CONFIG} from "../constants/promotionConstants.js";
 
 const PromotionManagementPage = () => {
     const [paginationModel, setPaginationModel] = useState({
@@ -28,8 +30,8 @@ const PromotionManagementPage = () => {
     const {data: promotions, isLoading, isError, error} = useGetAllPromotionsQuery();
 
     const columns = [
-        { field: "code", headerName: "Mã", flex: 1, minWidth: 70 },
-        { field: "name", headerName: "Tên", flex: 1, minWidth: 180 },
+        {field: "code", headerName: "Mã", flex: 1, minWidth: 70},
+        {field: "name", headerName: "Tên", flex: 1, minWidth: 180},
         {
             field: "startDate",
             headerName: "Ngày áp dụng",
@@ -49,8 +51,8 @@ const PromotionManagementPage = () => {
                             lineHeight: "1.2",
                         }}
                     >
-                        <span style={{ fontWeight: 600 }}>{date.format("HH:mm")}</span>
-                        <span style={{ fontSize: "0.8rem", color: "#666" }}>{date.format("DD/MM/YY")}</span>
+                        <span style={{fontWeight: 600}}>{date.format("HH:mm")}</span>
+                        <span style={{fontSize: "0.8rem", color: "#666"}}>{date.format("DD/MM/YY")}</span>
                     </div>
                 );
             },
@@ -74,13 +76,18 @@ const PromotionManagementPage = () => {
                             lineHeight: "1.2",
                         }}
                     >
-                        <span style={{ fontWeight: 600 }}>{date.format("HH:mm")}</span>
-                        <span style={{ fontSize: "0.8rem", color: "#666" }}>{date.format("DD/MM/YY")}</span>
+                        <span style={{fontWeight: 600}}>{date.format("HH:mm")}</span>
+                        <span style={{fontSize: "0.8rem", color: "#666"}}>{date.format("DD/MM/YY")}</span>
                     </div>
                 );
             },
         },
-        { field: "status", headerName: "Trạng thái", width: 90 },
+        {
+            field: "status",
+            headerName: "Trạng thái",
+            width: 120,
+            renderCell: (params) => <StatusChip status={params.value} configs={PROMOTION_STATUS_CONFIG}/>,
+        },
         {
             field: "forGuest",
             headerName: "Cho khách",
@@ -149,20 +156,20 @@ const PromotionManagementPage = () => {
             filterable: false,
             disableColumnMenu: true,
             renderCell: (params) => (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
                     <Button
-                        startIcon={<EditOutlinedIcon />}
+                        startIcon={<EditOutlinedIcon/>}
                         variant="text"
-                        sx={{ color: "black" }}
+                        sx={{color: "black"}}
                         onClick={() => handleEditClick(params.row)}
                     >
                         Tùy chỉnh
                     </Button>
-                    <span style={{ color: "black" }}>|</span>
+                    <span style={{color: "black"}}>|</span>
                     <Button
-                        startIcon={<DeleteOutlineOutlinedIcon />}
+                        startIcon={<DeleteOutlineOutlinedIcon/>}
                         variant="text"
-                        sx={{ color: "red" }}
+                        sx={{color: "red"}}
                     >
                         Xóa
                     </Button>
@@ -202,9 +209,9 @@ const PromotionManagementPage = () => {
                 <h2 className="text-2xl font-extrabold text-black">Quản Lý Ưu đãi</h2>
             </div>
 
-            <Box sx={{ height: 630, width: "100%" }}>
+            <Box sx={{height: 630, width: "100%"}}>
                 {isLoading ? (
-                    <TableSkeleton paginationModel={paginationModel} />
+                    <TableSkeleton paginationModel={paginationModel}/>
                 ) : (
                     <DataGrid
                         sx={{borderRadius: 4}}
@@ -212,7 +219,7 @@ const PromotionManagementPage = () => {
                         columns={columns}
                         disableRowSelectionOnClick
                         rowHeight={100}
-                        slots={{ toolbar: () => <CustomToolbar handleAddClick={handleAddClick} /> }}
+                        slots={{toolbar: () => <CustomToolbar handleAddClick={handleAddClick}/>}}
                         showToolbar
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}

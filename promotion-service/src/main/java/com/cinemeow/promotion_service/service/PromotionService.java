@@ -1,7 +1,9 @@
 package com.cinemeow.promotion_service.service;
 
 import com.cinemeow.promotion_service.dto.request.PromotionRequest;
+import com.cinemeow.promotion_service.dto.request.VoucherValidationRequest;
 import com.cinemeow.promotion_service.dto.response.PromotionResponse;
+import com.cinemeow.promotion_service.dto.response.VoucherValidationResponse;
 
 import java.util.List;
 
@@ -11,4 +13,5 @@ public interface PromotionService {
     List<PromotionResponse> getAll();
     PromotionResponse update(String id, PromotionRequest request);
     void delete(String id);
+    VoucherValidationResponse validateVoucher(String code, VoucherValidationRequest request);
 }
