@@ -1,8 +1,10 @@
 package com.cinemeow.promotion_service.controller;
 
 import com.cinemeow.promotion_service.dto.request.PromotionRequest;
+import com.cinemeow.promotion_service.dto.request.VoucherValidationRequest;
 import com.cinemeow.promotion_service.dto.response.BaseResponse;
 import com.cinemeow.promotion_service.dto.response.PromotionResponse;
+import com.cinemeow.promotion_service.dto.response.VoucherValidationResponse;
 import com.cinemeow.promotion_service.service.PromotionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -108,6 +110,23 @@ public class PromotionController {
         promotionService.delete(id);
         return BaseResponse.<Void>builder()
                 .message("Promotion has been deleted")
+                .build();
+    }
+
+    @Operation(
+            summary = "Validate a voucher code",
+            description = """
+        This endpoint validates a voucher or promotion code for a specific booking request.
+        It checks all applicable rules such as minimum order value, validity period, usage limit,
+        and conditional restrictions (e.g. day of week, time range, payment method, etc.).
+        
+        Returns whether the voucher is valid, along with the discount amount and final payable price.
+        """
+    )
+    @PostMapping("/validate")
+    public BaseResponse<VoucherValidationResponse> validate(@Valid @RequestBody VoucherValidationRequest request) {
+        return BaseResponse.<VoucherValidationResponse>builder()
+                .data(promotionService.validateVoucher(request))
                 .build();
     }
 }

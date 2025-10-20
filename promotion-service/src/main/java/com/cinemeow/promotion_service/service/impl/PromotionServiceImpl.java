@@ -2,15 +2,17 @@ package com.cinemeow.promotion_service.service.impl;
 
 import com.cinemeow.promotion_service.dto.request.PromotionConditionRequest;
 import com.cinemeow.promotion_service.dto.request.PromotionRequest;
+import com.cinemeow.promotion_service.dto.request.VoucherValidationRequest;
 import com.cinemeow.promotion_service.dto.response.PromotionResponse;
+import com.cinemeow.promotion_service.dto.response.VoucherValidationResponse;
 import com.cinemeow.promotion_service.entity.Promotion;
 import com.cinemeow.promotion_service.entity.PromotionCondition;
 import com.cinemeow.promotion_service.exception.AppException;
 import com.cinemeow.promotion_service.exception.ErrorCode;
 import com.cinemeow.promotion_service.mapper.PromotionMapper;
-import com.cinemeow.promotion_service.repository.PromotionConditionRepository;
 import com.cinemeow.promotion_service.repository.PromotionRepository;
 import com.cinemeow.promotion_service.service.PromotionService;
+import com.cinemeow.promotion_service.validation.VoucherValidatorChain;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +20,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     PromotionRepository promotionRepository;
     PromotionMapper promotionMapper;
-    PromotionConditionRepository promotionConditionRepository;
+    VoucherValidatorChain voucherValidatorChain;
 
     @Override
     public PromotionResponse create(PromotionRequest request) {
@@ -86,4 +84,12 @@ public class PromotionServiceImpl implements PromotionService {
     public void delete(String id) {
         promotionRepository.deleteById(id);
     }
+
+    @Override
+    public VoucherValidationResponse validateVoucher(VoucherValidationRequest request) {
+        Promotion promotion = promotionRepository.findByCode(request.getCode())
+                .orElseThrow(() -> new AppException(ErrorCode.PROMOTION_NOT_EXISTED));
+        return voucherValidatorChain.validate(promotion, request);
+    }
+
 }

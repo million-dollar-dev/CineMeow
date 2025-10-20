@@ -17,7 +17,7 @@ import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 import {openSnackbar} from "../../redux/slices/snackbarSlice.js";
 import {useCreateFnBMutation, useUpdateFnBMutation} from "../../services/cinemaService.js";
 import {useGetAllBrandsQuery} from "../../services/brandService.js";
-import {FNB_AVAILABLE, FNB_CATEGORY} from "../../constants/fnbContants.js";
+import {FNB_AVAILABLE, FNB_CATEGORY} from "../../constants/fnbConstants.js";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 
@@ -107,9 +107,8 @@ export default function FnBModal({open, onClose, mode = "add", itemData}) {
         } else {
             reset(EMPTY_ITEM);
         }
-    }, [itemData, open, brands, reset]);
+    }, [itemData, open, reset]);
 
-    console.log(itemData)
 
     const onSubmit = async (data) => {
         const payload = {

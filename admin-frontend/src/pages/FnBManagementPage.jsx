@@ -14,7 +14,7 @@ import {openSnackbar} from "../redux/slices/snackbarSlice.js";
 import {useDispatch} from "react-redux";
 import {useGetAllFnBsQuery} from "../services/cinemaService.js";
 import FnBModal from "../components/CinemaManagement/FnBModal.jsx";
-import {FNB_AVAILABLE, FNB_CATEGORY} from "../constants/fnbContants.js";
+import {FNB_AVAILABLE, FNB_CATEGORY} from "../constants/fnbConstants.js";
 
 export default function FnBManagementPage() {
     const [paginationModel, setPaginationModel] = useState({
@@ -172,8 +172,6 @@ export default function FnBManagementPage() {
 
     const {data: itemResponse, isError, error, isLoading} = useGetAllFnBsQuery();
     const items = itemResponse?.data ?? [];
-
-    console.log(items);
 
     const handleAddClick = () => {
         setModalMode("add");
