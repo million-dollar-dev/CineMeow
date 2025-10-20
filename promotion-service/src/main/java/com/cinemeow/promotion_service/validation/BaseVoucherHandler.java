@@ -14,10 +14,11 @@ public abstract class BaseVoucherHandler implements VoucherValidationHandler {
 
     protected VoucherValidationResponse next(Promotion promotion, VoucherValidationRequest request) {
         if (next != null)
-            next.handle(promotion, request);
+            return next.handle(promotion, request);
+
         return VoucherValidationResponse.builder()
                 .valid(true)
-                .message("Voucher hợp lệ")
+                .message("Voucher hợp lệ!")
                 .build();
     }
 }

@@ -13,5 +13,5 @@ public interface PromotionService {
     List<PromotionResponse> getAll();
     PromotionResponse update(String id, PromotionRequest request);
     void delete(String id);
-    VoucherValidationResponse validateVoucher(String code, VoucherValidationRequest request);
+    VoucherValidationResponse validateVoucher(VoucherValidationRequest request);
 }

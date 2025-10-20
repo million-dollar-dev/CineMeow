@@ -4,6 +4,8 @@ import com.cinemeow.promotion_service.dto.request.VoucherValidationRequest;
 import com.cinemeow.promotion_service.dto.response.VoucherValidationResponse;
 import com.cinemeow.promotion_service.entity.Promotion;
 import com.cinemeow.promotion_service.entity.PromotionCondition;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -12,10 +14,13 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Component
+@Order(8)
 public class ConditionListHandler extends BaseVoucherHandler {
     @Override
     public VoucherValidationResponse handle(Promotion promotion, VoucherValidationRequest request) {
+        log.info("VoucherValidatorChain");
         for (PromotionCondition cond : promotion.getConditions()) {
             switch (cond.getType()) {
                 case BRAND -> {
@@ -27,6 +32,11 @@ public class ConditionListHandler extends BaseVoucherHandler {
                     }
                 }
                 case SEAT_TYPE -> {
+                    if (request.getSeats() == null)
+                        return VoucherValidationResponse.builder()
+                                .valid(false)
+                                .message("Vui lòng chọn ghế để kiểm tra điều kiện khuyến mãi")
+                                .build();
                     boolean match = request.getSeats().stream()
                             .anyMatch(s -> s.getType().equals(cond.getValue()));
                     if (!match) {
@@ -45,6 +55,11 @@ public class ConditionListHandler extends BaseVoucherHandler {
                     }
                 }
                 case PAYMENT_METHOD -> {
+                    if (request.getPaymentMethod() == null)
+                        return VoucherValidationResponse.builder()
+                                .valid(false)
+                                .message("Thiếu phương thức thanh toán để kiểm tra điều kiện khuyến mãi")
+                                .build();
                     if (!cond.getValue().equalsIgnoreCase(request.getPaymentMethod())) {
                         return VoucherValidationResponse.builder()
                                 .valid(false)
