@@ -1,6 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChair, faPlus, faTicket, faXmark} from "@fortawesome/free-solid-svg-icons";
-import {useState} from "react";
+import {faChair, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 const ROOM_TYPES = [
     {value: "_2D", label: "2D"},
@@ -14,16 +13,9 @@ export default function BookingSummary({
                                            selectedCombos = [],
                                            setOpenPopup,
                                            setSelectedCombos,
-                                           seatTotalPrice,
                                            seatGroups = [],
-                                           comboTotalPrice,
-                                           handleApplyVoucher,
-                                           errorMsg,
-                                           total,
-                                           discount,
-                                           finalPrice,
+                                           onContinue
                                        }) {
-    const [voucherCode, setVoucherCode] = useState("");
 
     const updateComboQuantity = (id, delta) => {
         setSelectedCombos((prev) =>
@@ -36,6 +28,9 @@ export default function BookingSummary({
                 .filter((c) => c.quantity > 0)
         );
     };
+
+    seatGroups = Object.values(seatGroups);
+    console.log('suamma ry gourped', seatGroups);
 
     const handleRemoveCombo = (id) => {
         setSelectedCombos((prev) => prev.filter((c) => c.id !== id));
@@ -125,38 +120,6 @@ export default function BookingSummary({
                         <span>Thêm combo bắp nước</span>
                     </button>
                 </div>
-
-                {/* Ô nhập mã giảm giá */}
-                <div className="border-t border-[#2a2a2a] pt-4">
-                    <div className="flex items-center gap-2 mb-2">
-                        <FontAwesomeIcon icon={faTicket} className="text-[#9f7bff]"/>
-                        <span className="text-white font-semibold text-[1vw]">
-              Mã giảm giá
-            </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="text"
-                            value={voucherCode}
-                            onChange={(e) => setVoucherCode(e.target.value)}
-                            placeholder="Nhập mã khuyến mãi..."
-                            className="flex-1 bg-[#202020] border border-[#2a2a2a] rounded-lg p-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9f7bff]"
-                        />
-                        <button
-                            onClick={() => handleApplyVoucher(voucherCode)}
-                            className="px-4 py-2 bg-gradient-to-r from-[#7f5af0] to-[#9f7bff] rounded-lg text-white font-semibold text-sm hover:opacity-90 transition-all"
-                        >
-                            Áp dụng
-                        </button>
-                    </div>
-                    {errorMsg && <p className="text-red-400 text-sm mt-1">{errorMsg}</p>}
-                    {discount > 0 && (
-                        <p className="text-green-400 text-sm mt-1">
-                            Giảm {discount.toLocaleString("vi-VN")}đ
-                        </p>
-                    )}
-                </div>
-
                 <div className="border-t border-[#333] pt-4 space-y-3 text-[1vw]">
                     {seatGroups.length > 0 ? (
                         <div className="bg-[#202020] p-[0.8vw] rounded-xl border border-[#2a2a2a] overflow-hidden">
@@ -174,9 +137,9 @@ export default function BookingSummary({
                                     <tr key={idx} className="border-b border-[#2a2a2a] hover:bg-[#2a2a2a] transition">
                                         <td className="p-2">{g.seatType}</td>
                                         <td className="p-2 text-center">{g.seats.length}</td>
-                                        <td className="p-2 text-right">{g.price.toLocaleString("vi-VN")} ₫</td>
+                                        <td className="p-2 text-right">{(g.price).toLocaleString("vi-VN")} ₫</td>
                                         <td className="p-2 text-right text-[#9f7bff] font-semibold">
-                                            {(seatTotalPrice).toLocaleString("vi-VN")} ₫
+                                            {(g.price * g.seats.length).toLocaleString("vi-VN")} ₫
                                         </td>
                                     </tr>
                                 ))}
@@ -186,31 +149,12 @@ export default function BookingSummary({
                     ) : (
                         <p className="text-gray-500 italic text-[0.9vw]">Chưa chọn ghế nào.</p>
                     )}
-                    {selectedCombos.length > 0 && (
-                        <div className="flex justify-between">
-                            <span className="text-gray-400">Combo</span>
-                            <span className="font-semibold text-[#f5f5f5]">
-                {comboTotalPrice.toLocaleString("vi-VN")}đ
-              </span>
-                        </div>
-                    )}
-                    {discount > 0 && (
-                        <div className="flex justify-between text-green-400">
-                            <span>Giảm giá</span>
-                            <span>-{discount.toLocaleString("vi-VN")}đ</span>
-                        </div>
-                    )}
-                    <div className="flex justify-between font-bold text-[1.1vw] pt-3 border-t border-[#2a2a2a]">
-                        <span>Tổng cộng</span>
-                        <span className="text-[#9f7bff]">
-              {finalPrice.toLocaleString("vi-VN")}đ
-            </span>
-                    </div>
                 </div>
             </div>
 
             <button
                 disabled={selectedSeats.length === 0}
+                onClick={onContinue}
                 className={`mt-8 w-full py-[0.9vw] rounded-xl font-semibold text-[1vw] transition-all duration-300 ${
                     selectedSeats.length === 0
                         ? "bg-[#2a2a2a] text-gray-500 cursor-not-allowed"

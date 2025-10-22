@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import {useGetAllPriceByBrandQuery} from "../services/bookingService.js";
 import {useValidateVoucherMutation} from "../services/promotionService.js";
+import PaymentStep from "../components/Booking/PaymentStep.jsx";
 
 const BookingPage = () => {
     const {showtimeId} = useParams();
@@ -55,8 +56,11 @@ const BookingPage = () => {
     const [openPopup, setOpenPopup] = useState(false);
     const [selectedCombos, setSelectedCombos] = useState([]);
 
+    const [voucherCode, setVoucherCode] = useState("");
     const [voucherInfo, setVoucherInfo] = useState(null);
     const [voucherErrorMsg, setVoucherErrorMsg] = useState("");
+
+    const [step, setStep] = useState("summary");
 
     const handleConfirmCombo = (combos) => {
         setSelectedCombos(combos);
@@ -127,6 +131,13 @@ const BookingPage = () => {
     };
 
     useEffect(() => {
+        setVoucherInfo(null);
+        setVoucherCode("");
+        setVoucherErrorMsg("");
+    }, [selectedSeats, selectedCombos]);
+
+
+    useEffect(() => {
         if (voucherValidateResponse) {
             if (voucherValidateResponse.valid) {
                 setVoucherInfo(voucherValidateResponse);
@@ -138,7 +149,7 @@ const BookingPage = () => {
         }
         if (isVoucherValidateError && voucherValidateError) {
             console.error("Voucher error:", voucherValidateError);
-            setVoucherErrorMsg("Không thể xác thực voucher, vui lòng thử lại.");
+            setVoucherErrorMsg(voucherValidateError.data.message);
         }
     }, [voucherValidateResponse, isVoucherValidateError, voucherValidateError]);
 
@@ -209,22 +220,30 @@ const BookingPage = () => {
                         onToggleSeat={handleToggleSeat}
                     />
                 </div>
-
-                {/* Cột phải - Tổng kết & thanh toán */}
-                <BookingSummary
-                    selectedSeats={selectedSeats}
-                    selectedCombos={selectedCombos}
-                    setSelectedCombos={setSelectedCombos}
-                    setOpenPopup={setOpenPopup}
-                    seatTotalPrice={seatTotalPrice}
-                    comboTotalPrice={comboTotalPrice}
-                    seatGroups={groupedSeats}
-                    handleApplyVoucher={handleApplyVoucher}
-                    errorMsg={voucherErrorMsg}
-                    total={totalPrice}
-                    discount={voucherInfo?.discountAmount || 0}
-                    finalPrice={voucherInfo?.finalPrice || totalPrice}
-                />
+                {step === "summary" ? (
+                    <BookingSummary
+                        selectedSeats={selectedSeats}
+                        selectedCombos={selectedCombos}
+                        setSelectedCombos={setSelectedCombos}
+                        setOpenPopup={setOpenPopup}
+                        seatGroups={groupedSeats}
+                        onContinue={() => setStep("payment")}
+                    />
+                ) : (
+                    <PaymentStep
+                        selectedSeats={selectedSeats}
+                        selectedCombos={selectedCombos}
+                        seatTotalPrice={seatTotalPrice}
+                        comboTotalPrice={comboTotalPrice}
+                        errorMsg={voucherErrorMsg}
+                        voucherCode={voucherCode}
+                        setVoucherCode={setVoucherCode}
+                        handleApplyVoucher={handleApplyVoucher}
+                        discount={voucherInfo?.discountAmount || 0}
+                        finalPrice={voucherInfo?.finalPrice || totalPrice}
+                        onBack={() => setStep("summary")}
+                    />
+                )}
             </div>
 
             <Promotions/>
