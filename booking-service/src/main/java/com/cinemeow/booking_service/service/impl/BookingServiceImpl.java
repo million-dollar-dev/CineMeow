@@ -7,6 +7,8 @@ import com.cinemeow.booking_service.dto.request.FnbOrderRequest;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
 import com.cinemeow.booking_service.dto.response.SeatResponse;
 import com.cinemeow.booking_service.dto.response.ShowtimeResponse;
+import com.cinemeow.booking_service.entity.BookedFnbItem;
+import com.cinemeow.booking_service.entity.BookedSeat;
 import com.cinemeow.booking_service.entity.Booking;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.enums.RoomType;
@@ -20,6 +22,7 @@ import com.cinemeow.booking_service.service.TicketPriceService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +33,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class BookingServiceImpl implements BookingService {
     BookingRepository bookingRepository;
     BookingMapper bookingMapper;
@@ -49,19 +53,39 @@ public class BookingServiceImpl implements BookingService {
         if (seats.size() != request.getSeatIds().size())
             throw new AppException(ErrorCode.INVALID_SEAT);
 
-        BigDecimal totalPrice = getTicketPrice(request.getSeatIds(), showtime)
-                .add(getFnbPrice(request.getFnbItems()));
-
         Booking booking = bookingMapper.toBooking(request);
-        booking.setTotalPrice(totalPrice);
         booking.setStatus(BookingStatus.PENDING_PAYMENT);
 
+        seats.forEach(seat -> {
+            BookedSeat bookedSeat = BookedSeat.builder()
+                    .booking(booking)
+                    .seatId(seat.getId())
+                    .seatLabel(seat.getLabel())
+                    .seatType(seat.getType())
+                    .build();
 
+            booking.getSeats().add(bookedSeat);
+        });
 
+        List<FnbOrderRequest> fnbItems = request.getFnbItems();
+        fnbItems.forEach(item -> {
+            BookedFnbItem bookedFnbItem = BookedFnbItem.builder()
+                    .booking(booking)
+                    .fnbItemId(item.getFnbItemId())
+                    .fnbName(item.getName())
+                    .quantity(item.getQuantity())
+                    .unitPrice(item.getUnitPrice())
+                    .totalPrice(item.getUnitPrice()
+                            .multiply(BigDecimal.valueOf(item.getQuantity())))
+                    .build();
+            booking.getFnbItems().add(bookedFnbItem);
+        });
 
+        bookingRepository.save(booking);
 
+        BookingResponse response = bookingMapper.toBookingResponse(booking);
 
-        return null;
+        return response;
     }
 
     @Override
@@ -82,10 +106,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void delete(String id) {
 
-    }
-
-    private BigDecimal getTicketPrice(List<Long> seatIds, ShowtimeResponse showtime) {
-        return ticketPriceService.calculatePrice(seatIds, showtime.getBrandId(), showtime.getRoomType());
     }
 
     private BigDecimal getFnbPrice(List<FnbOrderRequest> fnbItems) {

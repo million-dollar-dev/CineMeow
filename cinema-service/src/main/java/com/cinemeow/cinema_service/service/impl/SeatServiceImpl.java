@@ -34,7 +34,7 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public List<SeatResponse> checkAvailableSeats(List<Long> seatIds) {
-        return seatRepository.findByIdInAndStatus(seatIds, SeatStatus.AVAILABLE)
+        return seatRepository.findByIdInAndStatus(seatIds, SeatStatus.ACTIVE)
                 .stream()
                 .map(seatMapper::toSeatResponse)
                 .toList();

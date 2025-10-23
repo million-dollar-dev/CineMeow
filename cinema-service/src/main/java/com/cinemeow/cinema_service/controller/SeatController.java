@@ -2,12 +2,17 @@ package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.response.SeatResponse;
 import com.cinemeow.cinema_service.service.SeatService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/seats")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SeatController {
     SeatService seatService;
 
