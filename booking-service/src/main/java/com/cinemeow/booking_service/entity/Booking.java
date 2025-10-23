@@ -53,9 +53,11 @@ public class Booking {
     @Embedded
     GuestInfo guestInfo;
 
+    @Builder.Default
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BookedSeat> seats = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BookedFnbItem> fnbItems = new ArrayList<>();
 

@@ -33,6 +33,10 @@ public class BookingRequest {
     @DecimalMin(value = "0.0", inclusive = false, message = "Final price must be greater than 0")
     BigDecimal finalPrice;
 
+    @NotNull(message = "Total price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Final price must be greater than 0")
+    BigDecimal totalPrice;
+
     @Size(max = 50, message = "Voucher code must not exceed 50 characters")
     String voucherCode;
 

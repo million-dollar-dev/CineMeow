@@ -1,6 +1,7 @@
 package com.cinemeow.booking_service.entity;
 
 import com.cinemeow.booking_service.enums.SeatType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,11 @@ public class BookedSeat {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")
+    @JsonIgnore
     Booking booking;
 
     @Column(name = "seat_id", nullable = false)
-    String seatId;
+    Long seatId;
 
     @Column(name = "seat_label")
     String seatLabel;
@@ -31,8 +33,5 @@ public class BookedSeat {
     @Column(name = "seat_type")
     @Enumerated(EnumType.STRING)
     SeatType seatType;
-
-    @Column(name = "price")
-    BigDecimal price;
 }
 

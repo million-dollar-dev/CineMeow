@@ -102,20 +102,6 @@ public class TicketPriceServiceImpl implements TicketPriceService {
                 .build();
     }
 
-    @Override
-    public BigDecimal calculatePrice(List<Long> seatIds, String brandId, RoomType roomType) {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        for (Long seatId : seatIds) {
-            var seat = cinemaClient.getSeatById(seatId);
-            var seatPrice = ticketPriceRepository
-                    .findByBrandIdAndRoomTypeAndSeatType(brandId, roomType, seat.getType())
-                    .orElseThrow(() -> new AppException(ErrorCode.TICKET_PRICE_NOT_EXISTED));
-
-            totalPrice.add(seatPrice.getPrice());
-        }
-        return  totalPrice;
-    }
-
     private TicketPriceResponse enrichWithBrandInfo(TicketPrice ticketPrice) {
         var response  = ticketPriceMapper.toTicketPriceResponse(ticketPrice);
         CinemaBrandResponse brand = cinemaClient.getBrandById(response.getBrandId()).getData();

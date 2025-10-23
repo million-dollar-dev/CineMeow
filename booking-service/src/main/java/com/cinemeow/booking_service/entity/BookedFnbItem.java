@@ -1,5 +1,6 @@
 package com.cinemeow.booking_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class BookedFnbItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")
+    @JsonIgnore
     Booking booking;
 
     @Column(name = "fnb_item_id", nullable = false)

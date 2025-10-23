@@ -17,5 +17,4 @@ public interface TicketPriceService {
     void delete(String id);
     List<TicketPriceResponse> getByBrandId(String brandId);
     CalculatePriceResponse calculatePrice(CalculatePriceRequest request);
-    BigDecimal calculatePrice(List<Long> seatIds, String brandId, RoomType roomType);
 }
