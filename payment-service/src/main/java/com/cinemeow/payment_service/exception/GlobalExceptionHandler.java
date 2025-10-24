@@ -1,6 +1,6 @@
-package com.cinemeow.payment_service.config.exception;
+package com.cinemeow.payment_service.exception;
 
-import com.cinemeow.payment_service.config.dto.response.BaseResponse;
+import com.cinemeow.payment_service.dto.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

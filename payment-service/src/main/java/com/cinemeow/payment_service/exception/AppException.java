@@ -1,4 +1,4 @@
-package com.cinemeow.payment_service.config.exception;
+package com.cinemeow.payment_service.exception;
 
 import lombok.AccessLevel;
 import lombok.Getter;

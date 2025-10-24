@@ -1,4 +1,4 @@
-package com.cinemeow.payment_service.config.dto.response;
+package com.cinemeow.payment_service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

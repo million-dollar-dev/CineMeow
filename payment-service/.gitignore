@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# local spring config (contains secrets)
+/src/main/resources/application-local.yml
