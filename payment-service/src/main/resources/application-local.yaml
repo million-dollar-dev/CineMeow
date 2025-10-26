@@ -1,0 +1,42 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /payment
+
+spring:
+  application:
+    name: payment-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cinemeow_payment
+    username: postgres
+    password: sa123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: payment-service
+    server: http://localhost:8086/payment
+    title: Payment Service
+    version: 1.0.0
+
+payment:
+  vnpay:
+    tmn-code: NVC3HBWD
+    secret-key: M0WH76A82ZLEZTPQR57ZTITWQ500PCWY
+    init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    return-url: https://example.com/
+    timeout: 15 # in minutes
