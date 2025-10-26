@@ -6,9 +6,10 @@ import com.cinemeow.payment_service.service.CryptoService;
 import com.cinemeow.payment_service.util.EncodingUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
-import lombok.Value;
+
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -25,6 +26,7 @@ public class CryptoServiceImpl implements CryptoService {
     @NonFinal
     @Value("${payment.vnpay.secret-key}")
     String secretKey;
+
     public CryptoServiceImpl() throws NoSuchAlgorithmException {
     }
 

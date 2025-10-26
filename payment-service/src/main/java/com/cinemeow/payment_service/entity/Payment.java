@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -20,7 +22,7 @@ public class Payment {
 
     String bookingId;
 
-    Double amount;
+    BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     PaymentMethod method;

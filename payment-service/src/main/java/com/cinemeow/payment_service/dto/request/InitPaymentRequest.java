@@ -1,7 +1,10 @@
 package com.cinemeow.payment_service.dto.request;
 
+import com.cinemeow.payment_service.enums.PaymentMethod;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 
 @Builder
 @Getter
@@ -12,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class InitPaymentRequest {
     String ipAddress;
     String userId;
-    String txnRef;
-    Long amount;
+    String bookingId;
+    BigDecimal amount;
+    PaymentMethod paymentMethod;
 }

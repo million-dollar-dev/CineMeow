@@ -35,8 +35,8 @@ openapi:
 
 payment:
   vnpay:
-    tmn-code: 4I4FEVKE
-    secret-key: XQ8LNANJO4K2QBW8SX005JOB8ZBVCX6U
+    tmn-code: NVC3HBWD
+    secret-key: M0WH76A82ZLEZTPQR57ZTITWQ500PCWY
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-    return-url: http://localhost:5074/payment-result
+    return-url: https://example.com/
     timeout: 15 # in minutes
