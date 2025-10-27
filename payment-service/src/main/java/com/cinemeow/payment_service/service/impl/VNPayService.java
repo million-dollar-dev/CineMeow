@@ -8,6 +8,9 @@ import com.cinemeow.payment_service.dto.response.InitPaymentResponse;
 import com.cinemeow.payment_service.dto.response.PaymentCallbackResponse;
 import com.cinemeow.payment_service.enums.Currency;
 import com.cinemeow.payment_service.enums.Locale;
+import com.cinemeow.payment_service.enums.PaymentMethod;
+import com.cinemeow.payment_service.exception.AppException;
+import com.cinemeow.payment_service.exception.ErrorCode;
 import com.cinemeow.payment_service.service.CryptoService;
 import com.cinemeow.payment_service.service.PaymentService;
 import com.cinemeow.payment_service.util.DateUtil;
@@ -57,7 +60,7 @@ public class VNPayService implements PaymentService {
     @Override
     public InitPaymentResponse createPayment(InitPaymentRequest request) {
         var amount = request.getAmount().longValueExact() * DEFAULT_MULTIPLIER;  // 1. amount * 100
-        var txnRef = "BOOKING-" + request.getBookingId() + "-" + (System.currentTimeMillis() % 100000);                      // 2. bookingId
+        var txnRef = request.getBookingId() + "-" + (System.currentTimeMillis() % 100000);                      // 2. bookingId
         var returnUrl = buildReturnUrl(txnRef);                 // 3. FE redirect by returnUrl
         var vnCalendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         var createdDate = DateUtil.formatVnPayVnTime(vnCalendar);
@@ -97,9 +100,37 @@ public class VNPayService implements PaymentService {
     }
 
     @Override
-    public PaymentCallbackResponse handleCallback(PaymentCallbackRequest request) {
-        return null;
+    public PaymentCallbackResponse handleCallback(Map<String, String> params) {
+        if (!verifyIpn(params)) {
+            throw new AppException(ErrorCode.VNPAY_SIGNING_FAILED);
+        }
+
+        String txnRef = params.get(VNPayParams.TXN_REF);
+        if (txnRef == null) throw new AppException(ErrorCode.INVALID_PAYMENT_REQUEST);
+
+        String bookingId = extractBookingId(txnRef);
+        String responseCode = params.get("vnp_ResponseCode");
+
+        boolean success = "00".equals(responseCode);
+
+        try {
+            if (success) {
+                bookingService.updateStatus(bookingId, PaymentStatus.SUCCESS);
+            } else {
+                bookingService.updateStatus(bookingId, PaymentStatus.FAILED);
+            }
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
+
+        return PaymentCallbackResponse.builder()
+                .paymentMethod(PaymentMethod.VNPAY)
+                .bookingId(bookingId)
+                .success(success)
+                .message(success ? "Payment success" : "Payment failed: " + responseCode)
+                .build();
     }
+
 
     private String buildPaymentDetail(InitPaymentRequest request) {
         return String.format("Thanh toan ve xem phim ma booking: %s", request.getBookingId());
@@ -175,4 +206,13 @@ public class VNPayService implements PaymentService {
 
         return initPaymentPrefixUrl + "?" + query;
     }
+
+    private String extractBookingId(String txnRef) {
+        String[] parts = txnRef.split("-");
+        if (parts.length >= 2) {
+            return parts[0];
+        }
+        throw new AppException(ErrorCode.VNPAY_SIGNING_FAILED);
+    }
+
 }

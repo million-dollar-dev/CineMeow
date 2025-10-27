@@ -1,5 +1,6 @@
 package com.cinemeow.payment_service.dto.response;
 
+import com.cinemeow.payment_service.enums.PaymentMethod;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentCallbackResponse {
-    String status;
+    PaymentMethod paymentMethod;
+    String bookingId;
+    boolean success;
     String message;
 }

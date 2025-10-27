@@ -3,16 +3,17 @@ package com.cinemeow.payment_service.controller;
 import com.cinemeow.payment_service.dto.request.InitPaymentRequest;
 import com.cinemeow.payment_service.dto.response.BaseResponse;
 import com.cinemeow.payment_service.dto.response.InitPaymentResponse;
+import com.cinemeow.payment_service.dto.response.PaymentCallbackResponse;
+import com.cinemeow.payment_service.enums.PaymentMethod;
 import com.cinemeow.payment_service.facade.PaymentFacade;
 import com.cinemeow.payment_service.util.RequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +34,13 @@ public class PaymentController {
                 .data(paymentFacade.createPayment(request))
                 .build();
     }
+
+    @GetMapping("/vnpay/ipn")
+    public BaseResponse<PaymentCallbackResponse> handleVnpayIpn(@RequestParam Map<String, String> params) {
+        return BaseResponse.<PaymentCallbackResponse>builder()
+                .data(paymentFacade.handleCallback(params))
+                .build();
+    }
+
 
 }

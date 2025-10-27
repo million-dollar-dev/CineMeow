@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +85,23 @@ public class PayPalService implements PaymentService {
     }
 
     @Override
-    public PaymentCallbackResponse handleCallback(PaymentCallbackRequest request) {
+    public PaymentCallbackResponse handleCallback(Map<String, String> params) {
+//        try {
+//            String paymentId = params.get("paymentId");
+//            String payerId = params.get("PayerID");
+//
+//            Payment payment = new Payment();
+//            payment.setId(paymentId);
+//
+//            PaymentExecution execution = new PaymentExecution();
+//            execution.setPayerId(payerId);
+//
+//            Payment executed = payment.execute(apiContext, execution);
+//            return new PaymentResponse(executed.getId(), executed.getState());
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException("PayPal payment execution failed", e);
+//        }
         return null;
     }
 }

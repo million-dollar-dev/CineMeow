@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -37,8 +40,17 @@ public class PaymentFacade {
         return response;
     }
 
-    public PaymentCallbackResponse handleCallback(PaymentMethod method, PaymentCallbackRequest request) {
+    public PaymentCallbackResponse handleCallback(Map<String, String> params) {
+        PaymentMethod method = factory.identifyGateway(params);
         PaymentService service = factory.getService(method);
-        return service.handleCallback(request);
+        PaymentCallbackResponse response = service.handleCallback(params);
+
+        paymentRepository.updateStatusByBookingId(
+                response.getBookingId(),
+                response.isSuccess() ? "SUCCESS" : "FAILED"
+        );
+        // update booking status
+
+        return response;
     }
 }
