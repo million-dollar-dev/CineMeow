@@ -34,9 +34,15 @@ openapi:
     version: 1.0.0
 
 payment:
+  cancel-url: https://example.com/
+  return-url: https://example.com/
   vnpay:
-    tmn-code: NVC3HBWD
-    secret-key: M0WH76A82ZLEZTPQR57ZTITWQ500PCWY
+    tmn-code: ${VNPAY_TMN_CODE}
+    secret-key: ${VNPAY_SECRET_KEY}
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-    return-url: https://example.com/
     timeout: 15 # in minutes
+
+  paypal:
+    client-id: ${PAYPAL_CLIENT_ID}
+    client-secret: ${PAYPAL_CLIENT_SECRET}
+    mode: sandbox
