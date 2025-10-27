@@ -44,7 +44,7 @@ public class VNPayService implements PaymentService {
     @NonFinal
     String initPaymentPrefixUrl;
 
-    @Value("${payment.vnpay.return-url}")
+    @Value("${payment.return-url}")
     @NonFinal
     String returnUrlFormat;
 
@@ -87,8 +87,6 @@ public class VNPayService implements PaymentService {
 
         params.put(VNPayParams.ORDER_INFO, orderInfo);
         params.put(VNPayParams.ORDER_TYPE, ORDER_TYPE);
-
-        params.put(VNPayParams.BANK_CODE, "VNBANK");
 
         var initPaymentUrl = buildInitPaymentUrl(params);
 
