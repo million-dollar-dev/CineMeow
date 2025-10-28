@@ -42,5 +42,12 @@ public class PaymentController {
                 .build();
     }
 
+    @GetMapping("/paypal/callback")
+    public BaseResponse<PaymentCallbackResponse> handlePayPalCallback(@RequestParam Map<String, String> params) {
+        return BaseResponse.<PaymentCallbackResponse>builder()
+                .data(paymentFacade.handleCallback(params))
+                .build();
+    }
+
 
 }

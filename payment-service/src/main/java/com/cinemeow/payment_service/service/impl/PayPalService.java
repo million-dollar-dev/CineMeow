@@ -4,6 +4,7 @@ import com.cinemeow.payment_service.dto.request.InitPaymentRequest;
 import com.cinemeow.payment_service.dto.request.PaymentCallbackRequest;
 import com.cinemeow.payment_service.dto.response.InitPaymentResponse;
 import com.cinemeow.payment_service.dto.response.PaymentCallbackResponse;
+import com.cinemeow.payment_service.enums.PaymentMethod;
 import com.cinemeow.payment_service.exception.AppException;
 import com.cinemeow.payment_service.exception.ErrorCode;
 import com.cinemeow.payment_service.service.PaymentService;
@@ -50,6 +51,7 @@ public class PayPalService implements PaymentService {
 
             Transaction transaction = new Transaction();
             transaction.setDescription("Payment for CineMeow booking");
+            transaction.setCustom(request.getBookingId());
             transaction.setAmount(amount);
 
             List<Transaction> transactions = List.of(transaction);
@@ -57,9 +59,11 @@ public class PayPalService implements PaymentService {
             Payer payer = new Payer();
             payer.setPaymentMethod("paypal");
 
+            String returnUrlWithBooking = String.format("%s?bookingId=%s",
+                    returnUrl, request.getBookingId());
             RedirectUrls redirectUrls = new RedirectUrls();
             redirectUrls.setCancelUrl(cancelUrl);
-            redirectUrls.setReturnUrl(returnUrl);
+            redirectUrls.setReturnUrl(returnUrlWithBooking);
 
             Payment payment = new Payment();
             payment.setIntent("sale");
@@ -86,22 +90,31 @@ public class PayPalService implements PaymentService {
 
     @Override
     public PaymentCallbackResponse handleCallback(Map<String, String> params) {
-//        try {
-//            String paymentId = params.get("paymentId");
-//            String payerId = params.get("PayerID");
-//
-//            Payment payment = new Payment();
-//            payment.setId(paymentId);
-//
-//            PaymentExecution execution = new PaymentExecution();
-//            execution.setPayerId(payerId);
-//
-//            Payment executed = payment.execute(apiContext, execution);
-//            return new PaymentResponse(executed.getId(), executed.getState());
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException("PayPal payment execution failed", e);
-//        }
-        return null;
+        try {
+            String paymentId = params.get("paymentId");
+            String payerId = params.get("PayerID");
+            String bookingId = params.get("bookingId");
+
+            Payment payment = new Payment();
+            payment.setId(paymentId);
+
+            PaymentExecution execution = new PaymentExecution();
+            execution.setPayerId(payerId);
+
+            Payment executed = payment.execute(apiContext, execution);
+
+            boolean success = "approved".equalsIgnoreCase(executed.getState());
+
+            return PaymentCallbackResponse.builder()
+                    .paymentMethod(PaymentMethod.PAYPAL)
+                    .success(success)
+                    .message(executed.getState())
+                    .bookingId(bookingId)
+                    .build();
+
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.PAYPAL_PAYMENT_FAILED);
+        }
     }
+
 }
