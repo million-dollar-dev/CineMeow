@@ -113,16 +113,6 @@ public class VNPayService implements PaymentService {
 
         boolean success = "00".equals(responseCode);
 
-        try {
-            if (success) {
-                bookingService.updateStatus(bookingId, PaymentStatus.SUCCESS);
-            } else {
-                bookingService.updateStatus(bookingId, PaymentStatus.FAILED);
-            }
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
-        }
-
         return PaymentCallbackResponse.builder()
                 .paymentMethod(PaymentMethod.VNPAY)
                 .bookingId(bookingId)

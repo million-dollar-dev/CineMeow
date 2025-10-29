@@ -1,10 +1,12 @@
 package com.cinemeow.payment_service.facade;
 
+import com.cinemeow.payment_service.client.BookingClient;
 import com.cinemeow.payment_service.dto.request.InitPaymentRequest;
 import com.cinemeow.payment_service.dto.request.PaymentCallbackRequest;
 import com.cinemeow.payment_service.dto.response.InitPaymentResponse;
 import com.cinemeow.payment_service.dto.response.PaymentCallbackResponse;
 import com.cinemeow.payment_service.entity.Payment;
+import com.cinemeow.payment_service.enums.BookingStatus;
 import com.cinemeow.payment_service.enums.PaymentMethod;
 import com.cinemeow.payment_service.factory.PaymentServiceFactory;
 import com.cinemeow.payment_service.repository.PaymentRepository;
@@ -24,6 +26,7 @@ public class PaymentFacade {
 
     PaymentServiceFactory factory;
     PaymentRepository paymentRepository;
+    BookingClient bookingClient;
 
     public InitPaymentResponse createPayment(InitPaymentRequest request) {
         PaymentService service = factory.getService(request.getPaymentMethod());
@@ -50,6 +53,10 @@ public class PaymentFacade {
                 response.isSuccess() ? "SUCCESS" : "FAILED"
         );
         // update booking status
+        bookingClient.updateStatus(
+                response.getBookingId(),
+                response.isSuccess() ? BookingStatus.PAID : BookingStatus.CANCELLED
+        );
 
         return response;
     }

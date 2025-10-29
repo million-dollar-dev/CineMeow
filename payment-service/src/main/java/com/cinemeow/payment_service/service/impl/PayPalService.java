@@ -59,7 +59,7 @@ public class PayPalService implements PaymentService {
             Payer payer = new Payer();
             payer.setPaymentMethod("paypal");
 
-            String returnUrlWithBooking = String.format("%s?bookingId=%s",
+            String returnUrlWithBooking = String.format("%s/paypal/callback?bookingId=%s",
                     returnUrl, request.getBookingId());
             RedirectUrls redirectUrls = new RedirectUrls();
             redirectUrls.setCancelUrl(cancelUrl);

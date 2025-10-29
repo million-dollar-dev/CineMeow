@@ -3,15 +3,13 @@ package com.cinemeow.booking_service.controller;
 import com.cinemeow.booking_service.dto.request.BookingRequest;
 import com.cinemeow.booking_service.dto.response.BaseResponse;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
+import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,10 @@ public class BookingController {
         return BaseResponse.<BookingResponse>builder()
                 .data(bookingService.create(request))
                 .build();
+    }
+
+    @PutMapping("/{id}/status")
+    public void updateStatus(@PathVariable String id, @RequestBody BookingStatus status) {
+        bookingService.updateStatus(id, status);
     }
 }
