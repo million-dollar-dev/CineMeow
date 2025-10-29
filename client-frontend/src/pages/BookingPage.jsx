@@ -12,13 +12,15 @@ import ComboPopup from "../components/Booking/ComboPopup.jsx";
 import BookingSummary from "../components/Booking/BookingSummary.jsx";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
-import {useGetAllPriceByBrandQuery} from "../services/bookingService.js";
+import {useCreateBookingMutation, useGetAllPriceByBrandQuery} from "../services/bookingService.js";
 import {useValidateVoucherMutation} from "../services/promotionService.js";
 import PaymentStep from "../components/Booking/PaymentStep.jsx";
+import {toast} from "react-toastify";
+import BookingOverlay from "../components/Booking/BookingOverlay.jsx";
+import {useInitPaymentMutation} from "../services/paymentService.js";
 
 const BookingPage = () => {
     const {showtimeId} = useParams();
-
     const {
         data: showtime,
         isLoading: loadingShowtime,
@@ -52,6 +54,24 @@ const BookingPage = () => {
             error: voucherValidateError
         }] = useValidateVoucherMutation();
 
+    const [
+        createBooking,
+        {
+            data: bookingResponse,
+            isSuccess: isBookingSuccess,
+            isLoading: isBooking,
+            isError: isBookingError,
+            error: bookingError
+        }] = useCreateBookingMutation();
+
+    const [initPayment, {
+        data: initPaymentResponse,
+        isLoading: isInitingPayment,
+        isSuccess: isInitingPaymentSuccess,
+        isError: isInitPaymentError,
+        error: initPaymentError
+    }] = useInitPaymentMutation();
+
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [openPopup, setOpenPopup] = useState(false);
     const [selectedCombos, setSelectedCombos] = useState([]);
@@ -59,6 +79,10 @@ const BookingPage = () => {
     const [voucherCode, setVoucherCode] = useState("");
     const [voucherInfo, setVoucherInfo] = useState(null);
     const [voucherErrorMsg, setVoucherErrorMsg] = useState("");
+
+    const [paymentMethod, setPaymentMethod] = useState("VNPAY");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
 
     const [step, setStep] = useState("summary");
 
@@ -130,6 +154,62 @@ const BookingPage = () => {
         validateVoucher(payload);
     };
 
+    const handleCreateBooking = async () => {
+        try {
+            const fnbItems = selectedCombos.map(item => ({
+                fnbItemId: item.id,
+                name: item.name,
+                quantity: item.quantity,
+                unitPrice: item.price,
+            }));
+
+            const payload = {
+                userId: null,
+                showtimeId: showtimeId,
+                discountAmount: voucherInfo?.discountAmount || 0,
+                totalPrice: totalPrice,
+                finalPrice: voucherInfo?.finalPrice || totalPrice,
+                voucherCode: voucherCode || null,
+                paymentMethod: paymentMethod,
+                seatIds: selectedSeats.map(i => i.id),
+                fnbItems,
+            };
+
+            console.log("📦 Payload gửi đi:", payload);
+
+            const bookingResult = await createBooking(payload).unwrap();
+
+            if (bookingResult?.id) {
+                const paymentPayload = {
+                    bookingId: bookingResult.id,
+                    amount: voucherInfo?.finalPrice || totalPrice,
+                    paymentMethod: paymentMethod,
+                };
+
+                await initPayment(paymentPayload);
+            } else {
+                toast.error("Không nhận được bookingId!");
+            }
+
+        } catch (error) {
+            console.error("❌ Lỗi khi tạo booking:", error);
+            toast.error(error?.data?.message || "Tạo đơn hàng thất bại!");
+        }
+    };
+
+    useEffect(() => {
+        if (isInitingPaymentSuccess && initPaymentResponse?.paymentUrl) {
+            window.location.href = initPaymentResponse.paymentUrl;
+        }
+
+        if (isInitPaymentError && initPaymentError) {
+            console.log('init paymenterror: ', initPaymentError)
+            toast.error(initPaymentError?.data?.message || "Khởi tạo thanh toán thất bại!");
+        }
+    }, [isInitingPaymentSuccess, isInitPaymentError, initPaymentResponse, initPaymentError]);
+
+
+
     useEffect(() => {
         setVoucherInfo(null);
         setVoucherCode("");
@@ -148,7 +228,6 @@ const BookingPage = () => {
             }
         }
         if (isVoucherValidateError && voucherValidateError) {
-            console.error("Voucher error:", voucherValidateError);
             setVoucherErrorMsg(voucherValidateError.data.message);
         }
     }, [voucherValidateResponse, isVoucherValidateError, voucherValidateError]);
@@ -165,10 +244,12 @@ const BookingPage = () => {
     }
 
     console.log('selected seat', selectedSeats);
-    console.log('grouped', groupedSeats);
+    console.log('selected combos', selectedCombos);
 
     return (
         <div className="bg-[#0b0b0b] text-white min-h-screen">
+            {(isInitingPayment) && <BookingOverlay/>}
+
             {/* Banner phim */}
             <Banner movieInfo={movie}/>
 
@@ -210,7 +291,7 @@ const BookingPage = () => {
             </p>
 
             {/* Bố cục chính */}
-            <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row gap-[2vw] pt-[1vw] pb-[4vw] px-[2vw]">
+            <div className="max-w-screen-2xl mx-auto flex flex-col lg:flex-row gap-[2vw] pt-[1vw] pb-[4vw] px-[2vw]">
                 {/* Cột trái - Sơ đồ ghế */}
                 <div
                     className="lg:w-3/5 w-full flex flex-col items-center bg-[#121212] rounded-2xl p-[2vw] shadow-[0_0_25px_rgba(127,90,240,0.05)] border border-[#1f1f1f]">
@@ -241,7 +322,14 @@ const BookingPage = () => {
                         handleApplyVoucher={handleApplyVoucher}
                         discount={voucherInfo?.discountAmount || 0}
                         finalPrice={voucherInfo?.finalPrice || totalPrice}
+                        phone={phone}
+                        setPhone={setPhone}
+                        email={email}
+                        setEmail={setEmail}
+                        paymentMethod={paymentMethod}
+                        setPaymentMethod={setPaymentMethod}
                         onBack={() => setStep("summary")}
+                        handleCreateBooking={handleCreateBooking}
                     />
                 )}
             </div>

@@ -2,7 +2,7 @@ import { rootApi } from "./rootApi";
 
 const CONTEXT_PATH = 'booking';
 
-export const brandApi = rootApi.injectEndpoints({
+export const bookingApi = rootApi.injectEndpoints({
     tagTypes: ["Pricing"],
     endpoints: (builder) => ({
         getAllPriceByBrand: builder.query({
@@ -12,9 +12,18 @@ export const brandApi = rootApi.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
+        createBooking: builder.mutation({
+            query: (payload) => ({
+                url: `${CONTEXT_PATH}/bookings`,
+                method: "POST",
+                body: payload,
+            }),
+            transformResponse: (response) => response.data,
+        }),
     }),
 });
 
 export const {
     useGetAllPriceByBrandQuery,
-} = brandApi;
+    useCreateBookingMutation,
+} = bookingApi;
