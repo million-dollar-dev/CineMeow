@@ -108,6 +108,14 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
+    @Override
+    public void updateStatus(String id, BookingStatus status) {
+        var booking =  bookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        booking.setStatus(status);
+        bookingRepository.save(booking);
+    }
+
     private BigDecimal getFnbPrice(List<FnbOrderRequest> fnbItems) {
         Map<String, Integer> items = new HashMap<>();
         for (FnbOrderRequest fnbItem : fnbItems) {

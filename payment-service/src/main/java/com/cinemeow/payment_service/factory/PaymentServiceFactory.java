@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -27,5 +29,13 @@ public class PaymentServiceFactory {
             case PAYPAL -> payPalService;
             default -> throw new AppException(ErrorCode.PAYMENT_METHOD_NOT_ALLOWED);
         };
+    }
+
+    public PaymentMethod identifyGateway(Map<String, String> params) {
+        if (params.containsKey("vnp_TxnRef"))
+            return PaymentMethod.VNPAY;
+        if (params.containsKey("token") && params.containsKey("PayerID"))
+            return PaymentMethod.PAYPAL;
+        throw new AppException(ErrorCode.PAYMENT_METHOD_NOT_ALLOWED);
     }
 }

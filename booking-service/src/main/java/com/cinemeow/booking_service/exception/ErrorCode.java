@@ -15,6 +15,7 @@ public enum ErrorCode {
     BRAND_NOT_EXISTED(1001, "Brand not existed", HttpStatus.NOT_FOUND),
     CINEMA_NOT_EXISTED(1001, "Cinema not existed", HttpStatus.NOT_FOUND),
     ROOM_NOT_EXISTED(1004, "Room not existed", HttpStatus.NOT_FOUND),
+    BOOKING_NOT_EXISTED(1004, "Booking not existed", HttpStatus.NOT_FOUND),
     SEAT_NOT_EXISTED(1005, "Seat not existed", HttpStatus.NOT_FOUND),
     ROOM_CAPACITY_EXCEED(1006, "Cannot add more seats: capacity exceeded", HttpStatus.BAD_REQUEST),
     SHOWTIME_NOT_AVAILABLE(1007, "Showtime not available", HttpStatus.BAD_REQUEST),
