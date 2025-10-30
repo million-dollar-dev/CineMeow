@@ -26,6 +26,7 @@ import {ToastContainer} from "react-toastify";
 import ProtectedLayout from "./pages/ProtectedLayout.jsx";
 import {PersistGate} from "redux-persist/integration/react";
 import Loading from "./components/Loading.jsx";
+import PaymentResultPage from "./pages/PaymentResultPage.jsx";
 const router = createBrowserRouter([
     {
         element: <RootLayout />,
@@ -106,8 +107,12 @@ const router = createBrowserRouter([
                 ]
             }
 
-        ]
-    }
+        ],
+    },
+    {
+        path: "/payment-result/:bookingId",
+        element: <PaymentResultPage />,
+    },
 ]);
 
 createRoot(document.getElementById('root')).render(
