@@ -2,6 +2,7 @@ package com.cinemeow.booking_service.controller;
 
 import com.cinemeow.booking_service.dto.request.BookingRequest;
 import com.cinemeow.booking_service.dto.response.BaseResponse;
+import com.cinemeow.booking_service.dto.response.BookingDetailResponse;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.service.BookingService;
@@ -22,6 +23,13 @@ public class BookingController {
     public BaseResponse<BookingResponse> create(@Valid @RequestBody BookingRequest request){
         return BaseResponse.<BookingResponse>builder()
                 .data(bookingService.create(request))
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public BaseResponse<BookingDetailResponse> get(@PathVariable String id){
+        return BaseResponse.<BookingDetailResponse>builder()
+                .data(bookingService.getById(id))
                 .build();
     }
 

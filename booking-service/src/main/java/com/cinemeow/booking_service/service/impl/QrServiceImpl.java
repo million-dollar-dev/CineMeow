@@ -40,7 +40,7 @@ public class QrServiceImpl implements QrService {
     @Value("${app.qr.verify-url}")
     String verifyUrl;
 
-    BookingService bookingService;
+//    BookingService bookingService;
 
     @Override
     public String generateQRCode(String bookingId) {
@@ -80,17 +80,18 @@ public class QrServiceImpl implements QrService {
 
     @Override
     public BookingDetailResponse verifyQRCode(String token) {
-        try {
-            var claims = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            String bookingId = claims.getSubject();
-            return bookingService.getById(bookingId);
-        } catch (JwtException e) {
-            throw new AppException(ErrorCode.QR_INVALID);
-        }
+//        try {
+//            var claims = Jwts.parserBuilder()
+//                    .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+//                    .build()
+//                    .parseClaimsJws(token)
+//                    .getBody();
+//
+//            String bookingId = claims.getSubject();
+//            return bookingService.getById(bookingId);
+//        } catch (JwtException e) {
+//            throw new AppException(ErrorCode.QR_INVALID);
+//        }
+        return null;
     }
 }

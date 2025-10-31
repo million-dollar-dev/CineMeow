@@ -36,6 +36,10 @@ public class BookingDetailResponse {
 
     RoomType roomType;
 
+    String qrToken;
+
+    String qrCodeUrl;
+
     LocalDateTime startTime;
 
     LocalDateTime endTime;
