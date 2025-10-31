@@ -29,4 +29,14 @@ public class BookingController {
     public void updateStatus(@PathVariable String id, @RequestBody BookingStatus status) {
         bookingService.updateStatus(id, status);
     }
+
+    @PutMapping("/{id}/payment")
+    public void updatePayment(@PathVariable String id, @RequestBody String paymentId) {
+        bookingService.updatePaymentId(id, paymentId);
+    }
+
+    @PostMapping("/{id}/confirm")
+    public void confirmBooking(@PathVariable String id) {
+        bookingService.confirmBooking(id);
+    }
 }

@@ -21,7 +21,9 @@ public enum ErrorCode {
     SHOWTIME_NOT_AVAILABLE(1007, "Showtime not available", HttpStatus.BAD_REQUEST),
     INVALID_SEAT(1008, "Invalid Seat", HttpStatus.BAD_REQUEST),
     TICKET_PRICE_NOT_EXISTED(1001, "Ticket Price not existed", HttpStatus.NOT_FOUND),
-    UNAUTHENTICATED(403, "Access denied", HttpStatus.UNAUTHORIZED)
+    UNAUTHENTICATED(403, "Access denied", HttpStatus.UNAUTHORIZED),
+    QR_GENERATION_FAILED(4001, "Qr generation failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    QR_INVALID(1007, "Qr invalid", HttpStatus.BAD_REQUEST),
     ;
 
     int code;

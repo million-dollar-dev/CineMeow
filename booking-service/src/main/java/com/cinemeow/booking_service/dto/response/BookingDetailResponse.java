@@ -4,15 +4,13 @@ import com.cinemeow.booking_service.entity.BookedFnbItem;
 import com.cinemeow.booking_service.entity.BookedSeat;
 import com.cinemeow.booking_service.entity.GuestInfo;
 import com.cinemeow.booking_service.enums.BookingStatus;
-import jakarta.persistence.*;
+import com.cinemeow.booking_service.enums.RoomType;
+import jakarta.persistence.Embedded;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -21,12 +19,26 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingResponse {
+public class BookingDetailResponse {
     String id;
 
     String userId;
 
     String showtimeId;
+
+    String movieTitle;
+
+    String posterPath;
+
+    String cinemaName;
+
+    String roomName;
+
+    RoomType roomType;
+
+    LocalDateTime startTime;
+
+    LocalDateTime endTime;
 
     BookingStatus status;
 
@@ -48,6 +60,8 @@ public class BookingResponse {
     List<BookedSeat> seats;
 
     List<BookedFnbItem> fnbItems;
+
+
 
     LocalDateTime createdAt;
 }

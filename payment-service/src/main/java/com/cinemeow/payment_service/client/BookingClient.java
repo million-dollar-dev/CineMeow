@@ -17,4 +17,9 @@ public interface BookingClient {
     @PutMapping("/{id}/status")
     void updateStatus(@PathVariable String id, @RequestBody BookingStatus status);
 
+    @PutMapping("/{id}/payment")
+    void updatePayment(@PathVariable String id, @RequestBody String paymentId);
+
+    @PostMapping("/{id}/confirm")
+    void confirmBooking(@PathVariable String id);
 }

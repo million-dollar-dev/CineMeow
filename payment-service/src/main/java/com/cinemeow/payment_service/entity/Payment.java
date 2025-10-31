@@ -4,8 +4,10 @@ import com.cinemeow.payment_service.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,5 +31,6 @@ public class Payment {
 
     String status; // PENDING, SUCCESS, FAILED
 
-    String transactionId;
+    @CreationTimestamp
+    LocalDateTime createdAt;
 }

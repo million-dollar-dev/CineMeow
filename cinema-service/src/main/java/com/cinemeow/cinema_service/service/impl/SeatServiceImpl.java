@@ -68,9 +68,9 @@ public class SeatServiceImpl implements SeatService {
     public void confirmSeats(List<Long> seatIds) {
         List<Seat> seats = seatRepository.findAllByIdIn(seatIds);
         for (Seat seat : seats) {
-            if (seat.getStatus() != SeatStatus.LOCKED) {
-                throw new AppException(ErrorCode.SEAT_NOT_LOCKED);
-            }
+//            if (seat.getStatus() != SeatStatus.LOCKED) {
+//                throw new AppException(ErrorCode.SEAT_NOT_LOCKED);
+//            }
             seat.setStatus(SeatStatus.BOOKED);
         }
         seatRepository.saveAll(seats);

@@ -1,9 +1,12 @@
 package com.cinemeow.booking_service.service.impl;
 
 import com.cinemeow.booking_service.client.CinemaClient;
+import com.cinemeow.booking_service.client.PaymentClient;
 import com.cinemeow.booking_service.client.ShowtimeClient;
 import com.cinemeow.booking_service.dto.request.BookingRequest;
 import com.cinemeow.booking_service.dto.request.FnbOrderRequest;
+import com.cinemeow.booking_service.dto.request.InitPaymentRequest;
+import com.cinemeow.booking_service.dto.response.BookingDetailResponse;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
 import com.cinemeow.booking_service.dto.response.SeatResponse;
 import com.cinemeow.booking_service.dto.response.ShowtimeResponse;
@@ -11,6 +14,7 @@ import com.cinemeow.booking_service.entity.BookedFnbItem;
 import com.cinemeow.booking_service.entity.BookedSeat;
 import com.cinemeow.booking_service.entity.Booking;
 import com.cinemeow.booking_service.enums.BookingStatus;
+import com.cinemeow.booking_service.enums.PaymentMethod;
 import com.cinemeow.booking_service.enums.RoomType;
 import com.cinemeow.booking_service.enums.ShowtimeStatus;
 import com.cinemeow.booking_service.exception.AppException;
@@ -18,6 +22,7 @@ import com.cinemeow.booking_service.exception.ErrorCode;
 import com.cinemeow.booking_service.mapper.BookingMapper;
 import com.cinemeow.booking_service.repository.BookingRepository;
 import com.cinemeow.booking_service.service.BookingService;
+import com.cinemeow.booking_service.service.QrService;
 import com.cinemeow.booking_service.service.TicketPriceService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +43,7 @@ public class BookingServiceImpl implements BookingService {
     BookingRepository bookingRepository;
     BookingMapper bookingMapper;
 
+    QrService qrService;
     TicketPriceService ticketPriceService;
     ShowtimeClient showtimeClient;
     CinemaClient cinemaClient;
@@ -81,6 +87,8 @@ public class BookingServiceImpl implements BookingService {
             booking.getFnbItems().add(bookedFnbItem);
         });
 
+
+
         bookingRepository.save(booking);
 
         BookingResponse response = bookingMapper.toBookingResponse(booking);
@@ -94,8 +102,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> getById(String id) {
-        return List.of();
+    public BookingDetailResponse getById(String id) {
+        var booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        String showtimeId = booking.getShowtimeId();
+        ShowtimeResponse showtime = showtimeClient.getById(showtimeId).getData();
+        var response = bookingMapper.toBookingDetailResponse(booking);
+        response.setMovieTitle(showtime.getMovieTitle());
+        response.setPosterPath(showtime.getPosterPath());
+        response.setRoomName(showtime.getRoomName());
+        response.setCinemaName(showtime.getCinemaName());
+        response.setRoomType(showtime.getRoomType());
+        response.setStartTime(showtime.getStartTime());
+        response.setEndTime(showtime.getEndTime());
+        return response;
     }
 
     @Override
@@ -116,11 +136,33 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
     }
 
-    private BigDecimal getFnbPrice(List<FnbOrderRequest> fnbItems) {
-        Map<String, Integer> items = new HashMap<>();
-        for (FnbOrderRequest fnbItem : fnbItems) {
-            items.put(fnbItem.getFnbItemId(), fnbItem.getQuantity());
-        }
-        return cinemaClient.calculate(items);
+    @Override
+    public void updatePaymentId(String bookingId, String paymentId) {
+        var booking =  bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        booking.setPaymentId(paymentId);
+        bookingRepository.save(booking);
     }
+
+    @Override
+    public void confirmBooking(String bookingId) {
+        var booking =  bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        booking.setStatus(BookingStatus.PAID);
+
+        String qrToken = qrService.generateQRCode(bookingId);
+        String qrImageUrl = qrService.generateQrImage(qrToken);
+
+        booking.setQrToken(qrToken);
+        booking.setQrCodeUrl(qrImageUrl);
+
+        bookingRepository.save(booking);
+
+        List<Long> seatIds = booking.getSeats().stream()
+                .map(s -> s.getSeatId())
+                .toList();
+
+        cinemaClient.confirmSeats(seatIds);
+    }
+
 }

@@ -110,7 +110,7 @@ const router = createBrowserRouter([
         ],
     },
     {
-        path: "/payment-result/:bookingId",
+        path: "/payment-result",
         element: <PaymentResultPage />,
     },
 ]);

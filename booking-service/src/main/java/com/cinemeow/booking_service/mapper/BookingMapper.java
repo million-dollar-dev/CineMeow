@@ -1,6 +1,7 @@
 package com.cinemeow.booking_service.mapper;
 
 import com.cinemeow.booking_service.dto.request.BookingRequest;
+import com.cinemeow.booking_service.dto.response.BookingDetailResponse;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
 import com.cinemeow.booking_service.entity.Booking;
 import org.mapstruct.Mapper;
@@ -13,4 +14,5 @@ public interface BookingMapper {
     Booking toBooking(BookingRequest request);
 
     BookingResponse toBookingResponse(Booking booking);
+    BookingDetailResponse toBookingDetailResponse(Booking booking);
 }

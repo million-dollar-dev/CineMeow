@@ -70,14 +70,11 @@ public class PaymentController {
     @GetMapping("/vnpay/ipn")
     public void handleVnpayIpn(@RequestParam Map<String, String> params,
                                HttpServletResponse response) throws IOException {
+        log.info("[VNPay Callback] params: {}", params);
         PaymentCallbackResponse result = paymentFacade.handleCallback(params);
-        String redirectUrl = String.format(
-                "http://localhost:3000/payment/result?bookingId=%s&status=%s",
-                result.getBookingId(),
-                result.isSuccess() ? "success" : "failed"
-        );
-        log.info("VNPay callback result: {}", result);
-        response.sendRedirect(redirectUrl);
+//        String redirectUrl = String.format(
+//                "http://localhost:5174/payment-result/%s", result.getBookingId());
+//        response.sendRedirect(redirectUrl);
     }
 
     @Operation(
@@ -92,13 +89,12 @@ public class PaymentController {
     @GetMapping("/paypal/callback")
     public void handlePayPalCallback(@RequestParam Map<String, String> params,
                                      HttpServletResponse response) throws IOException {
+        log.info("[Paypal Callback] params: {}", params);
         PaymentCallbackResponse result = paymentFacade.handleCallback(params);
+
         String redirectUrl = String.format(
-                "http://localhost:3000/payment/result?bookingId=%s&status=%s",
-                result.getBookingId(),
-                result.isSuccess() ? "success" : "failed"
-        );
-        log.info("PayPal callback result: {}", result);
+                "http://localhost:5174/payment-result?bookingId=%s", result.getBookingId());
+
         response.sendRedirect(redirectUrl);
     }
 

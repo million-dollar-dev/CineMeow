@@ -34,8 +34,12 @@ openapi:
     version: 1.0.0
 
 app:
+  qr:
+    secret-key: Kdx2vu8GOXH6lZnpmYwdtICtOIYxSS+jJH+yDB0PZvUH2gMVxyxDGoVqL3hBNTfv
+    verify-url: https://cinemeow.vn/booking/verify?token=
   services:
     showtime-service: http://localhost:8083/showtime
     cinema-service: http://localhost:8084/cinema
     movie-service: http://localhost:8082/movie
+    payment-service: http://localhost:8086/payment
 
