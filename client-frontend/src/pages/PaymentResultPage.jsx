@@ -1,32 +1,39 @@
 import React, {useEffect} from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import TicketCard from "../components/Booking/TicketCard.jsx";
+import {useGetBookingQuery} from "../services/bookingService.js";
+import {toast} from "react-toastify";
 
 const PaymentResultPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
-    var bookingId = '';
-    const isLoading = false;
-    const isError = false;
+    const [bookingId, setBookingId] = React.useState(null);
+    const [done, setDone] = React.useState(false);
     const isLoggedIn = false;
-    const booking = {
-        movieTitle: "Batman 2",
-        cinemaName: "CGV Sư Vạn Hạnh",
-        roomName: "A1",
-        totalPrice: 350000,
-        showtime: "12/12/2022",
-        seats: [{id: 1, label: "A1"}, {id: 2, label: "A2"}],
-        bookingCode: bookingId,
-        posterUrl: "https://media.posterstore.com/site_images/68631be292c536b9cc92b044_2010122803_WB0039-5.jpg?auto=compress%2Cformat&fit=max&w=3840"
 
-    }
+    const {
+        data: booking,
+        isLoading,
+        isError,
+        error,
+        isSuccess,
+    } = useGetBookingQuery(bookingId, {skip: !bookingId});
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         console.log(params);
-        bookingId = params.get("bookingId");
+        setBookingId(params.get("bookingId"));
+
     }, [location.search]);
+
+    useEffect(() => {
+        if (isSuccess && booking.status === 'PAID') {
+            setDone(true);
+        }
+        if (isError) {
+            toast.error(error);
+        }
+    }, [isError, booking, error]);
     if (isLoading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#010101] text-[#fffffe]">
@@ -36,7 +43,7 @@ const PaymentResultPage = () => {
         );
     }
 
-    if (isError || !booking) {
+    if (isError || !booking || !done) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#010101] text-[#fffffe] px-4 animate-fadeIn">
                 <div className="w-16 h-16 flex items-center justify-center bg-red-600/20 text-red-500 rounded-full text-4xl font-bold animate-pop">
@@ -44,7 +51,7 @@ const PaymentResultPage = () => {
                 </div>
                 <h2 className="text-2xl font-bold mt-4 animate-slideUp">Thanh toán thất bại</h2>
                 <p className="text-[#94a1b2] mt-2 text-center animate-slideUp animation-delay-200">
-                    Không thể tải thông tin vé. Vui lòng thử lại sau.
+                    {error?.message || "Không thể tải thông tin vé. Vui lòng thử lại sau."}
                 </p>
                 <button
                     onClick={() => navigate("/")}

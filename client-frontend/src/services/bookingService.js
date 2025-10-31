@@ -12,6 +12,13 @@ export const bookingApi = rootApi.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
+        getBooking: builder.query({
+            query: (bookingId) => ({
+                url: `${CONTEXT_PATH}/bookings/${bookingId}`,
+            }),
+            transformResponse: (response) => response.data,
+        }),
+
         createBooking: builder.mutation({
             query: (payload) => ({
                 url: `${CONTEXT_PATH}/bookings`,
@@ -26,4 +33,5 @@ export const bookingApi = rootApi.injectEndpoints({
 export const {
     useGetAllPriceByBrandQuery,
     useCreateBookingMutation,
+    useGetBookingQuery,
 } = bookingApi;

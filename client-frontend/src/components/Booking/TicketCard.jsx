@@ -1,6 +1,7 @@
 import React from "react";
 
 const TicketCard = ({ booking }) => {
+    console.log('TicketCard', booking);
     return (
         <div className="flex justify-center items-center py-6">
             <div className="relative bg-[#16161a] text-[#fffffe] rounded-3xl shadow-xl flex flex-row w-full max-w-2xl overflow-hidden">
@@ -11,9 +12,9 @@ const TicketCard = ({ booking }) => {
 
                 {/* Poster phim */}
                 <div className="flex items-center justify-center bg-[#16161a]">
-                    {booking.posterUrl ? (
+                    {booking.posterPath ? (
                         <img
-                            src={booking.posterUrl}
+                            src={booking.posterPath}
                             alt={booking.movieTitle}
                             className="w-42 h-54 object-cover shadow-md"
                         />
@@ -33,17 +34,17 @@ const TicketCard = ({ booking }) => {
                     </p>
 
                     <div className="grid grid-cols-[auto_1fr] gap-y-1 text-sm">
-                        <p className="text-[#94a1b2]">Suất chiếu:</p>
-                        <p className="font-medium">{booking.showtime}</p>
+                        <p className="text-[#94a1b2]">Suất chiếu: </p>
+                        <p className="font-medium">{booking.startTime}</p>
 
                         <p className="text-[#94a1b2]">Ghế:</p>
-                        <p className="font-medium">{booking.seats?.map((s) => s.label).join(", ")}</p>
+                        <p className="font-medium">{booking.seats?.map((s) => s.seatLabel).join(", ")}</p>
 
                         <p className="text-[#94a1b2]">Tổng tiền:</p>
                         <p className="font-medium text-[#7f5af0]">{booking.totalPrice?.toLocaleString()}₫</p>
 
-                        <p className="text-[#94a1b2]">Mã đặt vé:</p>
-                        <p className="font-medium">{booking.bookingCode}</p>
+                        {/*<p className="text-[#94a1b2]">Mã vé:</p>*/}
+                        {/*<p className="font-small">{booking.id}</p>*/}
                     </div>
 
                 </div>
@@ -53,8 +54,7 @@ const TicketCard = ({ booking }) => {
                     <div className="bg-white p-2 rounded-md shadow-md">
                         <img
                             src={
-                                booking.qrCodeUrl ||
-                                `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${booking.bookingCode}`
+                                booking.qrCodeUrl
                             }
                             alt="QR Code"
                             className="w-20 h-20"
