@@ -1,11 +1,12 @@
-import React from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import React, {useEffect} from "react";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import TicketCard from "../components/Booking/TicketCard.jsx";
 
 const PaymentResultPage = () => {
-    const {bookingId} = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
 
+    var bookingId = '';
     const isLoading = false;
     const isError = false;
     const isLoggedIn = false;
@@ -16,10 +17,16 @@ const PaymentResultPage = () => {
         totalPrice: 350000,
         showtime: "12/12/2022",
         seats: [{id: 1, label: "A1"}, {id: 2, label: "A2"}],
-        bookingCode: "12222222222222222222222",
+        bookingCode: bookingId,
         posterUrl: "https://media.posterstore.com/site_images/68631be292c536b9cc92b044_2010122803_WB0039-5.jpg?auto=compress%2Cformat&fit=max&w=3840"
 
     }
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        console.log(params);
+        bookingId = params.get("bookingId");
+    }, [location.search]);
     if (isLoading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#010101] text-[#fffffe]">

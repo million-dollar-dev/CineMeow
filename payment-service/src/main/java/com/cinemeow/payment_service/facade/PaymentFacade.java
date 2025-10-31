@@ -14,11 +14,13 @@ import com.cinemeow.payment_service.service.PaymentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -40,6 +42,8 @@ public class PaymentFacade {
                 .build();
         paymentRepository.save(payment);
 
+        bookingClient.updatePayment(request.getBookingId(), payment.getId());
+
         return response;
     }
 
@@ -53,10 +57,10 @@ public class PaymentFacade {
                 response.isSuccess() ? "SUCCESS" : "FAILED"
         );
         // update booking status
-        bookingClient.updateStatus(
-                response.getBookingId(),
-                response.isSuccess() ? BookingStatus.PAID : BookingStatus.CANCELLED
-        );
+        log.info("[Booking confirm]: {}", response.getBookingId());
+
+        if (response.isSuccess())
+            bookingClient.confirmBooking(response.getBookingId());
 
         return response;
     }

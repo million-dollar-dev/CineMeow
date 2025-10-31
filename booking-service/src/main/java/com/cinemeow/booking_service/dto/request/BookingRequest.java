@@ -4,6 +4,7 @@ import com.cinemeow.booking_service.entity.BookedFnbItem;
 import com.cinemeow.booking_service.entity.BookedSeat;
 import com.cinemeow.booking_service.entity.GuestInfo;
 import com.cinemeow.booking_service.enums.BookingStatus;
+import com.cinemeow.booking_service.enums.PaymentMethod;
 import jakarta.persistence.Embedded;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -39,6 +40,9 @@ public class BookingRequest {
 
     @Size(max = 50, message = "Voucher code must not exceed 50 characters")
     String voucherCode;
+
+    @NotNull(message = "Payment method must be not null")
+    PaymentMethod paymentMethod;
 
     @Valid
     GuestInfo guestInfo;
