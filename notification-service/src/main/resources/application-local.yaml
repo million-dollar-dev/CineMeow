@@ -6,6 +6,11 @@ server:
 spring:
   application:
     name: notification-service
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
 
 springdoc:
   api-docs:
@@ -23,3 +28,7 @@ openapi:
     title: Notification Service
     version: 1.0.0
 
+brevo:
+  api-key: ${BREVO_API_KEY}
+  sender-email: hoangtunqs134@gmail.com
+  sender-name: Cinemeow
