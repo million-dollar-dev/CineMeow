@@ -127,7 +127,7 @@ public class VNPayService implements PaymentService {
     }
 
     private String buildReturnUrl(String txnRef) {
-        return String.format("http://localhost:5174/payment-result?bookinggId=%s",
+        return String.format("http://localhost:5174/payment-result?bookingId=%s",
                 txnRef);
     }
 

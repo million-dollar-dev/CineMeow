@@ -1,0 +1,34 @@
+server:
+  port: 8087
+  servlet:
+    context-path: /notification
+
+spring:
+  application:
+    name: notification-service
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v1/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    operations-sorter: method
+
+openapi:
+  service:
+    api-docs: notification-service
+    server: http://localhost:8087/notification
+    title: Notification Service
+    version: 1.0.0
+
+brevo:
+  api-key: ${BREVO_API_KEY}
+  sender-email: hoangtunqs134@gmail.com
+  sender-name: Cinemeow

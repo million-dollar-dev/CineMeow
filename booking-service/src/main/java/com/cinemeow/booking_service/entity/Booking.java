@@ -61,8 +61,12 @@ public class Booking {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BookedFnbItem> fnbItems = new ArrayList<>();
 
+    @Lob
+    @Column(name = "qr_token")
     String qrToken;
 
+    @Lob
+    @Column(name = "qr_code_url")
     String qrCodeUrl;
 
     @CreationTimestamp

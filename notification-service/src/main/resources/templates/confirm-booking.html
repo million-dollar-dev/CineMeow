@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vé xem phim của bạn - CineMeow</title>
+    <style>
+        /* Reset cơ bản */
+        body, table, td, p, a { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; }
+        img { border: 0; display: block; }
+        body { background-color: #010101; color: #fffffe; }
+        a { color: #7f5af0; text-decoration: none; }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .container { width: 100% !important; }
+            .stack-column,
+            .stack-column-cell { display: block !important; width: 100% !important; }
+            .center-on-mobile { text-align: center !important; }
+        }
+    </style>
+</head>
+
+<body>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+        <td align="center" style="padding: 40px 10px;">
+            <table class="container" width="700" cellpadding="0" cellspacing="0" border="0" style="max-width:700px; background-color:#16161a; border-radius:24px; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,0.4);">
+                <tr>
+                    <td style="padding: 30px; text-align: center;">
+                        <div style="width:64px; height:64px; background:rgba(127,90,240,0.2); color:#7f5af0; border-radius:50%; font-size:32px; line-height:64px; display:inline-block;">✓</div>
+                        <h2 style="font-size:28px; font-weight:800; color:#fffffe; margin:16px 0 8px;">Thanh toán thành công</h2>
+                        <p style="color:#94a1b2;">Cảm ơn bạn đã đặt vé! Dưới đây là thông tin vé xem phim của bạn.</p>
+                    </td>
+                </tr>
+
+                <!-- Vé -->
+                <tr>
+                    <td style="padding: 0 20px 20px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <!-- Poster -->
+                                <td class="stack-column-cell" width="35%" align="center" style="background-color:#16161a; padding:16px;">
+                                    <img th:if="${posterPath}" th:src="${posterPath}" th:alt="${movieTitle}" width="180" height="240" style="border-radius:8px; object-fit:cover;">
+                                    <div th:if="${posterPath == null}" style="color:#94a1b2;">Poster</div>
+                                </td>
+
+                                <!-- Nội dung -->
+                                <td class="stack-column-cell" width="45%" valign="top" style="padding:24px; border-left:1px dashed #2a2a2a;">
+                                    <h3 th:text="${movieTitle}" style="color:#7f5af0; font-size:20px; margin-bottom:8px;"></h3>
+                                    <p style="color:#94a1b2; font-size:14px; margin-bottom:12px;">
+                                        <span th:text="${cinemaName}"></span> — Phòng <strong th:text="${roomName}" style="color:#fffffe;"></strong>
+                                    </p>
+                                    <table role="presentation" width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size:14px;">
+                                        <tr>
+                                            <td style="color:#94a1b2;">Suất chiếu:</td>
+                                            <td th:text="${startTime}" style="font-weight:600; color:#fffffe;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#94a1b2;">Ghế:</td>
+                                            <td th:text="${seats}" style="font-weight:600; color:#fffffe;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#94a1b2;">Tổng tiền:</td>
+                                            <td th:text="${totalPrice}" style="font-weight:700; color:#7f5af0;"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <!-- QR -->
+                                <td class="stack-column-cell center-on-mobile" width="20%" valign="middle" style="background-color:#242629; padding:20px; border-left:1px dashed #fffffe;">
+                                    <img th:src="${qrCodeUrl}" alt="QR Code" width="80" height="80" style="background:#fff; padding:6px; border-radius:8px;">
+                                    <p style="font-size:12px; color:#94a1b2; margin-top:6px;">Quét để vào rạp</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Nút về trang chủ -->
+                <tr>
+                    <td align="center" style="padding: 20px;">
+                        <a th:href="@{https://cinemeow.vn}" style="background-color:#7f5af0; color:#ffffff; padding:12px 24px; border-radius:12px; font-weight:600; display:inline-block;">Đến trang chủ</a>
+                    </td>
+                </tr>
+
+                <!-- Cảm ơn & hỗ trợ -->
+                <tr>
+                    <td align="center" style="padding: 30px;">
+                        <h3 style="color:#7f5af0; margin-bottom:8px;">Cảm ơn bạn đã lựa chọn CineMeow!</h3>
+                        <p style="color:#94a1b2; font-size:14px; line-height:1.6; max-width:480px; margin:0 auto 16px;">
+                            Chúng tôi hy vọng bạn sẽ có trải nghiệm tuyệt vời khi xem phim.
+                            Nếu bạn cần hỗ trợ, đội ngũ của chúng tôi luôn sẵn sàng giúp bạn bất cứ lúc nào.
+                        </p>
+                        <table role="presentation" cellpadding="6" cellspacing="0" border="0" style="background-color:#16161a; border:1px solid #2a2a2a; border-radius:12px; margin:auto;">
+                            <tr><td style="color:#94a1b2;">☎️ Hotline: <a href="tel:19001001">1900 1001</a></td></tr>
+                            <tr><td style="color:#94a1b2;">📧 Email: <a href="mailto:support@cinemeow.vn">support@cinemeow.vn</a></td></tr>
+                            <tr><td style="color:#94a1b2;">🌐 Website: <a href="https://cinemeow.vn">cinemeow.vn</a></td></tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center" style="padding:20px; color:#94a1b2; font-size:12px;">
+                        © 2025 CineMeow. All rights reserved.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
