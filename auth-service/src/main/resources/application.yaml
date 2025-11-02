@@ -23,6 +23,9 @@ app:
     username: admin
     password: admin
     email: admin123@gmail.com
+  verify-url: 12345678
+  services:
+    notification-service: http://localhost:8087/notification
 
 springdoc:
   api-docs:

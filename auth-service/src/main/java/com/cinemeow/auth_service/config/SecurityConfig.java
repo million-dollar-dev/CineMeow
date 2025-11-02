@@ -29,11 +29,12 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/webjars/**",
             "/v1/api-docs/**",
-            "/users",
+            "/users/register",
             "/auth/login",
             "/auth/introspect",
             "/auth/logout",
-            "/auth/refresh"
+            "/auth/refresh",
+
     };
 
     CustomJwtDecoder customJwtDecoder;

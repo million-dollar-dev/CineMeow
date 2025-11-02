@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Xác nhận tài khoản của bạn - CineMeow</title>
+    <style>
+        body {
+            background-color: #010101;
+            color: #fffffe;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #16161a;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            padding: 40px 30px;
+        }
+        .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #7f5af0;
+            letter-spacing: 1px;
+        }
+        .title {
+            text-align: center;
+            font-size: 22px;
+            margin-top: 24px;
+            color: #fffffe;
+        }
+        .message {
+            text-align: center;
+            color: #94a1b2;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 20px 0 30px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #7f5af0;
+            color: #fff !important;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: opacity .2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .footer {
+            text-align: center;
+            color: #94a1b2;
+            font-size: 13px;
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+        .support {
+            background-color: #242629;
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 18px;
+        }
+        .support a { color: #7f5af0; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">CineMeow</div>
+    <h2 class="title">Xác nhận tài khoản của bạn</h2>
+
+    <p class="message">
+        Cảm ơn bạn đã đăng ký tại <strong>CineMeow</strong><br />
+        Vui lòng nhấn nút bên dưới để kích hoạt tài khoản và bắt đầu đặt vé ngay hôm nay.
+    </p>
+
+    <div style="text-align:center;">
+        <a th:href="${verificationUrl}" class="btn">Xác nhận tài khoản</a>
+    </div>
+
+    <p class="message" style="margin-top:30px;">
+        Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.
+    </p>
+
+    <div class="footer">
+        <div class="support">
+            Cần hỗ trợ? Liên hệ: <br />
+            <a href="tel:19001001">1900 1001</a> —
+            <a href="mailto:support@cinemeow.vn">support@cinemeow.vn</a>
+        </div>
+        <p style="margin-top:16px;">© 2025 CineMeow. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

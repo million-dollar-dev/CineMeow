@@ -23,7 +23,7 @@ import java.util.List;
 public class UserController {
     UserService userService;
 
-    @PostMapping("/registration")
+    @PostMapping("/register")
     public BaseResponse<UserResponse> create(@Valid @RequestBody RegisterRequest request) {
         return BaseResponse.<UserResponse>builder()
                 .data(userService.create(request))
