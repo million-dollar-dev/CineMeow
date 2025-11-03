@@ -9,7 +9,6 @@ import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
 
 const RegisterPage = () => {
-
     const schema = yup.object().shape({
         username: yup.string().required("Username is required").min(3, "Min 3 characters"),
         password: yup.string().required("Password is required").min(3, "Min 3 characters"),

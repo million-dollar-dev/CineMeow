@@ -6,9 +6,12 @@ import com.cinemeow.auth_service.dto.request.LogoutRequest;
 import com.cinemeow.auth_service.dto.request.RefreshRequest;
 import com.cinemeow.auth_service.dto.response.AuthenticationResponse;
 import com.cinemeow.auth_service.dto.response.IntrospectResponse;
+import com.cinemeow.auth_service.entity.ActiveToken;
 import com.cinemeow.auth_service.entity.RefreshToken;
+import com.cinemeow.auth_service.entity.User;
 import com.cinemeow.auth_service.exception.AppException;
 import com.cinemeow.auth_service.exception.ErrorCode;
+import com.cinemeow.auth_service.repository.ActiveTokenRepository;
 import com.cinemeow.auth_service.repository.RefreshTokenRepository;
 import com.cinemeow.auth_service.repository.UserRepository;
 import com.cinemeow.auth_service.service.AuthenticationService;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -36,6 +40,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     JwtService jwtService;
 
     UserRepository userRepository;
+
+    ActiveTokenRepository activeTokenRepository;
 
     RefreshTokenRepository refreshTokenRepository;
 
@@ -113,6 +119,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return IntrospectResponse.builder()
                 .valid(isValid)
                 .build();
+    }
+
+    @Override
+    public void verifyAccount(String token) {
+        ActiveToken activeToken = activeTokenRepository.findByToken(token)
+                .orElseThrow(() -> new AppException(ErrorCode.TOKEN_NOT_FOUND));
+        if (activeToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new AppException(ErrorCode.ACTIVE_CODE_EXPIRED);
+        }
+        User user = activeToken.getUser();
+        user.setActive(true);
+        userRepository.save(user);
     }
 
     private String extractUsername(SignedJWT signedJWT) {

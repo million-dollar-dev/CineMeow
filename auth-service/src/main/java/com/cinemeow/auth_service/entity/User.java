@@ -19,8 +19,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+
+    @Column(unique = true)
     String username;
+
     String password;
+
+    @Builder.Default
+    @Column(nullable = false)
+    boolean active = false;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

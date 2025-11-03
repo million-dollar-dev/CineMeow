@@ -42,4 +42,5 @@ app:
     cinema-service: http://localhost:8084/cinema
     movie-service: http://localhost:8082/movie
     payment-service: http://localhost:8086/payment
+    notification-service: http://localhost:8087/notification
 

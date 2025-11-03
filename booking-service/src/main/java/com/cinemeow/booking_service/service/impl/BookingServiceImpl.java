@@ -1,18 +1,18 @@
 package com.cinemeow.booking_service.service.impl;
 
 import com.cinemeow.booking_service.client.CinemaClient;
+import com.cinemeow.booking_service.client.NotificationClient;
 import com.cinemeow.booking_service.client.PaymentClient;
 import com.cinemeow.booking_service.client.ShowtimeClient;
 import com.cinemeow.booking_service.dto.request.BookingRequest;
 import com.cinemeow.booking_service.dto.request.FnbOrderRequest;
 import com.cinemeow.booking_service.dto.request.InitPaymentRequest;
-import com.cinemeow.booking_service.dto.response.BookingDetailResponse;
-import com.cinemeow.booking_service.dto.response.BookingResponse;
-import com.cinemeow.booking_service.dto.response.SeatResponse;
-import com.cinemeow.booking_service.dto.response.ShowtimeResponse;
+import com.cinemeow.booking_service.dto.request.SendMailRequest;
+import com.cinemeow.booking_service.dto.response.*;
 import com.cinemeow.booking_service.entity.BookedFnbItem;
 import com.cinemeow.booking_service.entity.BookedSeat;
 import com.cinemeow.booking_service.entity.Booking;
+import com.cinemeow.booking_service.entity.Recipient;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.enums.PaymentMethod;
 import com.cinemeow.booking_service.enums.RoomType;
@@ -24,6 +24,7 @@ import com.cinemeow.booking_service.repository.BookingRepository;
 import com.cinemeow.booking_service.service.BookingService;
 import com.cinemeow.booking_service.service.QrService;
 import com.cinemeow.booking_service.service.TicketPriceService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -44,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
     BookingMapper bookingMapper;
 
     QrService qrService;
-    TicketPriceService ticketPriceService;
+    NotificationClient notificationClient;
     ShowtimeClient showtimeClient;
     CinemaClient cinemaClient;
 
@@ -144,6 +145,7 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
     }
 
+    @Transactional
     @Override
     public void confirmBooking(String bookingId) {
         var booking =  bookingRepository.findById(bookingId)
@@ -157,12 +159,38 @@ public class BookingServiceImpl implements BookingService {
         booking.setQrCodeUrl(qrImageUrl);
 
         bookingRepository.save(booking);
-
+        
         List<Long> seatIds = booking.getSeats().stream()
                 .map(s -> s.getSeatId())
                 .toList();
-
         cinemaClient.confirmSeats(seatIds);
+
+        sendEmailConfirm(bookingId);
+    }
+
+    private void sendEmailConfirm(String bookingId) {
+        BookingDetailResponse booking =  getById(bookingId);
+//        if (booking.getUserId() == null) {
+//            Recipient recipient = Recipient.builder()
+//                    .email(booking.getGuestInfo().getEmail())
+//                    .name(booking.getGuestInfo().getName())
+//                    .build();
+//        } else {
+//            //
+//        }
+
+        Recipient recipient = Recipient.builder()
+                    .email("cinemeow@yopmail.com")
+                    .name("guest")
+                    .build();
+
+        SendMailRequest sendMailRequest = SendMailRequest.builder()
+                .to(recipient)
+                .subject("Booking Confirmation")
+                .templateName("confirm-booking")
+                .build();
+
+        notificationClient.sendMail(sendMailRequest);
     }
 
 }

@@ -65,6 +65,7 @@ public class ApplicationInitConfig {
                     .ifPresentOrElse(user -> log.info("Admin user already exists"), () -> {
                         User adminUser = User.builder()
                                 .username(usernameAdmin)
+                                .active(true)
                                 .password(passwordEncoder.encode(passwordAdmin))
                                 .build();
                         roleRepository.findByName(RoleEnum.ADMIN.toString()).ifPresent(adminUser.getRoles()::add);
