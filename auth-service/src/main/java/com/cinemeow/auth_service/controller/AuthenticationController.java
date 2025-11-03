@@ -15,10 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -78,6 +75,14 @@ public class AuthenticationController {
     public BaseResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) {
         return BaseResponse.<AuthenticationResponse>builder()
                 .data(authenticationService.refreshToken(request))
+                .build();
+    }
+
+    @GetMapping("/verify")
+    public BaseResponse<Void> verifyAccount(@RequestParam("token") String token) {
+        authenticationService.verifyAccount(token);
+        return BaseResponse.<Void>builder()
+                .message("Successfully verified account")
                 .build();
     }
 

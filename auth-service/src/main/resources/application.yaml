@@ -23,7 +23,7 @@ app:
     username: admin
     password: admin
     email: admin123@gmail.com
-  verify-url: 12345678
+  verify-url: http://localhost:5174/verify
   services:
     notification-service: http://localhost:8087/notification
 
