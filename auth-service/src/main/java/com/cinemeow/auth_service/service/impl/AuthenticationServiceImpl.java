@@ -122,15 +122,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void verifyAccount(String token) {
+    public AuthenticationResponse verifyAccount(String token) {
         ActiveToken activeToken = activeTokenRepository.findByToken(token)
                 .orElseThrow(() -> new AppException(ErrorCode.TOKEN_NOT_FOUND));
-        if (activeToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new AppException(ErrorCode.ACTIVE_CODE_EXPIRED);
+        if (activeToken.getUsed()
+                || activeToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new AppException(ErrorCode.ACTIVE_CODE_INVALID);
         }
+
         User user = activeToken.getUser();
         user.setActive(true);
         userRepository.save(user);
+
+        activeToken.setUsed(true);
+        activeTokenRepository.save(activeToken);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        String deviceInfo = httpServletRequest.getHeader("User-Agent");
+
+        RefreshToken entity = RefreshToken.builder()
+                .user(user)
+                .token(refreshToken)
+                .expiryDate(Instant.now().plus(REFRESH_TOKEN_VALIDITY, ChronoUnit.SECONDS))
+                .revoked(false)
+                .deviceInfo(deviceInfo)
+                .build();
+
+        refreshTokenRepository.save(entity);
+
+        return AuthenticationResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .authenticated(true)
+                .build();
     }
 
     private String extractUsername(SignedJWT signedJWT) {

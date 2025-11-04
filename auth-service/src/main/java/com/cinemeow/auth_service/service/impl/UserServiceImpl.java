@@ -22,6 +22,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,7 +59,6 @@ public class UserServiceImpl implements UserService {
                 .expiryDate(LocalDateTime.now().plusHours(24))
                 .build();
 
-
         try {
             userRepository.save(user);
             activeTokenRepository.save(activeToken);
@@ -91,14 +92,24 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
+    @Override
+    public UserResponse getMyInfo(Jwt jwt) {
+        String name = jwt.getClaimAsString("sub");
+
+        User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return userMapper.toUserResponse(user);
+    }
+
     private void sendActiveMail(String email, String token) {
         String url= verifyUrl + "?token=" + token;
         Map<String, Object> data = new HashMap<>();
         data.put("verificationUrl", url);
 
         SendMailRequest request = SendMailRequest.builder()
+                .data(data)
                 .to(new Recipient("guest", email))
-                .subject("Xác nhận tài khoản của bạn - CineMeow")
+                .subject("Xác nhận tài khoản - CineMeow")
                 .templateName("register-confirmation")
                 .build();
 

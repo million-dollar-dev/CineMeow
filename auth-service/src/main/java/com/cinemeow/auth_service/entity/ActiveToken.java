@@ -29,5 +29,8 @@ public class ActiveToken {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
+    @Builder.Default
+    Boolean used = false;
+
 
 }

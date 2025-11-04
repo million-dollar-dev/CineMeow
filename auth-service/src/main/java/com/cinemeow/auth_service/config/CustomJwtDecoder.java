@@ -41,6 +41,14 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        return nimbusJwtDecoder.decode(token);
+//        return nimbusJwtDecoder.decode(token);
+        try {
+            Jwt jwt = nimbusJwtDecoder.decode(token);
+            System.out.println("Decoded JWT successfully: " + jwt.getClaims());
+            return jwt;
+        } catch (Exception e) {
+            System.err.println("JWT decode failed: " + e.getMessage());
+            throw e;
+        }
     }
 }

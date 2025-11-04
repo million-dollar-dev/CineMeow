@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -69,7 +70,9 @@ public class JwtServiceImpl implements JwtService {
         JWSObject jwsObject = new JWSObject(header, payload);
 
         try {
-            jwsObject.sign(new MACSigner(SIGNER_KEY));
+            byte[] keyBytes = SIGNER_KEY.getBytes(StandardCharsets.UTF_8);
+            MACSigner signer = new MACSigner(keyBytes);
+            jwsObject.sign(signer);
             return jwsObject.serialize();
         } catch (JOSEException e) {
             log.error("Cannot generate token");
