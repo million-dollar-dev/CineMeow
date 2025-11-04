@@ -11,6 +11,7 @@ import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {setTokens} from "../redux/slices/authSlice.js";
 import {useLoginMutation} from "../services/authService.js";
+import {showToast} from "../redux/slices/toastSlice.js";
 
 const RegisterPage = () => {
     const schema = yup.object().shape({
@@ -28,23 +29,24 @@ const RegisterPage = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [login, {data = {}, isError, error, isSuccess, isLoading}] = useLoginMutation();
+    const [login, {data: res, isError, error, isSuccess, isLoading}] = useLoginMutation();
 
     const onSubmit = (formData) => {
-        // login(formData);
+        login(formData);
     };
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data)
-            dispatch(setTokens({accessToken: data.data.token}));
-            // navigate("/");
+            console.log(res)
+            dispatch(setTokens({accessToken: res.data.accessToken, refreshToken: res.data.refreshToken}));
+            navigate("/");
+            dispatch(showToast({message: "Đăng nhập thành công"}));
         }
         if(isError) {
-            console.log(data)
+            console.log(res)
             toast.error(error?.data?.message || "Đăng nhập thất bại!");
         }
-    }, [isSuccess, data, navigate, dispatch, isLoading]);
+    }, [isSuccess, res, navigate, dispatch, isLoading]);
 
     return (
         <>

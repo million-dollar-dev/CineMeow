@@ -1,12 +1,16 @@
 import React, {useEffect} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGoogle} from "@fortawesome/free-brands-svg-icons";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import TextInput from "../components/FormInputs/TextInput.jsx";
 import FormField from "../components/FormField.jsx";
 import {FormProvider, useForm} from "react-hook-form";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
+import {useRegisterMutation} from "../services/authService.js";
+import {useDispatch} from "react-redux";
+import {showToast} from "../redux/slices/toastSlice.js";
+import Loading from "../components/Loading.jsx";
 
 const RegisterPage = () => {
     const schema = yup.object().shape({
@@ -23,16 +27,30 @@ const RegisterPage = () => {
         },
         resolver: yupResolver(schema)
     });
-
-    // const [register, {data = {}, isError, error, isSuccess, isLoading}] = useRegisterMutation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [register,
+        {data : response, isError, error, isSuccess, isLoading}
+    ] = useRegisterMutation();
     const onSubmit = (formData) => {
-        console.log(formData);
-        //register(formData);
+        register(formData);
     }
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate("/active-account");
+        }
+        if (isError) {
+            dispatch(showToast({message: error?.message || "Something went wrong"}));
+        }
+    }, [register, isError, isSuccess, error, response]);
 
     useEffect(() => {
         console.log(errors);
     }, [errors]);
+
+    if (isLoading) return <Loading />;
+
     return (
         <>
             <div className="bg-white p-10 flex flex-col justify-center">
