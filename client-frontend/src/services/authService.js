@@ -28,6 +28,15 @@ export const authApi = rootApi.injectEndpoints({
             }),
         }),
 
+        logout: builder.mutation({
+            query: (token) => ({
+                url: `${CONTEXT_PATH}/auth/logout`,
+                method: "POST",
+                body: { token },
+            }),
+            transformResponse: (response) => response.data,
+        }),
+
         getMe: builder.query({
             query: () => ({
                 url: `${CONTEXT_PATH}/users/me`,
@@ -50,4 +59,5 @@ export const {
     useVerifyAccountMutation,
     useRegisterMutation,
     useGetMeQuery,
+    useLogoutMutation,
 } = authApi;

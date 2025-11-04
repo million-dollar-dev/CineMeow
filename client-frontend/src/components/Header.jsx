@@ -1,25 +1,46 @@
 import React, {useEffect, useState} from 'react';
 import {faCat, faChevronDown, faUser} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useGetAllBrandsQuery} from "../services/brandService.js";
-import {useGetMeQuery} from "../services/authService.js";
-import {faUber} from "@fortawesome/free-brands-svg-icons";
+import {useGetMeQuery, useLogoutMutation} from "../services/authService.js";
+import {useDispatch, useSelector} from "react-redux";
+import {clearTokens} from "../redux/slices/authSlice.js";
+import Loading from "./Loading.jsx";
 
 const Header = () => {
-    const { data: user, isLoading} = useGetMeQuery();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const accessToken = useSelector((state) => state.auth.accessToken);
 
+    const [logout, { isLoading: isLogOut }] = useLogoutMutation();
     const [isScrolled, setIsScrolled] = useState(false);
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 150);
-        };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+    useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 150);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const {data: brandData = []} = useGetAllBrandsQuery();
+    const { data: brandData = [] } = useGetAllBrandsQuery();
+
+    const handleLogout = async () => {
+        try {
+            await logout(accessToken);
+        } finally {
+            dispatch(clearTokens());
+            navigate("/");
+        }
+    };
+
+    const { data: user, isLoading } = useGetMeQuery(undefined, {
+        skip: !accessToken,
+    });
+
+    if (isLogOut) return <Loading />;
+
+    useEffect(() => {}, [accessToken]);
+
 
     return (
         <header
@@ -174,14 +195,12 @@ const Header = () => {
                                                 </p>
                                             </li>
                                         </Link>
-                                        <Link to={"/blogs/neflix"}>
-                                            <li>
-                                                <p
-                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                    Phim Netflix
-                                                </p>
-                                            </li>
-                                        </Link>
+                                        <li>
+                                            <p
+                                                className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                Phim Netflix
+                                            </p>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -194,7 +213,7 @@ const Header = () => {
                     <ul className="text-white">
                         <li className="relative group px-3 py-2">
                             <button
-                                className="flex items-center space-x-1 hover:text-neutral-300 transition-colors duration-300">
+                                className="flex items-center gap-1 space-x-1 hover:text-neutral-300 transition-colors duration-300">
                                 <div className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10">
                                     <FontAwesomeIcon icon={faUser} className="text-black"/>
                                 </div>
@@ -220,14 +239,14 @@ const Header = () => {
                                                     </p>
                                                 </li>
                                             </Link>
-                                            <Link to={"/logout"}>
-                                                <li>
-                                                    <p
-                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                        Đăng xuất
-                                                    </p>
-                                                </li>
-                                            </Link>
+
+                                            <li onClick={() => handleLogout()}>
+                                                <p
+                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                    Đăng xuất
+                                                </p>
+                                            </li>
+
                                         </ul>
                                     </div>
                                 </div>
