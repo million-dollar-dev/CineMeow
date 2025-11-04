@@ -26,6 +26,7 @@ app:
   verify-url: http://localhost:5174/verify-account
   services:
     notification-service: http://localhost:8087/notification
+    profile-service: http://localhost:8081/profile
 
 springdoc:
   api-docs:

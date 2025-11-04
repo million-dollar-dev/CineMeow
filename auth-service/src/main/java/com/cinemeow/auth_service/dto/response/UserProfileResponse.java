@@ -1,9 +1,7 @@
-package com.cinemeow.profile_service.dto.response;
+package com.cinemeow.auth_service.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Builder
 @Getter

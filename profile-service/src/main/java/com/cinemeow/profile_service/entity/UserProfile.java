@@ -22,18 +22,9 @@ public class UserProfile {
     @Column(name = "user_id", unique = true)
     String userId;
 
-    @Column(name = "full_name")
-    String fullName;
-
-    @Column(name = "dob")
-    LocalDate dob;
-
     @Column(name = "phone_number", unique = true)
     String phoneNumber;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     String email;
-
-    @Column(name = "avatar_url")
-    String avatarUrl;
 }

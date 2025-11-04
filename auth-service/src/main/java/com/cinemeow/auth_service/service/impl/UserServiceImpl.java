@@ -1,8 +1,10 @@
 package com.cinemeow.auth_service.service.impl;
 
 import com.cinemeow.auth_service.client.NotificationClient;
+import com.cinemeow.auth_service.client.ProfileClient;
 import com.cinemeow.auth_service.dto.request.RegisterRequest;
 import com.cinemeow.auth_service.dto.request.SendMailRequest;
+import com.cinemeow.auth_service.dto.request.UserProfileRequest;
 import com.cinemeow.auth_service.dto.request.UserUpdateRoleRequest;
 import com.cinemeow.auth_service.dto.response.UserResponse;
 import com.cinemeow.auth_service.entity.ActiveToken;
@@ -23,6 +25,7 @@ import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +41,15 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
     NotificationClient notificationClient;
     ActiveTokenRepository activeTokenRepository;
-
+    PasswordEncoder passwordEncoder;
+    ProfileClient profileClient;
     @NonFinal
     @Value("${app.verify-url}")
     String verifyUrl;
 
     public UserResponse create(RegisterRequest request) {
         User user = userMapper.toUser(request);
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById("USER").ifPresent(roles::add);
@@ -61,7 +65,16 @@ public class UserServiceImpl implements UserService {
 
         try {
             userRepository.save(user);
+
             activeTokenRepository.save(activeToken);
+
+            UserProfileRequest profileRequest = UserProfileRequest.builder()
+                    .userId(user.getId())
+                    .email(request.getEmail())
+                    .phoneNumber(request.getPhoneNumber())
+                    .build();
+            profileClient.create(profileRequest);
+
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }

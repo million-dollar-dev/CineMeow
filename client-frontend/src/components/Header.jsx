@@ -6,7 +6,8 @@ import {useGetAllBrandsQuery} from "../services/brandService.js";
 import {useGetMeQuery, useLogoutMutation} from "../services/authService.js";
 import {useDispatch, useSelector} from "react-redux";
 import {clearTokens} from "../redux/slices/authSlice.js";
-import Loading from "./Loading.jsx";
+import OverlayLoading from "./Booking/OverlayLoading.jsx";
+import {rootApi} from "../services/rootApi.js";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const Header = () => {
             await logout(accessToken);
         } finally {
             dispatch(clearTokens());
+            dispatch(rootApi.util.resetApiState());
             navigate("/");
         }
     };
@@ -37,10 +39,7 @@ const Header = () => {
         skip: !accessToken,
     });
 
-    if (isLogOut) return <Loading />;
-
-    useEffect(() => {}, [accessToken]);
-
+    if (isLogOut || isLoading) return <OverlayLoading />;
 
     return (
         <header
@@ -209,7 +208,7 @@ const Header = () => {
                 </ul>
             </nav>
             <nav>
-                {user ? (
+                {accessToken ? (
                     <ul className="text-white">
                         <li className="relative group px-3 py-2">
                             <button

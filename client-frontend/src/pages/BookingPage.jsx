@@ -16,7 +16,7 @@ import {useCreateBookingMutation, useGetAllPriceByBrandQuery} from "../services/
 import {useValidateVoucherMutation} from "../services/promotionService.js";
 import PaymentStep from "../components/Booking/PaymentStep.jsx";
 import {toast} from "react-toastify";
-import BookingOverlay from "../components/Booking/BookingOverlay.jsx";
+import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 import {useInitPaymentMutation} from "../services/paymentService.js";
 
 const BookingPage = () => {
@@ -248,7 +248,7 @@ const BookingPage = () => {
 
     return (
         <div className="bg-[#0b0b0b] text-white min-h-screen">
-            {(isInitingPayment) && <BookingOverlay/>}
+            {(isInitingPayment) && <OverlayLoading/>}
 
             {/* Banner phim */}
             <Banner movieInfo={movie}/>

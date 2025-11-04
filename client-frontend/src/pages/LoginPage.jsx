@@ -12,6 +12,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {setTokens} from "../redux/slices/authSlice.js";
 import {useLoginMutation} from "../services/authService.js";
 import {showToast} from "../redux/slices/toastSlice.js";
+import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 
 const RegisterPage = () => {
     const schema = yup.object().shape({
@@ -47,6 +48,8 @@ const RegisterPage = () => {
             toast.error(error?.data?.message || "Đăng nhập thất bại!");
         }
     }, [isSuccess, res, navigate, dispatch, isLoading]);
+
+    if (isLoading) return <OverlayLoading />;
 
     return (
         <>
