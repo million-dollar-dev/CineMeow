@@ -14,5 +14,6 @@ public interface AuthenticationService {
     void logout(LogoutRequest request);
     AuthenticationResponse refreshToken(RefreshRequest request);
     IntrospectResponse introspect(IntrospectRequest request);
-    void verifyAccount(String token);
+    AuthenticationResponse verifyAccount(String token);
+
 }

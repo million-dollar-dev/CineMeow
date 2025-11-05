@@ -1,21 +1,45 @@
 import React, {useEffect, useState} from 'react';
-import {faCat, faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {faCat, faChevronDown, faUser} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useGetAllBrandsQuery} from "../services/brandService.js";
+import {useGetMeQuery, useLogoutMutation} from "../services/authService.js";
+import {useDispatch, useSelector} from "react-redux";
+import {clearTokens} from "../redux/slices/authSlice.js";
+import OverlayLoading from "./Booking/OverlayLoading.jsx";
+import {rootApi} from "../services/rootApi.js";
 
 const Header = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 150);
-        };
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const accessToken = useSelector((state) => state.auth.accessToken);
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+    const [logout, { isLoading: isLogOut }] = useLogoutMutation();
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 150);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const {data: brandData = []} = useGetAllBrandsQuery();
+    const { data: brandData = [] } = useGetAllBrandsQuery();
+
+    const handleLogout = async () => {
+        try {
+            await logout(accessToken);
+        } finally {
+            dispatch(clearTokens());
+            dispatch(rootApi.util.resetApiState());
+            navigate("/");
+        }
+    };
+
+    const { data: user, isLoading } = useGetMeQuery(undefined, {
+        skip: !accessToken,
+    });
+
+    if (isLogOut || isLoading) return <OverlayLoading />;
 
     return (
         <header
@@ -170,14 +194,12 @@ const Header = () => {
                                                 </p>
                                             </li>
                                         </Link>
-                                        <Link to={"/blogs/neflix"}>
-                                            <li>
-                                                <p
-                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
-                                                    Phim Netflix
-                                                </p>
-                                            </li>
-                                        </Link>
+                                        <li>
+                                            <p
+                                                className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                Phim Netflix
+                                            </p>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -186,28 +208,74 @@ const Header = () => {
                 </ul>
             </nav>
             <nav>
-                <ul>
-                    <Link to={"/login"}>
-                        <li>
-                            <p
-                                className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
-                                <span className="mr-2">Đăng nhập</span>
-                                <svg className="stroke-current" width="10" height="10" strokeWidth="2"
-                                     viewBox="0 0 10 10"
-                                     aria-hidden="true">
-                                    <g fillRule="evenodd">
-                                        <path
-                                            className="opacity-0 group-hover:opacity-100 transition ease-in-out duration-200"
-                                            d="M0 5h7"></path>
-                                        <path
-                                            className="opacity-100 group-hover:transform group-hover:translate-x-1 transition ease-in-out duration-200"
-                                            d="M1 1l4 4-4 4"></path>
-                                    </g>
-                                </svg>
-                            </p>
+                {accessToken ? (
+                    <ul className="text-white">
+                        <li className="relative group px-3 py-2">
+                            <button
+                                className="flex items-center gap-1 space-x-1 hover:text-neutral-300 transition-colors duration-300">
+                                <div className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10">
+                                    <FontAwesomeIcon icon={faUser} className="text-black"/>
+                                </div>
+                                <span>{user?.username}</span>
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
+                                    className="text-xs transition-transform duration-300 group-hover:rotate-180"
+                                />
+                            </button>
+                            <div
+                                className="absolute top-0 -left-10 transition group-hover:translate-y-7 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[180px] transform">
+                                <div className="relative top-6 p-4 bg-white rounded-xl shadow-xl w-full">
+                                    <div
+                                        className="w-10 h-10 bg-white transform rotate-45 absolute top-0 z-0 -translate-x-4 transition-transform group-hover:translate-x-20 duration-500 ease-in-out rounded-sm">
+                                    </div>
+                                    <div className="relative z-10">
+                                        <ul className="text-[15px]">
+                                            <Link to={"/user-details"}>
+                                                <li>
+                                                    <p
+                                                        className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                        Thông tin tài khoản
+                                                    </p>
+                                                </li>
+                                            </Link>
+
+                                            <li onClick={() => handleLogout()}>
+                                                <p
+                                                    className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
+                                                    Đăng xuất
+                                                </p>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
-                    </Link>
-                </ul>
+                    </ul>
+                ) : (
+                    <ul>
+                        <Link to={"/login"}>
+                            <li>
+                                <p
+                                    className="rounded-full px-3 py-2 font-semibold bg-white bg-opacity-10 flex items-center group">
+                                    <span className="mr-2">Đăng nhập</span>
+                                    <svg className="stroke-current" width="10" height="10" strokeWidth="2"
+                                         viewBox="0 0 10 10"
+                                         aria-hidden="true">
+                                        <g fillRule="evenodd">
+                                            <path
+                                                className="opacity-0 group-hover:opacity-100 transition ease-in-out duration-200"
+                                                d="M0 5h7"></path>
+                                            <path
+                                                className="opacity-100 group-hover:transform group-hover:translate-x-1 transition ease-in-out duration-200"
+                                                d="M1 1l4 4-4 4"></path>
+                                        </g>
+                                    </svg>
+                                </p>
+                            </li>
+                        </Link>
+                    </ul>
+                )}
             </nav>
         </header>
     );

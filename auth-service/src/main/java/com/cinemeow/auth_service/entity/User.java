@@ -20,9 +20,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     String username;
 
+    @Column(nullable = false)
     String password;
 
     @Builder.Default

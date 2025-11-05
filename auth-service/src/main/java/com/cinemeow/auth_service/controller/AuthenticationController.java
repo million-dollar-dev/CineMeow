@@ -78,10 +78,10 @@ public class AuthenticationController {
                 .build();
     }
 
-    @GetMapping("/verify")
-    public BaseResponse<Void> verifyAccount(@RequestParam("token") String token) {
-        authenticationService.verifyAccount(token);
-        return BaseResponse.<Void>builder()
+    @PostMapping("/verify")
+    public BaseResponse<AuthenticationResponse> verifyAccount(@RequestParam("token") String token) {
+        return BaseResponse.<AuthenticationResponse>builder()
+                .data(authenticationService.verifyAccount(token))
                 .message("Successfully verified account")
                 .build();
     }

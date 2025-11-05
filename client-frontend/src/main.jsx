@@ -27,6 +27,8 @@ import ProtectedLayout from "./pages/ProtectedLayout.jsx";
 import {PersistGate} from "redux-persist/integration/react";
 import Loading from "./components/Loading.jsx";
 import PaymentResultPage from "./pages/PaymentResultPage.jsx";
+import ActiveAccountPage from "./pages/ActiveAccountPage.jsx";
+import VerifyAccountPage from "./pages/VerifyAccountPage.jsx";
 const router = createBrowserRouter([
     {
         element: <RootLayout />,
@@ -112,6 +114,14 @@ const router = createBrowserRouter([
     {
         path: "/payment-result",
         element: <PaymentResultPage />,
+    },
+    {
+        path: "/active-account",
+        element: <ActiveAccountPage />,
+    },
+    {
+        path: "/verify-account",
+        element: <VerifyAccountPage />,
     },
 ]);
 

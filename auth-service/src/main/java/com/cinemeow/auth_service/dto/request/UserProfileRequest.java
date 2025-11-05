@@ -1,10 +1,8 @@
-package com.cinemeow.profile_service.dto.request;
+package com.cinemeow.auth_service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Builder
 @Getter
