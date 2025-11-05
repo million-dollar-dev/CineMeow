@@ -29,6 +29,7 @@ import Loading from "./components/Loading.jsx";
 import PaymentResultPage from "./pages/PaymentResultPage.jsx";
 import ActiveAccountPage from "./pages/ActiveAccountPage.jsx";
 import VerifyAccountPage from "./pages/VerifyAccountPage.jsx";
+import UserProfile from "./pages/UserProfilePage.jsx";
 const router = createBrowserRouter([
     {
         element: <RootLayout />,
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
             {
                 path: "/promotions/:id",
                 element: <PromotionDetailPage />
+            },
+            {
+                path: "/user-profile/:id",
+                element: <UserProfile />
             },
             {
                 path: "/showtimes/booking/:showtimeId",
