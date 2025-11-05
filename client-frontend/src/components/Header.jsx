@@ -230,7 +230,7 @@ const Header = () => {
                                     </div>
                                     <div className="relative z-10">
                                         <ul className="text-[15px]">
-                                            <Link to={"/user-details"}>
+                                            <Link to={`/user-profile/${user?.id}`}>
                                                 <li>
                                                     <p
                                                         className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
