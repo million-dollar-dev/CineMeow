@@ -10,6 +10,8 @@ import OverlayLoading from "./Booking/OverlayLoading.jsx";
 import {rootApi} from "../services/rootApi.js";
 import {showToast} from "../redux/slices/toastSlice.js";
 import {toast} from "react-toastify";
+import {clearUser, setUser} from "../redux/slices/userSlice.js";
+import {useGetProfileQuery} from "../services/profileService.js";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -32,6 +34,7 @@ const Header = () => {
             await logout(accessToken);
         } finally {
             dispatch(clearTokens());
+            dispatch(clearUser());
             dispatch(rootApi.util.resetApiState());
             navigate("/");
         }
@@ -41,13 +44,31 @@ const Header = () => {
         skip: !accessToken,
     });
 
+    const {data: profile, isSuccess: isProfileSuccess} = useGetProfileQuery(user?.id, {skip: !user});
+
     useEffect(() => {
         if (isError) {
             toast.error(errors?.message || 'Lỗi lấy thông tin người dùng');
         }
     }, [user, isLoading, isError, errors]);
 
+
+
+    useEffect(() => {
+        if (isProfileSuccess) {
+            console.log('profile:', profile);
+            dispatch(setUser({
+                userId: user.id,
+                username: user.username,
+                phoneNumber: profile.phoneNumber,
+                email: profile.email,
+            }));
+        }
+    }, [user, profile, isProfileSuccess]);
+
     if (isLogOut || isLoading) return <OverlayLoading />;
+
+    console.log(user)
 
     return (
         <header

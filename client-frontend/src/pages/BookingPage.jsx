@@ -18,9 +18,15 @@ import PaymentStep from "../components/Booking/PaymentStep.jsx";
 import {toast} from "react-toastify";
 import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 import {useInitPaymentMutation} from "../services/paymentService.js";
+import {useSelector} from "react-redux";
+import {useGetMeQuery} from "../services/authService.js";
 
 const BookingPage = () => {
     const {showtimeId} = useParams();
+    const accessToken = useSelector((state) => state.auth.accessToken);
+    const { data: user } = useGetMeQuery(undefined, {
+        skip: !accessToken,
+    });
     const {
         data: showtime,
         isLoading: loadingShowtime,
@@ -312,6 +318,7 @@ const BookingPage = () => {
                     />
                 ) : (
                     <PaymentStep
+                        user={user}
                         selectedSeats={selectedSeats}
                         selectedCombos={selectedCombos}
                         seatTotalPrice={seatTotalPrice}
