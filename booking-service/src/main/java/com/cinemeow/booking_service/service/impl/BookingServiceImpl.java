@@ -221,18 +221,10 @@ public class BookingServiceImpl implements BookingService {
 
     private void sendEmailConfirm(String bookingId) {
         BookingDetailResponse booking =  getById(bookingId);
-//        if (booking.getUserId() == null) {
-//            Recipient recipient = Recipient.builder()
-//                    .email(booking.getGuestInfo().getEmail())
-//                    .name(booking.getGuestInfo().getName())
-//                    .build();
-//        } else {
-//            //
-//        }
 
-        Recipient recipient = Recipient.builder()
-                    .email("cinemeow@yopmail.com")
-                    .name("guest")
+            Recipient recipient = Recipient.builder()
+                    .email(booking.getGuestInfo().getEmail())
+                    .name(booking.getGuestInfo().getName())
                     .build();
 
         SendMailRequest sendMailRequest = SendMailRequest.builder()

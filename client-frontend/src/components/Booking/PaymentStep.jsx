@@ -19,7 +19,8 @@ export default function PaymentStep({
                                         setEmail,
                                         paymentMethod,
                                         setPaymentMethod,
-                                        handleCreateBooking
+                                        handleCreateBooking,
+                                        user
                                     }) {
 
 
@@ -43,14 +44,14 @@ export default function PaymentStep({
                     <div className="flex space-x-3">
                         <input
                             type="text"
-                            value={phone}
+                            value={user?.phoneNumber || ""}
                             onChange={(e) => setPhone(e.target.value)}
                             placeholder="Số điện thoại"
                             className="w-1/2 bg-[#202020] border border-[#2a2a2a] rounded-lg p-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9f7bff]"
                         />
                         <input
                             type="email"
-                            value={email}
+                            value={user?.email || ""}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Email"
                             className="w-1/2 bg-[#202020] border border-[#2a2a2a] rounded-lg p-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9f7bff]"
