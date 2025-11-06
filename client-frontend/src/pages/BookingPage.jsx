@@ -18,6 +18,7 @@ import PaymentStep from "../components/Booking/PaymentStep.jsx";
 import {toast} from "react-toastify";
 import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 import {useInitPaymentMutation} from "../services/paymentService.js";
+import {useSelector} from "react-redux";
 
 const BookingPage = () => {
     const {showtimeId} = useParams();
@@ -84,6 +85,8 @@ const BookingPage = () => {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
+    const user = useSelector((state) => state.user);
+
     const [step, setStep] = useState("summary");
 
     const handleConfirmCombo = (combos) => {
@@ -140,7 +143,7 @@ const BookingPage = () => {
 
         const payload = {
             code,
-            userId: null,
+            userId: user?.userId || null,
             showtimeId,
             cinemaId: showtime?.cinemaId,
             brandName: showtime?.brandName,
@@ -163,14 +166,21 @@ const BookingPage = () => {
                 unitPrice: item.price,
             }));
 
+            const guestInfo = {
+                name: user?.username || "guest",
+                email: user?.email || email,
+                phone: user?.phoneNumber || phone,
+            }
+
             const payload = {
-                userId: null,
+                userId: user?.userId || null,
                 showtimeId: showtimeId,
                 discountAmount: voucherInfo?.discountAmount || 0,
                 totalPrice: totalPrice,
                 finalPrice: voucherInfo?.finalPrice || totalPrice,
                 voucherCode: voucherCode || null,
                 paymentMethod: paymentMethod,
+                guestInfo: guestInfo,
                 seatIds: selectedSeats.map(i => i.id),
                 fnbItems,
             };
@@ -240,7 +250,7 @@ const BookingPage = () => {
     }, []);
 
     if (loadingShowtime || loadingMovie || loadingSeatMap || loadingFnb) {
-        return <Loading/>;
+        return <OverlayLoading/>;
     }
 
     console.log('selected seat', selectedSeats);
@@ -312,6 +322,7 @@ const BookingPage = () => {
                     />
                 ) : (
                     <PaymentStep
+                        user={user}
                         selectedSeats={selectedSeats}
                         selectedCombos={selectedCombos}
                         seatTotalPrice={seatTotalPrice}

@@ -3,13 +3,14 @@ import {useLocation, useNavigate} from "react-router-dom";
 import TicketCard from "../components/Booking/TicketCard.jsx";
 import {useGetBookingQuery} from "../services/bookingService.js";
 import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
 
 const PaymentResultPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [bookingId, setBookingId] = React.useState(null);
     const [done, setDone] = React.useState(false);
-    const isLoggedIn = false;
+    const user = useSelector((state) => state.user);
 
     const {
         data: booking,
@@ -21,7 +22,6 @@ const PaymentResultPage = () => {
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
-        console.log(params);
         setBookingId(params.get("bookingId"));
 
     }, [location.search]);
@@ -90,9 +90,9 @@ const PaymentResultPage = () => {
                     Quay về trang chủ
                 </button>
 
-                {isLoggedIn && (
+                {user?.userId && (
                     <button
-                        onClick={() => navigate("/user/bookings")}
+                        onClick={() => navigate(`/user-profile/${user?.userId}`)}
                         className="px-6 py-3 bg-transparent border border-[#7f5af0] text-[#7f5af0] font-semibold rounded-xl hover:bg-[#7f5af01a] transition"
                     >
                         Xem lịch sử đặt vé

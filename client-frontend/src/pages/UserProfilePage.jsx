@@ -9,16 +9,12 @@ import {
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useSelector} from "react-redux";
+import UserProfileForm from "../components/UserProfile/UserProfileForm.jsx";
 
 export default function UserProfile() {
     const [activeTab, setActiveTab] = useState("info");
-
-    const user = {
-        name: "Đặng Cao Hoàng Tuấn",
-        email: "hoangtung134@gmail.com",
-        phone: "0346119237",
-        birth: "2003-04-12",
-    };
+    const user = useSelector((state) => state.user);
 
     return (
         <div className="py-[6vw] bg-[#141414]">
@@ -93,47 +89,7 @@ export default function UserProfile() {
                             </h1>
 
                             {/* Personal Info */}
-                            <section
-                                className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-6 mb-8 shadow-[0_0_10px_rgba(127,90,240,0.05)]">
-                                <h2 className="font-bold text-lg mb-4 text-[#eaeaea]">Thông tin cá nhân</h2>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="text-sm text-gray-400">Số điện thoại</label>
-                                        <div className="relative">
-                                            <FontAwesomeIcon
-                                                icon={faPhone}
-                                                className="absolute right-3 top-3 text-gray-500"
-                                            />
-                                            <input
-                                                type="text"
-                                                defaultValue={user.phone}
-                                                className="w-full bg-[#1b1b1b] border border-[#2a2a2a] text-[#eaeaea] rounded-md p-2 mt-1 pr-8 focus:outline-none focus:ring-2 focus:ring-[#7f5af0]"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="text-sm text-gray-400">Email</label>
-                                        <div className="relative">
-                                            <FontAwesomeIcon
-                                                icon={faEnvelope}
-                                                className="absolute right-3 top-3 text-gray-500"
-                                            />
-                                            <input
-                                                type="email"
-                                                defaultValue={user.email}
-                                                className="w-full bg-[#1b1b1b] border border-[#2a2a2a] text-[#eaeaea] rounded-md p-2 mt-1 pr-8 focus:outline-none focus:ring-2 focus:ring-[#7f5af0]"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button
-                                    className="mt-4 bg-[#7f5af0] text-white px-6 py-2 rounded-md font-medium hover:bg-[#9f7bff] active:scale-95 transition">
-                                    Lưu thông tin
-                                </button>
-                            </section>
+                            <UserProfileForm />
 
                             {/* Change Password */}
                             <section
