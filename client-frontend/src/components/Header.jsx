@@ -8,13 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {clearTokens} from "../redux/slices/authSlice.js";
 import OverlayLoading from "./Booking/OverlayLoading.jsx";
 import {rootApi} from "../services/rootApi.js";
+import {showToast} from "../redux/slices/toastSlice.js";
+import {toast} from "react-toastify";
 
 const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const accessToken = useSelector((state) => state.auth.accessToken);
 
-    const [logout, { isLoading: isLogOut }] = useLogoutMutation();
+    const [logout, { isLoading: isLogOut, isError: isLogoutError, errors: logoutErrors }] = useLogoutMutation();
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
@@ -35,9 +37,15 @@ const Header = () => {
         }
     };
 
-    const { data: user, isLoading } = useGetMeQuery(undefined, {
+    const { data: user, isLoading, isError, errors } = useGetMeQuery(undefined, {
         skip: !accessToken,
     });
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(errors?.message || 'Lỗi lấy thông tin người dùng');
+        }
+    }, [user, isLoading, isError, errors]);
 
     if (isLogOut || isLoading) return <OverlayLoading />;
 

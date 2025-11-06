@@ -3,6 +3,8 @@ import FeatureMovies from "../components/FeatureMovies/index.jsx";
 import MediaList from "../components/MediaList/index.jsx";
 import Promotions from "../components/PromotionSection.jsx";
 import {useSearchMoviesQuery} from "../services/movieService.js";
+import {useEffect} from "react";
+import {toast} from "react-toastify";
 
 function HomePage() {
     const { data: nowPlayingList = [],
@@ -27,7 +29,17 @@ function HomePage() {
         filters: ['status:"COMING_SOON"'],
     });
 
-    
+    useEffect(() => {
+        if (isNowPlayingError && nowPlayingError) {
+            toast.error(nowPlayingError?.error || "Lỗi lấy dữ liệu");
+        }
+    }, [isNowPlayingError, nowPlayingError]);
+
+    useEffect(() => {
+        if (isCommingSoonError && commingSoonError) {
+            toast.error(isCommingSoonError?.error || "Lỗi lấy dữ liệu");
+        }
+    }, [isCommingSoonError, commingSoonError]);
 
     return (
         <div className="bg-black">
