@@ -21,6 +21,7 @@ import com.cinemeow.booking_service.exception.AppException;
 import com.cinemeow.booking_service.exception.ErrorCode;
 import com.cinemeow.booking_service.mapper.BookingMapper;
 import com.cinemeow.booking_service.repository.BookingRepository;
+import com.cinemeow.booking_service.repository.specification.BookingSpecificationBuilder;
 import com.cinemeow.booking_service.service.BookingService;
 import com.cinemeow.booking_service.service.QrService;
 import com.cinemeow.booking_service.service.TicketPriceService;
@@ -29,12 +30,18 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -117,6 +124,50 @@ public class BookingServiceImpl implements BookingService {
         response.setStartTime(showtime.getStartTime());
         response.setEndTime(showtime.getEndTime());
         return response;
+    }
+
+    @Override
+    public PagedResponse<List<BookingResponse>> searchBookings(Pageable pageable, String[] filters) {
+        Page<Booking> bookingPage;
+        log.info("Search params: {}", Arrays.toString(filters));
+        if (filters != null && filters.length > 0) {
+            BookingSpecificationBuilder builder = new BookingSpecificationBuilder();
+
+            Pattern pattern = Pattern.compile("(\\w+?)([:<>~!])(\\p{Punct})(.*)(\\p{Punct})");
+            for (String filter : filters) {
+                Matcher matcher = pattern.matcher(filter);
+
+                if (matcher.find()) {
+                    String key = matcher.group(1);
+                    String operation = matcher.group(2);
+                    String prefix = matcher.group(3);
+                    String value = matcher.group(4);
+                    String suffix = matcher.group(5);
+                    if (value.isEmpty()) {
+                        log.warn("Empty value in filter: {}", filter);
+                        continue;
+                    }
+                    builder.with(null, key, operation, value, prefix, suffix);
+                } else {
+                    log.warn("Invalid filter format: {}", filter);
+                }
+            }
+            Specification<Booking> spec = builder.build();
+            bookingPage = bookingRepository.findAll(spec, pageable);
+        } else {
+            bookingPage = bookingRepository.findAll(pageable);
+        }
+
+        List<BookingResponse> bookingResponses = bookingPage.stream()
+                .map(bookingMapper::toBookingResponse)
+                .toList();
+
+        return PagedResponse.<List<BookingResponse>>builder()
+                .pageNo(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalPages(bookingPage.getTotalPages())
+                .content(bookingResponses)
+                .build();
     }
 
     @Override

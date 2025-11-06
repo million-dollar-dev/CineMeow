@@ -4,12 +4,14 @@ import com.cinemeow.booking_service.dto.request.BookingRequest;
 import com.cinemeow.booking_service.dto.response.BaseResponse;
 import com.cinemeow.booking_service.dto.response.BookingDetailResponse;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
+import com.cinemeow.booking_service.dto.response.PagedResponse;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,6 +32,16 @@ public class BookingController {
     public BaseResponse<BookingDetailResponse> get(@PathVariable String id){
         return BaseResponse.<BookingDetailResponse>builder()
                 .data(bookingService.getById(id))
+                .build();
+    }
+
+    @GetMapping("/search")
+    public BaseResponse<PagedResponse> searchBookings(
+            Pageable pageable,
+            @RequestParam(required = false) String[] filters
+    ) {
+        return BaseResponse.<PagedResponse>builder()
+                .data(bookingService.searchBookings(pageable, filters))
                 .build();
     }
 
