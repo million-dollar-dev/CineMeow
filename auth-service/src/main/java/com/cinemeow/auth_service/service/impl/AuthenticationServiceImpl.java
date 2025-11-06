@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -91,14 +92,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public AuthenticationResponse refreshToken(RefreshRequest request) {
         var token = request.getToken();
+
+        log.info("[refreshToken: {}] token={}", LocalDateTime.now(), token);
         var signedJWT = jwtService.verifyToken(token, "refresh");
 
         var username = extractUsername(signedJWT);
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        log.info("[refreshToken: {}] username={}", LocalDateTime.now(), username);
+
         refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        log.info("[refreshToken: {}] true={}", LocalDateTime.now(), true);
 
         String newAccessToken = jwtService.generateAccessToken(user);
 
