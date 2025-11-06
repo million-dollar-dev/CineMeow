@@ -15,12 +15,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 @Tag(name = "Authentication", description = "Endpoints for user authentication, token validation, and session control")
 public class AuthenticationController {
     AuthenticationService authenticationService;
@@ -73,6 +75,7 @@ public class AuthenticationController {
     })
     @PostMapping("/refresh")
     public BaseResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) {
+        log.info("[Received request to refresh access token]");
         return BaseResponse.<AuthenticationResponse>builder()
                 .data(authenticationService.refreshToken(request))
                 .build();

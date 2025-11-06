@@ -35,29 +35,27 @@ public class SecurityConfig {
             "/auth/logout",
             "/auth/refresh",
             "/auth/verify"
-
     };
 
     CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(requests ->
-                requests
-                        .requestMatchers(PUBLIC_ENDPOINT).permitAll()
-                        .anyRequest().authenticated()
-        );
-
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwt ->
-                                jwt
-                                        .decoder(customJwtDecoder)
-                                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                        )
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-        );
-
-        httpSecurity.csrf(csrf -> csrf.disable());
+        httpSecurity
+                .authorizeHttpRequests(requests ->
+                        requests
+                                .requestMatchers(PUBLIC_ENDPOINT).permitAll()
+                                .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(jwt ->
+                                        jwt
+                                                .decoder(customJwtDecoder)
+                                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                                )
+                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                )
+                .csrf(csrf -> csrf.disable());
 
         return httpSecurity.build();
     }

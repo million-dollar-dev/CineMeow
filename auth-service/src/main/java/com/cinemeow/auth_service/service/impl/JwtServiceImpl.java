@@ -37,7 +37,7 @@ public class JwtServiceImpl implements JwtService {
 
     @NonFinal
     @Value("${jwt.access-token-validity}")
-    long ACCESS_TOKEN_VALIDITY; // Ví dụ: 15 phút
+    long ACCESS_TOKEN_VALIDITY;
 
     @NonFinal
     @Value("${jwt.refresh-token-validity}")
