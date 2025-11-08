@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {faClockRotateLeft, faLock, faRightFromBracket, faUser,} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useSelector} from "react-redux";
 import UserProfileForm from "../components/UserProfile/UserProfileForm.jsx";
 import BookingHistory from "../components/UserProfile/BookingHistory.jsx";
 import {useSearchBookingQuery} from "../services/bookingService.js";
+import {toast} from "react-toastify";
 
 export default function UserProfile() {
     const [activeTab, setActiveTab] = useState("info");
@@ -21,11 +22,17 @@ export default function UserProfile() {
         },
         {skip: !user?.userId,}
     );
+
     const handleHistoryClick = () => {
         setActiveTab("history")
     }
 
-    console.log('hi', historyResponse);
+    useEffect(() => {
+        if (isError) {
+            toast.error(errors?.data || "Lỗi lấy lịch sử đặt vé")
+        }
+    })
+
     return (
         <div className="py-[6vw] bg-[#141414]">
             <div className="min-h-screen bg-[#141414] text-[#eaeaea] flex max-w-screen-xl mx-auto">

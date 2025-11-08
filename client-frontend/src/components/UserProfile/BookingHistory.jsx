@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {faCalendarAlt, faClock} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import OverlayLoading from "../Booking/OverlayLoading.jsx";
+import PopupTicketDetail from "./PopupTicketDetail.jsx";
 
 export default function BookingHistory({history, isLoading}) {
-
+    const [showPopup, setShowPopup] = useState(false);
     return (
         <section>
             <h1 className="text-2xl font-bold mb-6 uppercase tracking-wide text-[#eaeaea]">
@@ -16,6 +17,11 @@ export default function BookingHistory({history, isLoading}) {
                  overflow-y-auto scrollbar-thin scrollbar-track-transparent"
             >
                 {isLoading && <OverlayLoading />}
+                {history.length == 0 &&
+                    <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-6 text-center text-gray-400 shadow-[0_0_10px_rgba(127,90,240,0.05)]">
+                    Hiện chưa có vé nào được đặt
+                    </div>
+                }
                 {/* Mock dữ liệu */}
                 {history.map((ticket) => (
                     <div
@@ -24,6 +30,12 @@ export default function BookingHistory({history, isLoading}) {
                      rounded-lg p-4 mb-4 last:mb-0 transition-all duration-500
                      hover:shadow-[0_0_15px_rgba(127,90,240,0.25)] hover:border-[#7f5af0]/60"
                     >
+                        {showPopup && (
+                            <PopupTicketDetail
+                                ticket={ticket}
+                                onClose={() => setShowPopup(false)}
+                            />
+                        )}
                         {/* Ảnh phim */}
                         <div className="w-[70px] h-[100px] rounded-lg overflow-hidden flex-shrink-0">
                             <img
@@ -69,6 +81,7 @@ export default function BookingHistory({history, isLoading}) {
                             </p>
 
                             <button
+                                onClick={() => setShowPopup(true)}
                                 className="text-sm px-4 py-1.5 rounded-md border border-[#7f5af0] text-[#7f5af0]
                          hover:bg-[#7f5af0] hover:text-white transition-all duration-300 active:scale-95"
                             >

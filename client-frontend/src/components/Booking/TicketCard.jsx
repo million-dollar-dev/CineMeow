@@ -1,7 +1,6 @@
 import React from "react";
 
 const TicketCard = ({ booking }) => {
-    console.log('TicketCard', booking);
     return (
         <div className="flex justify-center items-center py-6">
             <div className="relative bg-[#16161a] text-[#fffffe] rounded-3xl shadow-xl flex flex-row w-full max-w-2xl overflow-hidden">
