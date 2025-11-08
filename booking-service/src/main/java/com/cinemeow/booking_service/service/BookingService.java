@@ -13,7 +13,7 @@ public interface BookingService {
     BookingResponse create(BookingRequest request);
     List<BookingResponse> getAll();
     BookingDetailResponse getById(String id);
-    PagedResponse<List<BookingResponse>> searchBookings(Pageable pageable, String[] filters);
+    PagedResponse<List<BookingDetailResponse>> searchBookings(Pageable pageable, String[] filters);
     BookingResponse update(String id, BookingRequest bookingRequest);
     void delete(String id);
     void updateStatus(String id, BookingStatus status);

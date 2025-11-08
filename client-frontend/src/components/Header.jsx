@@ -8,17 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {clearTokens} from "../redux/slices/authSlice.js";
 import OverlayLoading from "./Booking/OverlayLoading.jsx";
 import {rootApi} from "../services/rootApi.js";
-import {showToast} from "../redux/slices/toastSlice.js";
 import {toast} from "react-toastify";
 import {clearUser, setUser} from "../redux/slices/userSlice.js";
 import {useGetProfileQuery} from "../services/profileService.js";
+import {useLogoutHandler} from "../hooks/useLogoutHandler.js";
 
 const Header = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const accessToken = useSelector((state) => state.auth.accessToken);
-
-    const [logout, { isLoading: isLogOut, isError: isLogoutError, errors: logoutErrors }] = useLogoutMutation();
+    const { handleLogout, isLoggingOut } = useLogoutHandler();
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
@@ -28,17 +26,6 @@ const Header = () => {
     }, []);
 
     const { data: brandData = [] } = useGetAllBrandsQuery();
-
-    const handleLogout = async () => {
-        try {
-            await logout(accessToken);
-        } finally {
-            dispatch(clearTokens());
-            dispatch(clearUser());
-            dispatch(rootApi.util.resetApiState());
-            navigate("/");
-        }
-    };
 
     const { data: user, isLoading, isError, errors } = useGetMeQuery(undefined, {
         skip: !accessToken,
@@ -66,7 +53,7 @@ const Header = () => {
         }
     }, [user, profile, isProfileSuccess]);
 
-    if (isLogOut || isLoading) return <OverlayLoading />;
+    if (isLoggingOut || isLoading) return <OverlayLoading />;
 
     console.log(user)
 
@@ -268,7 +255,7 @@ const Header = () => {
                                                 </li>
                                             </Link>
 
-                                            <li onClick={() => handleLogout()}>
+                                            <li onClick={handleLogout}>
                                                 <p
                                                     className="block p-2 rounded-md text-gray-700 hover:text-black hover:bg-gray-100 transition duration-300">
                                                     Đăng xuất

@@ -6,10 +6,13 @@ import UserProfileForm from "../components/UserProfile/UserProfileForm.jsx";
 import BookingHistory from "../components/UserProfile/BookingHistory.jsx";
 import {useSearchBookingQuery} from "../services/bookingService.js";
 import {toast} from "react-toastify";
+import {useLogoutHandler} from "../hooks/useLogoutHandler.js";
+import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 
 export default function UserProfile() {
     const [activeTab, setActiveTab] = useState("info");
     const user = useSelector((state) => state.user);
+    const { handleLogout, isLoggingOut } = useLogoutHandler();
     const {
         data: historyResponse = [],
         isLoading,
@@ -32,7 +35,7 @@ export default function UserProfile() {
             toast.error(errors?.data || "Lỗi lấy lịch sử đặt vé")
         }
     })
-
+    if (isLoggingOut) return <OverlayLoading />
     return (
         <div className="py-[6vw] bg-[#141414]">
             <div className="min-h-screen bg-[#141414] text-[#eaeaea] flex max-w-screen-xl mx-auto">
@@ -87,6 +90,8 @@ export default function UserProfile() {
 
                         {/* Logout */}
                         <button
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
                             className="flex items-center gap-3 px-4 py-2 rounded-md text-sm border border-transparent transition-all duration-300 text-[#ff5c5c] hover:text-[#ff7676]">
                             <FontAwesomeIcon icon={faRightFromBracket}/>
                             Đăng xuất
