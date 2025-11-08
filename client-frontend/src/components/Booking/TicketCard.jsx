@@ -1,4 +1,6 @@
 import React from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCalendarAlt, faClock} from "@fortawesome/free-solid-svg-icons";
 
 const TicketCard = ({ booking }) => {
     return (
@@ -34,7 +36,13 @@ const TicketCard = ({ booking }) => {
 
                     <div className="grid grid-cols-[auto_1fr] gap-y-1 text-sm">
                         <p className="text-[#94a1b2]">Suất chiếu: </p>
-                        <p className="font-medium">{booking.startTime}</p>
+                        <p className="font-medium"><FontAwesomeIcon icon={faCalendarAlt} className="text-[#7f5af0] mx-2" />
+                            {new Date(booking.startTime).toLocaleDateString("vi-VN")} |{" "}
+                            <FontAwesomeIcon icon={faClock} className="ml-2 mr-1 text-[#7f5af0]" />
+                            {new Date(booking.startTime).toLocaleTimeString("vi-VN", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            })}</p>
 
                         <p className="text-[#94a1b2]">Ghế:</p>
                         <p className="font-medium">{booking.seats?.map((s) => s.seatLabel).join(", ")}</p>
