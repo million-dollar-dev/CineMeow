@@ -27,6 +27,25 @@ export const bookingApi = rootApi.injectEndpoints({
             }),
             transformResponse: (response) => response.data,
         }),
+
+        searchBooking: builder.query({
+            query: ({ sort, filters = [] }) => {
+                const params = new URLSearchParams();
+
+                if (sort) {
+                    // ví dụ: "duration,asc"
+                    params.append("sort", sort);
+                }
+
+                filters.forEach((f) => params.append("filters", f));
+
+                return {
+                    url: `${CONTEXT_PATH}/bookings/search?${params.toString()}`,
+                    method: "GET",
+                };
+            },
+            transformResponse: (response) => response.data.content,
+        }),
     }),
 });
 
@@ -34,4 +53,5 @@ export const {
     useGetAllPriceByBrandQuery,
     useCreateBookingMutation,
     useGetBookingQuery,
+    useSearchBookingQuery,
 } = bookingApi;

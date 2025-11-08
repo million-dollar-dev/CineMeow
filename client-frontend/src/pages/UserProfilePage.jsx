@@ -1,20 +1,37 @@
-import React, {useState} from "react";
-import {
-    faClock,
-    faClockRotateLeft,
-    faEnvelope,
-    faLock,
-    faPhone,
-    faRightFromBracket,
-    faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import React, {useEffect, useState} from "react";
+import {faClockRotateLeft, faLock, faRightFromBracket, faUser,} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useSelector} from "react-redux";
 import UserProfileForm from "../components/UserProfile/UserProfileForm.jsx";
+import BookingHistory from "../components/UserProfile/BookingHistory.jsx";
+import {useSearchBookingQuery} from "../services/bookingService.js";
+import {toast} from "react-toastify";
 
 export default function UserProfile() {
     const [activeTab, setActiveTab] = useState("info");
     const user = useSelector((state) => state.user);
+    const {
+        data: historyResponse = [],
+        isLoading,
+        isError,
+        errors
+    } = useSearchBookingQuery(
+        {
+            sort: "createdAt,desc",
+            filters: [`userId:"${user?.userId}"`],
+        },
+        {skip: !user?.userId,}
+    );
+
+    const handleHistoryClick = () => {
+        setActiveTab("history")
+    }
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(errors?.data || "Lỗi lấy lịch sử đặt vé")
+        }
+    })
 
     return (
         <div className="py-[6vw] bg-[#141414]">
@@ -57,7 +74,7 @@ export default function UserProfile() {
                         </button>
 
                         <button
-                            onClick={() => setActiveTab("history")}
+                            onClick={() => handleHistoryClick()}
                             className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm border border-transparent transition-all duration-300 ${
                                 activeTab === "history"
                                     ? "bg-[#7f5af0]/20 border-[#7f5af0] text-[#7f5af0]"
@@ -89,7 +106,7 @@ export default function UserProfile() {
                             </h1>
 
                             {/* Personal Info */}
-                            <UserProfileForm />
+                            <UserProfileForm/>
 
                             {/* Change Password */}
                             <section
@@ -142,121 +159,10 @@ export default function UserProfile() {
                     )}
 
                     {activeTab === "history" && (
-                        <section>
-                            <h1 className="text-2xl font-bold mb-6 uppercase tracking-wide text-[#eaeaea]">
-                                Lịch sử đặt vé
-                            </h1>
-
-                            <div
-                                className="p-4 h-[500px]
-                 overflow-y-auto scrollbar-thin scrollbar-track-transparent
-                 shadow-[0_0_15px_rgba(127,90,240,0.08)]"
-                            >
-                                {/* Mock dữ liệu */}
-                                {[
-                                    {
-                                        id: 1,
-                                        movie: "Avengers: Endgame",
-                                        cinema: "CGV Hùng Vương Plaza",
-                                        date: "25/10/2025",
-                                        time: "19:30",
-                                        seats: ["E7", "E8"],
-                                        total: "240,000₫",
-                                        poster:
-                                            "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_UF894,1000_QL80_.jpg",
-                                    },
-                                    {
-                                        id: 2,
-                                        movie: "Doraemon: Nobita và Vũ trụ phiêu lưu ký",
-                                        cinema: "Lotte Cinema Gò Vấp",
-                                        date: "14/09/2025",
-                                        time: "14:00",
-                                        seats: ["C3"],
-                                        total: "120,000₫",
-                                        poster:
-                                            "https://upload.wikimedia.org/wikipedia/vi/2/22/Doraemon_Movie_2019_poster.jpg",
-                                    },
-                                    {
-                                        id: 3,
-                                        movie: "Inside Out 2",
-                                        cinema: "BHD Star Bitexco",
-                                        date: "12/08/2025",
-                                        time: "16:45",
-                                        seats: ["G5", "G6", "G7"],
-                                        total: "360,000₫",
-                                        poster:
-                                            "https://lumiere-a.akamaihd.net/v1/images/p_insideout2_639b8d4e.jpeg",
-                                    },
-                                    {
-                                        id: 4,
-                                        movie: "Venom: The Last Dance",
-                                        cinema: "Galaxy Nguyễn Du",
-                                        date: "05/07/2025",
-                                        time: "20:00",
-                                        seats: ["B4", "B5"],
-                                        total: "220,000₫",
-                                        poster:
-                                            "https://m.media-amazon.com/images/I/81Wf0kk6FAL._AC_UF894,1000_QL80_.jpg",
-                                    },
-                                ].map((ticket) => (
-                                    <div
-                                        key={ticket.id}
-                                        className="flex items-center gap-4 bg-[#1b1b1b] border border-[#2a2a2a]
-                     rounded-lg p-4 mb-4 last:mb-0 transition-all duration-500
-                     hover:shadow-[0_0_15px_rgba(127,90,240,0.25)] hover:border-[#7f5af0]/60"
-                                    >
-                                        {/* Ảnh phim */}
-                                        <div className="w-[70px] h-[100px] rounded-lg overflow-hidden flex-shrink-0">
-                                            <img
-                                                src={ticket.poster}
-                                                alt={ticket.movie}
-                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                            />
-                                        </div>
-
-                                        {/* Thông tin vé */}
-                                        <div className="flex-1 text-gray-300">
-                                            <h3 className="text-lg font-semibold text-[#eaeaea]">
-                                                {ticket.movie}
-                                            </h3>
-                                            <p className="text-sm text-gray-400 mt-1">
-                                                {ticket.cinema}
-                                            </p>
-                                            <p className="text-sm mt-1">
-                                                {ticket.date} |{" "}
-                                                <FontAwesomeIcon
-                                                    icon={faClock}
-                                                    className="ml-2 mr-1 text-[#7f5af0]"
-                                                />
-                                                {ticket.time}
-                                            </p>
-                                            <p className="text-sm mt-1">
-                                                Ghế:{" "}
-                                                <span className="text-[#7f5af0] font-medium">
-                {ticket.seats.join(", ")}
-              </span>
-                                            </p>
-                                        </div>
-
-                                        {/* Tổng tiền + nút */}
-                                        <div className="flex flex-col items-end">
-                                            <p className="text-sm text-gray-400 mb-2">
-                                                Tổng tiền:{" "}
-                                                <span className="text-[#7f5af0] font-semibold">
-                {ticket.total}
-              </span>
-                                            </p>
-                                            <button
-                                                className="text-sm px-4 py-1.5 rounded-md border border-[#7f5af0] text-[#7f5af0]
-                         hover:bg-[#7f5af0] hover:text-white transition-all duration-300 active:scale-95"
-                                            >
-                                                Xem chi tiết
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
+                        <BookingHistory
+                            history={historyResponse}
+                            isLoading={isLoading}
+                        />
                     )}
 
                 </main>
