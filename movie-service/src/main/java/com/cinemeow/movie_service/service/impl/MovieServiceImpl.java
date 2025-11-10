@@ -15,6 +15,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +43,7 @@ public class MovieServiceImpl implements MovieService {
     GenreService genreService;
 
     @Override
+    @CacheEvict(value = "movies", key = "'all'")
     public MovieResponse create(MovieRequest request) {
         var movie = movieMapper.toMovie(request);
         var genres = genreService.findGenresByIds(request.getGenres());
@@ -47,6 +52,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Cacheable(value = "movie", key = "#id")
     public MovieResponse getById(String id) {
         var movie = movieRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
@@ -54,6 +60,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Cacheable(value = "movies", key = "'all'")
     public List<MovieResponse> getAll() {
         return movieRepository.findAll().stream()
                 .map(movieMapper::toMovieResponse)
@@ -100,6 +107,10 @@ public class MovieServiceImpl implements MovieService {
 
 
     @Override
+    @Caching(
+            evict = @CacheEvict(value = "movies", key = "'all'"),
+            put = @CachePut(value = "movie", key = "#id")
+    )
     public MovieResponse update(String id, MovieRequest request) {
         var movie = movieRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
@@ -153,7 +164,4 @@ public class MovieServiceImpl implements MovieService {
                 .content(movieResponses)
                 .build();
     }
-
-
-
 }
