@@ -11,6 +11,9 @@ import com.cinemeow.cinema_service.service.CinemaBrandService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,7 @@ public class CinemaBrandServiceImpl implements CinemaBrandService {
     CinemaBrandMapper cinemaBrandMapper;
 
     @Override
+    @CacheEvict(value = "brands", key = "'all'")
     public CinemaBrandResponse create(CinemaBrandRequest request) {
         var brand = cinemaBrandMapper.toCinemaBrand(request);
         cinemaBrandRepository.save(brand);
@@ -30,6 +34,7 @@ public class CinemaBrandServiceImpl implements CinemaBrandService {
     }
 
     @Override
+    @Cacheable(value = "brands", key = "'all'")
     public List<CinemaBrandResponse> getAll() {
         return cinemaBrandRepository.findAll()
                 .stream()
@@ -38,6 +43,10 @@ public class CinemaBrandServiceImpl implements CinemaBrandService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "brands", key = "'all'"),
+            @CacheEvict(value = "brand", key = "#id")
+    })
     public CinemaBrandResponse updateById(String id, CinemaBrandRequest request) {
         var brand = cinemaBrandRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
@@ -47,11 +56,16 @@ public class CinemaBrandServiceImpl implements CinemaBrandService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "brands", key = "'all'"),
+            @CacheEvict(value = "brand", key = "#id")
+    })
     public void delete(String id) {
         cinemaBrandRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable(value = "brand", key = "#id")
     public CinemaBrandResponse getById(String id) {
         return cinemaBrandMapper.toCinemaBrandResponse(this.findById(id));
     }
