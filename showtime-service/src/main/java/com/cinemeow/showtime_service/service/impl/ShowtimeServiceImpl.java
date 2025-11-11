@@ -17,6 +17,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -42,6 +45,10 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     CinemaClient cinemaClient;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "showtimes", allEntries = true),
+            @CacheEvict(value = "showtime_search", allEntries = true)
+    })
     public ShowtimeResponse create(ShowtimeRequest request) {
         var showtime = showtimeMapper.toShowtime(request);
         showtimeRepository.save(showtime);
@@ -50,6 +57,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
+    @Cacheable(value = "showtimes", key = "'all'")
     public List<ShowtimeResponse> getAll() {
         return showtimeRepository.findAll().stream()
                 .map(this::buildFullShowtimeResponse)
@@ -57,6 +65,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
+    @Cacheable(value = "showtime", key = "#id")
     public ShowtimeResponse getById(String id) {
         Showtime showtime = showtimeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
@@ -67,6 +76,11 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "showtimes", allEntries = true),
+            @CacheEvict(value = "showtime_search", allEntries = true),
+            @CacheEvict(value = "showtime", key = "#id")
+    })
     public ShowtimeResponse updateById(String id, ShowtimeRequest request) {
         var showtime = showtimeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
@@ -77,11 +91,17 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "showtimes", allEntries = true),
+            @CacheEvict(value = "showtime_search", allEntries = true),
+            @CacheEvict(value = "showtime", key = "#id")
+    })
     public void delete(String id) {
         showtimeRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable(value = "showtime_search", key = "#pageable.pageNumber + ':' + #pageable.pageSize + ':' + T(java.util.Arrays).toString(#filters)")
     public List<ShowtimeResponse> searchShowtime(Pageable pageable, String[] filters) {
         log.info("Search params: {}", Arrays.toString(filters));
         Page<Showtime> showtimePage;

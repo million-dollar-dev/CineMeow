@@ -43,7 +43,10 @@ public class MovieServiceImpl implements MovieService {
     GenreService genreService;
 
     @Override
-    @CacheEvict(value = "movies", key = "'all'")
+    @Caching(evict = {
+            @CacheEvict(value = "movies", allEntries = true),
+            @CacheEvict(value = "movie_search", allEntries = true)
+    })
     public MovieResponse create(MovieRequest request) {
         var movie = movieMapper.toMovie(request);
         var genres = genreService.findGenresByIds(request.getGenres());
@@ -110,7 +113,8 @@ public class MovieServiceImpl implements MovieService {
     @Caching(
             evict = {
                     @CacheEvict(value = "movie", key = "#id"),
-                    @CacheEvict(value = "movies", key = "'all'")
+                    @CacheEvict(value = "movies", key = "'all'"),
+                    @CacheEvict(value = "showtime_search", allEntries = true),
             }
     )
     public MovieResponse update(String id, MovieRequest request) {
@@ -124,6 +128,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Cacheable(value = "movie_search", key = "#pageable.pageNumber + ':' + #pageable.pageSize + ':' + T(java.util.Arrays).toString(#filters)")
     public PagedResponse<List<MovieResponse>> searchMovies(Pageable pageable, String[] filters) {
         Page<Movie> moviePage;
         if (filters != null && filters.length > 0) {
