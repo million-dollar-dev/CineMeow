@@ -13,6 +13,9 @@ import com.cinemeow.profile_service.service.UserProfileService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +35,10 @@ public class UserProfileServiceImpl implements UserProfileService {
     UserProfileMapper userProfileMapper;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "profiles", allEntries = true),
+            @CacheEvict(value = "profile_search", allEntries = true)
+    })
     public UserProfileResponse create(UserProfileRequest request) {
         var profile = userProfileMapper.toUserProfile(request);
         userProfileRepository.save(profile);
@@ -39,6 +46,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
+    @Cacheable(value = "profile_search", key = "#pageNo + ':' + #pageSize + ':' + #sortBy")
     public PagedResponse<List<UserProfileResponse>> getProfiles(int pageNo, int pageSize, String sortBy) {
         int page = Math.max(0, pageNo - 1);
         Sort sort = buildSort(sortBy);
@@ -60,6 +68,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
+    @Cacheable(value = "showtime", key = "#id")
     public UserProfileResponse getByUserId(String userId) {
         var profile = userProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
@@ -67,6 +76,11 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "profiles", allEntries = true),
+            @CacheEvict(value = "profile_search", allEntries = true),
+            @CacheEvict(value = "profile", key = "#id")
+    })
     public UserProfileResponse updateByUserId(String userId, UserProfileUpdateRequest request) {
         var profile = userProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
@@ -76,11 +90,17 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "profiles", allEntries = true),
+            @CacheEvict(value = "profile_search", allEntries = true),
+            @CacheEvict(value = "profile", key = "#id")
+    })
     public void deleteByUserId(String userId) {
         userProfileRepository.deleteByUserId(userId);
     }
 
     @Override
+    @Cacheable(value = "profileWithEmail", key = "#id")
     public UserProfileResponse getByEmail(String email) {
         var profile = userProfileRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
