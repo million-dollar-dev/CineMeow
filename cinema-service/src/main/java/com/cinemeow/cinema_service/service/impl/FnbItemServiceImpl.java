@@ -15,6 +15,9 @@ import com.cinemeow.cinema_service.service.FnbItemService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,6 +35,7 @@ public class FnbItemServiceImpl implements FnbItemService {
     CinemaBrandRepository cinemaBrandRepository;
 
     @Override
+    @CacheEvict(value = "fnbs", key = "'all'")
     public FnbItemResponse creat(FnbItemRequest request) {
         var fnbItem = fnbItemMapper.toFnbItem(request);
         var brand = cinemaBrandRepository.findById(request.getBrandId())
@@ -42,6 +46,7 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
+    @Cacheable(value = "fnbs", key = "'all'")
     public List<FnbItemResponse> getAll() {
         return fnbItemRepository.findAll().stream()
                 .map(fnbItemMapper::toFnbItemResponse)
@@ -49,6 +54,7 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
+    @Cacheable(value = "fnbWithBrand", key = "#id")
     public List<FnbItemResponse> getByBrandId(String brandId) {
         var brand = cinemaBrandRepository.findById(brandId)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
@@ -58,6 +64,7 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
+    @Cacheable(value = "fnb", key = "#id")
     public FnbItemResponse getById(String id) {
         var  fnbItem = fnbItemRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FNB_ITEM_NOT_EXISTED));
@@ -65,6 +72,11 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "fnbs", key = "'all'"),
+            @CacheEvict(value = "fnb", key = "#id"),
+            @CacheEvict(value = "fnbWithBrand", key = "#id")
+    })
     public FnbItemResponse updateById(String id, FnbItemRequest request) {
         var  fnbItem = fnbItemRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FNB_ITEM_NOT_EXISTED));
@@ -77,6 +89,11 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "fnbs", key = "'all'"),
+            @CacheEvict(value = "fnb", key = "#id"),
+            @CacheEvict(value = "fnbWithBrand", key = "#id")
+    })
     public void deleteById(String id) {
         fnbItemRepository.deleteById(id);
     }
