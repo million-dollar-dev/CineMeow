@@ -108,8 +108,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Caching(
-            evict = @CacheEvict(value = "movies", key = "'all'"),
-            put = @CachePut(value = "movie", key = "#id")
+            evict = {
+                    @CacheEvict(value = "movie", key = "#id"),
+                    @CacheEvict(value = "movies", key = "'all'")
+            }
     )
     public MovieResponse update(String id, MovieRequest request) {
         var movie = movieRepository.findById(id)
@@ -124,7 +126,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public PagedResponse<List<MovieResponse>> searchMovies(Pageable pageable, String[] filters) {
         Page<Movie> moviePage;
-        log.info("Search params: {}", Arrays.toString(filters));
         if (filters != null && filters.length > 0) {
             MovieSpecificationBuilder builder = new MovieSpecificationBuilder();
 
