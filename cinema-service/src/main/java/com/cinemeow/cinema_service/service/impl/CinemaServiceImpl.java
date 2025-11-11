@@ -12,6 +12,9 @@ import com.cinemeow.cinema_service.service.CinemaService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +26,12 @@ public class CinemaServiceImpl implements CinemaService {
     CinemaRepository cinemaRepository;
     CinemaMapper cinemaMapper;
     CinemaBrandService brandService;
+
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "cinemas", key = "'all'"),
+            @CacheEvict(value = "cinema", key = "#id")
+    })
     public CinemaDetailResponse create(CinemaRequest request) {
         var cinema = cinemaMapper.toCinema(request);
         var brand = brandService.findById(request.getBrandId());
@@ -33,6 +41,7 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
+    @Cacheable(value = "cinemas", key = "'all'")
     public List<CinemaDetailResponse> getAll() {
         return cinemaRepository.findAll()
                 .stream()
@@ -41,6 +50,7 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
+    @Cacheable(value = "cinema", key = "#id")
     public CinemaDetailResponse getDetailInfo(String id) {
         var cinema = cinemaRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_EXISTED));
@@ -48,6 +58,10 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "cinemas", key = "'all'"),
+            @CacheEvict(value = "cinema", key = "#id")
+    })
     public CinemaDetailResponse updateInfo(String id, CinemaRequest request) {
         var cinema = cinemaRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_EXISTED));
@@ -59,6 +73,10 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "cinemas", key = "'all'"),
+            @CacheEvict(value = "cinema", key = "#id")
+    })
     public void delete(String id) {
         cinemaRepository.deleteById(id);
     }
