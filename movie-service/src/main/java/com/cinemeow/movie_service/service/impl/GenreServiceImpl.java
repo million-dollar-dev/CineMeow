@@ -9,6 +9,9 @@ import com.cinemeow.movie_service.service.GenreService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,13 +23,16 @@ public class GenreServiceImpl implements GenreService {
     GenreRepository genreRepository;
     GenreMapper genreMapper;
 
+
     @Override
+    @CacheEvict(value = "genres", key = "'all'")
     public GenreResponse create(GenreRequest request) {
         Genre genre = genreMapper.toGenre(request);
         return genreMapper.toGenreResponse(genreRepository.save(genre));
     }
 
     @Override
+    @Cacheable(value = "genres", key = "'all'")
     public List<GenreResponse> getAll() {
         return genreRepository.findAll().stream()
                 .map(genreMapper::toGenreResponse)
@@ -34,6 +40,12 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "genre", key = "#id"),
+                    @CacheEvict(value = "genres", key = "'all'")
+            }
+    )
     public void deleteById(Integer id) {
         genreRepository.deleteById(id);
     }

@@ -16,6 +16,25 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  cache:
+    type: redis  # Chỉ định sử dụng Redis làm cache provider
+    redis:
+      time-to-live: 3600000  # TTL mặc định: 3,600,000ms = 1 giờ
+      cache-null-values: false  # Không cache giá trị null
+  data:
+    redis:
+      host: localhost    # Địa chỉ Redis server
+      port: 6379         # Port Redis
+      database: 0        # Sử dụng database số 0 (Redis có 16 databases 0-15)
+      lettuce:
+        pool:
+          max-active: 8     # Số connection tối đa trong pool
+          max-idle: 8       # Số connection idle tối đa
+          min-idle: 2       # Số connection idle tối thiểu
+          max-wait: -1ms    # Thời gian chờ connection (-1 = chờ vô hạn)
+        shutdown-timeout: 100ms  # Thời gian chờ khi shutdown
+      connect-timeout: 2000ms    # Timeout khi kết nối
+      timeout: 1000ms            # Timeout khi thao tác
 
 springdoc:
   api-docs:
@@ -32,6 +51,10 @@ openapi:
     server: http://localhost:8082/movie
     title: Movie Service
     version: 1.0.0
+
+app:
+  cache:
+    movie-ttl: 1800
 
 logging:
   level:

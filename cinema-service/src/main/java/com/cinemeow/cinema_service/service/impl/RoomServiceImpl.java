@@ -23,6 +23,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -44,6 +47,10 @@ public class RoomServiceImpl implements RoomService {
     CinemaService cinemaService;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "roomWithBrand", key = "#id")
+    })
     public RoomResponse create(RoomRequest request) {
         var room = roomMapper.toRoom(request);
         var cinema = cinemaService.getCinemaById(request.getCinemaId());
@@ -56,6 +63,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "room", key = "#id"),
+            @CacheEvict(value = "roomWithBrand", key = "#id")
+    })
     public RoomResponse update(String id, RoomRequest request) {
         var room = roomRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
@@ -65,6 +77,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Cacheable(value = "room", key = "#id")
     public RoomResponse getById(String id) {
         var room = roomRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
@@ -79,12 +92,22 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "room", key = "#id"),
+            @CacheEvict(value = "roomWithBrand", key = "#id")
+    })
     public void delete(String id) {
         roomRepository.deleteById(id);
     }
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "room", key = "#id"),
+            @CacheEvict(value = "roomWithBrand", key = "#id")
+    })
     public List<RoomResponse> getRoomsByCinemaId(String cinemaId) {
         return roomRepository.getRoomsByCinemaId(cinemaId)
                 .stream()
@@ -111,6 +134,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Cacheable(value = "roomSeatMap", key = "#id")
     public SeatMapResponse getSeatMap(String id) {
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
@@ -119,6 +143,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "roomSeatMap", key = "#id")
     public SeatMapResponse updateSeatMap(String roomId, SeatMapRequest request) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
