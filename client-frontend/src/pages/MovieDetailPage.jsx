@@ -8,6 +8,7 @@ import ReviewList from "../components/MovieDetail/ReviewList.jsx";
 import {useGetMovieQuery} from "../services/movieService.js";
 import {useSearchShowtimesQuery} from "../services/showtimeService.js";
 import dayjs from "dayjs";
+import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 
 const MovieDetailPage = () => {
     const {movieId} = useParams();
@@ -30,7 +31,7 @@ const MovieDetailPage = () => {
     });
 
     if (isLoading) {
-        return <Loading />
+        return <OverlayLoading />
     }
 
     return (

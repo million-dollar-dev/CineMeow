@@ -29,12 +29,6 @@ public interface CinemaClient {
     @GetMapping("/seats/{id}")
     SeatResponse getSeatById(@PathVariable Long id);
 
-    @PostMapping("/seats/check")
-    List<SeatResponse> checkAvailableSeats(@RequestBody List<Long> seatIds);
-
-    @PostMapping("seats/confirm")
-    void confirmSeats(@RequestBody List<Long> seatIds);
-
     @PostMapping("/fnbs/internal/calculate")
     BigDecimal calculate(Map<String, Integer> items);
 }

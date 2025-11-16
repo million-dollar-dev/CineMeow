@@ -9,10 +9,7 @@ import com.cinemeow.booking_service.dto.request.FnbOrderRequest;
 import com.cinemeow.booking_service.dto.request.InitPaymentRequest;
 import com.cinemeow.booking_service.dto.request.SendMailRequest;
 import com.cinemeow.booking_service.dto.response.*;
-import com.cinemeow.booking_service.entity.BookedFnbItem;
-import com.cinemeow.booking_service.entity.BookedSeat;
-import com.cinemeow.booking_service.entity.Booking;
-import com.cinemeow.booking_service.entity.Recipient;
+import com.cinemeow.booking_service.entity.*;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.enums.PaymentMethod;
 import com.cinemeow.booking_service.enums.RoomType;
@@ -65,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
         if (showtime.getStatus() != ShowtimeStatus.AVAILABLE)
             throw new AppException(ErrorCode.SHOWTIME_NOT_AVAILABLE);
 
-        List<SeatResponse> seats = cinemaClient.checkAvailableSeats(request.getSeatIds());
+        List<ShowtimeSeat> seats = showtimeClient.checkAvailableSeats(request.getSeatIds());
         if (seats.size() != request.getSeatIds().size())
             throw new AppException(ErrorCode.INVALID_SEAT);
 
@@ -203,7 +200,7 @@ public class BookingServiceImpl implements BookingService {
         List<Long> seatIds = booking.getSeats().stream()
                 .map(s -> s.getSeatId())
                 .toList();
-        cinemaClient.confirmSeats(seatIds);
+        showtimeClient.confirmSeats(seatIds);
 
         sendEmailConfirm(bookingId);
     }

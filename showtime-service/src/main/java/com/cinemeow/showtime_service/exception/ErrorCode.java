@@ -16,6 +16,7 @@ public enum ErrorCode {
     CINEMA_NOT_EXISTED(1001, "Cinema not existed", HttpStatus.NOT_FOUND),
     ROOM_NOT_EXISTED(1004, "Room not existed", HttpStatus.NOT_FOUND),
     SEAT_NOT_EXISTED(10045, "Seat not existed", HttpStatus.NOT_FOUND),
+    SEAT_NOT_AVAILABLE(1004, "Seat not available", HttpStatus.BAD_REQUEST),
     SHOWTIME_NOT_EXISTED(10045, "Showtime not existed", HttpStatus.NOT_FOUND),
     ROOM_CAPACITY_EXCEED(1011, "Cannot add more seats: capacity exceeded", HttpStatus.BAD_REQUEST),
     SEAT_UPDATE_FAILED(1013, "Update status fail", HttpStatus.BAD_REQUEST),

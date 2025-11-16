@@ -3,6 +3,7 @@ package com.cinemeow.showtime_service.controller;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
 import com.cinemeow.showtime_service.dto.response.BaseResponse;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
+import com.cinemeow.showtime_service.entity.ShowtimeSeat;
 import com.cinemeow.showtime_service.service.ShowtimeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -139,6 +140,15 @@ public class ShowtimeController {
     ) {
         return BaseResponse.<List<ShowtimeResponse>>builder()
                 .data(showtimeService.searchShowtime(pageable, filters))
+                .build();
+    }
+
+    @GetMapping("/{id}/seats")
+    public BaseResponse<List<ShowtimeSeat>> getSeats(
+            @PathVariable String id
+    ) {
+        return BaseResponse.<List<ShowtimeSeat>>builder()
+                .data(showtimeService.getSeats(id))
                 .build();
     }
 }

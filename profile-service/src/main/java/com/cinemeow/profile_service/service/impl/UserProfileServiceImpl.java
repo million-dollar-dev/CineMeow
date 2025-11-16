@@ -68,7 +68,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    @Cacheable(value = "showtime", key = "#id")
+    @Cacheable(value = "profile", key = "#userId")
     public UserProfileResponse getByUserId(String userId) {
         var profile = userProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
@@ -79,7 +79,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Caching(evict = {
             @CacheEvict(value = "profiles", allEntries = true),
             @CacheEvict(value = "profile_search", allEntries = true),
-            @CacheEvict(value = "profile", key = "#id")
+            @CacheEvict(value = "profile", key = "#userId")
     })
     public UserProfileResponse updateByUserId(String userId, UserProfileUpdateRequest request) {
         var profile = userProfileRepository.findByUserId(userId)
@@ -93,14 +93,14 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Caching(evict = {
             @CacheEvict(value = "profiles", allEntries = true),
             @CacheEvict(value = "profile_search", allEntries = true),
-            @CacheEvict(value = "profile", key = "#id")
+            @CacheEvict(value = "profile", key = "#userId")
     })
     public void deleteByUserId(String userId) {
         userProfileRepository.deleteByUserId(userId);
     }
 
     @Override
-    @Cacheable(value = "profileWithEmail", key = "#id")
+    @Cacheable(value = "profileWithEmail", key = "#email")
     public UserProfileResponse getByEmail(String email) {
         var profile = userProfileRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));

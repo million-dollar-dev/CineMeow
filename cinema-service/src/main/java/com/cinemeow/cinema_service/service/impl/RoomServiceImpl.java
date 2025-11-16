@@ -105,8 +105,8 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Caching(evict = {
             @CacheEvict(value = "rooms", key = "'all'"),
-            @CacheEvict(value = "room", key = "#id"),
-            @CacheEvict(value = "roomWithBrand", key = "#id")
+            @CacheEvict(value = "room", key = "#cinemaId"),
+            @CacheEvict(value = "roomWithBrand", key = "#cinemaId")
     })
     public List<RoomResponse> getRoomsByCinemaId(String cinemaId) {
         return roomRepository.getRoomsByCinemaId(cinemaId)

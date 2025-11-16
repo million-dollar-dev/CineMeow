@@ -5,13 +5,19 @@ import com.cinemeow.showtime_service.client.MovieClient;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
 import com.cinemeow.showtime_service.dto.response.MovieResponse;
 import com.cinemeow.showtime_service.dto.response.RoomResponse;
+import com.cinemeow.showtime_service.dto.response.SeatResponse;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
 import com.cinemeow.showtime_service.entity.Showtime;
+import com.cinemeow.showtime_service.entity.ShowtimeSeat;
+import com.cinemeow.showtime_service.enums.SeatStatus;
+import com.cinemeow.showtime_service.enums.SeatType;
 import com.cinemeow.showtime_service.exception.AppException;
 import com.cinemeow.showtime_service.exception.ErrorCode;
 import com.cinemeow.showtime_service.mapper.ShowtimeMapper;
 import com.cinemeow.showtime_service.repository.ShowtimeRepository;
+import com.cinemeow.showtime_service.repository.ShowtimeSeatRepository;
 import com.cinemeow.showtime_service.repository.specification.ShowtimeSpecificationBuilder;
+import com.cinemeow.showtime_service.service.ShowtimeSeatService;
 import com.cinemeow.showtime_service.service.ShowtimeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +46,8 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     ShowtimeRepository showtimeRepository;
 
     ShowtimeMapper showtimeMapper;
+
+    ShowtimeSeatService showtimeSeatService;
 
     MovieClient movieClient;
 
@@ -52,6 +61,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     public ShowtimeResponse create(ShowtimeRequest request) {
         var showtime = showtimeMapper.toShowtime(request);
         showtimeRepository.save(showtime);
+        showtimeSeatService.initializeSeatsForShowtime(showtime.getId(), request.getRoomId());
         var response = buildFullShowtimeResponse(showtime);
         return response;
     }
@@ -73,7 +83,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         var response = buildFullShowtimeResponse(showtime);
         return response;
     }
-
 
     @Override
     @Caching(evict = {
@@ -138,6 +147,11 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 .toList();
     }
 
+    @Override
+    public List<ShowtimeSeat> getSeats(String id) {
+        return showtimeSeatService.getSeatsByShowtimeId(id);
+    }
+
     private ShowtimeResponse buildFullShowtimeResponse(Showtime showtime) {
         ShowtimeResponse response = showtimeMapper.toShowtimeResponse(showtime);
 
@@ -156,5 +170,4 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
         return response;
     }
-
 }

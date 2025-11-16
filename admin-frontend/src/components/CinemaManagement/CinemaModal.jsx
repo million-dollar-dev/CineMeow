@@ -115,6 +115,7 @@ export default function CinemaModal({ open, onClose, cinemaData, mode = "add" })
 
     useEffect(() => {
         if (isError) {
+            console.log(error)
             dispatch(openSnackbar({message: error?.error, type: "error"}));
         }
     }, [isError, error, isLoading, brandResponse]);

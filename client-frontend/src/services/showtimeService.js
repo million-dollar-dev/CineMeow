@@ -17,6 +17,13 @@ export const showtimeApi = rootApi.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
+        getShowtimeSeats: builder.query({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/showtimes/${id}/seats`,
+            }),
+            transformResponse: (response) => response.data,
+        }),
+
         searchShowtimes: builder.query({
             query: ({ page = 0, size = 10, sort, filters = [] }) => {
                 const params = new URLSearchParams();
@@ -48,4 +55,5 @@ export const {
     useGetAllShowtimesQuery,
     useSearchShowtimesQuery,
     useGetShowtimeQuery,
+    useGetShowtimeSeatsQuery
 } = showtimeApi;

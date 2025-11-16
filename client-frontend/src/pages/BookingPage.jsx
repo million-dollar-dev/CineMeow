@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import Loading from "../components/Loading.jsx";
 import Banner from "../components/MovieDetail/Banner.jsx";
 import Promotions from "../components/PromotionSection.jsx";
-import {useGetShowtimeQuery} from "../services/showtimeService.js";
+import {useGetShowtimeQuery, useGetShowtimeSeatsQuery} from "../services/showtimeService.js";
 import {useGetMovieQuery} from "../services/movieService.js";
 import {useGetSeatMapQuery} from "../services/cinemaService.js";
 import {useGetFnbsByBrandQuery} from "../services/brandService.js";
@@ -45,6 +45,11 @@ const BookingPage = () => {
         data: seatMapResponse,
         isLoading: loadingSeatMap,
     } = useGetSeatMapQuery(showtime?.roomId, {skip: !showtime?.roomId});
+
+    const {
+        data: showtimeSeats,
+        isLoading: loadingShowtimeSeats,
+    } = useGetShowtimeSeatsQuery(showtimeId, {skip: !showtime?.id});
 
     const [
         validateVoucher,
@@ -94,11 +99,21 @@ const BookingPage = () => {
         setOpenPopup(false);
     };
 
+    const seats = seatMapResponse?.seats?.map(seat => {
+        const showtimeSeat = showtimeSeats?.find(status => status.seatId === seat.id);
+        return {
+            ...seat,
+            status: showtimeSeat?.status || 'AVAILABLE',
+            reservedUntil: showtimeSeat?.reservedUntil || null,
+            bookingId: showtimeSeat?.bookingId || null
+        };
+    }) || [];
+
     const handleToggleSeat = (seat) => {
-        if (seat.type === "EMPTY" || seat.status !== "ACTIVE") return;
+        if (seat.type === "EMPTY" || seat.status !== "AVAILABLE") return;
 
         setSelectedSeats((prev) =>
-            prev.includes(seat)
+            prev.some(s => s.id === seat.id)
                 ? prev.filter((s) => s.id !== seat.id)
                 : [...prev, seat]
         );
@@ -114,7 +129,6 @@ const BookingPage = () => {
     //Gom nhóm ghế theo seatType + roomType
     const groupedSeats = selectedSeats.reduce((acc, seat) => {
         const matchedPrice = price.find((p) => p.seatType === seat.type && p.roomType === showtime.roomType);
-        console.log("matchedPrice", matchedPrice);
         const key = `${seat.type}-${showtime.roomType}`;
 
         if (!acc[key]) {
@@ -156,7 +170,6 @@ const BookingPage = () => {
         };
         validateVoucher(payload);
     };
-
     const handleCreateBooking = async () => {
         try {
             const fnbItems = selectedCombos.map(item => ({
@@ -187,19 +200,19 @@ const BookingPage = () => {
 
             console.log("📦 Payload gửi đi:", payload);
 
-            const bookingResult = await createBooking(payload).unwrap();
-
-            if (bookingResult?.id) {
-                const paymentPayload = {
-                    bookingId: bookingResult.id,
-                    amount: voucherInfo?.finalPrice || totalPrice,
-                    paymentMethod: paymentMethod,
-                };
-
-                await initPayment(paymentPayload);
-            } else {
-                toast.error("Không nhận được bookingId!");
-            }
+            // const bookingResult = await createBooking(payload).unwrap();
+            //
+            // if (bookingResult?.id) {
+            //     const paymentPayload = {
+            //         bookingId: bookingResult.id,
+            //         amount: voucherInfo?.finalPrice || totalPrice,
+            //         paymentMethod: paymentMethod,
+            //     };
+            //
+            //     await initPayment(paymentPayload);
+            // } else {
+            //     toast.error("Không nhận được bookingId!");
+            // }
 
         } catch (error) {
             console.error("❌ Lỗi khi tạo booking:", error);
@@ -253,9 +266,6 @@ const BookingPage = () => {
         return <OverlayLoading/>;
     }
 
-    console.log('selected seat', selectedSeats);
-    console.log('selected combos', selectedCombos);
-
     return (
         <div className="bg-[#0b0b0b] text-white min-h-screen">
             {(isInitingPayment) && <OverlayLoading/>}
@@ -306,7 +316,7 @@ const BookingPage = () => {
                 <div
                     className="lg:w-3/5 w-full flex flex-col items-center bg-[#121212] rounded-2xl p-[2vw] shadow-[0_0_25px_rgba(127,90,240,0.05)] border border-[#1f1f1f]">
                     <SeatSelection
-                        seats={seatMapResponse?.seats}
+                        seats={seats}
                         selectedSeats={selectedSeats}
                         onToggleSeat={handleToggleSeat}
                     />

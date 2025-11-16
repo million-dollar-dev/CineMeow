@@ -54,7 +54,7 @@ public class FnbItemServiceImpl implements FnbItemService {
     }
 
     @Override
-    @Cacheable(value = "fnbWithBrand", key = "#id")
+    @Cacheable(value = "fnbWithBrand", key = "#brandId")
     public List<FnbItemResponse> getByBrandId(String brandId) {
         var brand = cinemaBrandRepository.findById(brandId)
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
