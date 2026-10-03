@@ -1,16 +1,23 @@
-import React, {useEffect} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
-import TicketCard from "../components/Booking/TicketCard.jsx";
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import {useGetBookingQuery} from "../services/bookingService.js";
-import {toast} from "react-toastify";
-import {useSelector} from "react-redux";
+import TicketCard from "../components/Booking/TicketCard.jsx";
 
 const PaymentResultPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [bookingId, setBookingId] = React.useState(null);
-    const [done, setDone] = React.useState(false);
     const user = useSelector((state) => state.user);
+
+    const [bookingId, setBookingId] = useState(null);
+    const [pollingInterval, setPollingInterval] = useState(2000);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const id = params.get("bookingId");
+        if (id) setBookingId(id);
+    }, [location.search]);
 
     const {
         data: booking,
@@ -18,32 +25,44 @@ const PaymentResultPage = () => {
         isError,
         error,
         isSuccess,
-    } = useGetBookingQuery(bookingId, {skip: !bookingId});
+    } = useGetBookingQuery(bookingId, {
+        skip: !bookingId,
+        pollingInterval: pollingInterval,
+    });
 
+    // Xử lý logic dừng Polling khi có kết quả cuối cùng
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        setBookingId(params.get("bookingId"));
-
-    }, [location.search]);
-
-    useEffect(() => {
-        if (isSuccess && booking.status === 'PAID') {
-            setDone(true);
+        if (isSuccess && booking) {
+            if (booking.status === 'PAID') {
+                setPollingInterval(0);
+            } else if (booking.status === 'CANCELLED' || booking.status === 'FAILED') {
+                setPollingInterval(0);
+            }
         }
+
         if (isError) {
-            toast.error(error);
+            setPollingInterval(0);
+            toast.error(error?.message || "Lỗi kết nối");
         }
-    }, [isError, booking, error]);
-    if (isLoading) {
+    }, [isSuccess, booking, isError, error]);
+
+    const isVerifying = isSuccess && booking && (booking.status === 'PENDING' || booking.status === 'UNPAID');
+
+    if (isLoading || isVerifying) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#010101] text-[#fffffe]">
                 <div className="w-10 h-10 border-4 border-[#7f5af0] border-t-transparent rounded-full animate-spin"/>
-                <p className="mt-4 text-[#94a1b2]">Đang tải thông tin vé...</p>
+                <p className="mt-4 text-[#94a1b2]">
+                    {isLoading ? "Đang tải thông tin vé..." : "Đang xác thực giao dịch với ngân hàng..."}
+                </p>
+                {isVerifying && <p className="text-xs text-gray-500 mt-2">Vui lòng không tắt trình duyệt</p>}
             </div>
         );
     }
 
-    if (isError || !booking || !done) {
+    const isPaymentFailed = isSuccess && booking && (booking.status === 'FAILED' || booking.status === 'CANCELLED');
+
+    if (isError || isPaymentFailed || !booking) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#010101] text-[#fffffe] px-4 animate-fadeIn">
                 <div className="w-16 h-16 flex items-center justify-center bg-red-600/20 text-red-500 rounded-full text-4xl font-bold animate-pop">
@@ -51,7 +70,9 @@ const PaymentResultPage = () => {
                 </div>
                 <h2 className="text-2xl font-bold mt-4 animate-slideUp">Thanh toán thất bại</h2>
                 <p className="text-[#94a1b2] mt-2 text-center animate-slideUp animation-delay-200">
-                    {error?.message || "Không thể tải thông tin vé. Vui lòng thử lại sau."}
+                    {isPaymentFailed
+                        ? "Giao dịch bị hủy hoặc thanh toán không thành công."
+                        : (error?.message || "Không thể tải thông tin vé. Vui lòng thử lại sau.")}
                 </p>
                 <button
                     onClick={() => navigate("/")}
@@ -63,7 +84,6 @@ const PaymentResultPage = () => {
         );
     }
 
-    // Nếu thanh toán thành công
     return (
         <div className="min-h-screen bg-[#010101] text-[#fffffe] flex flex-col items-center justify-center py-12 px-4 animate-fadeIn">
             <div className="w-16 h-16 mx-auto flex items-center justify-center bg-[#7f5af0]/20 text-[#7f5af0] rounded-full text-4xl font-bold animate-pop">

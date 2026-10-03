@@ -12,8 +12,13 @@ import java.util.List;
 @Repository
 public interface ShowtimeSeatRepository extends JpaRepository<ShowtimeSeat, Long> {
     List<ShowtimeSeat> findAllByIdIn(List<Long> ids);
+
     List<ShowtimeSeat> findAllByShowtimeId(String showtimeId);
-    @Query("SELECT s FROM ShowtimeSeat s WHERE s.id IN :ids AND s.status = :status")
-    List<ShowtimeSeat> findByIdInAndStatus(@Param("ids") List<Long> ids,
-                                   @Param("status") SeatStatus status);
+
+    @Query("SELECT s " +
+            "FROM ShowtimeSeat s " +
+            "WHERE s.seatId IN :ids AND s.status = :status AND s.showtimeId = :showtimeId")
+    List<ShowtimeSeat> findBySeatIdInAndStatusAndShowtimeId(@Param("ids") List<Long> ids,
+                                                            @Param("status") SeatStatus status,
+                                                            @Param("showtimeId") String showtimeId);
 }

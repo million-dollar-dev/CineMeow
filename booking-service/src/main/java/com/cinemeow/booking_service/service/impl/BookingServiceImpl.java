@@ -62,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
         if (showtime.getStatus() != ShowtimeStatus.AVAILABLE)
             throw new AppException(ErrorCode.SHOWTIME_NOT_AVAILABLE);
 
-        List<ShowtimeSeat> seats = showtimeClient.checkAvailableSeats(request.getSeatIds());
+        List<ShowtimeSeat> seats = showtimeClient.checkAvailableSeats( request.getShowtimeId(), request.getSeatIds());
         if (seats.size() != request.getSeatIds().size())
             throw new AppException(ErrorCode.INVALID_SEAT);
 

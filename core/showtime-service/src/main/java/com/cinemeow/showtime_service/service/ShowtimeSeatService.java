@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ShowtimeSeatService {
     void initializeSeatsForShowtime(String showtimeId, String roomId);
-    List<ShowtimeSeat> checkAvailableSeats(List<Long> seatIds);
+    List<ShowtimeSeat> checkAvailableSeats(String showtimeId, List<Long> seatIds);
     void lockSeats(List<Long> seatIds);
     void unlockSeats(List<Long> seatIds);
     void confirmSeats(List<Long> seatIds);

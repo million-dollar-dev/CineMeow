@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+            http://maven.apache.org/POM/4.0.0
+            https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cinemeow</groupId>
+    <artifactId>cinemeow</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <name>Cinemeow</name>
+
+    <modules>
+        <!-- Root services -->
+        <module>api-gateway</module>
+        <module>auth-service</module>
+        <module>booking-service</module>
+        <module>notification-service</module>
+        <module>payment-service</module>
+        <!-- Core services -->
+        <module>core/cinema-service</module>
+        <module>core/movie-service</module>
+        <module>core/profile-service</module>
+        <module>core/promotion-service</module>
+        <module>core/showtime-service</module>
+    </modules>
+
+</project>

@@ -15,12 +15,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShowtimeSeatController {
     ShowtimeSeatService showtimeSeatService;
-
-    @PostMapping("/check")
-    public List<ShowtimeSeat> checkAvailableSeats(@RequestBody List<Long> seatIds) {
-        return showtimeSeatService.checkAvailableSeats(seatIds);
-    }
-
     @PostMapping("/lock")
     public void lockSeats(@RequestBody List<Long> seatIds) {
         showtimeSeatService.lockSeats(seatIds);

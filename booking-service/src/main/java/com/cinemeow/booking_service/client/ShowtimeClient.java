@@ -22,8 +22,9 @@ public interface ShowtimeClient {
     @GetMapping("/showtimes/{id}/seats")
     BaseResponse<List<ShowtimeSeat>> getSeats(@PathVariable String id);
 
-    @PostMapping("/seats/check")
-    List<ShowtimeSeat> checkAvailableSeats(@RequestBody List<Long> seatIds);
+    @PostMapping("/showtimes/{id}/seats/check")
+    List<ShowtimeSeat> checkAvailableSeats(@PathVariable String id,
+                                                  @RequestBody List<Long> seatIds);
 
     @PostMapping("/seats/lock")
     void lockSeats(@RequestBody List<Long> seatIds);

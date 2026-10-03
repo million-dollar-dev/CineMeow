@@ -45,8 +45,9 @@ public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
     }
 
     @Override
-    public List<ShowtimeSeat> checkAvailableSeats(List<Long> seatIds) {
-        return showtimeSeatRepository.findByIdInAndStatus(seatIds, SeatStatus.ACTIVE)
+    public List<ShowtimeSeat> checkAvailableSeats(String showtimeId, List<Long> seatIds) {
+        return showtimeSeatRepository.findBySeatIdInAndStatusAndShowtimeId(seatIds,
+                        SeatStatus.AVAILABLE, showtimeId)
                 .stream()
                 .toList();
     }

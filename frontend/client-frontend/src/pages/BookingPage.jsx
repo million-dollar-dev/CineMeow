@@ -200,19 +200,19 @@ const BookingPage = () => {
 
             console.log("📦 Payload gửi đi:", payload);
 
-            // const bookingResult = await createBooking(payload).unwrap();
-            //
-            // if (bookingResult?.id) {
-            //     const paymentPayload = {
-            //         bookingId: bookingResult.id,
-            //         amount: voucherInfo?.finalPrice || totalPrice,
-            //         paymentMethod: paymentMethod,
-            //     };
-            //
-            //     await initPayment(paymentPayload);
-            // } else {
-            //     toast.error("Không nhận được bookingId!");
-            // }
+            const bookingResult = await createBooking(payload).unwrap();
+
+            if (bookingResult?.id) {
+                const paymentPayload = {
+                    bookingId: bookingResult.id,
+                    amount: voucherInfo?.finalPrice || totalPrice,
+                    paymentMethod: paymentMethod,
+                };
+
+                await initPayment(paymentPayload);
+            } else {
+                toast.error("Không nhận được bookingId!");
+            }
 
         } catch (error) {
             console.error("❌ Lỗi khi tạo booking:", error);
