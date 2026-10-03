@@ -19,6 +19,7 @@ public class EmailConsumer {
 
     @RabbitListener(queues = "email.sending.queue")
     public void sendEmail(SendMailRequest request) {
+        log.info("[RabbitMQ] Sending mail request to email service, {}", request.getTo());
         emailService.sendMail(request);
     }
 }
