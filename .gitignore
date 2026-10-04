@@ -1,3 +1,22 @@
 # IntelliJ
 .idea/
 *.iml
+
+# Local shell configurations
+.bashrc
+.bashrc.local
+
+# Antigravity / AI Agent skills & configurations
+.agents/
+.agent/
+**/.agents/
+**/.agent/
+
+# Design System documentation
+design-system/
+**/design-system/
+
+# Frontend artifacts
+frontend/node/
+**/node_modules/
+**/dist/
