@@ -21,7 +21,7 @@ export default function MovieBlogSection() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-2">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/10 text-violet-400 border border-violet-500/20 mb-2">
                             <FontAwesomeIcon icon={faBookOpen} />
                             Góc Nhìn Điện Ảnh
                         </div>
@@ -35,7 +35,7 @@ export default function MovieBlogSection() {
 
                     <Link
                         to="/blogs/cinema"
-                        className="inline-flex items-center gap-2 text-sm font-bold text-rose-400 hover:text-rose-300 transition-colors group"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-violet-400 hover:text-violet-300 transition-colors group"
                     >
                         <span>Khám phá tất cả bài viết</span>
                         <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1" />
@@ -48,7 +48,7 @@ export default function MovieBlogSection() {
                         onClick={() => setActiveTab("latest")}
                         className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                             activeTab === "latest"
-                                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/40"
+                                ? "bg-violet-600 text-white shadow-lg shadow-violet-900/40"
                                 : "bg-[#141424] text-slate-400 hover:text-white border border-white/5"
                         }`}
                     >
@@ -58,7 +58,7 @@ export default function MovieBlogSection() {
                         onClick={() => setActiveTab("mostViewed")}
                         className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                             activeTab === "mostViewed"
-                                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/40"
+                                ? "bg-violet-600 text-white shadow-lg shadow-violet-900/40"
                                 : "bg-[#141424] text-slate-400 hover:text-white border border-white/5"
                         }`}
                     >
@@ -72,7 +72,7 @@ export default function MovieBlogSection() {
                         <Link
                             key={post.id}
                             to={`/blogs/${post.category}/${post.id}`}
-                            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-rose-500/40 shadow-lg hover:shadow-[0_8px_25px_rgba(225,29,72,0.15)] transition-all duration-300 hover:-translate-y-1"
+                            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-violet-500/40 shadow-lg hover:shadow-[0_8px_25px_rgba(127,90,240,0.18)] transition-all duration-300 hover:-translate-y-1"
                         >
                             <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
                                 <img 
@@ -85,7 +85,7 @@ export default function MovieBlogSection() {
                                 </div>
                             </div>
                             <div className="p-4 flex flex-col justify-between flex-grow">
-                                <h3 className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                                <h3 className="text-sm font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-snug">
                                     {post.title}
                                 </h3>
                                 <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
@@ -107,7 +107,7 @@ export default function MovieBlogSection() {
                 <div className="mt-10 text-center">
                     <Link
                         to="/blogs/cinema"
-                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-[#16162c] hover:bg-[#20203e] border border-white/10 hover:border-rose-500/40 text-white transition-all shadow-md"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-[#16162c] hover:bg-[#20203e] border border-white/10 hover:border-violet-500/40 text-white transition-all shadow-md"
                     >
                         <span>Xem thêm chuyên mục Blog</span>
                         <FontAwesomeIcon icon={faArrowRight} />

@@ -8,9 +8,7 @@ import {
     faClock, 
     faCheck, 
     faArrowLeft, 
-    faListUl, 
-    faTicketAlt,
-    faBookOpen
+    faListUl
 } from "@fortawesome/free-solid-svg-icons";
 import MainCard from "../components/Blog/MainCard.jsx";
 import TrendCard from "../components/Blog/TrendCard.jsx";
@@ -50,14 +48,14 @@ const BlogDetailPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0B14] text-slate-100 pt-24 pb-16 selection:bg-rose-600 selection:text-white">
+        <div className="min-h-screen bg-[#0B0B14] text-slate-100 pt-24 pb-16 selection:bg-violet-600 selection:text-white">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2 text-xs md:text-sm text-slate-400 mb-6">
-                    <Link to="/" className="hover:text-rose-400 transition-colors">Trang chủ</Link>
+                    <Link to="/" className="hover:text-violet-400 transition-colors">Trang chủ</Link>
                     <span>/</span>
-                    <Link to={`/blogs/${article.category}`} className="hover:text-rose-400 transition-colors">
+                    <Link to={`/blogs/${article.category}`} className="hover:text-violet-400 transition-colors">
                         {categoryInfo.label}
                     </Link>
                     <span>/</span>
@@ -67,7 +65,7 @@ const BlogDetailPage = () => {
                 {/* Article Header */}
                 <div className="space-y-4 mb-8">
                     <div className="flex items-center justify-between gap-4">
-                        <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                        <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/15 text-violet-400 border border-violet-500/30">
                             {article.tag}
                         </span>
 
@@ -94,7 +92,7 @@ const BlogDetailPage = () => {
                             <img
                                 src={article.author?.avatar}
                                 alt={article.author?.name}
-                                className="w-11 h-11 rounded-full object-cover border-2 border-rose-500/40"
+                                className="w-11 h-11 rounded-full object-cover border-2 border-violet-500/40"
                             />
                             <div>
                                 <h4 className="text-sm font-bold text-white">{article.author?.name}</h4>
@@ -104,7 +102,7 @@ const BlogDetailPage = () => {
 
                         <div className="flex items-center gap-4 text-xs text-slate-400">
                             <span className="flex items-center gap-1.5">
-                                <FontAwesomeIcon icon={faCalendarAlt} className="text-rose-400" />
+                                <FontAwesomeIcon icon={faCalendarAlt} className="text-violet-400" />
                                 {article.date}
                             </span>
                             <span>•</span>
@@ -150,10 +148,10 @@ const BlogDetailPage = () => {
                             )}
                         </div>
 
-                        {/* Booking CTA Banner inside article */}
-                        <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#1c1228] via-[#141426] to-[#0f0f20] border border-rose-500/30 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                        {/* Booking CTA Banner inside article (Violet CTA) */}
+                        <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#1c1228] via-[#141426] to-[#0f0f20] border border-violet-500/30 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                             <div className="space-y-1">
-                                <span className="text-xs font-bold uppercase tracking-wider text-rose-400">
+                                <span className="text-xs font-bold uppercase tracking-wider text-violet-400">
                                     Thưởng Thức Trọn Vẹn Tại Rạp
                                 </span>
                                 <h3 className="text-lg sm:text-xl font-extrabold text-white">
@@ -165,7 +163,7 @@ const BlogDetailPage = () => {
                             </div>
                             <Link
                                 to="/showtimes/today"
-                                className="flex-shrink-0 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm bg-rose-600 hover:bg-rose-500 text-white text-center shadow-lg shadow-rose-900/40 transition-all hover:scale-105"
+                                className="flex-shrink-0 px-6 py-3 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-center shadow-lg shadow-violet-900/40 transition-all hover:scale-105"
                             >
                                 Đặt vé xem ngay
                             </Link>
@@ -175,7 +173,7 @@ const BlogDetailPage = () => {
                         <div className="pt-6 border-t border-white/10">
                             <Link
                                 to={`/blogs/${article.category}`}
-                                className="inline-flex items-center gap-2 text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors"
+                                className="inline-flex items-center gap-2 text-sm font-semibold text-violet-400 hover:text-violet-300 transition-colors"
                             >
                                 <FontAwesomeIcon icon={faArrowLeft} />
                                 <span>Quay lại chuyên mục {categoryInfo.label}</span>
@@ -191,13 +189,13 @@ const BlogDetailPage = () => {
                         {article.tableOfContents && article.tableOfContents.length > 0 && (
                             <div className="p-5 rounded-2xl bg-[#141424]/90 border border-white/10 shadow-xl sticky top-28">
                                 <h4 className="text-sm font-extrabold text-white flex items-center gap-2 uppercase tracking-wider mb-3">
-                                    <FontAwesomeIcon icon={faListUl} className="text-rose-400" />
+                                    <FontAwesomeIcon icon={faListUl} className="text-violet-400" />
                                     Mục Lục Bài Viết
                                 </h4>
                                 <ul className="space-y-2.5 text-xs text-slate-400">
                                     {article.tableOfContents.map((heading, i) => (
-                                        <li key={i} className="hover:text-rose-400 transition-colors cursor-pointer flex items-start gap-2">
-                                            <span className="text-rose-500 font-bold">•</span>
+                                        <li key={i} className="hover:text-violet-400 transition-colors cursor-pointer flex items-start gap-2">
+                                            <span className="text-violet-500 font-bold">•</span>
                                             <span className="leading-snug">{heading}</span>
                                         </li>
                                     ))}
@@ -208,7 +206,7 @@ const BlogDetailPage = () => {
                         {/* Trending Articles Sidebar */}
                         <div className="p-5 rounded-2xl bg-[#141424]/90 border border-white/10 shadow-xl">
                             <h4 className="text-sm font-extrabold text-white flex items-center gap-2 mb-3">
-                                <FontAwesomeIcon icon={faEye} className="text-rose-400" />
+                                <FontAwesomeIcon icon={faEye} className="text-violet-400" />
                                 Đọc Nhiều Nhất
                             </h4>
                             <div className="space-y-2 divide-y divide-white/5">
@@ -227,12 +225,12 @@ const BlogDetailPage = () => {
                     <div className="mt-16 pt-12 border-t border-white/10">
                         <div className="flex items-center justify-between mb-8">
                             <div>
-                                <span className="text-xs font-bold uppercase tracking-wider text-rose-400">Gợi Ý Thêm</span>
+                                <span className="text-xs font-bold uppercase tracking-wider text-violet-400">Gợi Ý Thêm</span>
                                 <h3 className="text-2xl font-extrabold text-white">Bài Viết Cùng Chuyên Mục</h3>
                             </div>
                             <Link
                                 to={`/blogs/${article.category}`}
-                                className="text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300"
+                                className="text-xs sm:text-sm font-semibold text-violet-400 hover:text-violet-300"
                             >
                                 Xem tất cả →
                             </Link>

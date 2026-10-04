@@ -1,35 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
 import Loading from "../components/Loading.jsx";
 import ReviewList from "../components/MovieDetail/ReviewList.jsx";
 import ButtonPlay from "../components/utils/ButtonPlay.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronDown, faMessage} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faMessage, faStar, faTicketAlt, faCalendarAlt, faClock, faFilm } from "@fortawesome/free-solid-svg-icons";
 import RatingCard from "../components/RatingCard.jsx";
 import CircularProgressBar from "../components/CircularProgressBar.jsx";
 import Promotions from "../components/PromotionSection.jsx";
+import { MOVIE_REVIEWS_DATA } from "../data/reviewData.js";
 
 const MovieReviewPage = () => {
-    const {movieId} = useParams();
-    const [movieInfo, setMovieInfo] = useState();
+    const { movieId } = useParams();
+    const [movieInfo, setMovieInfo] = useState(null);
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const maxChars = 600;
     const toggleExpand = () => setIsExpanded(!isExpanded);
 
-    const review = "Bối cảnh và khởi điểm\n" +
-        "Ra mắt năm 2025, bản live-action của How to Train Your Dragon (Bí Kíp Luyện Rồng) do Dean DeBlois – cha đẻ của bản hoạt hình gốc – chỉ đạo. Phim đánh dấu lần đầu tiên Toothless và Hiccup được tái hiện bằng diễn viên thật và CGI trong bối cảnh Bắc Âu giả tưởng. Câu chuyện vẫn trung thành với nguyên tác: Hiccup – một cậu bé gầy gò, yếu ớt nhưng giàu lòng trắc ẩn – vô tình làm bị thương một con rồng Night Fury, và từ đó bắt đầu hành trình thay đổi vận mệnh cả ngôi làng.\n" +
-        "\n" +
-        "Điểm mạnh của bản chuyển thể\n" +
-        "Dù không đổi mới kịch bản, phim vẫn tạo được cảm xúc nhờ sự đầu tư chỉn chu vào hiệu ứng hình ảnh. Toothless – chú rồng bóng đêm – trở thành điểm sáng nhất với CGI mượt mà, linh hoạt, không quá hoạt hình cũng không quá máy móc. Các cảnh bay lượn giữa trời mây được dàn dựng mãn nhãn, mang lại cảm giác choáng ngợp tương tự bản gốc, nhưng với độ chân thực cao hơn.\n" +
-        "\n" +
-        "Về diễn xuất, Mason Thames hóa thân thành Hiccup với sự rụt rè, nhút nhát đúng chất, trong khi Nico Parker (Astrid) mang lại một Astrid mạnh mẽ, lanh lợi, khác biệt hơn bản hoạt hình. Đặc biệt, Gerard Butler quay trở lại trong vai Stoick – người cha nghiêm khắc – tạo nên những khoảnh khắc lặng giữa hành động sôi động, gợi nhớ đến mối quan hệ cha con từng khiến khán giả rơi nước mắt ở phần hoạt hình.\n" +
-        "\n" +
-        "Những hạn chế rõ rệt\n" +
-        "Tuy nhiên, chính vì bám sát nguyên tác nên phim không tạo được nhiều bất ngờ. Các nút thắt, cao trào gần như được tái dựng y hệt khiến khán giả trung thành với phiên bản hoạt hình dễ cảm thấy thiếu mới mẻ. Hơn nữa, một vài cảnh hành động – đặc biệt là lúc Toothless bay lần đầu với Hiccup – bị cắt dựng hơi vội, làm giảm phần nào cảm xúc kỳ diệu vốn có.\n" +
-        "\n" +
-        "Một điểm trừ nhẹ khác là tông màu phim hơi lạnh, làm giảm sự ấm áp, tươi sáng của thế giới rồng từng quen thuộc.";
-    const [isLoading, setIsLoading] = useState(false);
-    const displayText = isExpanded ? review : review.slice(0, maxChars) + (review.length > maxChars ? "..." : "");
+    // Fallback data if TMDB fetch fails or offline
+    const matchedLocalReview = MOVIE_REVIEWS_DATA.find(r => r.movieId === movieId || r.id === movieId);
+
+    const defaultReviewText = matchedLocalReview?.featuredReview?.content 
+        ? `${matchedLocalReview.consensus}\n\n${matchedLocalReview.featuredReview.content}`
+        : "Tác phẩm điện ảnh được đầu tư công phu với hiệu ứng hình ảnh mãn nhãn, âm thanh Dolby Atmos đỉnh cao và diễn xuất ấn tượng của dàn diễn viên chính. Những trường đoạn cao trào được xử lý mượt mà, truyền tải trọn vẹn thông điệp sâu sắc và mang lại cảm xúc khó quên cho khán giả tại rạp.";
+
     useEffect(() => {
         setIsLoading(true);
         fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
@@ -37,85 +32,171 @@ const MovieReviewPage = () => {
             headers: {
                 Accept: "application/json",
                 Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZjYzZGE3N2NiMGM3MjBhYzA5YWEyNzUwM2U2NWRlZiIsIm5iZiI6MTc1MTA5NzczMC4xODcsInN1YiI6IjY4NWZhMTgyMzllNDRlYmMxZWRlYmM0MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.lkquOyV3pva_h3EMIUppdPCWuLRHj9D-j-Wo3IOZFHk",
-
             },
         }).then(async (res) => {
             const data = await res.json();
-            console.log(data);
-            setMovieInfo(data);
+            if (data && data.title) {
+                setMovieInfo(data);
+            } else if (matchedLocalReview) {
+                setMovieInfo({
+                    title: matchedLocalReview.title,
+                    poster_path: matchedLocalReview.poster,
+                    backdrop_path: matchedLocalReview.backdrop,
+                    release_date: matchedLocalReview.releaseYear,
+                    vote_average: matchedLocalReview.rating,
+                    overview: matchedLocalReview.consensus
+                });
+            }
         }).catch((err) => {
-            console.log(err);
+            console.log("Fetch TMDB error:", err);
+            if (matchedLocalReview) {
+                setMovieInfo({
+                    title: matchedLocalReview.title,
+                    poster_path: matchedLocalReview.poster,
+                    backdrop_path: matchedLocalReview.backdrop,
+                    release_date: matchedLocalReview.releaseYear,
+                    vote_average: matchedLocalReview.rating,
+                    overview: matchedLocalReview.consensus
+                });
+            }
         }).finally(() => setIsLoading(false));
-    }, [movieId]);
+    }, [movieId, matchedLocalReview]);
 
-    if (isLoading) {
-        return <Loading />
+    if (isLoading && !movieInfo) {
+        return <Loading />;
     }
 
+    const title = movieInfo?.title || matchedLocalReview?.title || "Đánh Giá Phim";
+    const posterUrl = movieInfo?.poster_path 
+        ? (movieInfo.poster_path.startsWith("http") ? movieInfo.poster_path : `https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieInfo.poster_path}`)
+        : (matchedLocalReview?.poster || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=600&q=80");
+    
+    const backdropUrl = movieInfo?.backdrop_path
+        ? (movieInfo.backdrop_path.startsWith("http") ? movieInfo.backdrop_path : `https://image.tmdb.org/t/p/original${movieInfo.backdrop_path}`)
+        : (matchedLocalReview?.backdrop || "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1280&q=80");
+
+    const displayText = isExpanded ? defaultReviewText : defaultReviewText.slice(0, maxChars) + (defaultReviewText.length > maxChars ? "..." : "");
+
     return (
-        <div className="bg-gray-dark pt-[6vw] text-white">
-            <div className="max-w-screen-xl mx-auto flex gap-20">
-                <div className="flex-1">
-                    <div className="sticky top-[6vw] mb-[2vw]">
-                        <div className="text-center">
-                            <div className="relative group">
-                                <img src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieInfo?.poster_path}`} alt="poster"
-                                     className="border-1 border-gray-800 rounded-md"/>
-                                <ButtonPlay />
-                                <div className="absolute inset-2">
-                                    <RatingCard rating={"K"} />
+        <div className="min-h-screen bg-[#0B0B14] text-slate-100 pt-24 pb-16 selection:bg-violet-600 selection:text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                {/* Breadcrumbs */}
+                <nav className="flex items-center gap-2 text-xs md:text-sm text-slate-400 mb-6">
+                    <Link to="/" className="hover:text-violet-400 transition-colors">Trang chủ</Link>
+                    <span>/</span>
+                    <Link to="/reviews" className="hover:text-violet-400 transition-colors">Đánh giá phim</Link>
+                    <span>/</span>
+                    <span className="text-white font-medium truncate max-w-xs sm:max-w-md">{title}</span>
+                </nav>
+
+                <div className="flex flex-col lg:flex-row gap-10 items-start">
+                    
+                    {/* Left Sticky Poster Card */}
+                    <div className="w-full lg:w-80 flex-shrink-0">
+                        <div className="lg:sticky lg:top-28 rounded-3xl overflow-hidden bg-[#141424] border border-white/10 p-5 shadow-2xl space-y-4">
+                            <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden shadow-lg group">
+                                <img
+                                    src={posterUrl}
+                                    alt={title}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                                <div className="absolute top-3 left-3">
+                                    <RatingCard rating={"P"} />
                                 </div>
                             </div>
-                            <p className="font-bold text-[1.8vw] mt-[1vw]">{movieInfo?.title}</p>
-                        </div>
-                        <p className="text-gray-light">Thể loại: Gia đình, Phiêu lưu, Giả tưởng, Hành động</p>
-                        <p className="text-gray-light">Ngày chiếu: {movieInfo?.release_date}</p>
-                        <div className="flex justify-center mt-[1vw]">
-                            <Link to={`/movie/${movieId}`}>
-                                <button className="rounded-full px-6 py-2 border-2 border-white text-black bg-white flex items-center gap-2 hover:text-white hover:bg-transparent transition-all group">
-                                    <span>Đặt vé ngay</span>
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex-4">
-                    <div className="max-h-[300px] w-full overflow-hidden rounded-md relative">
-                        <img className=""
-                             src={`https://image.tmdb.org/t/p/original${movieInfo?.backdrop_path}`} alt="poster"/>
-                        <div className="absolute bottom-3 left-3 flex gap-4">
-                            <CircularProgressBar percent={90} size={3.5} strokeWidth={0.3}/>
-                            <div className="flex items-center gap-2 font-bold text-[1.4vw]">
-                                <FontAwesomeIcon icon={faMessage} />
-                                <p>2.4K</p>
+
+                            <div className="text-center space-y-1">
+                                <h3 className="text-lg font-bold text-white leading-tight">{title}</h3>
+                                <p className="text-xs text-slate-400">
+                                    Khởi chiếu: {movieInfo?.release_date || "Đang chiếu tại rạp"}
+                                </p>
+                            </div>
+
+                            <div className="pt-2">
+                                <Link
+                                    to={`/movie/${movieId}`}
+                                    className="w-full py-3 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-violet-900/40 transition-all hover:scale-105"
+                                >
+                                    <FontAwesomeIcon icon={faTicketAlt} />
+                                    <span>Đặt vé xem phim</span>
+                                </Link>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <p className="font-bold text-[2vw] my-[1.8vw]">Review phim Bí Kíp Luyện Rồng (2025) – Khi Toothless cất cánh bằng da thịt thật sự</p>
-                        <p className="text-gray-light leading-relaxed">{displayText}</p>
-                        <div className="flex justify-center my-[1vw]">
-                            {review.length > maxChars && (
-                                <button
-                                    onClick={toggleExpand}
-                                    className="text-violet hover:border-2 py-2 px-3 rounded-md mt-2 flex items-center gap-1"
-                                >
-                                    {isExpanded ? "Rút gọn" : "Xem thêm"}
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        className={`${isExpanded ? "rotate-180" : ""}`}
-                                    />
-                                </button>
+
+                    {/* Right Main Review Content */}
+                    <div className="flex-grow min-w-0 space-y-8">
+                        
+                        {/* Backdrop Hero with Score Badge */}
+                        <div className="relative aspect-[16/8] sm:aspect-[16/7] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-slate-900">
+                            <img
+                                src={backdropUrl}
+                                alt={title}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B14] via-[#0B0B14]/40 to-transparent" />
+
+                            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <CircularProgressBar percent={90} size={3.5} strokeWidth={0.3} />
+                                    <div>
+                                        <p className="text-xs font-bold uppercase tracking-wider text-amber-400">Đánh giá chung</p>
+                                        <p className="text-sm sm:text-base font-black text-white">9.2 / 10 từ khán giả</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-slate-200">
+                                    <FontAwesomeIcon icon={faMessage} className="text-violet-400" />
+                                    <span>{matchedLocalReview?.commentsCount || "2.4K"} bình luận</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Review Content Card */}
+                        <div className="p-6 sm:p-8 rounded-3xl bg-[#141424] border border-white/10 shadow-xl space-y-4">
+                            <h2 className="text-xl sm:text-2xl font-black text-white leading-snug">
+                                Review Phim {title} – Góc Nhìn Toàn Diện
+                            </h2>
+
+                            <div className="text-slate-300 text-sm sm:text-base leading-relaxed space-y-3">
+                                {displayText.split('\n\n').map((para, i) => (
+                                    <p key={i}>{para}</p>
+                                ))}
+                            </div>
+
+                            {defaultReviewText.length > maxChars && (
+                                <div className="pt-2 text-center">
+                                    <button
+                                        onClick={toggleExpand}
+                                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-violet-400 hover:text-white bg-violet-500/10 hover:bg-violet-600 transition-all"
+                                    >
+                                        <span>{isExpanded ? "Thu gọn review" : "Đọc toàn bộ bài viết"}</span>
+                                        <FontAwesomeIcon
+                                            icon={faChevronDown}
+                                            className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                                        />
+                                    </button>
+                                </div>
                             )}
                         </div>
-                        <hr/>
+
+                        {/* Interactive Review List Component */}
+                        <div className="pt-4">
+                            <ReviewList />
+                        </div>
+
                     </div>
-                    <div>
-                        <ReviewList />
-                    </div>
+
                 </div>
+
             </div>
-            <Promotions />
+
+            {/* Bottom Promotions Section */}
+            <div className="mt-16">
+                <Promotions />
+            </div>
         </div>
     );
 };

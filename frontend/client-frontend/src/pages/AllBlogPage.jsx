@@ -76,12 +76,12 @@ const AllBlogPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0B14] text-slate-100 pt-24 pb-16 selection:bg-rose-600 selection:text-white">
+        <div className="min-h-screen bg-[#0B0B14] text-slate-100 pt-24 pb-16 selection:bg-violet-600 selection:text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2 text-xs md:text-sm text-slate-400 mb-6">
-                    <Link to="/" className="hover:text-rose-400 transition-colors">Trang chủ</Link>
+                    <Link to="/" className="hover:text-violet-400 transition-colors">Trang chủ</Link>
                     <span>/</span>
                     <span className="text-white font-medium">{currentCatInfo.label}</span>
                 </nav>
@@ -94,7 +94,7 @@ const AllBlogPage = () => {
                 {/* Header Title & Live Search */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                     <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-2">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/10 text-violet-400 border border-violet-500/20 mb-2">
                             <FontAwesomeIcon icon={faBookOpen} />
                             Tạp Chí CineMeow
                         </div>
@@ -113,7 +113,7 @@ const AllBlogPage = () => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Tìm kiếm bài viết, chủ đề..."
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#141424] border border-white/10 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-rose-500/80 transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#141424] border border-white/10 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-violet-500/80 transition-colors"
                         />
                         <FontAwesomeIcon 
                             icon={faSearch} 
@@ -130,7 +130,7 @@ const AllBlogPage = () => {
                     </div>
                 </div>
 
-                {/* Category Navigation Tabs */}
+                {/* Category Navigation Tabs (Violet Theme) */}
                 <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-thin scrollbar-thumb-slate-800">
                     {BLOG_CATEGORIES.map((cat) => {
                         const isActive = category === cat.id;
@@ -140,7 +140,7 @@ const AllBlogPage = () => {
                                 to={`/blogs/${cat.id}`}
                                 className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
                                     isActive
-                                        ? "bg-rose-600 text-white shadow-lg shadow-rose-900/40"
+                                        ? "bg-violet-600 text-white shadow-lg shadow-violet-900/40"
                                         : "bg-[#141424] text-slate-300 border border-white/5 hover:border-white/20 hover:text-white"
                                 }`}
                             >
@@ -155,7 +155,7 @@ const AllBlogPage = () => {
                 {!searchQuery && featuredArticles.length > 0 && (
                     <div className="mb-12">
                         <h3 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                            <span className="w-2 h-2 rounded-full bg-violet-500 animate-ping" />
                             Góc Nhìn Nổi Bật
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -173,7 +173,7 @@ const AllBlogPage = () => {
                     <div className="lg:col-span-8 space-y-5">
                         <div className="flex items-center justify-between pb-3 border-b border-white/10">
                             <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
-                                <FontAwesomeIcon icon={faFilm} className="text-rose-500" />
+                                <FontAwesomeIcon icon={faFilm} className="text-violet-400" />
                                 Bài Viết Mới Nhất
                             </h3>
                             <span className="text-xs text-slate-400 font-medium">
@@ -189,12 +189,12 @@ const AllBlogPage = () => {
                                     ))}
                                 </div>
 
-                                {/* Load More Button */}
+                                {/* Load More Button (Violet Hover) */}
                                 {visibleCount < latestArticles.length && (
                                     <div className="pt-6 text-center">
                                         <button
                                             onClick={handleLoadMore}
-                                            className="px-8 py-3 rounded-xl font-bold text-xs sm:text-sm bg-[#16162c] hover:bg-[#20203e] border border-white/10 hover:border-rose-500/40 text-white transition-all shadow-md hover:-translate-y-0.5"
+                                            className="px-8 py-3 rounded-xl font-bold text-xs sm:text-sm bg-[#16162c] hover:bg-[#20203e] border border-white/10 hover:border-violet-500/40 text-white transition-all shadow-md hover:-translate-y-0.5"
                                         >
                                             Xem thêm bài viết ({latestArticles.length - visibleCount} còn lại)
                                         </button>
@@ -204,7 +204,7 @@ const AllBlogPage = () => {
                         ) : (
                             /* Empty Search State */
                             <div className="py-16 px-6 text-center rounded-2xl bg-[#141424]/60 border border-white/5 flex flex-col items-center">
-                                <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400 text-2xl mb-4">
+                                <div className="w-16 h-16 rounded-full bg-violet-500/10 flex items-center justify-center text-violet-400 text-2xl mb-4">
                                     <FontAwesomeIcon icon={faBookOpen} />
                                 </div>
                                 <h3 className="text-lg font-bold text-white mb-2">
@@ -215,7 +215,7 @@ const AllBlogPage = () => {
                                 </p>
                                 <button
                                     onClick={() => setSearchQuery("")}
-                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs bg-rose-600 hover:bg-rose-500 text-white transition-colors"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs bg-violet-600 hover:bg-violet-500 text-white transition-colors"
                                 >
                                     <FontAwesomeIcon icon={faArrowRotateLeft} />
                                     Xem tất cả bài viết
@@ -231,10 +231,10 @@ const AllBlogPage = () => {
                         <div className="p-5 rounded-2xl bg-[#141424]/90 border border-white/10 shadow-xl">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
-                                    <FontAwesomeIcon icon={faArrowTrendUp} className="text-rose-500" />
+                                    <FontAwesomeIcon icon={faArrowTrendUp} className="text-violet-400" />
                                     Đọc Nhiều Nhất
                                 </h3>
-                                <span className="text-[11px] font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full">
+                                <span className="text-[11px] font-bold text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded-full">
                                     Top Views
                                 </span>
                             </div>
@@ -246,9 +246,9 @@ const AllBlogPage = () => {
                             </div>
                         </div>
 
-                        {/* Cinema Showtime Quick Booking Banner */}
-                        <div className="relative p-6 rounded-2xl overflow-hidden border border-rose-500/20 bg-gradient-to-br from-rose-950/40 via-[#181226] to-[#0f0f20] shadow-xl text-center space-y-3">
-                            <div className="w-12 h-12 mx-auto rounded-full bg-rose-600/20 text-rose-400 flex items-center justify-center text-xl">
+                        {/* Cinema Showtime Quick Booking Banner (Violet Theme) */}
+                        <div className="relative p-6 rounded-2xl overflow-hidden border border-violet-500/20 bg-gradient-to-br from-purple-950/40 via-[#181226] to-[#0f0f20] shadow-xl text-center space-y-3">
+                            <div className="w-12 h-12 mx-auto rounded-full bg-violet-600/20 text-violet-400 flex items-center justify-center text-xl">
                                 <FontAwesomeIcon icon={faTicketAlt} />
                             </div>
                             <h4 className="text-base font-bold text-white">
@@ -259,7 +259,7 @@ const AllBlogPage = () => {
                             </p>
                             <Link
                                 to="/showtimes/today"
-                                className="inline-block w-full py-2.5 rounded-xl font-bold text-xs bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-md"
+                                className="inline-block w-full py-2.5 rounded-xl font-bold text-xs bg-violet-600 hover:bg-violet-500 text-white transition-all shadow-md shadow-violet-900/40"
                             >
                                 Xem lịch chiếu các rạp
                             </Link>
@@ -281,7 +281,7 @@ const AllBlogPage = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Nhập email của bạn..."
-                                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+                                    className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition-colors"
                                 />
                                 <button
                                     type="submit"
