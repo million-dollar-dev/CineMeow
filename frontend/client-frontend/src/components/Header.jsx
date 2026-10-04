@@ -81,6 +81,7 @@ const Header = () => {
 
     const isLinkActive = (path) => {
         if (path === '/') return location.pathname === '/';
+        if (path === '/movies') return location.pathname === '/movies';
         return location.pathname.startsWith(path);
     };
 
@@ -162,6 +163,16 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Link: Phim Chiếu (Route to /movies) */}
+                    <Link
+                        to="/movies"
+                        className={`px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
+                            isLinkActive('/movies') ? "text-violet-400 font-bold" : "text-slate-300 hover:text-white"
+                        }`}
+                    >
+                        <span>Phim Chiếu</span>
+                    </Link>
 
                     {/* Dropdown: Cụm rạp (No icons at start) */}
                     <div className="relative group px-3 py-2">
@@ -378,12 +389,26 @@ const Header = () => {
                             </button>
                             {mobileSubmenu === 'showtimes' && (
                                 <div className="pl-4 space-y-2 pt-2 text-xs text-slate-400">
+                                    <Link to="/movies" className="block py-1.5 text-violet-300 font-semibold hover:text-violet-400">Tất cả phim chiếu rạp</Link>
                                     <Link to="/showtimes/today" className="block py-1.5 hover:text-violet-400">Lịch chiếu hôm nay</Link>
                                     <Link to="/now-playing" className="block py-1.5 hover:text-violet-400">Phim đang chiếu</Link>
                                     <Link to="/comming-soon" className="block py-1.5 hover:text-violet-400">Phim sắp chiếu</Link>
                                 </div>
                             )}
                         </div>
+
+                        {/* Phim Chiếu (All Movies) */}
+                        <Link
+                            to="/movies"
+                            className={`flex items-center justify-between text-slate-200 py-2 hover:text-violet-400 ${
+                                isLinkActive('/movies') ? "text-violet-400 font-bold" : ""
+                            }`}
+                        >
+                            <span>Phim Chiếu Rạp</span>
+                            <span className="text-[10px] font-bold text-violet-400 uppercase tracking-wider bg-violet-500/10 px-2 py-0.5 rounded-full border border-violet-500/20">
+                                Tất cả phim
+                            </span>
+                        </Link>
 
                         {/* Cụm rạp */}
                         <div>
