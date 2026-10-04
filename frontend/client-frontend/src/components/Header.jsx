@@ -29,6 +29,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const accessToken = useSelector((state) => state.auth.accessToken);
+    const reduxUser = useSelector((state) => state.user);
     const { handleLogout, isLoggingOut } = useLogoutHandler();
     
     const [isScrolled, setIsScrolled] = useState(false);
@@ -54,27 +55,29 @@ const Header = () => {
     const { data: brandData = [] } = useGetAllBrandsQuery();
     const displayBrands = brandData.length > 0 ? brandData : FALLBACK_BRANDS;
 
-    const { data: user, isLoading: isUserLoading } = useGetMeQuery(undefined, {
+    const { data: user } = useGetMeQuery(undefined, {
         skip: !accessToken,
     });
 
-    const { data: profile, isSuccess: isProfileSuccess } = useGetProfileQuery(user?.id, {
-        skip: !user?.id,
+    const currentUser = user || (reduxUser?.username ? reduxUser : null);
+
+    const { data: profile, isSuccess: isProfileSuccess } = useGetProfileQuery(currentUser?.id || currentUser?.userId, {
+        skip: !(currentUser?.id || currentUser?.userId),
     });
 
     // Sync profile to Redux store
     useEffect(() => {
-        if (isProfileSuccess && profile && user) {
+        if (isProfileSuccess && profile && currentUser) {
             dispatch(setUser({
-                userId: user.id,
-                username: user.username,
+                userId: currentUser.id || currentUser.userId,
+                username: currentUser.username,
                 phoneNumber: profile.phoneNumber,
                 email: profile.email,
             }));
         }
-    }, [user, profile, isProfileSuccess, dispatch]);
+    }, [currentUser, profile, isProfileSuccess, dispatch]);
 
-    if (isLoggingOut || isUserLoading) return <OverlayLoading />;
+    if (isLoggingOut) return <OverlayLoading />;
 
     const isLinkActive = (path) => {
         if (path === '/') return location.pathname === '/';
@@ -268,10 +271,10 @@ const Header = () => {
                         <div className="relative group">
                             <button className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#141424] border border-white/10 hover:border-violet-500/40 transition-colors shadow">
                                 <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shadow">
-                                    {user?.username ? user.username.charAt(0).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
+                                    {currentUser?.username ? currentUser.username.charAt(0).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
                                 </div>
                                 <span className="text-xs font-bold text-white max-w-[120px] truncate">
-                                    {user?.username || "Tài khoản"}
+                                    {currentUser?.username || "Tài khoản"}
                                 </span>
                                 <FontAwesomeIcon icon={faChevronDown} className="text-[10px] text-slate-400 group-hover:rotate-180 transition-transform" />
                             </button>
@@ -279,12 +282,12 @@ const Header = () => {
                             <div className="absolute top-full right-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 w-56">
                                 <div className="p-3 rounded-2xl bg-[#141424]/95 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 space-y-1">
                                     <div className="px-3 py-2 border-b border-white/5 mb-1">
-                                        <p className="text-xs font-bold text-white truncate">{user?.username}</p>
-                                        <p className="text-[11px] text-slate-400 truncate">{user?.email || "Hội viên CineMeow"}</p>
+                                        <p className="text-xs font-bold text-white truncate">{currentUser?.username || "Thành viên"}</p>
+                                        <p className="text-[11px] text-slate-400 truncate">{currentUser?.email || "Hội viên CineMeow"}</p>
                                     </div>
 
                                     <Link
-                                        to={`/user-profile/${user?.id}`}
+                                        to={`/user-profile/${currentUser?.id || currentUser?.userId || 'me'}`}
                                         className="block p-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
                                     >
                                         Thông tin tài khoản
@@ -333,11 +336,11 @@ const Header = () => {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white text-sm font-bold">
-                                        {user?.username ? user.username.charAt(0).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
+                                        {currentUser?.username ? currentUser.username.charAt(0).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-white">{user?.username}</p>
-                                        <Link to={`/user-profile/${user?.id}`} className="text-xs text-violet-400">Xem hồ sơ →</Link>
+                                        <p className="text-sm font-bold text-white">{currentUser?.username || "Thành viên"}</p>
+                                        <Link to={`/user-profile/${currentUser?.id || currentUser?.userId || 'me'}`} className="text-xs text-violet-400">Xem hồ sơ →</Link>
                                     </div>
                                 </div>
                                 <button

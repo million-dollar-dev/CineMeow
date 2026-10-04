@@ -1,37 +1,74 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 
-const TextInput = ({ onChange, name, value, type = "text", error, placeholder }) => {
+const TextInput = ({ 
+    onChange, 
+    name, 
+    value, 
+    type = "text", 
+    error, 
+    placeholder, 
+    icon,
+    autoComplete,
+    disabled = false
+}) => {
     const [showPassword, setShowPassword] = useState(false);
     const inputType = type === "password" ? (showPassword ? "text" : "password") : type;
+
     return (
-        <>
-            <div className="relative">
+        <div className="w-full space-y-1.5">
+            <div className="relative flex items-center">
+                {/* Optional Leading Icon */}
+                {icon && (
+                    <div className="absolute left-4 text-slate-400 pointer-events-none text-sm">
+                        <FontAwesomeIcon icon={icon} />
+                    </div>
+                )}
+
+                {/* Input Field */}
                 <input
-                    placeholder={placeholder}
-                    className={`w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black ${
-                        error ? "border-red-500" : ""
-                    }`}
+                    id={name}
                     name={name}
+                    type={inputType}
                     value={value ?? ""}
                     onChange={onChange}
-                    type={inputType}
+                    placeholder={placeholder}
+                    autoComplete={autoComplete}
+                    disabled={disabled}
+                    className={`w-full bg-[#0B0B14]/80 text-white placeholder-slate-500 text-xs sm:text-sm rounded-2xl py-3.5 transition-all duration-300 border ${
+                        icon ? "pl-11" : "pl-4"
+                    } ${
+                        type === "password" ? "pr-11" : "pr-4"
+                    } ${
+                        error 
+                            ? "border-rose-500/80 bg-rose-500/5 focus:border-rose-500 focus:ring-1 focus:ring-rose-500" 
+                            : "border-white/10 hover:border-white/20 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 focus:shadow-[0_0_20px_rgba(127,90,240,0.2)]"
+                    } focus:outline-none`}
                 />
 
+                {/* Password Toggle Button */}
                 {type === "password" && (
                     <button
                         type="button"
+                        tabIndex={-1}
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
+                        className="absolute right-3.5 text-slate-400 hover:text-white p-1 rounded-lg transition-colors"
+                        title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                     >
-                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-sm" />
                     </button>
                 )}
             </div>
 
-            {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
-        </>
+            {/* Error Message */}
+            {error && (
+                <p className="flex items-center gap-1.5 text-rose-400 text-xs pl-1 animate-fadeIn">
+                    <FontAwesomeIcon icon={faExclamationCircle} className="text-[11px]" />
+                    <span>{error.message}</span>
+                </p>
+            )}
+        </div>
     );
 };
 
