@@ -1,89 +1,118 @@
-import React, {useState} from 'react';
-import ButtonMore from "./utils/ButtonMore.jsx";
-
-const blogData = {
-    latest: [
-        {
-            id: 1,
-            title: "Phim bộ hay nhất về băng đảng và thế giới ngầm giống Peaky Blinders",
-            category: "TV Series về băng đảng tội phạm",
-            views: null,
-            image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250627195752-638866510728643657.jpg",
-        },
-        {
-            id: 2,
-            title: "Review phim Squid Game 3 (2025) – Màn kết thúc đẫm máu và dữ dội cho loạt phim sinh tồn Hàn Quốc",
-            category: "Review phim Squid Game 3 (2025)",
-            views: "5.5K",
-            image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250627195752-638866510728643657.jpg",
-        },
-        {
-            id: 3,
-            title: "Top phim lẻ dành cho người thích xem một mình",
-            category: "Top phim lẻ",
-            views: "548",
-            image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250627195752-638866510728643657.jpg",
-        },
-        {
-            id: 4,
-            title: "Review phim Ironheart (2025): Khi Công Nghệ Chạm Trán Phép Thuật Trong MCU",
-            category: "Review phim Ironheart (2025)",
-            views: "382",
-            image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250627195752-638866510728643657.jpg",
-        },
-    ],
-    mostViewed: [],
-};
+import React, { useState, useMemo } from 'react';
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faBookOpen, faEye, faClock } from "@fortawesome/free-solid-svg-icons";
+import { BLOG_ARTICLES } from "../data/blogData.js";
 
 export default function MovieBlogSection() {
     const [activeTab, setActiveTab] = useState("latest");
 
+    const displayedPosts = useMemo(() => {
+        if (activeTab === "mostViewed") {
+            return BLOG_ARTICLES.filter(a => a.isTrending).slice(0, 4);
+        }
+        return BLOG_ARTICLES.slice(0, 4);
+    }, [activeTab]);
+
     return (
-        <section className="bg-black py-12 px-4">
-            <div className="max-w-screen-xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-white">Blog phim ảnh</h2>
-                <p className="text-center text-gray-light mt-2 mb-6">
-                    Tổng hợp và Review các bộ phim hot, bom tấn, phim chiếu rạp hay mỗi ngày
-                </p>
+        <section className="bg-[#0B0B14] py-16 px-4 border-t border-white/5">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-2">
+                            <FontAwesomeIcon icon={faBookOpen} />
+                            Góc Nhìn Điện Ảnh
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                            Blog & Tạp Chí Điện Ảnh
+                        </h2>
+                        <p className="mt-1 text-sm text-slate-400">
+                            Tổng hợp bài viết phân tích, tin tức hậu trường và review phim chiếu rạp mới nhất.
+                        </p>
+                    </div>
+
+                    <Link
+                        to="/blogs/cinema"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-rose-400 hover:text-rose-300 transition-colors group"
+                    >
+                        <span>Khám phá tất cả bài viết</span>
+                        <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
+                </div>
 
                 {/* Tabs */}
-                <div className="flex justify-center gap-8 mb-6 font-medium text-lg">
+                <div className="flex gap-3 mb-8">
                     <button
                         onClick={() => setActiveTab("latest")}
-                        className={`pb-1 border-b-2 ${
-                            activeTab === "latest" ? "border-violet text-violet" : "border-transparent text-gray-light"
+                        className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                            activeTab === "latest"
+                                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/40"
+                                : "bg-[#141424] text-slate-400 hover:text-white border border-white/5"
                         }`}
                     >
                         Mới nhất
                     </button>
                     <button
                         onClick={() => setActiveTab("mostViewed")}
-                        className={`pb-1 border-b-2 ${
-                            activeTab === "mostViewed" ? "border-violet text-violet" : "border-transparent text-gray-light"
+                        className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                            activeTab === "mostViewed"
+                                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/40"
+                                : "bg-[#141424] text-slate-400 hover:text-white border border-white/5"
                         }`}
                     >
                         Xem nhiều nhất
                     </button>
                 </div>
 
-                {/* Blog cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {blogData[activeTab].map((post) => (
-                        <div key={post.id}>
-                            <div className="relative rounded-lg overflow-hidden shadow">
-                                <img src={post.image} alt={post.title} className="w-full h-[180px] object-cover" />
-
+                {/* Blog cards grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {displayedPosts.map((post) => (
+                        <Link
+                            key={post.id}
+                            to={`/blogs/${post.category}/${post.id}`}
+                            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-rose-500/40 shadow-lg hover:shadow-[0_8px_25px_rgba(225,29,72,0.15)] transition-all duration-300 hover:-translate-y-1"
+                        >
+                            <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                                <img 
+                                    src={post.coverUrl} 
+                                    alt={post.title} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                />
+                                <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/10">
+                                    {post.tag}
+                                </div>
                             </div>
-                            <h3 className="mt-3 font-semibold text-white">{post.title}</h3>
-                            {post.views && (
-                                <p className="text-sm text-gray-light mt-1">{post.views} lượt xem</p>
-                            )}
-                        </div>
+                            <div className="p-4 flex flex-col justify-between flex-grow">
+                                <h3 className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                                    {post.title}
+                                </h3>
+                                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+                                    <span className="flex items-center gap-1">
+                                        <FontAwesomeIcon icon={faClock} className="text-[10px] text-amber-400" />
+                                        {post.readTime}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <FontAwesomeIcon icon={faEye} className="text-[10px]" />
+                                        {post.views}
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
                     ))}
                 </div>
 
-                {/* Xem thêm */}
-                <ButtonMore/>
+                {/* Bottom CTA */}
+                <div className="mt-10 text-center">
+                    <Link
+                        to="/blogs/cinema"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-[#16162c] hover:bg-[#20203e] border border-white/10 hover:border-rose-500/40 text-white transition-all shadow-md"
+                    >
+                        <span>Xem thêm chuyên mục Blog</span>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </Link>
+                </div>
             </div>
         </section>
     );
