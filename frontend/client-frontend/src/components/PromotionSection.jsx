@@ -1,57 +1,71 @@
 import React from 'react';
-import ButtonMore from "./utils/ButtonMore.jsx";
-
-const promotionSection = [{
-    id: 1,
-    title: "Mua 1 Tặng 1",
-    date: "Áp dụng đến 30/06/2025",
-    image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250512175307-638826691875533384.jpg",
-}, {
-    id: 2,
-    title: "Ưu đãi sinh nhật",
-    date: "Áp dụng cả tháng sinh nhật",
-    image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250512175307-638826691875533384.jpg",
-}, {
-    id: 3,
-    title: "Combo Học Sinh - Sinh Viên",
-    date: "Từ 01/07/2025 đến 31/07/2025",
-    image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250512175307-638826691875533384.jpg",
-}, {
-    id: 4,
-    title: "Thành viên VIP",
-    date: "Dành riêng cho hội viên",
-    image: "https://homepage.momocdn.net/blogscontents/momo-amazone-s3-api-250512175307-638826691875533384.jpg",
-},];
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faCalendarAlt, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
+import { PROMOTIONS_DATA } from "../data/promotionsData.js";
 
 const Promotions = () => {
+    const featuredPromos = PROMOTIONS_DATA.slice(0, 4);
+
     return (
-        <section className="bg-gray-dark">
-            <div className="py-[3vw] bg-gray-dark text-white max-w-screen-xl mx-auto">
-                <div className="text-center">
-                    <h2 className="text-3xl font-bold mb-10">Ưu đãi & Khuyến mãi</h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                    {promotionSection.map((promo) => (<a
-                        key={promo.id}
-                        href="#"
-                        className="group rounded-xl overflow-hidden shadow hover:shadow-lg transition duration-300 bg-gray-sub"
+        <section className="bg-[#0B0B14] py-16 text-white border-t border-white/5">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+                    <div>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-2">
+                            <FontAwesomeIcon icon={faTicketAlt} />
+                            Đặc Quyền Rạp Phim
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                            Ưu Đãi & Khuyến Mãi Nổi Bật
+                        </h2>
+                    </div>
+
+                    <Link
+                        to="/promotions"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-rose-400 hover:text-rose-300 transition-colors group"
                     >
-                        <div className="overflow-hidden">
-                            <img
-                                src={promo.image}
-                                alt={promo.title}
-                                className="w-full h-32 object-cover transform group-hover:scale-105 transition duration-300"
-                            />
-                        </div>
-                        <div className="p-4">
-                            <h3 className="text-lg font-semibold text-white group-hover:text-gray-500 transition">
-                                {promo.title}
-                            </h3>
-                            <p className="text-sm text-gray-light mt-1">{promo.date}</p>
-                        </div>
-                    </a>))}
+                        <span>Xem tất cả ưu đãi</span>
+                        <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
                 </div>
-                <ButtonMore />
+
+                {/* Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {featuredPromos.map((promo) => (
+                        <Link
+                            key={promo.id}
+                            to={`/promotions/${promo.id}`}
+                            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-rose-500/40 shadow-lg hover:shadow-[0_8px_25px_rgba(225,29,72,0.15)] transition-all duration-300 hover:-translate-y-1"
+                        >
+                            <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                                <img
+                                    src={promo.bannerUrl}
+                                    alt={promo.title}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-rose-600 text-white shadow">
+                                    {promo.discount}
+                                </div>
+                            </div>
+                            <div className="p-4 flex flex-col justify-between flex-grow">
+                                <h3 className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                                    {promo.title}
+                                </h3>
+                                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+                                    <span className="flex items-center gap-1.5 truncate">
+                                        <FontAwesomeIcon icon={faCalendarAlt} className="text-rose-400 text-[10px]" />
+                                        {promo.validDate}
+                                    </span>
+                                    <span className="font-mono text-rose-400 font-bold">
+                                        {promo.code}
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
             </div>
         </section>
     );
