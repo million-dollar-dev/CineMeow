@@ -1,184 +1,302 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronDown, faLocationCrosshairs, faLocationDot} from "@fortawesome/free-solid-svg-icons";
+import React, { useMemo, useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+    faLocationDot, 
+    faCalendarDays, 
+    faFilm, 
+    faBuilding, 
+    faChevronDown,
+    faClock
+} from "@fortawesome/free-solid-svg-icons";
 import MovieDateSelector from "./MovieDateSelector.jsx";
 import CinemaBrandSelector from "./CinemaBrandSelector.jsx";
 import ShowtimesSelector from "./ShowtimesSelector.jsx";
-import ButtonMore from "../utils/ButtonMore.jsx";
-import {useGetAllBrandsQuery} from "../../services/brandService.js";
+import { useGetAllBrandsQuery } from "../../services/brandService.js";
+import { MOCK_BRANDS, MOCK_CINEMAS } from "../Showtimes/mockShowtimesData.js";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
 dayjs.locale("vi");
 
-const ShowtimesList = ({showtimes = []}) => {
-    const startDate = dayjs("2025-10-04T16:10:00");
+const CITIES = ["Tất cả khu vực", "Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
 
+const ShowtimesList = ({ showtimes = [], movieTitle = "Bộ phim", movieId }) => {
+    // Generate next 7 days starting from TODAY (dynamic, no hardcoded past dates)
+    const today = dayjs();
     const days = useMemo(() => {
-        return Array.from({length: 7}, (_, i) => {
-            const date = startDate.add(i, "day");
+        return Array.from({ length: 7 }, (_, i) => {
+            const date = today.add(i, "day");
+            const weekday = i === 0 ? "Hôm nay" : date.format("dddd");
             return {
-                iso: date.format("YYYY-MM-DDTHH:mm:ss"),
+                iso: date.format("YYYY-MM-DD"),
                 displayDate: date.format("MM/DD"),
-                weekday: date.format("dddd"),
+                fullDate: date.format("YYYY-MM-DD"),
+                weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1),
             };
         });
-    }, [startDate]);
+    }, []);
 
-    const {data: brandsData = []} = useGetAllBrandsQuery();
+    const { data: brandsData = [] } = useGetAllBrandsQuery();
+    const displayBrands = brandsData.length > 0 ? brandsData : MOCK_BRANDS;
 
-    const [selectedBrandId, setSelectedBrandId] = useState("all");
+    // Filters
     const [selectedDate, setSelectedDate] = useState(days[0].displayDate);
-    const [groupedShowtimes, setGroupedShowtimes] = useState({});
+    const [selectedBrandId, setSelectedBrandId] = useState("all");
+    const [selectedCity, setSelectedCity] = useState("Tất cả khu vực");
 
-    const memoizedShowtimes = useMemo(() => showtimes, [JSON.stringify(showtimes)]);
-    const memoizedBrands = useMemo(() => brandsData, [JSON.stringify(brandsData)]);
+    // Compute or fallback showtimes
+    const activeShowtimes = useMemo(() => {
+        // If API showtimes provided and non-empty, use them
+        if (Array.isArray(showtimes) && showtimes.length > 0) {
+            return showtimes;
+        }
 
-    const filterShowtimes = useCallback(() => {
-        let filtered = [...memoizedShowtimes];
+        // Realistic Fallback Generation: create showtimes across MOCK_CINEMAS for the 7 days
+        const generated = [];
+        const baseSlots = [
+            { startHour: "09:30", durationMin: 130, room: "Phòng chiếu 1", format: "2D Phụ đề" },
+            { startHour: "12:15", durationMin: 130, room: "Phòng chiếu 2", format: "2D Phụ đề" },
+            { startHour: "14:45", durationMin: 130, room: "Phòng IMAX Laser", format: "IMAX 2D" },
+            { startHour: "17:30", durationMin: 130, room: "Phòng chiếu 1", format: "2D Phụ đề" },
+            { startHour: "19:45", durationMin: 130, room: "Phòng IMAX Laser", format: "IMAX 2D" },
+            { startHour: "22:15", durationMin: 130, room: "Phòng chiếu 3", format: "2D Lồng tiếng" },
+        ];
 
-        // Filter theo ngày
+        days.forEach((dayObj, dIdx) => {
+            MOCK_CINEMAS.forEach((cinema, cIdx) => {
+                // Vary slots slightly per cinema
+                const cinemaSlots = baseSlots.slice((cIdx + dIdx) % 2, 6 - ((cIdx) % 2));
+                cinemaSlots.forEach((slot, sIdx) => {
+                    const start = dayjs(`${dayObj.fullDate}T${slot.startHour}:00`);
+                    const end = start.add(slot.durationMin, "minute");
+                    generated.push({
+                        id: `st-${cinema.id}-${dayObj.displayDate.replace("/", "")}-${sIdx}`,
+                        movieId: movieId || "movie-default",
+                        cinemaId: cinema.id,
+                        cinemaName: cinema.name,
+                        cinemaAddress: cinema.address,
+                        city: cinema.city,
+                        brandId: cinema.brandId,
+                        startTime: start.format("YYYY-MM-DDTHH:mm:ss"),
+                        endTime: end.format("YYYY-MM-DDTHH:mm:ss"),
+                        roomName: slot.room,
+                        roomType: slot.format,
+                        price: slot.format.includes("IMAX") ? 160000 : 95000,
+                    });
+                });
+            });
+        });
+
+        return generated;
+    }, [showtimes, days, movieId]);
+
+    // Group showtimes by cinema based on active filters
+    const groupedShowtimes = useMemo(() => {
+        let filtered = [...activeShowtimes];
+
+        // 1. Date filter
         if (selectedDate) {
             filtered = filtered.filter(
                 (item) => dayjs(item.startTime).format("MM/DD") === selectedDate
             );
         }
 
-        // Filter theo thương hiệu
+        // 2. Brand filter
         if (selectedBrandId !== "all") {
             filtered = filtered.filter((item) => item.brandId === selectedBrandId);
         }
 
-        // Gom nhóm theo rạp
-        const grouped = filtered.reduce((acc, showtime) => {
-            const cinemaId = showtime.cinemaId;
-            if (!cinemaId) return acc;
+        // 3. City filter
+        if (selectedCity !== "Tất cả khu vực") {
+            filtered = filtered.filter((item) => item.city === selectedCity);
+        }
 
-            if (!acc[cinemaId]) {
-                const brandLogo = memoizedBrands.find((b) => b.id === showtime.brandId)?.logoUrl || null;
+        // Group by cinema
+        const grouped = {};
+        filtered.forEach((st) => {
+            const cinemaId = st.cinemaId;
+            if (!cinemaId) return;
 
-                acc[cinemaId] = {
+            if (!grouped[cinemaId]) {
+                const brandLogo =
+                    displayBrands.find((b) => b.id === st.brandId)?.logoUrl ||
+                    MOCK_CINEMAS.find((c) => c.id === cinemaId)?.brand?.logoUrl ||
+                    null;
+
+                grouped[cinemaId] = {
                     cinemaInfo: {
-                        id: showtime.cinemaId,
-                        name: showtime.cinemaName,
-                        address: showtime.cinemaAddress,
+                        id: st.cinemaId,
+                        name: st.cinemaName,
+                        address: st.cinemaAddress,
                         logoUrl: brandLogo,
+                        city: st.city,
                     },
                     showtimes: [],
                 };
             }
 
-            acc[cinemaId].showtimes.push(showtime);
-            return acc;
-        }, {});
+            grouped[cinemaId].showtimes.push(st);
+        });
 
-        setGroupedShowtimes(grouped);
-    }, [memoizedShowtimes, memoizedBrands, selectedBrandId, selectedDate]);
+        return grouped;
+    }, [activeShowtimes, selectedDate, selectedBrandId, selectedCity, displayBrands]);
 
-    // ✅ useEffect an toàn: chỉ chạy khi filterShowtimes thay đổi thực sự
-    useEffect(() => {
-        filterShowtimes();
-    }, [filterShowtimes]);
-
-    const handleSelectDate = (date) => setSelectedDate(date);
-    const handleSelectBrand = (brand) =>
-        setSelectedBrandId(brand === "all" ? "all" : brand.id);
-
-    console.log(groupedShowtimes);
+    const cinemaCount = Object.keys(groupedShowtimes).length;
+    const totalSlotsCount = Object.values(groupedShowtimes).reduce((acc, curr) => acc + curr.showtimes.length, 0);
 
     return (
-        <div className="text-white min-h-screen py-[2vw]">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-[1vw]">
-                <p className="font-bold text-[1.8vw] text-[#eaeaea] tracking-wide flex items-center gap-[0.6vw]">
-                    Lịch chiếu
-                </p>
-
-                <div className="flex gap-[0.6vw]">
-                    <button className="flex items-center gap-[0.8vw] bg-[#7f5af0] text-white px-[1vw] py-[0.6vw]
-                    rounded-full font-medium transition-all duration-300 hover:bg-[#9f7bff] active:scale-95
-                    shadow-[0_0_10px_rgba(127,90,240,0.5)]"
-                    >
-                        <FontAwesomeIcon icon={faLocationDot}/>
-                        Hồ Chí Minh
-                        <FontAwesomeIcon icon={faChevronDown} className="ml-[0.4vw]"/>
-                    </button>
-
-                    <button className="flex items-center gap-[0.6vw] bg-transparent border border-[#7f5af0]
-                    text-[#7f5af0] px-[1vw] py-[0.6vw] rounded-full font-medium transition-all duration-300
-                    hover:bg-[#7f5af0] hover:text-white active:scale-95"
-                    >
-                        <FontAwesomeIcon icon={faLocationCrosshairs}/>
-                        Gần bạn
-                    </button>
+        <section id="showtimes-section" className="text-zinc-100 py-6 scroll-mt-24">
+            {/* 1. Header Bar with City Picker & Title */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+                        <span className="w-2.5 h-6 rounded-full bg-gradient-to-b from-violet-500 to-fuchsia-500" />
+                        <span>Lịch Chiếu & Đặt Vé</span>
+                    </h2>
+                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                        Chọn cụm rạp, suất chiếu phù hợp và đặt chỗ trực tuyến
+                    </p>
                 </div>
-            </div>
 
-            {/* Content */}
-            <div className="border border-[#1f1f1f] bg-[#141414] rounded-2xl shadow-[0_0_20px_rgba(127,90,240,0.15)] my-[2vw]">
-                {/* Bộ chọn ngày */}
-                <div className="flex justify-between gap-[1vw] overflow-x-auto px-[2vw] py-[1.6vw] scrollbar-hide">
-                    {days.map((d) => (
-                        <MovieDateSelector
-                            key={d.iso}
-                            date={d.displayDate}
-                            day={d.weekday}
-                            isSelected={selectedDate === d.displayDate}
-                            handleClick={() => handleSelectDate(d.displayDate)}
+                {/* City Picker & Stats */}
+                <div className="flex items-center gap-2.5 self-start sm:self-auto">
+                    <div className="relative">
+                        <select
+                            value={selectedCity}
+                            onChange={(e) => setSelectedCity(e.target.value)}
+                            className="appearance-none pl-8 pr-8 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-xs sm:text-sm font-semibold text-zinc-200 focus:outline-none focus:border-violet-500 cursor-pointer shadow-sm"
+                        >
+                            {CITIES.map((city) => (
+                                <option key={city} value={city} className="bg-zinc-900 text-zinc-200">
+                                    {city}
+                                </option>
+                            ))}
+                        </select>
+                        <FontAwesomeIcon
+                            icon={faLocationDot}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-violet-400 text-xs pointer-events-none"
                         />
-                    ))}
-                </div>
-
-                {/* Divider */}
-                <div className="mx-[2vw] my-[0.6vw] h-[1px] bg-gradient-to-r from-transparent via-[#7f5af0]/40 to-transparent"/>
-
-                {/* Bộ chọn brand */}
-                <div className="flex flex-wrap justify-center gap-[1.2vw]
-                      px-[2vw] pb-[2vw] pt-[1vw]">
-                    <CinemaBrandSelector
-                        key="all"
-                        name="Tất cả"
-                        logoUrl="https://homepage.momocdn.net/next-js/_next/static/public/cinema/dexuat-icon.svg"
-                        handleClick={() => handleSelectBrand('all')}
-                        isSelected={selectedBrandId === 'all'}
-                    />
-                    {brandsData.map((c) => (
-                        <CinemaBrandSelector
-                            key={c.id}
-                            name={c.name}
-                            logoUrl={c.logoUrl}
-                            handleClick={() => handleSelectBrand(c)}
-                            isSelected={selectedBrandId === c.id}
+                        <FontAwesomeIcon
+                            icon={faChevronDown}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-[10px] pointer-events-none"
                         />
-                    ))}
-                </div>
-
-                {/* Danh sách suất chiếu */}
-                <div className="text-white px-[2vw] pb-[2vw]">
-                    {Object.keys(groupedShowtimes).length === 0 ? (
-                        <div className="text-center py-[3vw] text-gray-500 text-[1.1vw] italic">
-                            Chưa có suất chiếu nào cho ngày này 🎭
-                        </div>
-                    ) : (
-                        Object.values(groupedShowtimes).map(({cinemaInfo, showtimes}) => (
-                            <ShowtimesSelector
-                                key={cinemaInfo.id}
-                                name={cinemaInfo.name}
-                                address={cinemaInfo.address}
-                                logoUrl={cinemaInfo.logoUrl}
-                                showtimes={showtimes}
-                            />
-                        ))
-                    )}
-
-                    <div className="flex justify-center mt-[2vw]">
-                        <ButtonMore/>
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* 2. Main Box Container */}
+            <div className="rounded-3xl border border-zinc-800/80 bg-zinc-950/70 p-4 sm:p-6 backdrop-blur-md shadow-2xl shadow-violet-950/20">
+                {/* 2A. 7-Day Date Picker Slider */}
+                <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                        <FontAwesomeIcon icon={faCalendarDays} className="text-violet-400 text-xs" />
+                        <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
+                            Chọn Ngày Chiếu:
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 sm:gap-3">
+                        {days.map((d) => (
+                            <MovieDateSelector
+                                key={d.iso}
+                                date={d.displayDate}
+                                day={d.weekday}
+                                isSelected={selectedDate === d.displayDate}
+                                handleClick={() => setSelectedDate(d.displayDate)}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Subtle Divider */}
+                <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent my-6" />
+
+                {/* 2B. Cinema Brand Chains Filter */}
+                <div className="mb-6">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                            <FontAwesomeIcon icon={faBuilding} className="text-violet-400 text-xs" />
+                            <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
+                                Chọn Chuỗi Rạp:
+                            </span>
+                        </div>
+                        <span className="text-xs text-zinc-500">
+                            {selectedBrandId === 'all' ? 'Tất cả các rạp' : displayBrands.find(b => b.id === selectedBrandId)?.name}
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
+                        <CinemaBrandSelector
+                            key="all"
+                            name="Tất cả"
+                            logoUrl="https://homepage.momocdn.net/next-js/_next/static/public/cinema/dexuat-icon.svg"
+                            handleClick={() => setSelectedBrandId('all')}
+                            isSelected={selectedBrandId === 'all'}
+                        />
+                        {displayBrands.map((b) => (
+                            <CinemaBrandSelector
+                                key={b.id}
+                                name={b.name}
+                                logoUrl={b.logoUrl}
+                                handleClick={() => setSelectedBrandId(b.id)}
+                                isSelected={selectedBrandId === b.id}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Subtle Divider */}
+                <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent my-6" />
+
+                {/* 2C. Showtimes List by Cinema */}
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                            Tìm thấy <strong className="text-white">{cinemaCount}</strong> rạp chiếu (
+                            <strong className="text-violet-400">{totalSlotsCount}</strong> suất chiếu)
+                        </span>
+                    </div>
+
+                    {cinemaCount === 0 ? (
+                        <div className="text-center py-12 px-4 rounded-2xl bg-zinc-900/40 border border-zinc-800/60">
+                            <div className="w-12 h-12 rounded-full bg-violet-600/10 text-violet-400 flex items-center justify-center mx-auto mb-3">
+                                <FontAwesomeIcon icon={faFilm} className="text-lg" />
+                            </div>
+                            <h4 className="text-sm font-bold text-zinc-200">
+                                Chưa có suất chiếu phù hợp
+                            </h4>
+                            <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
+                                Hãy thử chọn ngày khác hoặc chọn tất cả chuỗi rạp để xem lịch chiếu sẵn có.
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSelectedBrandId("all");
+                                    setSelectedCity("Tất cả khu vực");
+                                }}
+                                className="mt-4 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-colors cursor-pointer"
+                            >
+                                Đặt lại bộ lọc
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {Object.values(groupedShowtimes).map(({ cinemaInfo, showtimes: slots }, idx) => (
+                                <ShowtimesSelector
+                                    key={cinemaInfo.id}
+                                    name={cinemaInfo.name}
+                                    address={cinemaInfo.address}
+                                    logoUrl={cinemaInfo.logoUrl}
+                                    showtimes={slots}
+                                    defaultOpen={idx === 0 || cinemaCount <= 3}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </section>
     );
 };
-
 
 export default ShowtimesList;
