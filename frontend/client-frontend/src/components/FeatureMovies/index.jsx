@@ -215,13 +215,13 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                     loading="eager"
                 />
 
-                {/* 2. Balanced Cinema Dot Matrix Layer ("chấm chấm li li" mật độ vừa phải 10px) */}
+                {/* 2. RoPhim Dark Halftone Dot Layer (Dot màu đen, mật độ dày hơn 6px) */}
                 <div
                     aria-hidden="true"
-                    className="absolute inset-0 pointer-events-none z-[3] opacity-40 mix-blend-overlay"
+                    className="absolute inset-0 pointer-events-none z-[3]"
                     style={{
-                        backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.42) 1px, transparent 1px)",
-                        backgroundSize: "10px 10px",
+                        backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.85) 1.2px, transparent 1.2px)",
+                        backgroundSize: "6px 6px",
                     }}
                 />
 

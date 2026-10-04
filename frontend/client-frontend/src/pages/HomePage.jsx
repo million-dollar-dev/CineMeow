@@ -68,13 +68,13 @@ const HomePage = () => {
 
     return (
         <div className="min-h-screen bg-[#07070b] text-zinc-100 overflow-x-hidden selection:bg-violet-600 selection:text-white relative">
-            {/* Ambient Background Dotted Texture Layer (Mật độ vừa phải 12px, tinh tế) */}
+            {/* Ambient Background Dotted Texture Layer (Dot màu đen, mật độ 6px) */}
             <div
                 aria-hidden="true"
-                className="fixed inset-0 pointer-events-none z-0 opacity-20"
+                className="fixed inset-0 pointer-events-none z-0"
                 style={{
-                    backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px)",
-                    backgroundSize: "12px 12px",
+                    backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.7) 1.2px, transparent 1.2px)",
+                    backgroundSize: "6px 6px",
                 }}
             />
 
