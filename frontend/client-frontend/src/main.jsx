@@ -59,6 +59,10 @@ const router = createBrowserRouter([
                 element: <CommingSoon />,
             },
             {
+                path: "/brands",
+                element: <BrandPage />,
+            },
+            {
                 path: "/brands/:brandId",
                 element: <BrandPage />,
             },
