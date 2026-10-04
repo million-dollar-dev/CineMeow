@@ -177,7 +177,7 @@ const MovieDetailPage = () => {
 
             {/* 3. Main Body Container (2 Columns) */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
                     
                     {/* LEFT COLUMN (8 cols): Showtimes + Community Reviews */}
                     <div className="lg:col-span-8 space-y-12">
@@ -204,8 +204,8 @@ const MovieDetailPage = () => {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN (4 cols): Now Playing Hot + Cinema Rules + Member Perks */}
-                    <aside className="lg:col-span-4 space-y-6">
+                    {/* RIGHT COLUMN (4 cols): Sticky Pinned Hot Movies + Rules + Support (No Blank Space) */}
+                    <aside className="lg:col-span-4 lg:sticky lg:top-36 space-y-6 self-start max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-hide">
                         {/* 1. Hot Now Playing List */}
                         <NowPlayingList currentMovieId={movie.id} />
 

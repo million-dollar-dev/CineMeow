@@ -11,6 +11,7 @@ import {
 import MovieDateSelector from "./MovieDateSelector.jsx";
 import CinemaBrandSelector from "./CinemaBrandSelector.jsx";
 import ShowtimesSelector from "./ShowtimesSelector.jsx";
+import CustomDropdown from "../common/CustomDropdown.jsx";
 import { useGetAllBrandsQuery } from "../../services/brandService.js";
 import { MOCK_BRANDS, MOCK_CINEMAS } from "../Showtimes/mockShowtimesData.js";
 import dayjs from "dayjs";
@@ -158,29 +159,19 @@ const ShowtimesList = ({ showtimes = [], movieTitle = "Bộ phim", movieId }) =>
                     </p>
                 </div>
 
-                {/* City Picker & Stats */}
+                {/* City Picker (Unified CustomDropdown) */}
                 <div className="flex items-center gap-2.5 self-start sm:self-auto">
-                    <div className="relative">
-                        <select
-                            value={selectedCity}
-                            onChange={(e) => setSelectedCity(e.target.value)}
-                            className="appearance-none pl-8 pr-8 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-xs sm:text-sm font-semibold text-zinc-200 focus:outline-none focus:border-violet-500 cursor-pointer shadow-sm"
-                        >
-                            {CITIES.map((city) => (
-                                <option key={city} value={city} className="bg-zinc-900 text-zinc-200">
-                                    {city}
-                                </option>
-                            ))}
-                        </select>
-                        <FontAwesomeIcon
-                            icon={faLocationDot}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-violet-400 text-xs pointer-events-none"
-                        />
-                        <FontAwesomeIcon
-                            icon={faChevronDown}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 text-[10px] pointer-events-none"
-                        />
-                    </div>
+                    <CustomDropdown
+                        icon={faLocationDot}
+                        label={selectedCity}
+                        options={CITIES}
+                        value={selectedCity}
+                        onChange={setSelectedCity}
+                        headerTitle="Khu Vực Chiếu"
+                        align="right"
+                        width="w-auto"
+                        dropdownWidth="w-52"
+                    />
                 </div>
             </div>
 
