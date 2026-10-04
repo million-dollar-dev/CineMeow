@@ -22,10 +22,10 @@ const NowPlayingList = ({ currentMovieId }) => {
             list = NOW_PLAYING_MOVIES;
         }
 
-        // Filter out current movie if present and take top 5
+        // Filter out current movie if present and take top 4
         return list
             .filter((m) => String(m.id) !== String(currentMovieId))
-            .slice(0, 5);
+            .slice(0, 4);
     }, [apiMovies, currentMovieId]);
 
     return (

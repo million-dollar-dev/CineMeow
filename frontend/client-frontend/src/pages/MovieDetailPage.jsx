@@ -118,7 +118,7 @@ const MovieDetailPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#07070b] text-zinc-100 overflow-x-hidden selection:bg-violet-600 selection:text-white">
+        <div className="min-h-screen bg-[#07070b] text-zinc-100 selection:bg-violet-600 selection:text-white">
             {/* 1. Hero Showcase Banner */}
             <Banner
                 movieInfo={movie}
