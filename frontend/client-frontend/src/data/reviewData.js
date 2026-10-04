@@ -238,3 +238,227 @@ export const MOVIE_REVIEWS_DATA = [
         ]
     }
 ];
+
+export const DEFAULT_COMMUNITY_REVIEWS = [
+    {
+        id: "cr-1",
+        user: "Trần Minh Hoàng",
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
+        role: "Cinephile Bạch Kim",
+        score: 9.8,
+        date: "2 giờ trước",
+        content: "Trải nghiệm rạp chiếu không thể chê vào đâu được! Âm thanh vòm rung chuyển sống động, từng khung hình đẹp như một bức tranh nghệ thuật. Cảm xúc trọn vẹn từ phút đầu đến tận credit cuối cùng.",
+        tags: ["Đáng tiền vé", "Kỹ xảo mãn nhãn", "Nhạc phim xuất sắc"],
+        verifiedTicket: true,
+        likes: 38
+    },
+    {
+        id: "cr-2",
+        user: "Nguyễn Thảo Ly",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
+        role: "Khán giả rạp",
+        score: 9.5,
+        date: "5 giờ trước",
+        content: "Kịch bản xây dựng rất lớp lang, cao trào hồi ba giải quyết vấn đề cực kỳ thông minh. Dàn diễn viên nhập vai quá đạt, ánh mắt và cử chỉ đều chạm đến cảm xúc người xem.",
+        tags: ["Kịch tính gay cấn", "Diễn xuất đỉnh cao"],
+        verifiedTicket: true,
+        likes: 24
+    },
+    {
+        id: "cr-3",
+        user: "Đặng Tuấn Kiệt",
+        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80",
+        role: "Thành viên VIP CineMeow",
+        score: 9.0,
+        date: "Hôm qua",
+        content: "Phim xem rất cuốn, không khí trong rạp hồi hộp từng giây. Ai thích thể loại này thì nhất định phải ra rạp xem màn hình lớn mới cảm nhận hết được sự đầu tư công phu.",
+        tags: ["Đáng tiền vé", "Plot twist bất ngờ"],
+        verifiedTicket: true,
+        likes: 19
+    },
+    {
+        id: "cr-4",
+        user: "Lê Quỳnh Chi",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        role: "Khán giả rạp",
+        score: 8.8,
+        date: "2 ngày trước",
+        content: "Hình ảnh và bối cảnh được đầu tư khủng, xem rất mãn nhãn. Đoạn giữa nhịp hơi chùng một xíu nhưng đoạn kết cứu vãn mọi thứ, rất đáng khen cho ê-kíp sản xuất.",
+        tags: ["Kỹ xảo mãn nhãn", "Cảm động rơi nước mắt"],
+        verifiedTicket: false,
+        likes: 12
+    }
+];
+
+export const getMovieEditorialData = (movie) => {
+    if (movie?.editorialReview) return movie.editorialReview;
+    const title = (movie?.title || "").toLowerCase();
+    const movieId = String(movie?.movieId || movie?.id || "");
+
+    if (title.includes("dune") || movieId === "693134") {
+        return {
+            director: "Denis Villeneuve",
+            cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson", "Austin Butler", "Florence Pugh"],
+            duration: "166 phút",
+            ageRating: "T16 - Phim dành cho khán giả từ 16 tuổi trở lên",
+            aspectRatio: "IMAX 1.43:1 / 1.90:1",
+            soundFormat: "Dolby Atmos 7.1",
+            verdict: "Dune: Phần Hai là tuyệt tác sci-fi đương đại hiếm hoi tiệm cận chuẩn mực của The Empire Strikes Back hay The Lord of the Rings. Denis Villeneuve đã kiến tạo nên một sử thi cát vàng tráng lệ, vừa choáng ngợp về mặt thị giác vừa đầy sức nặng tâm lý về sự biến chất của quyền lực và đức tin mù quáng.",
+            pros: [
+                "Hình ảnh tráng lệ của Greig Fraser kết hợp âm thanh gầm vang từ Hans Zimmer",
+                "Diễn xuất bùng nổ của Timothée Chalamet và ác nhân Austin Butler (Feyd-Rautha)",
+                "Trường đoạn cưỡi sâu cát và đại chiến Arrakeen xứng đáng đi vào lịch sử",
+                "Chuyển thể sắc sảo, hiện đại và sâu sắc hơn nguyên tác của Frank Herbert"
+            ],
+            cons: [
+                "Thời lượng dài 166 phút đòi hỏi sự tập trung cao từ người xem",
+                "Tuyến tình cảm giữa Paul và Chani có một số biến tấu có thể gây tranh luận với fan truyện cũ"
+            ],
+            criteria: {
+                script: 9.3,
+                acting: 9.7,
+                visuals: 9.9,
+                sound: 9.8
+            }
+        };
+    }
+
+    if (title.includes("conan") || movieId === "1214484") {
+        return {
+            director: "Chika Nagaoka",
+            cast: ["Minami Takayama", "Kappei Yamaguchi", "Ryo Horikawa", "Wakana Yamazaki"],
+            duration: "110 phút",
+            ageRating: "P - Phim được phép phổ biến đến mọi khán giả",
+            aspectRatio: "Widescreen 16:9",
+            soundFormat: "Dolby 5.1 / 7.1",
+            verdict: "Movie 27 của Thám Tử Conan là bữa tiệc giải trí trọn vẹn dành cho người hâm mộ với những màn đấu kiếm mãn nhãn, sự phối hợp ăn ý giữa Heiji và Conan, cùng cú twist ngoạn mục về dòng máu gia tộc Kuroba - Kudo.",
+            pros: [
+                "Những màn so kiếm sắc bén trên nóc xe điện Hakodate được dựng công phu",
+                "Tương tác duyên dáng, hài hước và ngọt ngào giữa Heiji và Kazuha",
+                "Plot twist đắt giá làm bùng nổ cộng đồng người hâm mộ sau gần 30 năm",
+                "Nhạc phim 'Soshite, Kimi wa' của Aiko vô cùng bắt tai và xúc động"
+            ],
+            cons: [
+                "Yếu tố suy luận phá án bị giảm nhẹ để nhường đất cho hành động hoành tráng",
+                "Số lượng nhân vật xuất hiện đông đúc có thể khiến khán giả mới hơi bối rối"
+            ],
+            criteria: {
+                script: 8.8,
+                acting: 9.2,
+                visuals: 9.5,
+                sound: 9.4
+            }
+        };
+    }
+
+    if (title.includes("deadpool") || movieId === "533535") {
+        return {
+            director: "Shawn Levy",
+            cast: ["Ryan Reynolds", "Hugh Jackman", "Emma Corrin", "Morena Baccarin", "Matthew Macfadyen"],
+            duration: "128 phút",
+            ageRating: "T18 - Phim dành cho khán giả từ 18 tuổi trở lên",
+            aspectRatio: "Cinemascope 2.39:1",
+            soundFormat: "Dolby Atmos",
+            verdict: "Deadpool & Wolverine mang lại đúng những gì người hâm mộ mong chờ: bạo lực đã mắt, những câu thoại châm biếm sắc sảo phá vỡ bức tường thứ 4, và màn tái xuất huyền thoại của Hugh Jackman trong bộ giáp vàng xanh kinh điển.",
+            pros: [
+                "Phản ứng hóa học đỉnh cao giữa Ryan Reynolds và Hugh Jackman",
+                "Hàng loạt vai khách mời (cameo) hoài niệm gây sốc và đầy phấn khích",
+                "Những màn đấm đá R-rated đẫm máu được biên đạo cực kỳ sáng tạo",
+                "Nhạc phim retro từ thập niên 90 và 2000 đỉnh cao và bùng nổ"
+            ],
+            cons: [
+                "Cốt truyện TVA và dòng thời gian khá đơn giản, chủ yếu làm nền cho fan-service",
+                "Nhân vật phản diện Cassandra Nova chưa được khai thác hết tiềm năng"
+            ],
+            criteria: {
+                script: 8.6,
+                acting: 9.5,
+                visuals: 9.4,
+                sound: 9.6
+            }
+        };
+    }
+
+    if (title.includes("oppenheimer") || movieId === "872585") {
+        return {
+            director: "Christopher Nolan",
+            cast: ["Cillian Murphy", "Emily Blunt", "Matt Damon", "Robert Downey Jr.", "Florence Pugh"],
+            duration: "180 phút",
+            ageRating: "T18 - Phim dành cho khán giả từ 18 tuổi trở lên",
+            aspectRatio: "IMAX 1.43:1 / 2.20:1 70mm",
+            soundFormat: "Dolby Atmos / IMAX 6-Track",
+            verdict: "Kiệt tác tiểu sử kinh điển của Christopher Nolan đào sâu vào lương tri của kẻ nắm giữ sức mạnh hủy diệt thế giới. Sự kết hợp giữa dựng phim phi tuyến tính và âm nhạc thót tim của Ludwig Göransson tạo nên trải nghiệm rạp chiếu nghẹt thở.",
+            pros: [
+                "Màn hóa thân để đời của Cillian Murphy và Robert Downey Jr. xứng đáng Oscar",
+                "Trường đoạn thử nghiệm bom Trinity là chuẩn mực của nghệ thuật âm thanh và im lặng",
+                "Dựng phim dồn dập, biến một phiên điều trần chính trị thành phim giật gân kịch tính",
+                "Âm nhạc của Ludwig Göransson liên tục đẩy cao nhịp đập con tim"
+            ],
+            cons: [
+                "Khối lượng nhân vật lịch sử và thuật ngữ vật lý đòi hỏi người xem có chuẩn bị trước",
+                "Nửa đầu phim chuyển đổi dòng thời gian liên tục có thể gây khó theo dõi"
+            ],
+            criteria: {
+                script: 9.6,
+                acting: 9.9,
+                visuals: 9.7,
+                sound: 9.8
+            }
+        };
+    }
+
+    if (title.includes("lật mặt") || title.includes("lat mat") || movieId === "1248039") {
+        return {
+            director: "Lý Hải",
+            cast: ["Thanh Hiền", "Trương Minh Cường", "Đinh Y Nhung", "Quách Ngọc Tuyên", "Trâm Anh"],
+            duration: "138 phút",
+            ageRating: "K - Khán giả dưới 13 tuổi có người giám hộ",
+            aspectRatio: "Widescreen 2.39:1",
+            soundFormat: "Dolby Atmos",
+            verdict: "Lật Mặt 7 là bước chuyển mình xuất sắc của Lý Hải sang dòng phim gia đình tâm lý. Không cần kỹ xảo đao to búa lớn, phim chạm đến trái tim khán giả bằng câu chuyện chân thật về sự hy sinh vô điều kiện của người mẹ.",
+            pros: [
+                "Diễn xuất thăng hoa, mộc mạc và đẫm nước mắt của nghệ sĩ Thanh Hiền",
+                "Bối cảnh làng K'Long K'Lanh và làng chài Mỹ Tân hiện lên tuyệt đẹp",
+                "Thông điệp gia đình sâu sắc, chạm tới sợi dây đồng cảm của nhiều thế hệ",
+                "Nhạc phim 'Vẽ Lại Bức Tranh' cất lên đúng thời điểm lấy nước mắt khán giả"
+            ],
+            cons: [
+                "Một số mâu thuẫn giữa các người con được giải quyết hơi nhanh ở đoạn kết",
+                "Lời thoại ở một vài phân cảnh còn mang tính kịch nghệ"
+            ],
+            criteria: {
+                script: 8.8,
+                acting: 9.3,
+                visuals: 9.1,
+                sound: 9.0
+            }
+        };
+    }
+
+    // Default smart editorial generator for other movies
+    return {
+        director: movie?.director || "Đạo diễn danh tiếng",
+        cast: movie?.cast || ["Dàn diễn viên thực lực", "Ngôi sao hàng đầu"],
+        duration: movie?.duration || "120 phút",
+        ageRating: "T16 - Phim dành cho khán giả từ 16 tuổi trở lên",
+        aspectRatio: "2.39:1 Cinemascope",
+        soundFormat: "Dolby Atmos",
+        verdict: movie?.consensus || "Tác phẩm điện ảnh ghi điểm với kịch bản chặt chẽ, hình ảnh trau chuốt và những thông điệp nhân văn lắng đọng. Đây là trải nghiệm rạp chiếu đáng giá mà khán giả yêu mến bộ môn nghệ thuật thứ 7 không nên bỏ lỡ.",
+        pros: [
+            "Hiệu ứng hình ảnh và kỹ xảo được trau chuốt tỉ mỉ từng chi tiết",
+            "Diễn xuất giàu cảm xúc của dàn diễn viên tạo được sự đồng cảm sâu sắc",
+            "Âm thanh sống động, nhạc nền đẩy cao trào cảm xúc rất tốt",
+            "Nhịp phim cuốn hút, nhiều bất ngờ ở hồi ba"
+        ],
+        cons: [
+            "Đoạn mở đầu có đôi chỗ hơi chậm để giới thiệu bối cảnh nhân vật",
+            "Một số tuyến nhân vật phụ có thể phát triển sâu hơn"
+        ],
+        criteria: {
+            script: 9.0,
+            acting: 9.4,
+            visuals: 9.6,
+            sound: 9.3
+        }
+    };
+};
