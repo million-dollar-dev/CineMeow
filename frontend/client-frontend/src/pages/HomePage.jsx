@@ -67,17 +67,7 @@ const HomePage = () => {
     const nowPlaying2Rows = NOW_PLAYING_MOVIES.slice(0, 10);
 
     return (
-        <div className="min-h-screen bg-[#07070b] text-zinc-100 overflow-x-hidden selection:bg-violet-600 selection:text-white relative">
-            {/* Ambient Background Dotted Texture Layer (Dot màu đen, mật độ 6px) */}
-            <div
-                aria-hidden="true"
-                className="fixed inset-0 pointer-events-none z-0"
-                style={{
-                    backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.7) 1.2px, transparent 1.2px)",
-                    backgroundSize: "6px 6px",
-                }}
-            />
-
+        <div className="min-h-screen bg-[#07070b] text-zinc-100 overflow-x-hidden selection:bg-violet-600 selection:text-white">
             {/* 1. FeatureMovies Spotlight (RoPhim-inspired banner with Right-hand Thumbnail Rail) */}
             <FeatureMovies
                 onPlayTrailer={(movie) => setSelectedTrailerMovie(movie)}
