@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faCheck } from "@fortawesome/free-solid-svg-icons";
+import RatingCard from "../RatingCard.jsx";
 
 const CustomDropdown = ({
     icon,
@@ -75,15 +76,19 @@ const CustomDropdown = ({
                 aria-expanded={isOpen}
             >
                 <div className="flex items-center gap-2 truncate min-w-0">
-                    {icon && (
+                    {currentOption?.rating ? (
+                        <RatingCard rating={currentOption.rating} />
+                    ) : icon ? (
                         <FontAwesomeIcon
                             icon={icon}
                             className={`text-xs flex-shrink-0 ${
                                 isFiltered ? "text-violet-400" : "text-violet-400/80"
                             }`}
                         />
-                    )}
-                    <span className="truncate">{displayLabel}</span>
+                    ) : null}
+                    <span className="truncate">
+                        {currentOption?.rating && currentOption.shortLabel ? currentOption.shortLabel : displayLabel}
+                    </span>
                 </div>
 
                 <FontAwesomeIcon
@@ -117,6 +122,8 @@ const CustomDropdown = ({
                             const optValue = getOptionValue(opt);
                             const optLabel = getOptionLabel(opt);
                             const isSelected = value === optValue;
+                            const rating = typeof opt === "object" ? opt.rating : null;
+                            const displayText = rating && opt.shortLabel ? opt.shortLabel : optLabel;
 
                             return (
                                 <button
@@ -132,7 +139,10 @@ const CustomDropdown = ({
                                             : "text-zinc-300 hover:bg-zinc-800/80 hover:text-white"
                                     }`}
                                 >
-                                    <span className="truncate">{optLabel}</span>
+                                    <div className="flex items-center gap-2 truncate min-w-0">
+                                        {rating && <RatingCard rating={rating} />}
+                                        <span className="truncate">{displayText}</span>
+                                    </div>
                                     {isSelected && (
                                         <FontAwesomeIcon
                                             icon={faCheck}

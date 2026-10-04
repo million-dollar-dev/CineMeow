@@ -193,11 +193,11 @@ export const FORMAT_OPTIONS = [
 
 export const AGE_RATING_OPTIONS = [
     { value: "all", label: "Tất cả độ tuổi" },
-    { value: "P", label: "P - Phổ biến (Mọi lứa tuổi)" },
-    { value: "K", label: "K - Dưới 13 tuổi (Kèm PH)" },
-    { value: "T13", label: "T13 - Khán giả từ 13 tuổi" },
-    { value: "T16", label: "T16 - Khán giả từ 16 tuổi" },
-    { value: "T18", label: "T18 - Khán giả từ 18 tuổi" },
+    { value: "P", label: "P - Phổ biến (Mọi lứa tuổi)", shortLabel: "Phổ biến (Mọi lứa tuổi)", rating: "P" },
+    { value: "K", label: "K - Dưới 13 tuổi (Kèm PH)", shortLabel: "Dưới 13 tuổi (Kèm PH)", rating: "K" },
+    { value: "T13", label: "T13 - Khán giả từ 13 tuổi", shortLabel: "Khán giả từ 13 tuổi", rating: "T13" },
+    { value: "T16", label: "T16 - Khán giả từ 16 tuổi", shortLabel: "Khán giả từ 16 tuổi", rating: "T16" },
+    { value: "T18", label: "T18 - Khán giả từ 18 tuổi", shortLabel: "Khán giả từ 18 tuổi", rating: "T18" },
 ];
 
 export const SORT_OPTIONS = [

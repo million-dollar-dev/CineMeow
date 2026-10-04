@@ -19,12 +19,14 @@ const RATING_MAP = {
     NC17: { bg: "bg-purple-600", text: "text-white", label: "18+" },
 };
 
-const RatingCard = ({ rating = "P" }) => {
+const RatingCard = ({ rating = "P", className = "" }) => {
     const key = String(rating).toUpperCase().trim();
     const info = RATING_MAP[key] || { bg: "bg-zinc-700", text: "text-zinc-200", label: rating };
 
     return (
-        <span className={`inline-flex items-center justify-center font-bold text-[11px] sm:text-xs px-1.5 py-0.5 rounded shadow-sm leading-none tracking-tight ${info.bg} ${info.text}`}>
+        <span
+            className={`inline-flex items-center justify-center font-bold text-[11px] sm:text-xs px-1.5 py-0.5 rounded shadow-sm leading-none tracking-tight shrink-0 select-none ${info.bg} ${info.text} ${className}`}
+        >
             {info.label}
         </span>
     );
