@@ -338,7 +338,7 @@ const NowPlayingPage = () => {
                 </div>
 
                 {/* Advanced Search & Dropdown Controls Bar */}
-                <div className="bg-[#141424] rounded-2xl p-4 sm:p-5 border border-white/10 shadow-xl mb-8">
+                <div className="relative z-30 bg-[#141424] rounded-2xl p-4 sm:p-5 border border-white/10 shadow-xl mb-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
                         {/* Search Input */}
                         <div className="relative sm:col-span-2 lg:col-span-1">
@@ -423,7 +423,7 @@ const NowPlayingPage = () => {
 
                 {/* Movie Grid */}
                 {filteredMovies.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                    <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                         {filteredMovies.map((movie) => (
                             <NowPlayingMovieCard
                                 key={movie.id}

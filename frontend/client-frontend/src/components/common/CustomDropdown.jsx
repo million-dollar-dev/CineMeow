@@ -67,7 +67,10 @@ const CustomDropdown = ({
         : "bg-zinc-950/80 border-zinc-800 text-zinc-300 hover:border-zinc-700 hover:bg-[#181826] hover:text-white";
 
     return (
-        <div className={`relative ${variant === "pill" ? "inline-block" : width} ${className}`} ref={dropdownRef}>
+        <div
+            className={`relative ${isOpen ? "z-50" : "z-10"} ${variant === "pill" ? "inline-block" : width} ${className}`}
+            ref={dropdownRef}
+        >
             {/* Trigger Button */}
             <button
                 type="button"
@@ -102,7 +105,7 @@ const CustomDropdown = ({
             {/* Dropdown Menu Popover */}
             {isOpen && (
                 <div
-                    className={`absolute top-full mt-2 ${dropdownWidth} bg-[#161622]/95 backdrop-blur-xl border border-zinc-700/80 rounded-xl shadow-2xl z-50 py-1.5 animate-fadeIn ring-1 ring-violet-500/25 ${
+                    className={`absolute top-full mt-2 ${dropdownWidth} bg-[#161622]/98 backdrop-blur-2xl border border-zinc-700/80 rounded-xl shadow-2xl z-[100] py-1.5 animate-fadeIn ring-1 ring-violet-500/25 ${
                         align === "right" ? "right-0" : "left-0"
                     }`}
                 >

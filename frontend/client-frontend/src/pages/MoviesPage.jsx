@@ -684,7 +684,7 @@ const MoviesPage = () => {
                 </div>
 
                 {/* Filter Controls Bar */}
-                <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 backdrop-blur-md shadow-xl space-y-4">
+                <div className="relative z-30 mt-6 p-4 sm:p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 backdrop-blur-md shadow-xl space-y-4">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         
                         {/* Live Search Input */}
@@ -718,7 +718,7 @@ const MoviesPage = () => {
                         </div>
 
                         {/* Dropdown Filters Collection */}
-                        <div className="flex items-center gap-2.5 flex-wrap">
+                        <div className="relative z-30 flex items-center gap-2.5 flex-wrap">
                             {/* Thể loại */}
                             <CustomDropdown
                                 icon={faTags}
@@ -827,7 +827,7 @@ const MoviesPage = () => {
                 </div>
 
                 {/* Movie Grid */}
-                <div className="mt-8">
+                <div className="relative z-10 mt-8">
                     {filteredMovies.length > 0 ? (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                             {paginatedMovies.map((movie) => (

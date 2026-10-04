@@ -367,7 +367,7 @@ const CommingSoonPage = () => {
                 </div>
 
                 {/* Filter Controls Panel */}
-                <div className="bg-[#10101a] border border-white/10 rounded-2xl p-4 sm:p-5 mb-8 shadow-xl">
+                <div className="relative z-30 bg-[#10101a] border border-white/10 rounded-2xl p-4 sm:p-5 mb-8 shadow-xl">
                     {/* Top Row: Search Input + Sort Dropdown */}
                     <div className="flex flex-col md:flex-row gap-3 mb-4">
                         {/* Search Input Bar */}
@@ -538,7 +538,7 @@ const CommingSoonPage = () => {
 
                 {/* Movie Grid */}
                 {filteredMovies.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
+                    <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
                         {filteredMovies.map((movie) => (
                             <CommingSoonMovieCard
                                 key={movie.id}
