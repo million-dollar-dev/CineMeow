@@ -56,7 +56,7 @@ const BrandPage = () => {
                     </div>
                 </div>
             </div>
-            <ShowtimesTableSection />
+            <ShowtimesTableSection initialBrandId={brandId} />
             <MediaCarousel title={"Phim đang chiếu"}/>
             <MovieBlogSection />
             <PromotionSection />

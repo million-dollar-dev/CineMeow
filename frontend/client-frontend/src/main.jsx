@@ -47,6 +47,10 @@ const router = createBrowserRouter([
                 element: <ShowtimesPage />,
             },
             {
+                path: "/showtimes",
+                element: <ShowtimesPage />,
+            },
+            {
                 path: "/now-playing",
                 element: <NowPlayingPage />,
             },
