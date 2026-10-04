@@ -4,10 +4,14 @@ import MediaCarousel from "../components/MediaCarousel.jsx";
 import MovieCard from "../components/MediaList/MovieCard.jsx";
 import PaginationComponent from "../components/utils/PaginationComponent.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronDown, faSearch} from "@fortawesome/free-solid-svg-icons";
+import {faSearch, faTags, faGlobe, faCalendarDays, faXmark} from "@fortawesome/free-solid-svg-icons";
+import CustomDropdown from "../components/common/CustomDropdown.jsx";
 
 const MoviesPage = () => {
-    const [openPanel, setOpenPanel] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+    const [selectedCountry, setSelectedCountry] = useState("Tất cả");
+    const [selectedYear, setSelectedYear] = useState("Tất cả");
+    const [searchMovieQuery, setSearchMovieQuery] = useState("");
     const categories = [
         "Tất cả", "Phim truyền hình", "Tiểu sử", "Chính kịch", "Hài", "Phiêu lưu",
         "Kinh dị", "Tài liệu", "Tội phạm", "Giật gân", "Ma", "Trinh thám",
@@ -19,9 +23,6 @@ const MoviesPage = () => {
     ];
     const countries = ["Tất cả", "Việt Nam", "Mỹ", "Hàn Quốc", "Nhật Bản", "Trung Quốc"];
     const years = ["Tất cả", "2025", "2024", "2023", "2022", "2021"];
-    const handleToggle = (panel) => {
-        setOpenPanel(openPanel === panel ? null : panel);
-    };
     const [mediaList, setMediaList] = useState([]);
     const url = "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
     useEffect(() => {
@@ -54,104 +55,65 @@ const MoviesPage = () => {
                 <div className="max-w-screen-xl mx-auto py-[2vw]">
                     <div className="flex space justify-between my-[2vw] items-center">
                         <p className="text-[2vw] font-bold">Tìm phim chiếu rạp trên <span className="text-violet">CineMeow</span></p>
-                        <div className="flex gap-3 flex-wrap">
+                        <div className="flex gap-3 flex-wrap items-center">
                             {/* Thể loại */}
-                            <div className="relative inline-block">
-                                <button
-                                    onClick={() => handleToggle("category")}
-                                    className="flex border-2 items-center gap-2 px-4 py-2 border rounded-md shadow-sm bg-white text-black hover:bg-gray-100"
-                                >
-                                    Thể loại
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        size={12}
-                                        className={`transition-transform duration-300 ${openPanel === "category" ? "rotate-180" : ""}`}
-                                    />
-                                </button>
-                                {openPanel === "category" && (
-                                    <div className="absolute left-0 mt-2 w-[600px] bg-white rounded-lg shadow-lg p-2 z-50 text-black">
-                                        <div className="grid grid-cols-3 gap-x-6 gap-y-2">
-                                            {categories.map((cat, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className="text-left px-2 py-1 hover:bg-gray-100 rounded-md w-full"
-                                                >
-                                                    {cat}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            <CustomDropdown
+                                icon={faTags}
+                                label={selectedCategory}
+                                options={categories}
+                                value={selectedCategory}
+                                onChange={setSelectedCategory}
+                                headerTitle="Thể Loại Phim"
+                                width="w-auto"
+                                dropdownWidth="w-56"
+                            />
 
-                            <div className="relative inline-block">
-                                {/* Nút dropdown */}
-                                <button
-                                    onClick={() => handleToggle("country")}
-                                    className="flex border-2 items-center gap-2 px-4 py-2 border rounded-md shadow-sm bg-white text-black hover:bg-gray-100"
-                                >
-                                    Quốc gia
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        size={12}
-                                        className={`transition-transform duration-300 ${openPanel === "country" ? "rotate-180" : ""}`}
-                                    />
-                                </button>
-
-                                {/* Menu */}
-                                {openPanel === "country" && (
-                                    <div className="absolute left-0 mt-2 w-[400px] bg-white rounded-lg shadow-lg p-2 z-50 text-black">
-                                        <div className="grid grid-cols-3 gap-x-6 gap-y-2">
-                                            {countries.map((cat, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className="text-left px-2 py-1 hover:bg-gray-100 rounded-md w-full"
-                                                >
-                                                    {cat}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            {/* Quốc gia */}
+                            <CustomDropdown
+                                icon={faGlobe}
+                                label={selectedCountry}
+                                options={countries}
+                                value={selectedCountry}
+                                onChange={setSelectedCountry}
+                                headerTitle="Quốc Gia"
+                                width="w-auto"
+                                dropdownWidth="w-48"
+                            />
 
                             {/* Năm */}
-                            <div className="relative inline-block">
-                                <button
-                                    onClick={() => handleToggle("year")}
-                                    className="border-2 flex items-center gap-2 px-4 py-2 border rounded-md shadow-sm bg-white text-black hover:bg-gray-100"
-                                >
-                                    Năm
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        size={12}
-                                        className={`transition-transform duration-300 ${openPanel === "year" ? "rotate-180" : ""}`}
-                                    />
-                                </button>
-                                {openPanel === "year" && (
-                                    <div className="absolute left-0 mt-2 w-[100px] bg-white rounded-lg shadow-lg p-2 z-50 text-black">
-                                        <div className="grid grid-cols-1 gap-x-6 gap-y-2">
-                                            {years.map((cat, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className="text-left px-2 py-1 hover:bg-gray-100 rounded-md w-full"
-                                                >
-                                                    {cat}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            <CustomDropdown
+                                icon={faCalendarDays}
+                                label={selectedYear}
+                                options={years}
+                                value={selectedYear}
+                                onChange={setSelectedYear}
+                                headerTitle="Năm Phát Hành"
+                                width="w-auto"
+                                dropdownWidth="w-40"
+                            />
 
                             {/* Ô tìm kiếm */}
-                            <div className="flex items-center border-1 rounded-md px-3 py-2 w-[200px] relative">
+                            <div className="relative h-10 w-52">
                                 <input
                                     type="text"
-                                    placeholder="Tìm theo tên phim ..."
-                                    className="outline-none max-w-[160px]"
+                                    value={searchMovieQuery}
+                                    onChange={(e) => setSearchMovieQuery(e.target.value)}
+                                    placeholder="Tìm theo tên phim..."
+                                    className="w-full h-full pl-9 pr-8 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/40 transition-all"
                                 />
-                                <FontAwesomeIcon icon={faSearch} className="text-gray-500 absolute right-2 text-white" />
+                                <FontAwesomeIcon
+                                    icon={faSearch}
+                                    className="text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 text-xs"
+                                />
+                                {searchMovieQuery && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearchMovieQuery("")}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs cursor-pointer"
+                                    >
+                                        <FontAwesomeIcon icon={faXmark} />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

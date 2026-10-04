@@ -22,6 +22,7 @@ import CinemaBrandSelector from "../MovieDetail/CinemaBrandSelector.jsx";
 import MovieDateSelector from "../MovieDetail/MovieDateSelector.jsx";
 import MovieAndShowtimeCard from "../Showtimes/MovieAndShowtimeCard.jsx";
 import CinemaCard from "../Showtimes/CinemaCard.jsx";
+import CustomDropdown from "../common/CustomDropdown.jsx";
 
 import { useGetAllBrandsQuery } from "../../services/brandService.js";
 import { useGetAllCinemasQuery } from "../../services/cinemaService.js";
@@ -52,97 +53,7 @@ const TIME_SLOTS = [
 
 const FORMATS = ["Tất cả định dạng", "2D Phụ đề", "2D Lồng tiếng", "IMAX", "3D"];
 
-// Custom Filter Dropdown matching CineMeow aesthetic
-const CustomFilterDropdown = ({
-    icon,
-    label,
-    options,
-    value,
-    onChange,
-    headerTitle,
-    align = "right",
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    // Check if current value is non-default
-    const isFiltered = value !== (typeof options[0] === "object" ? options[0].id : options[0]);
-
-    return (
-        <div className="relative" ref={dropdownRef}>
-            <button
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer active:scale-95 ${
-                    isFiltered
-                        ? "bg-violet-950/60 border-violet-500 text-violet-300 shadow-[0_0_12px_rgba(127,90,240,0.35)] ring-1 ring-violet-500/50"
-                        : "bg-zinc-900/90 border-zinc-700/80 text-zinc-300 hover:border-zinc-500 hover:bg-[#1f1a2e] hover:text-white"
-                }`}
-            >
-                {icon && <FontAwesomeIcon icon={icon} className="text-violet-400 text-xs flex-shrink-0" />}
-                <span className="truncate max-w-[130px] sm:max-w-[150px]">{label}</span>
-                <FontAwesomeIcon
-                    icon={faChevronDown}
-                    className={`text-[9px] text-zinc-400 transition-transform duration-200 flex-shrink-0 ${
-                        isOpen ? "rotate-180 text-violet-400" : ""
-                    }`}
-                />
-            </button>
-
-            {isOpen && (
-                <div
-                    className={`absolute top-full mt-2 w-52 bg-[#1a1a22] border border-zinc-700/80 rounded-xl shadow-2xl z-50 py-1.5 animate-fadeIn ring-1 ring-violet-500/25 ${
-                        align === "right" ? "right-0" : "left-0"
-                    }`}
-                >
-                    {headerTitle && (
-                        <p className="px-3 py-1 text-[10px] font-bold text-zinc-500 uppercase tracking-wider border-b border-zinc-800/80 mb-1">
-                            {headerTitle}
-                        </p>
-                    )}
-                    <div className="space-y-0.5 px-1 max-h-56 overflow-y-auto custom-scrollbar">
-                        {options.map((opt) => {
-                            const optId = typeof opt === "object" ? opt.id : opt;
-                            const optLabel = typeof opt === "object" ? opt.label : opt;
-                            const isSelected = value === optId;
-
-                            return (
-                                <button
-                                    key={optId}
-                                    type="button"
-                                    onClick={() => {
-                                        onChange(optId);
-                                        setIsOpen(false);
-                                    }}
-                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center justify-between cursor-pointer ${
-                                        isSelected
-                                            ? "bg-violet-600/25 text-violet-300 font-bold"
-                                            : "text-zinc-300 hover:bg-zinc-800/70 hover:text-white"
-                                    }`}
-                                >
-                                    <span>{optLabel}</span>
-                                    {isSelected && (
-                                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_6px_rgba(127,90,240,0.8)]" />
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
 
 const ShowtimesTableSection = ({ initialBrandId = "all" }) => {
     // API Queries
@@ -166,25 +77,11 @@ const ShowtimesTableSection = ({ initialBrandId = "all" }) => {
     const [selectedBrandId, setSelectedBrandId] = useState(initialBrandId || "all");
     const [selectedCity, setSelectedCity] = useState("Hồ Chí Minh");
     const [isNearMe, setIsNearMe] = useState(false);
-    const [showCityDropdown, setShowCityDropdown] = useState(false);
     const [searchCinemaQuery, setSearchCinemaQuery] = useState("");
     const [searchMovieQuery, setSearchMovieQuery] = useState("");
     const [selectedFormat, setSelectedFormat] = useState("Tất cả định dạng");
     const [selectedTimeSlot, setSelectedTimeSlot] = useState("all");
     const [mobileTab, setMobileTab] = useState("schedule"); // "cinemas" | "schedule"
-
-    const cityDropdownRef = useRef(null);
-
-    // Close city dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (cityDropdownRef.current && !cityDropdownRef.current.contains(e.target)) {
-                setShowCityDropdown(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
     // If initialBrandId changes (e.g. from parent props on BrandPage)
     useEffect(() => {
@@ -375,51 +272,16 @@ const ShowtimesTableSection = ({ initialBrandId = "all" }) => {
                         <span className="text-xs sm:text-sm font-medium text-zinc-400">Khu vực:</span>
 
                         {/* City Dropdown */}
-                        <div className="relative" ref={cityDropdownRef}>
-                            <button
-                                type="button"
-                                onClick={() => setShowCityDropdown(!showCityDropdown)}
-                                className="flex items-center gap-2 bg-[#7f5af0] hover:bg-[#906df9] text-white px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 shadow-[0_0_12px_rgba(127,90,240,0.35)] cursor-pointer active:scale-95"
-                            >
-                                <FontAwesomeIcon icon={faLocationDot} className="text-xs" />
-                                <span>{selectedCity}</span>
-                                <FontAwesomeIcon
-                                    icon={faChevronDown}
-                                    className={`text-[10px] transition-transform duration-200 ${
-                                        showCityDropdown ? "rotate-180" : ""
-                                    }`}
-                                />
-                            </button>
-
-                            {/* Dropdown Menu */}
-                            {showCityDropdown && (
-                                <div className="absolute top-full left-0 mt-2 w-52 bg-[#1a1a22] border border-zinc-700/80 rounded-xl shadow-2xl z-50 py-2 animate-fadeIn ring-1 ring-violet-500/20">
-                                    <p className="px-3.5 py-1 text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
-                                        Chọn Tỉnh/Thành phố
-                                    </p>
-                                    {CITIES.map((city) => (
-                                        <button
-                                            key={city}
-                                            type="button"
-                                            onClick={() => {
-                                                setSelectedCity(city);
-                                                setShowCityDropdown(false);
-                                            }}
-                                            className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm font-medium transition-colors flex items-center justify-between cursor-pointer ${
-                                                selectedCity === city
-                                                    ? "bg-violet-600/20 text-violet-300 font-bold"
-                                                    : "text-zinc-300 hover:bg-zinc-800/70 hover:text-white"
-                                            }`}
-                                        >
-                                            <span>{city}</span>
-                                            {selectedCity === city && (
-                                                <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        <CustomDropdown
+                            icon={faLocationDot}
+                            label={selectedCity}
+                            options={CITIES}
+                            value={selectedCity}
+                            onChange={setSelectedCity}
+                            headerTitle="Chọn Tỉnh / Thành Phố"
+                            variant="pill"
+                            dropdownWidth="w-52"
+                        />
 
                         {/* Near Me Button */}
                         <button
@@ -677,25 +539,29 @@ const ShowtimesTableSection = ({ initialBrandId = "all" }) => {
                         {/* Format & Time Custom Dropdowns */}
                         <div className="flex flex-wrap items-center gap-2">
                             {/* Format selector */}
-                            <CustomFilterDropdown
+                            <CustomDropdown
                                 icon={faFilm}
                                 label={selectedFormat}
                                 options={FORMATS}
                                 value={selectedFormat}
-                                onChange={(val) => setSelectedFormat(val)}
-                                headerTitle="Chọn định dạng chiếu"
+                                onChange={setSelectedFormat}
+                                headerTitle="Định Dạng Chiếu"
+                                variant="pill"
                                 align="right"
+                                dropdownWidth="w-52"
                             />
 
                             {/* Time Slot selector */}
-                            <CustomFilterDropdown
+                            <CustomDropdown
                                 icon={faClock}
                                 label={TIME_SLOTS.find((t) => t.id === selectedTimeSlot)?.label || "Tất cả giờ"}
                                 options={TIME_SLOTS}
                                 value={selectedTimeSlot}
-                                onChange={(val) => setSelectedTimeSlot(val)}
-                                headerTitle="Chọn khung giờ chiếu"
+                                onChange={setSelectedTimeSlot}
+                                headerTitle="Khung Giờ Chiếu"
+                                variant="pill"
                                 align="right"
+                                dropdownWidth="w-56"
                             />
 
                             {/* Reset filters if any active */}

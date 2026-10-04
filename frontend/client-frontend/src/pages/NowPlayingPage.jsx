@@ -17,8 +17,12 @@ import {
     faBolt,
     faGift,
     faClapperboard,
+    faTags,
+    faShieldHalved,
+    faArrowDownWideShort,
 } from "@fortawesome/free-solid-svg-icons";
 
+import CustomDropdown from "../components/common/CustomDropdown.jsx";
 import MediaCarousel from "../components/MediaCarousel.jsx";
 import TopReviewSection from "../components/TopReviewSection.jsx";
 import MovieBlogSection from "../components/MovieBlogSection.jsx";
@@ -338,85 +342,81 @@ const NowPlayingPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
                         {/* Search Input */}
                         <div className="relative sm:col-span-2 lg:col-span-1">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Tìm tên phim, diễn viên..."
-                                className="w-full pl-9 pr-8 py-2.5 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-violet-500 transition-colors"
-                            />
-                            <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"
-                            />
-                            {searchQuery && (
-                                <button
-                                    onClick={() => setSearchQuery("")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs cursor-pointer"
-                                >
-                                    <FontAwesomeIcon icon={faXmark} />
-                                </button>
-                            )}
+                            <div className="relative w-full h-10">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Tìm tên phim, thể loại..."
+                                    className="w-full h-full pl-9 pr-8 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/40 transition-all"
+                                />
+                                <FontAwesomeIcon
+                                    icon={faMagnifyingGlass}
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"
+                                />
+                                {searchQuery && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearchQuery("")}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs cursor-pointer"
+                                        aria-label="Xóa tìm kiếm"
+                                    >
+                                        <FontAwesomeIcon icon={faXmark} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* Thể loại */}
                         <div>
-                            <select
+                            <CustomDropdown
+                                icon={faTags}
+                                options={GENRE_OPTIONS}
                                 value={selectedGenre}
-                                onChange={(e) => setSelectedGenre(e.target.value)}
-                                className="w-full py-2.5 px-3 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white text-xs sm:text-sm focus:outline-none focus:border-violet-500 cursor-pointer transition-colors"
-                            >
-                                {GENRE_OPTIONS.map((g) => (
-                                    <option key={g.value} value={g.value} className="bg-zinc-900 text-white">
-                                        {g.label}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={setSelectedGenre}
+                                headerTitle="Thể Loại Phim"
+                                align="left"
+                                dropdownWidth="w-56"
+                            />
                         </div>
 
                         {/* Định dạng */}
                         <div>
-                            <select
+                            <CustomDropdown
+                                icon={faFilm}
+                                options={FORMAT_OPTIONS}
                                 value={selectedFormat}
-                                onChange={(e) => setSelectedFormat(e.target.value)}
-                                className="w-full py-2.5 px-3 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white text-xs sm:text-sm focus:outline-none focus:border-violet-500 cursor-pointer transition-colors"
-                            >
-                                {FORMAT_OPTIONS.map((f) => (
-                                    <option key={f.value} value={f.value} className="bg-zinc-900 text-white">
-                                        {f.label}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={setSelectedFormat}
+                                headerTitle="Định Dạng Chiếu"
+                                align="left"
+                                dropdownWidth="w-56"
+                            />
                         </div>
 
                         {/* Độ tuổi */}
                         <div>
-                            <select
+                            <CustomDropdown
+                                icon={faShieldHalved}
+                                options={AGE_RATING_OPTIONS}
                                 value={selectedAgeRating}
-                                onChange={(e) => setSelectedAgeRating(e.target.value)}
-                                className="w-full py-2.5 px-3 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white text-xs sm:text-sm focus:outline-none focus:border-violet-500 cursor-pointer transition-colors"
-                            >
-                                {AGE_RATING_OPTIONS.map((r) => (
-                                    <option key={r.value} value={r.value} className="bg-zinc-900 text-white">
-                                        {r.label}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={setSelectedAgeRating}
+                                headerTitle="Độ Tuổi Khán Giả"
+                                align="left"
+                                dropdownWidth="w-64"
+                            />
                         </div>
 
                         {/* Sắp xếp */}
                         <div>
-                            <select
+                            <CustomDropdown
+                                icon={faArrowDownWideShort}
+                                options={SORT_OPTIONS}
                                 value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full py-2.5 px-3 bg-zinc-950/80 rounded-xl border border-zinc-800 text-white text-xs sm:text-sm focus:outline-none focus:border-violet-500 cursor-pointer transition-colors font-medium"
-                            >
-                                {SORT_OPTIONS.map((s) => (
-                                    <option key={s.value} value={s.value} className="bg-zinc-900 text-white">
-                                        {s.label}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={setSortBy}
+                                headerTitle="Sắp Xếp Theo"
+                                align="right"
+                                dropdownWidth="w-56"
+                            />
                         </div>
                     </div>
                 </div>
