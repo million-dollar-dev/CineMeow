@@ -61,33 +61,34 @@ const Banner = ({ movieInfo, onPlayTrailer, onScrollToShowtimes }) => {
 
     return (
         <div className="relative w-full overflow-hidden bg-[#07070b] pt-24 sm:pt-28 pb-12 sm:pb-16 select-none border-b border-zinc-800/60">
-            {/* 1. Backdrop Background Artwork with Smooth Fade */}
+            {/* 1. Backdrop Background Artwork with Natural Framing & High Vibrancy */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <img
-                    src={movieInfo?.backdropPath || movieInfo?.posterPath}
+                    src={movieInfo?.backdropPath || movieInfo?.backdrop || movieInfo?.posterPath}
                     alt={movieInfo?.title}
-                    className="w-full h-full object-cover object-center filter brightness-[0.95] contrast-[1.12] saturate-[1.25] scale-105 transition-transform duration-1000"
+                    className="w-full h-full object-cover object-top md:object-[center_20%] lg:object-[center_25%] filter brightness-[1.08] contrast-[1.15] saturate-[1.3] scale-100 transition-all duration-700"
                 />
 
                 {/* 2. RoPhim Dotted Halftone Texture Layer */}
                 <div
                     aria-hidden="true"
-                    className="absolute inset-0 pointer-events-none z-[2] opacity-20 sm:opacity-25"
+                    className="absolute inset-0 pointer-events-none z-[2] opacity-25 sm:opacity-30"
                     style={{
                         backgroundImage: "url('/images/dotted.png')",
                         backgroundRepeat: "repeat",
                     }}
                 />
 
-                {/* 3. Directional Vignette & Gradient Overlays */}
-                <div className="absolute inset-y-0 left-0 w-full sm:w-[85%] md:w-[70%] lg:w-[60%] bg-gradient-to-r from-[#07070b] via-[#07070b]/90 via-35% md:via-45% to-transparent z-[1]" />
-                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#07070b] via-[#07070b]/80 to-transparent z-[1]" />
-                <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#07070b]/90 via-[#07070b]/50 to-transparent z-[1]" />
-                <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-[#07070b]/60 to-transparent z-[1]" />
+                {/* 3. Directional Vignette & Gradient Overlays - Leaves Center & Right Artwork Vivid */}
+                <div className="absolute inset-y-0 left-0 w-full sm:w-[75%] md:w-[60%] lg:w-[50%] bg-gradient-to-r from-[#07070b] via-[#07070b]/80 via-25% md:via-35% to-transparent z-[1]" />
+                <div className="absolute inset-x-0 bottom-0 h-36 sm:h-44 bg-gradient-to-t from-[#07070b] via-[#07070b]/70 to-transparent z-[1]" />
+                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#07070b]/75 to-transparent z-[1]" />
+                <div className="absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-[#07070b]/40 to-transparent z-[1]" />
 
-                {/* 4. Ambient Neon Glows */}
-                <div className="absolute top-1/4 right-1/4 w-[480px] h-[480px] bg-violet-600/20 rounded-full blur-[140px] pointer-events-none mix-blend-screen" />
-                <div className="absolute bottom-1/3 left-1/4 w-[380px] h-[380px] bg-fuchsia-600/15 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+                {/* 4. Ambient Neon Spotlights to Make Background Pop */}
+                <div className="absolute top-1/4 right-1/4 w-[550px] h-[550px] bg-violet-600/25 rounded-full blur-[140px] pointer-events-none mix-blend-screen" />
+                <div className="absolute bottom-1/3 left-1/4 w-[420px] h-[420px] bg-fuchsia-600/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+                <div className="absolute top-12 right-20 w-80 h-80 bg-cyan-500/15 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
             </div>
 
             {/* 2. Main Content Container */}

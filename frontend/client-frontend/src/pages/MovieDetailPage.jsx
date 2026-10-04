@@ -64,7 +64,7 @@ const MovieDetailPage = () => {
         if (foundNp) {
             return {
                 ...foundNp,
-                backdropPath: foundNp.backdropPath || foundNp.poster,
+                backdropPath: foundNp.backdrop || foundNp.backdropPath || foundNp.poster,
                 posterPath: foundNp.posterPath || foundNp.poster,
                 overview: foundNp.synopsis || foundNp.overview,
                 format: Array.isArray(foundNp.formats) ? foundNp.formats.join(" • ") : foundNp.formats,
@@ -76,7 +76,7 @@ const MovieDetailPage = () => {
         if (foundCs) {
             return {
                 ...foundCs,
-                backdropPath: foundCs.backdropPath || foundCs.poster,
+                backdropPath: foundCs.backdrop || foundCs.backdropPath || foundCs.poster,
                 posterPath: foundCs.posterPath || foundCs.poster,
                 overview: foundCs.synopsis || foundCs.overview,
                 format: Array.isArray(foundCs.formats) ? foundCs.formats.join(" • ") : foundCs.formats,
@@ -88,8 +88,8 @@ const MovieDetailPage = () => {
         return {
             ...defaultM,
             id: movieId || defaultM.id,
-            backdropPath: defaultM.poster,
-            posterPath: defaultM.poster,
+            backdropPath: defaultM.backdrop || defaultM.backdropPath || defaultM.poster,
+            posterPath: defaultM.posterPath || defaultM.poster,
             overview: defaultM.synopsis,
             format: "IMAX 2D • 2D Phụ đề",
         };
