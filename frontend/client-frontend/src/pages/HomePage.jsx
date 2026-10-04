@@ -68,14 +68,13 @@ const HomePage = () => {
 
     return (
         <div className="min-h-screen bg-[#07070b] text-zinc-100 overflow-x-hidden selection:bg-violet-600 selection:text-white relative">
-            {/* Ambient Background Dotted Texture Layer (RoPhim Cinema Style) */}
+            {/* Ambient Background Dotted Texture Layer (Mật độ thông thoáng 24px, tinh tế) */}
             <div
                 aria-hidden="true"
-                className="fixed inset-0 pointer-events-none z-0 opacity-15"
+                className="fixed inset-0 pointer-events-none z-0 opacity-20"
                 style={{
-                    backgroundImage: "url('/images/dotted.png'), radial-gradient(rgba(255, 255, 255, 0.25) 1.2px, transparent 1.2px)",
-                    backgroundRepeat: "repeat",
-                    backgroundSize: "auto, 4px 4px",
+                    backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.28) 1.2px, transparent 1.2px)",
+                    backgroundSize: "24px 24px",
                 }}
             />
 

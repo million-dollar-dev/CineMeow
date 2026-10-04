@@ -215,24 +215,13 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                     loading="eager"
                 />
 
-                {/* 2. RoPhim Signature Halftone Dotted Layer ("chấm chấm li li") */}
+                {/* 2. Refined Cinema Dot Matrix Layer ("chấm chấm li li" thông thoáng, mật độ rộng rãi 20px) */}
                 <div
                     aria-hidden="true"
-                    className="absolute inset-0 pointer-events-none z-[3] opacity-45 mix-blend-overlay"
+                    className="absolute inset-0 pointer-events-none z-[3] opacity-35"
                     style={{
-                        backgroundImage: "url('/images/dotted.png'), radial-gradient(rgba(255, 255, 255, 0.45) 1.2px, transparent 1.2px)",
-                        backgroundRepeat: "repeat",
-                        backgroundSize: "auto, 4px 4px",
-                    }}
-                />
-
-                {/* 3. Subtle Cinema Scanline & Mesh Texture */}
-                <div
-                    aria-hidden="true"
-                    className="absolute inset-0 pointer-events-none z-[3] opacity-20 mix-blend-soft-light"
-                    style={{
-                        backgroundImage: "linear-gradient(rgba(18, 16, 38, 0) 50%, rgba(0, 0, 0, 0.45) 50%)",
-                        backgroundSize: "100% 4px",
+                        backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.35) 1.2px, transparent 1.2px)",
+                        backgroundSize: "20px 20px",
                     }}
                 />
 
