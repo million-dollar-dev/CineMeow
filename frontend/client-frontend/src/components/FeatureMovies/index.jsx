@@ -201,26 +201,58 @@ const FeatureMovies = ({ onPlayTrailer }) => {
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
-            {/* Background Backdrop Image with Smooth Fade */}
+            {/* Background Backdrop Image with Enhanced Vibrancy & Smooth Fade */}
             <div
                 className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                    isFading ? "opacity-0" : "opacity-100"
+                    isFading ? "opacity-0 scale-[1.02]" : "opacity-100 scale-100"
                 }`}
             >
+                {/* 1. Backdrop Image with High Dynamic Range, Rich Saturation & Contrast */}
                 <img
                     src={activeMovie.backdropPath}
                     alt={activeMovie.title}
-                    className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
+                    className="w-full h-full object-cover object-center filter brightness-[1.06] contrast-[1.14] saturate-[1.28] scale-105 transition-all duration-1000"
                     loading="eager"
                 />
 
-                {/* Dark Vignette & Gradient Overlays (Inspired by RoPhim / Phimhay style) */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#07070b] via-[#07070b]/80 to-transparent lg:w-[65%]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07070b] via-[#07070b]/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/60 via-transparent to-transparent" />
+                {/* 2. RoPhim Signature Halftone Dotted Layer ("chấm chấm li li") */}
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 pointer-events-none z-[3] opacity-45 mix-blend-overlay"
+                    style={{
+                        backgroundImage: "url('/images/dotted.png'), radial-gradient(rgba(255, 255, 255, 0.45) 1.2px, transparent 1.2px)",
+                        backgroundRepeat: "repeat",
+                        backgroundSize: "auto, 4px 4px",
+                    }}
+                />
 
-                {/* Ambient Glow */}
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-[120px] pointer-events-none" />
+                {/* 3. Subtle Cinema Scanline & Mesh Texture */}
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 pointer-events-none z-[3] opacity-20 mix-blend-soft-light"
+                    style={{
+                        backgroundImage: "linear-gradient(rgba(18, 16, 38, 0) 50%, rgba(0, 0, 0, 0.45) 50%)",
+                        backgroundSize: "100% 4px",
+                    }}
+                />
+
+                {/* 4. Directional Gradient Masks - Keeps Left Text Ultra-Crisp while Leaving Center & Right Artwork Vivid */}
+                {/* Left Side Text Protection Gradient */}
+                <div className="absolute inset-y-0 left-0 w-full sm:w-[85%] md:w-[70%] lg:w-[58%] bg-gradient-to-r from-[#07070b] via-[#07070b]/90 via-30% md:via-42% to-transparent z-[2]" />
+
+                {/* Bottom Section Blend Gradient */}
+                <div className="absolute inset-x-0 bottom-0 h-44 sm:h-56 bg-gradient-to-t from-[#07070b] via-[#07070b]/75 to-transparent z-[2]" />
+
+                {/* Top Subtle Vignette for Navbar */}
+                <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#07070b]/85 via-[#07070b]/40 to-transparent z-[2]" />
+
+                {/* Right Edge Soft Feathering */}
+                <div className="absolute inset-y-0 right-0 w-24 sm:w-36 bg-gradient-to-l from-[#07070b]/50 to-transparent z-[2]" />
+
+                {/* 5. Luminous Neon Ambient Glows to Make Background Pop */}
+                <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-violet-600/25 rounded-full blur-[140px] pointer-events-none mix-blend-screen z-[1]" />
+                <div className="absolute bottom-1/3 left-1/3 w-[420px] h-[420px] bg-fuchsia-600/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen z-[1]" />
+                <div className="absolute top-12 right-20 w-80 h-80 bg-cyan-500/15 rounded-full blur-[110px] pointer-events-none mix-blend-screen z-[1]" />
             </div>
 
             {/* Main Container: Left Content + Right RoPhim Thumbnail Carousel Rail */}
