@@ -215,13 +215,13 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                     loading="eager"
                 />
 
-                {/* 2. RoPhim Dark Halftone Dot Layer (Dot màu đen, mật độ dày hơn 6px) */}
+                {/* 2. RoPhim Signature Halftone Dotted Layer (Chấm nhỏ li li, gradient mờ nhẹ 0.2, chuẩn 100% RoPhim) */}
                 <div
                     aria-hidden="true"
-                    className="absolute inset-0 pointer-events-none z-[3]"
+                    className="absolute inset-0 pointer-events-none z-[3] opacity-20 sm:opacity-25"
                     style={{
-                        backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.85) 1.2px, transparent 1.2px)",
-                        backgroundSize: "6px 6px",
+                        backgroundImage: "url('/images/dotted.png')",
+                        backgroundRepeat: "repeat",
                     }}
                 />
 
