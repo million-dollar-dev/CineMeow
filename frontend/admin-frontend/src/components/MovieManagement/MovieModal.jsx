@@ -28,7 +28,7 @@ import useFormServerErrors from "../../hooks/useFormServerErrors.js";
 import {MOVIE_STATUS_CONFIG} from "../../constants/movieStatus.js";
 
 const STATUS_OPTIONS = ["NOW_PLAYING", "COMING_SOON", "RELEASED", "POST_PRODUCTION"];
-const RATING_OPTIONS = ["G", "PG", "PG13", "R", "NC17", "C13"];
+const RATING_OPTIONS = ["P", "K", "T13", "T16", "T18", "G", "PG", "PG13", "R", "NC17", "C13"];
 const EMPTY_MOVIE = {
     // backdropPath: "",
     // duration: "",
@@ -141,9 +141,16 @@ export default function MovieModal({open, onClose, mode = "add", movieData}) {
 
     useEffect(() => {
         if (movieData) {
+            const rawDuration = movieData.duration;
+            const cleanDuration =
+                rawDuration !== undefined && rawDuration !== null
+                    ? Number(String(rawDuration).replace(/\D/g, "")) || ""
+                    : "";
+
             reset({
                 ...movieData,
-                genres: movieData.genres?.map((g) => Number(g.id ?? g)) || []
+                duration: cleanDuration,
+                genres: movieData.genres?.map((g) => Number(g.id ?? g)) || [],
             });
         } else {
             reset(EMPTY_MOVIE);
