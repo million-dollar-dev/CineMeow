@@ -1,8 +1,8 @@
 import { rootApi } from "./rootApi";
 
-const CONTEXT_PATH = 'promotion';
+const CONTEXT_PATH = "promotion";
 
-export const brandApi = rootApi.injectEndpoints({
+export const promotionApi = rootApi.injectEndpoints({
     tagTypes: ["Promotions"],
     endpoints: (builder) => ({
         getAllPromotions: builder.query({
@@ -30,11 +30,22 @@ export const brandApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["Promotions"],
         }),
+
+        deletePromotion: builder.mutation({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/promotions/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Promotions"],
+        }),
     }),
 });
+
+export const brandApi = promotionApi; // backwards compatibility
 
 export const {
     useGetAllPromotionsQuery,
     useCreatePromotionMutation,
-    useUpdatePromotionMutation
-} = brandApi;
+    useUpdatePromotionMutation,
+    useDeletePromotionMutation,
+} = promotionApi;

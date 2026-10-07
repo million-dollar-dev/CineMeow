@@ -49,11 +49,35 @@ const statusStyles = {
         pulse: false,
         defaultLabel: "Ngưng chiếu",
     },
+    ACTIVE: {
+        bg: "bg-emerald-50",
+        text: "text-emerald-700",
+        border: "border-emerald-200/80",
+        dot: "bg-emerald-500",
+        pulse: true,
+        defaultLabel: "Kích hoạt",
+    },
+    INACTIVE: {
+        bg: "bg-amber-50",
+        text: "text-amber-700",
+        border: "border-amber-200/80",
+        dot: "bg-amber-500",
+        pulse: false,
+        defaultLabel: "Chưa kích hoạt",
+    },
+    EXPIRED: {
+        bg: "bg-rose-50",
+        text: "text-rose-700",
+        border: "border-rose-200/80",
+        dot: "bg-rose-500",
+        pulse: false,
+        defaultLabel: "Đã hết hạn",
+    },
 };
 
 export default function StatusChip({ status, configs }) {
     const customConfig = configs?.[status];
-    const style = statusStyles[status] || {
+    const defaultStyle = statusStyles[status] || {
         bg: "bg-slate-100",
         text: "text-slate-700",
         border: "border-slate-200",
@@ -62,7 +86,15 @@ export default function StatusChip({ status, configs }) {
         defaultLabel: status,
     };
 
-    const label = customConfig?.label || style.defaultLabel || status;
+    const style = {
+        bg: customConfig?.bg || defaultStyle.bg,
+        text: customConfig?.text || defaultStyle.text,
+        border: customConfig?.border || defaultStyle.border,
+        dot: customConfig?.dot || customConfig?.dotColor || defaultStyle.dot,
+        pulse: customConfig?.pulse !== undefined ? customConfig.pulse : defaultStyle.pulse,
+    };
+
+    const label = customConfig?.label || defaultStyle.defaultLabel || status;
 
     return (
         <span
