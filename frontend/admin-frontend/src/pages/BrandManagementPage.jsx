@@ -32,6 +32,7 @@ import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 // Components, Services & Mock
 import StatCard from "../components/OverviewStats/StatCard.jsx";
@@ -462,69 +463,49 @@ export default function BrandManagementPage() {
             {/* 3. FILTER & SEARCH TOOLBAR */}
             <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4">
                 {/* Search input */}
-                <div className="w-full md:w-96">
-                    <TextField
-                        size="small"
-                        fullWidth
+                <div className="relative flex-1 min-w-[240px] max-w-md w-full">
+                    <SearchOutlinedIcon
+                        sx={{ fontSize: 18 }}
+                        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                    />
+                    <input
+                        type="text"
                         placeholder="Tìm theo tên thương hiệu, mô tả..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchOutlinedIcon sx={{ fontSize: 20, color: "text.secondary" }} />
-                                </InputAdornment>
-                            ),
-                            endAdornment: searchQuery ? (
-                                <InputAdornment position="end">
-                                    <button
-                                        type="button"
-                                        onClick={() => setSearchQuery("")}
-                                        className="text-slate-400 hover:text-slate-600 cursor-pointer"
-                                    >
-                                        <CloseOutlinedIcon sx={{ fontSize: 16 }} />
-                                    </button>
-                                </InputAdornment>
-                            ) : null,
-                        }}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                borderRadius: "12px",
-                                backgroundColor: "#F8FAFC",
-                            },
-                        }}
+                        className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
                     />
+                    {searchQuery && (
+                        <button
+                            type="button"
+                            onClick={() => setSearchQuery("")}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        >
+                            <CloseOutlinedIcon sx={{ fontSize: 15 }} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Sort selector & Actions */}
                 <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-3 flex-wrap">
-                    {/* Sort Dropdown */}
-                    <div className="w-48">
-                        <TextField
-                            select
-                            size="small"
-                            fullWidth
+                    {/* Standard Sort Dropdown */}
+                    <div className="relative min-w-[200px]">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
+                            <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
+                        </div>
+                        <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <FilterListOutlinedIcon sx={{ fontSize: 18, color: "text.secondary" }} />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            sx={{
-                                "& .MuiOutlinedInput-root": {
-                                    borderRadius: "12px",
-                                    backgroundColor: "#F8FAFC",
-                                },
-                            }}
+                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
                         >
-                            <MenuItem value="DEFAULT">Sắp xếp: Mặc định</MenuItem>
-                            <MenuItem value="NAME_ASC">Tên (A → Z)</MenuItem>
-                            <MenuItem value="EMP_DESC">Nhân sự (Nhiều → Ít)</MenuItem>
-                            <MenuItem value="EMP_ASC">Nhân sự (Ít → Nhiều)</MenuItem>
-                        </TextField>
+                            <option value="DEFAULT">Sắp xếp: Mặc định</option>
+                            <option value="NAME_ASC">Tên thương hiệu (A → Z)</option>
+                            <option value="EMP_DESC">Nhân sự (Nhiều → Ít)</option>
+                            <option value="EMP_ASC">Nhân sự (Ít → Nhiều)</option>
+                        </select>
+                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
+                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
+                        </div>
                     </div>
 
                     {/* Reset Filters */}
@@ -532,7 +513,7 @@ export default function BrandManagementPage() {
                         <button
                             type="button"
                             onClick={handleResetFilters}
-                            className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
                         >
                             <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
                             <span>Đặt lại</span>
@@ -540,7 +521,7 @@ export default function BrandManagementPage() {
                     )}
 
                     {/* Count badge */}
-                    <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600">
+                    <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 shadow-2xs">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                         <span>
                             Hiển thị: {filteredBrands.length}/{brands.length} thương hiệu
