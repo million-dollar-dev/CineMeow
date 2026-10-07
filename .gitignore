@@ -12,9 +12,7 @@
 **/.agents/
 **/.agent/
 
-# Design System documentation
-design-system/
-**/design-system/
+frontend/client-frontend/design-system/
 
 # Frontend artifacts
 frontend/node/
