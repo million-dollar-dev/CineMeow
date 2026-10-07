@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 
 // Material Icons
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
 import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOutlined";
@@ -47,6 +48,7 @@ export default function PricingManagementPage() {
         isLoading,
         isError,
         error,
+        refetch,
     } = useGetAllBrandsQuery();
 
     // Fallback merge
@@ -82,13 +84,13 @@ export default function PricingManagementPage() {
             {
                 title: "Chuỗi rạp định giá",
                 value: `${totalBrands} Chuỗi`,
-                subtitle: "Áp dụng chính sách giá toàn quốc",
+                subtitle: "Áp dụng chính sách toàn quốc",
                 icon: <StorefrontOutlinedIcon fontSize="medium" />,
                 bigIcon: <StorefrontOutlinedIcon fontSize="inherit" />,
                 bgColor: "#1976d2", // Indigo / Violet
             },
             {
-                title: "Vé 2D Chuẩn bình quân",
+                title: "Vé 2D tiêu chuẩn",
                 value: "85.000 ₫",
                 subtitle: "Định mức vé đơn 2D phổ thông",
                 icon: <ConfirmationNumberOutlinedIcon fontSize="medium" />,
@@ -96,7 +98,7 @@ export default function PricingManagementPage() {
                 bgColor: "#2e7d32", // Emerald
             },
             {
-                title: "Vé IMAX / 4DX Cao Cấp",
+                title: "Vé IMAX / 4DX",
                 value: "190.000 ₫",
                 subtitle: "Định mức phòng chiếu công nghệ cao",
                 icon: <WorkspacePremiumOutlinedIcon fontSize="medium" />,
@@ -104,12 +106,12 @@ export default function PricingManagementPage() {
                 bgColor: "#f57c00", // Amber
             },
             {
-                title: "Phụ thu ghế đôi (Couple)",
-                value: "+110% - 120%",
-                subtitle: "Chênh lệch giá ghế đôi so với ghế đơn",
-                icon: <WeekendOutlinedIcon fontSize="medium" />,
-                bigIcon: <WeekendOutlinedIcon fontSize="inherit" />,
-                bgColor: "#e11d48", // Rose
+                title: "Định dạng phòng chiếu",
+                value: "4 Định dạng",
+                subtitle: "Chuẩn 2D, 3D, IMAX & 4DX",
+                icon: <TableChartOutlinedIcon fontSize="medium" />,
+                bigIcon: <TableChartOutlinedIcon fontSize="inherit" />,
+                bgColor: "#7c3aed", // Violet
             },
         ],
         [totalBrands]
@@ -321,60 +323,63 @@ export default function PricingManagementPage() {
     ];
 
     return (
-        <Box className="py-4 px-1 sm:px-2 min-h-screen space-y-6">
-            {/* 1. PAGE HEADER */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="py-6 space-y-6">
+            {/* 1. PAGE HEADER (STANDARD PAGE HEADER BANNER) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                    {/* Breadcrumbs */}
-                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
-                        <span>Hệ Thống</span>
-                        <span>/</span>
-                        <span>Quản Lý Bán Vé</span>
-                        <span>/</span>
-                        <span className="text-violet-600 font-bold">Bảng Giá Vé</span>
-                    </div>
-
-                    <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-                        <span>Chính Sách & Biểu Giá Vé Rạp</span>
-                        <span className="text-xs font-black uppercase px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700">
-                            Ma trận định giá
-                        </span>
-                    </h1>
-
-                    <p className="text-xs text-slate-500 font-medium mt-1">
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                        <PaymentsOutlinedIcon className="text-violet-600" />
+                        <span>Bảng Giá Vé Rạp</span>
+                    </h2>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
                         Quản lý biểu phí vé xem phim theo từng chuỗi thương hiệu, định dạng phòng chiếu (2D, 3D, IMAX, 4DX) và phân hạng ghế
                     </p>
                 </div>
 
-                {/* Primary Action Button */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            refetch();
+                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu biểu giá vé...", type: "info" }));
+                        }}
+                        startIcon={<RefreshOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
+                    >
+                        Làm mới
+                    </Button>
+
                     <Button
                         variant="contained"
                         onClick={() => handleOpenEditModal(brands[0] || null)}
                         startIcon={<PaymentsOutlinedIcon />}
                         sx={{
-                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
                             textTransform: "none",
-                            borderRadius: "14px",
-                            px: 3,
-                            py: 1.2,
                             fontWeight: 800,
-                            fontSize: "13px",
-                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.35)",
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
+                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.3)",
                             "&:hover": {
                                 background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
-                                transform: "translateY(-1px)",
                             },
-                            transition: "all 0.2s ease",
                         }}
                     >
-                        Tùy Chỉnh Giá Vé Chuỗi Rạp
+                        Tùy chỉnh giá vé chuỗi rạp
                     </Button>
                 </div>
             </div>
 
             {/* 2. STATS KPI CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {stats.map((stat, index) => (
                     <StatCard
                         key={index}
@@ -631,6 +636,6 @@ export default function PricingManagementPage() {
                     </div>
                 )}
             </Dialog>
-        </Box>
+        </div>
     );
 }

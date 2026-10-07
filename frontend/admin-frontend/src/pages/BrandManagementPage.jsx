@@ -20,7 +20,8 @@ import BrandingWatermarkOutlinedIcon from "@mui/icons-material/BrandingWatermark
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 import WorkspacePremiumOutlinedIcon from "@mui/icons-material/WorkspacePremiumOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
@@ -392,60 +393,63 @@ export default function BrandManagementPage() {
     ];
 
     return (
-        <Box className="py-4 px-1 sm:px-2 min-h-screen space-y-6">
-            {/* 1. PAGE HEADER & ACTIONS */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="py-6 space-y-6">
+            {/* 1. PAGE HEADER (STANDARD PAGE HEADER BANNER) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                    {/* Breadcrumbs */}
-                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
-                        <span>Hệ Thống</span>
-                        <span>/</span>
-                        <span>Quản Lý Cụm Rạp</span>
-                        <span>/</span>
-                        <span className="text-violet-600 font-bold">Thương Hiệu Rạp</span>
-                    </div>
-
-                    <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                        <BrandingWatermarkOutlinedIcon className="text-violet-600" />
                         <span>Quản Lý Thương Hiệu Rạp</span>
-                        <span className="text-xs font-black uppercase px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700">
-                            Đối tác chuỗi rạp
-                        </span>
-                    </h1>
-
-                    <p className="text-xs text-slate-500 font-medium mt-1">
+                    </h2>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
                         Hệ thống nhận diện thương hiệu rạp chiếu, biểu trưng đối tác và phân bổ quy mô nhân sự vận hành
                     </p>
                 </div>
 
-                {/* Main Action Button */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            refetch();
+                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu thương hiệu rạp...", type: "info" }));
+                        }}
+                        startIcon={<RefreshOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
+                    >
+                        Làm mới
+                    </Button>
+
                     <Button
                         variant="contained"
                         onClick={handleAddClick}
-                        startIcon={<AddCircleOutlineOutlinedIcon />}
+                        startIcon={<AddOutlinedIcon />}
                         sx={{
-                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
                             textTransform: "none",
-                            borderRadius: "14px",
-                            px: 3,
-                            py: 1.2,
                             fontWeight: 800,
-                            fontSize: "13px",
-                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.35)",
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
+                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.3)",
                             "&:hover": {
                                 background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
-                                transform: "translateY(-1px)",
                             },
-                            transition: "all 0.2s ease",
                         }}
                     >
-                        Thêm Thương Hiệu Mới
+                        Thêm thương hiệu mới
                     </Button>
                 </div>
             </div>
 
             {/* 2. STATS KPI CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {stats.map((stat, index) => (
                     <StatCard
                         key={index}
@@ -764,6 +768,6 @@ export default function BrandManagementPage() {
                     </div>
                 </div>
             </Dialog>
-        </Box>
+        </div>
     );
 }

@@ -4,7 +4,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import {
     Box,
     Button,
-    Grid,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -550,15 +549,11 @@ export default function ShowtimePage() {
             </div>
 
             {/* 2. STATS OVERVIEW CARDS */}
-            <Box sx={{ pb: 3.5 }}>
-                <Grid container spacing={3}>
-                    {stats.map((stat, idx) => (
-                        <Grid item xs={12} sm={6} md={3} key={idx}>
-                            <StatCard {...stat} loading={isLoadingShowtimes} />
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                {stats.map((stat, idx) => (
+                    <StatCard key={idx} {...stat} loading={isLoadingShowtimes} />
+                ))}
+            </div>
 
             {/* 3. MULTI-FILTER BAR & STATUS TABS */}
             <div className="bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3.5 mb-5">

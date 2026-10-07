@@ -26,7 +26,7 @@ import { MOVIE_STATUS_CONFIG } from "../constants/movieStatus.js";
 import { MOCK_MOVIES } from "../mock/mockMovies.js";
 
 // Icons
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import MovieCreationOutlinedIcon from "@mui/icons-material/MovieCreationOutlined";
 import PlayCircleOutlinedIcon from "@mui/icons-material/PlayCircleOutlined";
 import FiberNewOutlinedIcon from "@mui/icons-material/FiberNewOutlined";
@@ -610,42 +610,62 @@ export default function MovieManagementPage() {
                 movieData={selectedMovie}
             />
 
-            {/* 1. TOP HEADER & PRIMARY ACTION */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* 1. PAGE HEADER (STANDARD PAGE HEADER BANNER) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                     <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-                        <LocalMoviesOutlinedIcon sx={{ fontSize: 28 }} className="text-violet-600" />
-                        Kho Phim Điện Ảnh
+                        <LocalMoviesOutlinedIcon className="text-violet-600" />
+                        <span>Quản Lý Phim</span>
                     </h2>
-                    <p className="text-xs font-medium text-slate-400 mt-1">
-                        Quản lý danh mục phim, kiểm soát tình trạng phát hành và thiết lập thông tin hiển thị trên hệ thống rạp CineMeow.
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                        Quản lý danh mục phim, kiểm soát tình trạng phát hành và thiết lập thông tin hiển thị trên hệ thống rạp CineMeow
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <Tooltip title="Tải lại dữ liệu" arrow disableInteractive>
-                        <button
-                            type="button"
-                            onClick={() => refetch()}
-                            className="w-10 h-10 rounded-xl bg-white border border-slate-200/80 hover:bg-slate-50 text-slate-600 hover:text-slate-900 flex items-center justify-center transition cursor-pointer shadow-xs active:scale-95"
-                        >
-                            <RefreshOutlinedIcon sx={{ fontSize: 20 }} />
-                        </button>
-                    </Tooltip>
-
-                    <button
-                        type="button"
-                        onClick={handleAddClick}
-                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-violet-500/25 flex items-center gap-2 transition cursor-pointer active:scale-95"
+                <div className="flex items-center gap-2.5">
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            refetch();
+                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu danh mục phim...", type: "info" }));
+                        }}
+                        startIcon={<RefreshOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
                     >
-                        <AddRoundedIcon sx={{ fontSize: 18 }} />
+                        Làm mới
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        onClick={handleAddClick}
+                        startIcon={<AddOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 800,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
+                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.3)",
+                            "&:hover": {
+                                background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
+                            },
+                        }}
+                    >
                         Thêm phim mới
-                    </button>
+                    </Button>
                 </div>
             </div>
 
             {/* 2. STATS KPI GRID USING SHARED StatCard COMPONENT */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {stats.map((stat, idx) => (
                     <StatCard key={idx} {...stat} loading={isLoading} />
                 ))}

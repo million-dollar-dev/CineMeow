@@ -2,6 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Box, Button} from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import {DataGrid} from "@mui/x-data-grid";
@@ -27,7 +30,7 @@ const PromotionManagementPage = () => {
     const [modalMode, setModalMode] = useState("add");
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const {data: promotions, isLoading, isError, error} = useGetAllPromotionsQuery();
+    const {data: promotions, isLoading, isError, error, refetch} = useGetAllPromotionsQuery();
 
     const columns = [
         {field: "code", headerName: "Mã", flex: 1, minWidth: 70},
@@ -205,8 +208,58 @@ const PromotionManagementPage = () => {
                 open={openModal}
                 itemData={selectedItem}
             />
-            <div className="flex justify-between items-center my-4">
-                <h2 className="text-2xl font-extrabold text-black">Quản Lý Ưu đãi</h2>
+            {/* 1. PAGE HEADER (STANDARD PAGE HEADER BANNER) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                        <ConfirmationNumberOutlinedIcon className="text-violet-600" />
+                        <span>Quản Lý Ưu Đãi</span>
+                    </h2>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                        Thiết lập mã giảm giá, chương trình ưu đãi vé xem phim và combo bắp nước trên toàn hệ thống
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            refetch();
+                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu ưu đãi...", type: "info" }));
+                        }}
+                        startIcon={<RefreshOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
+                    >
+                        Làm mới
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        onClick={handleAddClick}
+                        startIcon={<AddOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 800,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
+                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.3)",
+                            "&:hover": {
+                                background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
+                            },
+                        }}
+                    >
+                        Thêm ưu đãi mới
+                    </Button>
+                </div>
             </div>
 
             <Box sx={{height: 630, width: "100%"}}>

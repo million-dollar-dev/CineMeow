@@ -256,16 +256,17 @@ export default function DashboardPage() {
             {/* 1. TOP HEADER: GREETING & FILTERS */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
                 <div>
-                    <div className="flex items-center gap-2.5">
-                        <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                            Tổng Quan Vận Hành Cụm Rạp
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                        <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                            <TrendingUpOutlinedIcon className="text-violet-600" />
+                            <span>Tổng Quan Vận Hành Cụm Rạp</span>
                         </h1>
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/60 text-emerald-700 text-xs font-bold">
                             <FiberManualRecordIcon sx={{ fontSize: 9 }} className="text-emerald-500 animate-pulse" />
                             Trực tuyến
                         </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
+                    <p className="text-xs text-slate-400 mt-1 font-medium">
                         Giám sát hiệu suất phòng vé, tỷ lệ lấp đầy ghế và hoạt động các phòng chiếu thời gian thực.
                     </p>
                 </div>

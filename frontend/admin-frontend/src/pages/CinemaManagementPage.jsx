@@ -26,6 +26,9 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import TheaterComedyOutlinedIcon from "@mui/icons-material/TheaterComedyOutlined";
 import EventSeatOutlinedIcon from "@mui/icons-material/EventSeatOutlined";
+import TheatersOutlinedIcon from "@mui/icons-material/TheatersOutlined";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 // Components, Services & Mock
 import StatCard from "../components/OverviewStats/StatCard.jsx";
@@ -45,6 +48,7 @@ export default function CinemaManagementPage() {
         isError: isCinemaError,
         error: cinemaError,
         isLoading: isLoadingCinemas,
+        refetch: refetchCinemas,
     } = useGetAllCinemasQuery();
     const { data: brandResponse } = useGetAllBrandsQuery();
 
@@ -468,26 +472,57 @@ export default function CinemaManagementPage() {
                 initialTab={modalTab}
             />
 
-            {/* 1. HEADER SECTION */}
+            {/* 1. HEADER SECTION (STANDARD PAGE HEADER BANNER) */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                    <h2 className="text-2xl font-black tracking-tight text-slate-900">
-                        Quản Lý Cụm Rạp
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                        <TheatersOutlinedIcon className="text-violet-600" />
+                        <span>Quản Lý Cụm Rạp</span>
                     </h2>
-                    <p className="text-xs text-slate-500 font-medium mt-1">
+                    <p className="text-xs text-slate-400 font-medium mt-1">
                         Quản lý hệ sinh thái rạp chiếu phim, sơ đồ phòng máy, thương hiệu và công nghệ phòng chiếu trên toàn quốc
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <button
-                        type="button"
-                        onClick={handleAddClick}
-                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white text-xs font-bold shadow-md shadow-violet-500/20 hover:shadow-lg hover:shadow-violet-500/30 transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+                <div className="flex items-center gap-2.5">
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            refetchCinemas();
+                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu cụm rạp...", type: "info" }));
+                        }}
+                        startIcon={<RefreshOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
                     >
-                        <AddCircleOutlineOutlinedIcon sx={{ fontSize: 18 }} />
-                        <span>Thêm Cụm Rạp Mới</span>
-                    </button>
+                        Làm mới
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        onClick={handleAddClick}
+                        startIcon={<AddOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 800,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
+                            boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.3)",
+                            "&:hover": {
+                                background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
+                            },
+                        }}
+                    >
+                        Thêm cụm rạp mới
+                    </Button>
                 </div>
             </div>
 

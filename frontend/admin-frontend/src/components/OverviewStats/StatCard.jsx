@@ -54,13 +54,13 @@ const StatCard = ({
                 position: "relative",
                 overflow: "hidden",
                 borderRadius: "20px",
-                p: { xs: 2.5, sm: 3 },
+                p: { xs: 2, sm: 2.25 },
                 display: "flex",
                 alignItems: "center",
-                gap: 2.5,
+                gap: 2,
                 background: cardGradient,
                 color: "white",
-                minHeight: 120,
+                minHeight: { xs: 104, sm: 110 },
                 boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05)",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 cursor: onClick ? "pointer" : "default",
@@ -90,9 +90,9 @@ const StatCard = ({
             {/* 1. Frosted Glass Front Icon Container */}
             <Box
                 sx={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: "16px",
+                    width: 48,
+                    height: 48,
+                    borderRadius: "14px",
                     backgroundColor: "rgba(255, 255, 255, 0.18)",
                     backdropFilter: "blur(12px)",
                     border: "1px solid rgba(255, 255, 255, 0.35)",
@@ -108,7 +108,7 @@ const StatCard = ({
                     React.cloneElement(icon, {
                         style: {
                             color: "#FFFFFF",
-                            fontSize: 26,
+                            fontSize: 24,
                         },
                     })}
             </Box>
@@ -152,11 +152,17 @@ const StatCard = ({
                             variant="h4"
                             sx={{
                                 fontWeight: 900,
-                                fontSize: { xs: "26px", sm: "30px" },
+                                fontSize:
+                                    typeof value === "string" && value.length > 5
+                                        ? { xs: "20px", sm: "22px" }
+                                        : { xs: "24px", sm: "28px" },
                                 letterSpacing: "-0.02em",
                                 lineHeight: 1.15,
                                 mt: 0.25,
                                 color: "#FFFFFF",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
                             }}
                         >
                             {value}
