@@ -147,6 +147,37 @@ Nằm trên cùng của Dialog Paper, tạo nhận diện thương hiệu CineMe
   </div>
   ```
 
+### 3.5. Quy Chuẩn Panel Xem Trước Trực Tiếp (Live Preview Studio Panel)
+
+Đối với các modal tạo/chỉnh sửa thực thể hiển thị khách hàng (`MovieModal`, `ShowtimeModal`, `BrandModal`, v.v.), bắt buộc có panel Live Preview ở cột phụ bên phải:
+
+#### 1. Bố cục & Vị trí Sticky
+- **Vị trí**: Cột phụ bên phải trong bố cục Grid 12 cột (`col-span-12 lg:col-span-5` hoặc `lg:col-span-6`).
+- **Sticky container**: `<div className="sticky top-2 space-y-3">` giữ panel xem trước luôn xuất hiện trong tầm nhìn khi cuộn nội dung form bên trái.
+
+#### 2. Thanh Tiêu Đề Preview (Header Bar)
+Bắt buộc có đèn hiệu radar xanh pulse và badge link source phía client:
+```jsx
+<div className="flex items-center justify-between px-1 text-xs">
+    <div className="flex items-center gap-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="font-extrabold uppercase tracking-wider text-slate-800 text-[11px]">
+            Live Preview: [Tên Đối Tượng Khách Hàng]
+        </span>
+    </div>
+    <span className="text-[10px] font-bold text-violet-700 bg-violet-50 border border-violet-200 px-2.5 py-0.5 rounded-full">
+        client-frontend / [Component hoặc Page tương ứng]
+    </span>
+</div>
+```
+
+#### 3. Khung Card Mô Phỏng Dark Theme Khách Hàng (Client Replica Shell)
+- **Vỏ card**: `rounded-3xl bg-[#0a0a0d] border border-zinc-800/90 shadow-2xl text-white overflow-hidden relative select-none p-5 sm:p-6`
+- **Nguyên tắc phản chiếu (Mirroring Principle)**:
+  - Bê y nguyên 100% cấu trúc giao diện khách hàng tương ứng từ `client-frontend` (Banner, Dark Gradient, Glassmorphism logo container, Badges, Tagline, Highlight Pills, Nút CTA).
+  - Liên kết dữ liệu thời gian thực (`useWatch` từ React Hook Form).
+  - Có fallback xử lý ảnh lỗi (`onError`) và placeholder tinh tế khi người dùng chưa nhập liệu.
+
 ---
 
 ### 3.4. Modal Footer (Thanh hành động chân trang)
