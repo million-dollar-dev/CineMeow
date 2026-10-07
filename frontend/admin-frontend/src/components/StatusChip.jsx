@@ -67,6 +67,7 @@ export default function StatusChip({ status, configs }) {
     return (
         <span
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border shadow-2xs select-none ${style.bg} ${style.text} ${style.border}`}
+            style={{ lineHeight: "1.2" }}
         >
             <span
                 className={`w-1.5 h-1.5 rounded-full ${style.dot} ${
