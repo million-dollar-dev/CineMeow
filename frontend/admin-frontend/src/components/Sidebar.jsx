@@ -18,6 +18,7 @@ import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
 import LoyaltyOutlinedIcon from "@mui/icons-material/LoyaltyOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 const menuGroups = [
     {
@@ -72,6 +73,16 @@ const menuGroups = [
                 label: "Ưu đãi & Khuyến mãi",
                 path: "/promotion",
                 Icon: LoyaltyOutlinedIcon,
+            },
+        ],
+    },
+    {
+        title: "Hệ thống",
+        items: [
+            {
+                label: "Cấu hình hệ thống",
+                path: "/settings",
+                Icon: SettingsOutlinedIcon,
             },
         ],
     },

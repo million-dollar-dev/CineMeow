@@ -1,13 +1,8 @@
 import React from 'react';
-import {Button} from "@mui/material";
+import DashboardPage from './DashboardPage.jsx';
 
 const HomePage = () => {
-    return (
-        <div>
-            <h1>Hello world</h1>
-            <Button variant={"contained"}>Login</Button>
-        </div>
-    );
+    return <DashboardPage />;
 };
 
-export default HomePage;
+export default HomePage;

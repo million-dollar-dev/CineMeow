@@ -1,6 +1,6 @@
 import {createRoot} from 'react-dom/client'
 import './index.css'
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
 import RootLayout from "./pages/RootLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import {ThemeProvider} from "@mui/material";
@@ -19,6 +19,7 @@ import ShowtimePage from "./pages/ShowtimePage.jsx";
 import FnBManagementPage from "./pages/FnBManagementPage.jsx";
 import PricingManagementPage from "./pages/PricingManagementPage.jsx";
 import PromotionManagementPage from "./pages/PromotionManagementPage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: "/",
-                        element: <HomePage/>
+                        element: <Navigate to="/dashboard" replace />
                     },
                     {
                         path: "/dashboard",
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
                     {
                         path: "/promotion",
                         element: <PromotionManagementPage />
+                    },
+                    {
+                        path: "/settings",
+                        element: <SettingsPage />
                     },
                 ]
             },

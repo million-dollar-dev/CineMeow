@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
     Tooltip,
@@ -42,6 +42,7 @@ const pageMeta = {
     "/pricing": { title: "Bảng giá vé", subtitle: "Cấu hình định mức giá vé & phụ thu" },
     "/fnb": { title: "Bắp nước FnB", subtitle: "Danh mục combo ẩm thực & đồ uống" },
     "/promotion": { title: "Ưu đãi & Khuyến mãi", subtitle: "Chương trình ưu đãi & mã giảm giá" },
+    "/settings": { title: "Cấu hình hệ thống", subtitle: "Quy tắc đặt vé, cổng thanh toán, điểm thưởng & vận hành" },
 };
 
 const notificationsData = [
@@ -86,6 +87,7 @@ const notificationsData = [
 const Topbar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
     const expanded = useSelector((state) => state.sidebar.expanded);
     const { logOut } = useLogout();
 
@@ -186,6 +188,7 @@ const Topbar = () => {
                 <Tooltip title="Cài đặt hệ thống" arrow disableInteractive>
                     <button
                         type="button"
+                        onClick={() => navigate("/settings")}
                         className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-violet-50 text-slate-500 hover:text-violet-600 border border-slate-200/70 transition-all flex items-center justify-center cursor-pointer active:scale-95 shadow-xs"
                     >
                         <SettingsOutlinedIcon sx={{ fontSize: 20 }} />
@@ -347,7 +350,10 @@ const Topbar = () => {
                 </MenuItem>
 
                 <MenuItem
-                    onClick={() => setAnchorAcc(null)}
+                    onClick={() => {
+                        setAnchorAcc(null);
+                        navigate("/settings");
+                    }}
                     sx={{
                         borderRadius: "10px",
                         fontSize: "12px",
