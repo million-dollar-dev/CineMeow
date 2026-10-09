@@ -20,6 +20,7 @@ import FnBManagementPage from "./pages/FnBManagementPage.jsx";
 import PricingManagementPage from "./pages/PricingManagementPage.jsx";
 import PromotionManagementPage from "./pages/PromotionManagementPage.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
+import AccountManagementPage from "./pages/AccountManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
                     {
                         path: "/settings",
                         element: <SettingsPage />
+                    },
+                    {
+                        path: "/accounts",
+                        element: <AccountManagementPage />
                     },
                 ]
             },

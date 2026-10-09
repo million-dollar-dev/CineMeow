@@ -19,6 +19,7 @@ import LoyaltyOutlinedIcon from "@mui/icons-material/LoyaltyOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 
 const menuGroups = [
     {
@@ -79,6 +80,11 @@ const menuGroups = [
     {
         title: "Hệ thống",
         items: [
+            {
+                label: "Tài khoản quản trị",
+                path: "/accounts",
+                Icon: ManageAccountsOutlinedIcon,
+            },
             {
                 label: "Cấu hình hệ thống",
                 path: "/settings",

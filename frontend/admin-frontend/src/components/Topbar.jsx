@@ -30,6 +30,7 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 
 // Dynamic Page Titles & Subtitles based on Route
 const pageMeta = {
@@ -42,6 +43,7 @@ const pageMeta = {
     "/pricing": { title: "Bảng giá vé", subtitle: "Cấu hình định mức giá vé & phụ thu" },
     "/fnb": { title: "Bắp nước FnB", subtitle: "Danh mục combo ẩm thực & đồ uống" },
     "/promotion": { title: "Ưu đãi & Khuyến mãi", subtitle: "Chương trình ưu đãi & mã giảm giá" },
+    "/accounts": { title: "Tài khoản quản trị", subtitle: "Quản lý nhân sự, chức vụ & phân quyền hệ thống CineMeow" },
     "/settings": { title: "Cấu hình hệ thống", subtitle: "Quy tắc đặt vé, cổng thanh toán, điểm thưởng & vận hành" },
 };
 
@@ -367,6 +369,26 @@ const Topbar = () => {
                         <SettingsOutlinedIcon sx={{ fontSize: 18 }} />
                     </ListItemIcon>
                     Cài đặt hệ thống
+                </MenuItem>
+
+                <MenuItem
+                    onClick={() => {
+                        setAnchorAcc(null);
+                        navigate("/accounts");
+                    }}
+                    sx={{
+                        borderRadius: "10px",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                        color: "#334155",
+                        py: 1,
+                        "&:hover": { bgcolor: "#F8FAFC", color: "#0F172A" },
+                    }}
+                >
+                    <ListItemIcon sx={{ minWidth: 32, color: "#64748B" }}>
+                        <ManageAccountsOutlinedIcon sx={{ fontSize: 18 }} />
+                    </ListItemIcon>
+                    Quản lý tài khoản
                 </MenuItem>
 
                 <Divider sx={{ my: 0.75, borderColor: "#F1F5F9" }} />
