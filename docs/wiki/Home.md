@@ -57,6 +57,7 @@ We maintain a centralized tracking index to manage all implemented, in-progress,
 👉 **[[Go to Feature Index & Roadmap|Feature-Index]]**
 
 ### Core Feature Specifications
+- [[Admin Portal UI/UX Refactoring & Design System|Feature-Admin-UI-UX-Refactoring]]
 - [[Refactor Backend Services into Parent Module|Feature-Refactor-Backend-Services]]
 - [[Ticket Booking Engine|Feature-Booking]]
 - [[Payment & Transactions|Feature-Payment]]

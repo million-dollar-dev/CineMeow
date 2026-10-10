@@ -22,6 +22,7 @@ This page serves as the single source of truth for tracking the implementation s
 
 | Code | Feature Title | Target Microservices | Priority | Status | Specification Doc |
 | :---: | :--- | :--- | :---: | :---: | :--- |
+| **FEAT-UI-001** | Admin Portal UI/UX Refactoring & Design System | `admin-frontend`, `design-system` | P0 | `🟢 Live` | [[Feature-Admin-UI-UX-Refactoring]] |
 | **FEAT-ARCH-001** | Refactor Backend into Parent Module | `backend/`, `core/` | P0 | `🟡 In Progress` | [[Feature-Refactor-Backend-Services]] |
 | **FEAT-001** | Real-time Seat Hold & Release | `booking-service`, Redis | P0 | `🟢 Live` | [[Feature-Booking]] |
 | **FEAT-002** | Payment Gateway Integration (VNPay / MoMo) | `payment-service` | P0 | `🟢 Live` | [[Feature-Payment]] |
