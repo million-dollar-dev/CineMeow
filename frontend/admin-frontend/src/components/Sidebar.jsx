@@ -21,6 +21,7 @@ import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 
 const menuGroups = [
     {
@@ -61,6 +62,11 @@ const menuGroups = [
     {
         title: "Bán vé & Dịch vụ",
         items: [
+            {
+                label: "Đơn đặt vé",
+                path: "/bookings",
+                Icon: ReceiptLongOutlinedIcon,
+            },
             {
                 label: "Bảng giá vé",
                 path: "/pricing",

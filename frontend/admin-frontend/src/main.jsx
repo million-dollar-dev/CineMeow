@@ -22,6 +22,7 @@ import PromotionManagementPage from "./pages/PromotionManagementPage.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
 import AccountManagementPage from "./pages/AccountManagementPage.jsx";
 import NotificationManagementPage from "./pages/NotificationManagementPage.jsx";
+import BookingManagementPage from "./pages/BookingManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
                     {
                         path: "/fnb",
                         element: <FnBManagementPage />
+                    },
+                    {
+                        path: "/bookings",
+                        element: <BookingManagementPage />
                     },
                     {
                         path: "/pricing",
