@@ -21,6 +21,7 @@ import PricingManagementPage from "./pages/PricingManagementPage.jsx";
 import PromotionManagementPage from "./pages/PromotionManagementPage.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
 import AccountManagementPage from "./pages/AccountManagementPage.jsx";
+import NotificationManagementPage from "./pages/NotificationManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
                     {
                         path: "/accounts",
                         element: <AccountManagementPage />
+                    },
+                    {
+                        path: "/notifications",
+                        element: <NotificationManagementPage />
                     },
                 ]
             },

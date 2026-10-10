@@ -44,6 +44,7 @@ const pageMeta = {
     "/fnb": { title: "Bắp nước FnB", subtitle: "Danh mục combo ẩm thực & đồ uống" },
     "/promotion": { title: "Ưu đãi & Khuyến mãi", subtitle: "Chương trình ưu đãi & mã giảm giá" },
     "/accounts": { title: "Tài khoản quản trị", subtitle: "Quản lý nhân sự, chức vụ & phân quyền hệ thống CineMeow" },
+    "/notifications": { title: "Trung tâm Thông báo", subtitle: "Nhật ký cảnh báo vận hành, đơn vé mới & biến động hệ thống" },
     "/settings": { title: "Cấu hình hệ thống", subtitle: "Quy tắc đặt vé, cổng thanh toán, điểm thưởng & vận hành" },
 };
 
@@ -261,6 +262,10 @@ const Topbar = () => {
                     {notificationsData.map((item) => (
                         <div
                             key={item.id}
+                            onClick={() => {
+                                setAnchorNotif(null);
+                                navigate("/notifications");
+                            }}
                             className={`p-3.5 flex items-start gap-3 hover:bg-slate-50 transition cursor-pointer ${
                                 item.unread ? "bg-violet-50/30" : ""
                             }`}
@@ -282,7 +287,10 @@ const Topbar = () => {
                 <div className="p-2.5 text-center border-t border-slate-100 bg-slate-50/50">
                     <button
                         type="button"
-                        onClick={() => setAnchorNotif(null)}
+                        onClick={() => {
+                            setAnchorNotif(null);
+                            navigate("/notifications");
+                        }}
                         className="text-xs font-semibold text-violet-600 hover:text-violet-800 transition cursor-pointer"
                     >
                         Xem tất cả thông báo

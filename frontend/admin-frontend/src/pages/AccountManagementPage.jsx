@@ -874,75 +874,58 @@ export default function AccountManagementPage() {
     );
 
     return (
-        <div className="p-6 space-y-6 max-w-[1600px] mx-auto min-h-screen">
-            {/* 1. HEADER BANNER */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 text-white shadow-xl border border-slate-800">
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                    <div className="space-y-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                            <ManageAccountsOutlinedIcon sx={{ fontSize: 16 }} />
-                            <span>Trung tâm Quản Lý Tài Khoản CineMeow</span>
-                        </div>
-                        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
-                            Quản Lý Tài Khoản Toàn Hệ Thống
-                        </h1>
-                        <p className="text-xs md:text-sm text-slate-300 max-w-2xl leading-relaxed">
-                            Quản lý tập trung cả nhân sự quản trị (Super Admin, Quản lý rạp, Nhân viên) và khách hàng đăng ký thành viên (Loyalty CinePoints, hạng thẻ VIP).
-                        </p>
-                    </div>
+        <div className="py-6 space-y-6">
+            {/* 1. PAGE HEADER (STANDARD PAGE HEADER BANNER) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                        <ManageAccountsOutlinedIcon className="text-violet-600" />
+                        <span>Quản Lý Tài Khoản Toàn Hệ Thống</span>
+                    </h2>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                        Quản lý tập trung cả nhân sự quản trị hệ thống và khách hàng đăng ký thành viên CineMeow
+                    </p>
+                </div>
 
-                    {/* Actions on Banner */}
-                    <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <div className="flex items-center gap-2.5">
+                    <Button
+                        variant="outlined"
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon />}
+                        sx={{
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
+                    >
+                        Làm mới
+                    </Button>
+
+                    {accountTypeTab === "ADMIN" && (
                         <Button
-                            variant="outlined"
-                            onClick={handleRefresh}
-                            startIcon={<RefreshOutlinedIcon />}
+                            variant="contained"
+                            onClick={handleAddAccount}
+                            startIcon={<AddOutlinedIcon />}
                             sx={{
-                                color: "#FFFFFF",
-                                borderColor: "rgba(255, 255, 255, 0.2)",
-                                borderRadius: "12px",
                                 textTransform: "none",
-                                fontWeight: 700,
-                                fontSize: "13px",
-                                px: 2,
-                                py: 1,
+                                fontWeight: 800,
+                                fontSize: "12px",
+                                borderRadius: "12px",
+                                background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
+                                boxShadow: "0 10px 20px -5px rgba(124, 58, 237, 0.3)",
                                 "&:hover": {
-                                    borderColor: "#FFFFFF",
-                                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                    background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
                                 },
                             }}
                         >
-                            Đồng bộ dữ liệu
+                            Thêm quản trị viên
                         </Button>
-
-                        {accountTypeTab === "ADMIN" && (
-                            <Button
-                                variant="contained"
-                                onClick={handleAddAccount}
-                                startIcon={<AddOutlinedIcon />}
-                                sx={{
-                                    background: "linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)",
-                                    boxShadow: "0 4px 14px 0 rgba(124, 58, 237, 0.39)",
-                                    borderRadius: "12px",
-                                    textTransform: "none",
-                                    fontWeight: 700,
-                                    fontSize: "13px",
-                                    px: 2.5,
-                                    py: 1,
-                                    "&:hover": {
-                                        background: "linear-gradient(135deg, #6D28D9 0%, #4338CA 100%)",
-                                    },
-                                }}
-                            >
-                                + Thêm Quản Trị Viên
-                            </Button>
-                        )}
-                    </div>
+                    )}
                 </div>
-
-                {/* Decorative background glow */}
-                <div className="absolute -right-16 -top-16 w-64 h-64 bg-violet-600/20 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute right-1/3 -bottom-16 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
             </div>
 
             {/* 2. PRIMARY TAB SEGMENT SWITCHER: ADMIN vs CUSTOMER */}

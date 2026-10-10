@@ -20,6 +20,7 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 const menuGroups = [
     {
@@ -84,6 +85,11 @@ const menuGroups = [
                 label: "Tài khoản quản trị",
                 path: "/accounts",
                 Icon: ManageAccountsOutlinedIcon,
+            },
+            {
+                label: "Thông báo hệ thống",
+                path: "/notifications",
+                Icon: NotificationsNoneOutlinedIcon,
             },
             {
                 label: "Cấu hình hệ thống",
