@@ -1,22 +1,34 @@
 import React from 'react';
 
-const RATING_COLORS = {
-    G: "bg-green-500",       // General
-    PG: "bg-blue-400",       // Parental Guidance
-    PG13: "bg-yellow-400",   // Parents Strongly Cautioned
-    R: "bg-red-500",         // Restricted
-    NC17: "bg-purple-600",   // Adults Only
-    C13: "bg-orange-500",    // C13 (Việt Nam phân loại)
+const RATING_MAP = {
+    P: { bg: "bg-emerald-500", text: "text-white", label: "P" },
+    G: { bg: "bg-emerald-500", text: "text-white", label: "P" },
+    K: { bg: "bg-sky-500", text: "text-white", label: "K" },
+    PG: { bg: "bg-sky-500", text: "text-white", label: "PG" },
+    PG13: { bg: "bg-amber-500", text: "text-white", label: "13+" },
+    "13+": { bg: "bg-amber-500", text: "text-white", label: "13+" },
+    C13: { bg: "bg-amber-500", text: "text-white", label: "T13" },
+    T13: { bg: "bg-amber-500", text: "text-white", label: "T13" },
+    "16+": { bg: "bg-orange-500", text: "text-white", label: "16+" },
+    C16: { bg: "bg-orange-500", text: "text-white", label: "T16" },
+    T16: { bg: "bg-orange-500", text: "text-white", label: "T16" },
+    "18+": { bg: "bg-rose-600", text: "text-white", label: "18+" },
+    C18: { bg: "bg-rose-600", text: "text-white", label: "T18" },
+    T18: { bg: "bg-rose-600", text: "text-white", label: "T18" },
+    R: { bg: "bg-rose-600", text: "text-white", label: "R" },
+    NC17: { bg: "bg-purple-600", text: "text-white", label: "18+" },
 };
 
-const RatingCard = ({rating}) => {
-    const colorClass = RATING_COLORS[rating] || "bg-gray-400";
+const RatingCard = ({ rating = "P", className = "" }) => {
+    const key = String(rating).toUpperCase().trim();
+    const info = RATING_MAP[key] || { bg: "bg-zinc-700", text: "text-zinc-200", label: rating };
+
     return (
-        <div className="flex">
-            <div className={`py-[0.1vw] px-[0.5vw] rounded-md ${colorClass}`}>
-                <p className="text-[1vw]">{rating}</p>
-            </div>
-        </div>
+        <span
+            className={`inline-flex items-center justify-center font-bold text-[11px] sm:text-xs px-1.5 py-0.5 rounded shadow-sm leading-none tracking-tight shrink-0 select-none ${info.bg} ${info.text} ${className}`}
+        >
+            {info.label}
+        </span>
     );
 };
 

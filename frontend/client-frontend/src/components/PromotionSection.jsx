@@ -13,7 +13,7 @@ const Promotions = () => {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 mb-2">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-violet-500/10 text-violet-400 border border-violet-500/20 mb-2">
                             <FontAwesomeIcon icon={faTicketAlt} />
                             Đặc Quyền Rạp Phim
                         </div>
@@ -24,7 +24,7 @@ const Promotions = () => {
 
                     <Link
                         to="/promotions"
-                        className="inline-flex items-center gap-2 text-sm font-bold text-rose-400 hover:text-rose-300 transition-colors group"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-violet-400 hover:text-violet-300 transition-colors group"
                     >
                         <span>Xem tất cả ưu đãi</span>
                         <FontAwesomeIcon icon={faArrowRight} className="transition-transform group-hover:translate-x-1" />
@@ -37,7 +37,7 @@ const Promotions = () => {
                         <Link
                             key={promo.id}
                             to={`/promotions/${promo.id}`}
-                            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-rose-500/40 shadow-lg hover:shadow-[0_8px_25px_rgba(225,29,72,0.15)] transition-all duration-300 hover:-translate-y-1"
+                            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-violet-500/40 shadow-lg hover:shadow-[0_8px_25px_rgba(127,90,240,0.18)] transition-all duration-300 hover:-translate-y-1"
                         >
                             <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
                                 <img
@@ -45,20 +45,20 @@ const Promotions = () => {
                                     alt={promo.title}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
-                                <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-rose-600 text-white shadow">
+                                <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-violet-600 text-white shadow">
                                     {promo.discount}
                                 </div>
                             </div>
                             <div className="p-4 flex flex-col justify-between flex-grow">
-                                <h3 className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                                <h3 className="text-sm font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-snug">
                                     {promo.title}
                                 </h3>
                                 <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
                                     <span className="flex items-center gap-1.5 truncate">
-                                        <FontAwesomeIcon icon={faCalendarAlt} className="text-rose-400 text-[10px]" />
+                                        <FontAwesomeIcon icon={faCalendarAlt} className="text-violet-400 text-[10px]" />
                                         {promo.validDate}
                                     </span>
-                                    <span className="font-mono text-rose-400 font-bold">
+                                    <span className="font-mono text-violet-400 font-bold">
                                         {promo.code}
                                     </span>
                                 </div>

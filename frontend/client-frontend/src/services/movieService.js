@@ -8,6 +8,7 @@ export const movieApi = rootApi.injectEndpoints({
             query: () => ({
                 url: `${CONTEXT_PATH}/movies/all`,
             }),
+            transformResponse: (response) => response?.data ?? response,
         }),
 
         getMovie: builder.query({

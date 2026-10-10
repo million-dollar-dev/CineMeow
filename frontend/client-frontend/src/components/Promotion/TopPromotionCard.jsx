@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faCopy, faCheck, faFire } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faCopy, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const TopPromotionCard = ({ promotion, rank }) => {
     const [copied, setCopied] = useState(false);
@@ -21,8 +21,8 @@ const TopPromotionCard = ({ promotion, rank }) => {
     };
 
     return (
-        <div className="group relative flex gap-3.5 p-3 rounded-xl bg-[#141424]/90 border border-white/5 hover:border-rose-500/40 hover:bg-[#1a1a32] transition-all duration-300">
-            {/* Thumbnail with Rank Badge */}
+        <div className="group relative flex gap-3.5 p-3 rounded-xl bg-[#141424]/90 border border-white/5 hover:border-violet-500/40 hover:bg-[#1a1a32] transition-all duration-300">
+            {/* Thumbnail with Rank Badge (Violet) */}
             <div className="relative w-24 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-slate-900">
                 <img
                     src={bannerUrl}
@@ -30,7 +30,7 @@ const TopPromotionCard = ({ promotion, rank }) => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                 />
-                <div className="absolute top-1 left-1 w-5 h-5 rounded-md bg-rose-600/90 text-white font-extrabold text-[10px] flex items-center justify-center shadow">
+                <div className="absolute top-1 left-1 w-5 h-5 rounded-md bg-violet-600/90 text-white font-extrabold text-[10px] flex items-center justify-center shadow">
                     #{rank}
                 </div>
             </div>
@@ -47,7 +47,7 @@ const TopPromotionCard = ({ promotion, rank }) => {
                         </span>
                     </div>
                     <Link to={`/promotions/${id}`}>
-                        <h4 className="text-xs font-semibold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-tight">
+                        <h4 className="text-xs font-semibold text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-tight">
                             {title}
                         </h4>
                     </Link>
@@ -69,7 +69,7 @@ const TopPromotionCard = ({ promotion, rank }) => {
 
                     <Link
                         to={`/promotions/${id}`}
-                        className="text-[11px] font-medium text-rose-400 hover:text-rose-300 inline-flex items-center gap-1"
+                        className="text-[11px] font-medium text-violet-400 hover:text-violet-300 inline-flex items-center gap-1"
                     >
                         Chi tiết <FontAwesomeIcon icon={faChevronRight} className="text-[9px]" />
                     </Link>

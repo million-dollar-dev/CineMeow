@@ -1,6 +1,6 @@
 import {createRoot} from 'react-dom/client'
 import './index.css'
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
 import RootLayout from "./pages/RootLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import {ThemeProvider} from "@mui/material";
@@ -19,6 +19,11 @@ import ShowtimePage from "./pages/ShowtimePage.jsx";
 import FnBManagementPage from "./pages/FnBManagementPage.jsx";
 import PricingManagementPage from "./pages/PricingManagementPage.jsx";
 import PromotionManagementPage from "./pages/PromotionManagementPage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
+import AccountManagementPage from "./pages/AccountManagementPage.jsx";
+import NotificationManagementPage from "./pages/NotificationManagementPage.jsx";
+import BookingManagementPage from "./pages/BookingManagementPage.jsx";
+import TransactionManagementPage from "./pages/TransactionManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -29,7 +34,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: "/",
-                        element: <HomePage/>
+                        element: <Navigate to="/dashboard" replace />
                     },
                     {
                         path: "/dashboard",
@@ -56,6 +61,14 @@ const router = createBrowserRouter([
                         element: <FnBManagementPage />
                     },
                     {
+                        path: "/bookings",
+                        element: <BookingManagementPage />
+                    },
+                    {
+                        path: "/transactions",
+                        element: <TransactionManagementPage />
+                    },
+                    {
                         path: "/pricing",
                         element: <PricingManagementPage />
                     },
@@ -63,10 +76,26 @@ const router = createBrowserRouter([
                         path: "/promotion",
                         element: <PromotionManagementPage />
                     },
+                    {
+                        path: "/settings",
+                        element: <SettingsPage />
+                    },
+                    {
+                        path: "/accounts",
+                        element: <AccountManagementPage />
+                    },
+                    {
+                        path: "/notifications",
+                        element: <NotificationManagementPage />
+                    },
                 ]
             },
             {
                 path: "/auth",
+                element: <AuthPage/>
+            },
+            {
+                path: "/login",
                 element: <AuthPage/>
             }
         ]

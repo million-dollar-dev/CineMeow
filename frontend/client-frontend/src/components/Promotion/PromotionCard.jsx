@@ -6,7 +6,6 @@ import {
     faEye, 
     faCopy, 
     faCheck, 
-    faTicketAlt, 
     faArrowRight 
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,7 +24,7 @@ const PromotionCard = ({ promotion }) => {
         validDate,
         views,
         tag,
-        badgeColor = "rose"
+        badgeColor = "violet"
     } = promotion;
 
     const handleCopy = (e) => {
@@ -46,14 +45,14 @@ const PromotionCard = ({ promotion }) => {
                 return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
             case 'indigo':
                 return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30';
-            case 'rose':
+            case 'violet':
             default:
-                return 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+                return 'bg-violet-500/20 text-violet-400 border-violet-500/30';
         }
     };
 
     return (
-        <div className="group relative flex flex-col justify-between rounded-2xl bg-[#141424]/90 border border-white/10 hover:border-rose-500/40 shadow-lg hover:shadow-[0_10px_30px_rgba(225,29,72,0.15)] transition-all duration-300 overflow-hidden hover:-translate-y-1">
+        <div className="group relative flex flex-col justify-between rounded-2xl bg-[#141424]/90 border border-white/10 hover:border-violet-500/40 shadow-lg hover:shadow-[0_10px_30px_rgba(127,90,240,0.18)] transition-all duration-300 overflow-hidden hover:-translate-y-1">
             {/* Image & Badges */}
             <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
                 <img
@@ -72,7 +71,7 @@ const PromotionCard = ({ promotion }) => {
                 </div>
 
                 <div className="absolute top-3 right-3">
-                    <span className="px-3 py-1 text-xs font-extrabold uppercase rounded-lg bg-rose-600 text-white shadow-md">
+                    <span className="px-3 py-1 text-xs font-extrabold uppercase rounded-lg bg-violet-600 text-white shadow-md">
                         {discount}
                     </span>
                 </div>
@@ -80,7 +79,7 @@ const PromotionCard = ({ promotion }) => {
                 {/* Date & Views overlay at bottom of banner */}
                 <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
                     <span className="flex items-center gap-1.5 font-medium">
-                        <FontAwesomeIcon icon={faCalendarAlt} className="text-rose-400" />
+                        <FontAwesomeIcon icon={faCalendarAlt} className="text-violet-400" />
                         {validDate}
                     </span>
                     <span className="flex items-center gap-1 text-slate-400">
@@ -94,7 +93,7 @@ const PromotionCard = ({ promotion }) => {
             <div className="p-5 flex flex-col flex-grow justify-between gap-4">
                 <div>
                     <Link to={`/promotions/${id}`}>
-                        <h3 className="text-base md:text-lg font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                        <h3 className="text-base md:text-lg font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-snug">
                             {title}
                         </h3>
                     </Link>
@@ -103,10 +102,10 @@ const PromotionCard = ({ promotion }) => {
                     </p>
                 </div>
 
-                {/* Voucher Code Box & Actions */}
+                {/* Voucher Code Box & Actions (Violet button) */}
                 <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 bg-[#1c1c34] border border-dashed border-white/15 px-3 py-1.5 rounded-xl">
-                        <span className="text-xs font-mono font-bold tracking-wider text-rose-300">
+                        <span className="text-xs font-mono font-bold tracking-wider text-violet-300">
                             {code}
                         </span>
                         <button
@@ -125,7 +124,7 @@ const PromotionCard = ({ promotion }) => {
 
                     <Link
                         to={`/promotions/${id}`}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors group/btn"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors group/btn"
                     >
                         <span>Chi tiết</span>
                         <FontAwesomeIcon 

@@ -99,6 +99,14 @@ export const brandApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ["FnBs"],
         }),
+
+        deleteFnB: builder.mutation({
+            query: (id) => ({
+                url: `${CONTEXT_PATH}/fnbs/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["FnBs"],
+        }),
     }),
 });
 
@@ -114,4 +122,5 @@ export const {
     useCreateFnBMutation,
     useGetAllFnBsQuery,
     useUpdateFnBMutation,
+    useDeleteFnBMutation,
 } = brandApi;

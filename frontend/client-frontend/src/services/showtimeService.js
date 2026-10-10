@@ -8,6 +8,7 @@ export const showtimeApi = rootApi.injectEndpoints({
             query: () => ({
                 url: `${CONTEXT_PATH}/showtimes`,
             }),
+            transformResponse: (response) => response?.data ?? response,
         }),
 
         getShowtime: builder.query({

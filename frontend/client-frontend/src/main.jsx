@@ -47,12 +47,20 @@ const router = createBrowserRouter([
                 element: <ShowtimesPage />,
             },
             {
+                path: "/showtimes",
+                element: <ShowtimesPage />,
+            },
+            {
                 path: "/now-playing",
                 element: <NowPlayingPage />,
             },
             {
                 path: "/comming-soon",
                 element: <CommingSoon />,
+            },
+            {
+                path: "/brands",
+                element: <BrandPage />,
             },
             {
                 path: "/brands/:brandId",

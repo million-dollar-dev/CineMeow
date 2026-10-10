@@ -3,12 +3,9 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
     faFire, 
-    faTicketAlt, 
     faCopy, 
     faCheck, 
-    faClock, 
-    
-    faFilm
+    faClock
 } from "@fortawesome/free-solid-svg-icons";
 
 const PromotionHeroSpotlight = ({ featuredPromo }) => {
@@ -27,15 +24,15 @@ const PromotionHeroSpotlight = ({ featuredPromo }) => {
     return (
         <div className="relative mb-12 rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#1b122c] via-[#121226] to-[#0d0d1a] shadow-2xl">
             {/* Ambient Background Glow */}
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 md:p-10 relative z-10">
                 {/* Left Content */}
                 <div className="lg:col-span-7 flex flex-col justify-center space-y-4">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                            <FontAwesomeIcon icon={faFire} className="text-rose-500 animate-pulse" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                            <FontAwesomeIcon icon={faFire} className="text-violet-400 animate-pulse" />
                             Đặc quyền CineMeow
                         </span>
                         <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">
@@ -52,7 +49,7 @@ const PromotionHeroSpotlight = ({ featuredPromo }) => {
                         {featuredPromo.description}
                     </p>
 
-                    {/* Voucher Code & Action Buttons */}
+                    {/* Voucher Code & Action Buttons (Violet CTA) */}
                     <div className="pt-2 flex flex-wrap items-center gap-3">
                         <div className="flex items-center gap-2 bg-black/50 border border-white/15 px-4 py-2.5 rounded-2xl backdrop-blur-md">
                             <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Mã ưu đãi:</span>
@@ -74,7 +71,7 @@ const PromotionHeroSpotlight = ({ featuredPromo }) => {
 
                         <Link
                             to={`/promotions/${featuredPromo.id}`}
-                            className="px-5 py-2.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white shadow-lg shadow-rose-900/30 transition-all hover:scale-105"
+                            className="px-5 py-2.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white shadow-lg shadow-violet-900/40 transition-all hover:scale-105"
                         >
                             Xem chi tiết điều kiện
                         </Link>
@@ -91,7 +88,7 @@ const PromotionHeroSpotlight = ({ featuredPromo }) => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B14]/80 via-transparent to-transparent" />
                         
-                        <div className="absolute top-3 right-3 px-3 py-1.5 rounded-xl bg-rose-600/90 backdrop-blur-md text-white font-black text-sm shadow-lg">
+                        <div className="absolute top-3 right-3 px-3 py-1.5 rounded-xl bg-violet-600/90 backdrop-blur-md text-white font-black text-sm shadow-lg">
                             {featuredPromo.discount}
                         </div>
                     </div>
