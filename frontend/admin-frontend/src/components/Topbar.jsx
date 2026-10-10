@@ -12,7 +12,11 @@ import {
 
 // Redux & Hooks
 import { toggle } from "../redux/slices/sidebarSlice.js";
+import { openSnackbar } from "../redux/slices/snackbarSlice.js";
 import { useLogout } from "../hooks/useLogout.js";
+import { MOCK_ADMIN_ACCOUNTS } from "../mock/mockAccounts.js";
+import AdminProfileModal from "./AccountManagement/AdminProfileModal.jsx";
+import ChangePasswordModal from "./AccountManagement/ChangePasswordModal.jsx";
 
 // Material UI Icons
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
@@ -97,6 +101,19 @@ const Topbar = () => {
     const [anchorAcc, setAnchorAcc] = useState(null);
     const [anchorNotif, setAnchorNotif] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [currentUser, setCurrentUser] = useState(MOCK_ADMIN_ACCOUNTS[0]);
+    const [profileModalOpen, setProfileModalOpen] = useState(false);
+    const [changePwModalOpen, setChangePwModalOpen] = useState(false);
+
+    const userInitials = currentUser?.fullName
+        ? currentUser.fullName
+              .split(" ")
+              .filter(Boolean)
+              .slice(-2)
+              .map((w) => w[0])
+              .join("")
+              .toUpperCase()
+        : "AD";
 
     // Date formatting in Vietnamese
     const today = new Date();
@@ -206,13 +223,13 @@ const Topbar = () => {
                 >
                     {/* Gradient Avatar with Live Dot */}
                     <div className="relative w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs shrink-0">
-                        AD
+                        {userInitials}
                         <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
                     </div>
 
                     {/* Admin Name & Role */}
                     <div className="hidden sm:block text-left min-w-0">
-                        <p className="text-xs font-bold text-slate-800 leading-tight truncate">Quản trị viên</p>
+                        <p className="text-xs font-bold text-slate-800 leading-tight truncate">{currentUser?.fullName || "Quản trị viên"}</p>
                         <p className="text-[10px] text-slate-400 leading-tight truncate">Admin Portal</p>
                     </div>
 
@@ -321,12 +338,15 @@ const Topbar = () => {
             >
                 {/* User Header Box */}
                 <div className="px-3 py-2.5 mb-1 rounded-xl bg-slate-50 border border-slate-100">
-                    <p className="text-xs font-bold text-slate-900 truncate">Quản trị viên CineMeow</p>
-                    <p className="text-[11px] text-slate-400 truncate">admin@cinemeow.vn</p>
+                    <p className="text-xs font-bold text-slate-900 truncate">{currentUser?.fullName || "Quản trị viên CineMeow"}</p>
+                    <p className="text-[11px] text-slate-400 truncate">{currentUser?.email || "admin@cinemeow.vn"}</p>
                 </div>
 
                 <MenuItem
-                    onClick={() => setAnchorAcc(null)}
+                    onClick={() => {
+                        setAnchorAcc(null);
+                        setProfileModalOpen(true);
+                    }}
                     sx={{
                         borderRadius: "10px",
                         fontSize: "12px",
@@ -343,7 +363,10 @@ const Topbar = () => {
                 </MenuItem>
 
                 <MenuItem
-                    onClick={() => setAnchorAcc(null)}
+                    onClick={() => {
+                        setAnchorAcc(null);
+                        setChangePwModalOpen(true);
+                    }}
                     sx={{
                         borderRadius: "10px",
                         fontSize: "12px",
@@ -421,6 +444,43 @@ const Topbar = () => {
                     Đăng xuất
                 </MenuItem>
             </Menu>
+
+            {/* Profile Modal */}
+            <AdminProfileModal
+                open={profileModalOpen}
+                onClose={() => setProfileModalOpen(false)}
+                user={currentUser}
+                onUpdateProfile={(updatedData) => {
+                    setCurrentUser((prev) => ({ ...prev, ...updatedData }));
+                    dispatch(
+                        openSnackbar({
+                            message: "Cập nhật thông tin cá nhân thành công!",
+                            type: "success",
+                        })
+                    );
+                    setProfileModalOpen(false);
+                }}
+                onOpenChangePassword={() => {
+                    setProfileModalOpen(false);
+                    setChangePwModalOpen(true);
+                }}
+            />
+
+            {/* Change Password Modal */}
+            <ChangePasswordModal
+                open={changePwModalOpen}
+                onClose={() => setChangePwModalOpen(false)}
+                user={currentUser}
+                onSuccess={() => {
+                    dispatch(
+                        openSnackbar({
+                            message: "Đổi mật khẩu tài khoản thành công!",
+                            type: "success",
+                        })
+                    );
+                    setChangePwModalOpen(false);
+                }}
+            />
         </header>
     );
 };
