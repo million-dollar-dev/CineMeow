@@ -22,6 +22,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 
 const menuGroups = [
     {
@@ -66,6 +67,11 @@ const menuGroups = [
                 label: "Đơn đặt vé",
                 path: "/bookings",
                 Icon: ReceiptLongOutlinedIcon,
+            },
+            {
+                label: "Giao dịch thanh toán",
+                path: "/transactions",
+                Icon: AccountBalanceWalletOutlinedIcon,
             },
             {
                 label: "Bảng giá vé",

@@ -122,6 +122,7 @@ export default function ShowtimePage() {
     const [selectedCinemaFilter, setSelectedCinemaFilter] = useState("ALL");
     const [selectedDateFilter, setSelectedDateFilter] = useState("ALL");
     const [searchQuery, setSearchQuery] = useState("");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Merged & Standardized Showtimes Dataset
     const showtimes = useMemo(() => {
@@ -225,6 +226,13 @@ export default function ShowtimePage() {
     }, [showtimes, selectedStatusTab, selectedCinemaFilter, selectedDateFilter, searchQuery]);
 
     // Handlers
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetch();
+        dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu suất chiếu...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
+    };
+
     const handleAddClick = () => {
         setMode("add");
         setSelectedShowtime(null);
@@ -485,7 +493,7 @@ export default function ShowtimePage() {
     ];
 
     return (
-        <Box className="py-2 min-h-screen">
+        <div className="py-6 space-y-6">
             {/* Modal Lập lịch / Chỉnh sửa suất chiếu */}
             <ShowtimeModal
                 open={openModal}
@@ -509,11 +517,8 @@ export default function ShowtimePage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetch();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu suất chiếu...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,
@@ -899,6 +904,6 @@ export default function ShowtimePage() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Box>
+        </div>
     );
 }

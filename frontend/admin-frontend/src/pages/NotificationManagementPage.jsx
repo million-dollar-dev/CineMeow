@@ -103,6 +103,7 @@ export default function NotificationManagementPage() {
     const [categoryTab, setCategoryTab] = useState("ALL"); // "ALL" | "UNREAD" | "BOOKING" | "SHOWTIME" | ...
     const [searchQuery, setSearchQuery] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("ALL");
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [branchFilter, setBranchFilter] = useState("ALL");
     const [sortBy, setSortBy] = useState("NEWEST"); // "NEWEST" | "OLDEST" | "PRIORITY"
 
@@ -341,12 +342,14 @@ export default function NotificationManagementPage() {
     };
 
     const handleRefresh = () => {
+        setIsRefreshing(true);
         dispatch(
             openSnackbar({
                 message: "Đang kiểm tra và đồng bộ thông báo mới từ hệ thống...",
                 type: "info",
             })
         );
+        setTimeout(() => setIsRefreshing(false), 600);
     };
 
     const getCategoryIcon = (category) => {
@@ -384,7 +387,7 @@ export default function NotificationManagementPage() {
                     <Button
                         variant="outlined"
                         onClick={handleRefresh}
-                        startIcon={<RefreshOutlinedIcon />}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

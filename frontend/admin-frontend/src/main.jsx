@@ -23,6 +23,7 @@ import SettingsPage from "./pages/SettingsPage.jsx";
 import AccountManagementPage from "./pages/AccountManagementPage.jsx";
 import NotificationManagementPage from "./pages/NotificationManagementPage.jsx";
 import BookingManagementPage from "./pages/BookingManagementPage.jsx";
+import TransactionManagementPage from "./pages/TransactionManagementPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
                     {
                         path: "/bookings",
                         element: <BookingManagementPage />
+                    },
+                    {
+                        path: "/transactions",
+                        element: <TransactionManagementPage />
                     },
                     {
                         path: "/pricing",

@@ -240,6 +240,7 @@ export default function MovieManagementPage() {
     // Search and Status Tab Filters
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedStatusTab, setSelectedStatusTab] = useState("ALL");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Format and merge raw movies with realistic mock dataset
     const movies = useMemo(() => {
@@ -395,6 +396,13 @@ export default function MovieManagementPage() {
         );
         setOpenDeleteDialog(false);
         setMovieToDelete(null);
+    };
+
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetch();
+        dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu danh mục phim...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
     };
 
     // Notification on Fetch Error
@@ -625,11 +633,8 @@ export default function MovieManagementPage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetch();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu danh mục phim...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

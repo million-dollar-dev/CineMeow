@@ -81,6 +81,7 @@ export default function BrandManagementPage() {
     // 4. Filter & Search states
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("DEFAULT");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Table pagination state
     const [paginationModel, setPaginationModel] = useState({
@@ -173,6 +174,13 @@ export default function BrandManagementPage() {
     }, [isError, error, dispatch]);
 
     // Handlers
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetch();
+        dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu thương hiệu rạp...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
+    };
+
     const handleAddClick = () => {
         setModalMode("add");
         setSelectedBrand(null);
@@ -409,11 +417,8 @@ export default function BrandManagementPage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetch();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu thương hiệu rạp...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

@@ -84,6 +84,7 @@ export default function BookingManagementPage() {
     const [selectedCinema, setSelectedCinema] = useState("ALL");
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("ALL");
     const [sortBy, setSortBy] = useState("NEWEST");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // 3. Modals & Dialogs State
     const [selectedBooking, setSelectedBooking] = useState(null);
@@ -110,6 +111,7 @@ export default function BookingManagementPage() {
 
     // 5. Refresh Data Handler
     const handleRefresh = () => {
+        setIsRefreshing(true);
         setBookings(MOCK_BOOKINGS);
         localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(MOCK_BOOKINGS));
         dispatch(
@@ -118,6 +120,7 @@ export default function BookingManagementPage() {
                 type: "success",
             })
         );
+        setTimeout(() => setIsRefreshing(false), 600);
     };
 
     // 6. Export Report Handler (JSON / CSV)
@@ -648,7 +651,7 @@ export default function BookingManagementPage() {
                     <Button
                         variant="outlined"
                         onClick={handleRefresh}
-                        startIcon={<RefreshOutlinedIcon />}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

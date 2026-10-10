@@ -79,6 +79,7 @@ export default function PromotionManagementPage() {
     const [selectedScopeFilter, setSelectedScopeFilter] = useState("ALL");
     const [sortBy, setSortBy] = useState("DEFAULT");
     const [searchQuery, setSearchQuery] = useState("");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Table pagination state
     const [paginationModel, setPaginationModel] = useState({
@@ -207,6 +208,13 @@ export default function PromotionManagementPage() {
     }, [isError, error, dispatch]);
 
     // Handlers
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetch();
+        dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu ưu đãi...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
+    };
+
     const handleAddClick = () => {
         setModalMode("add");
         setSelectedItem(null);
@@ -542,11 +550,8 @@ export default function PromotionManagementPage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetch();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu ưu đãi...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

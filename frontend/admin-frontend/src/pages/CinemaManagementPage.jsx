@@ -124,6 +124,7 @@ export default function CinemaManagementPage() {
     const [selectedCityFilter, setSelectedCityFilter] = useState("ALL");
     const [selectedBrandFilter, setSelectedBrandFilter] = useState("ALL");
     const [searchQuery, setSearchQuery] = useState("");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Statistics Calculation
     const totalCinemas = cinemas.length;
@@ -235,6 +236,13 @@ export default function CinemaManagementPage() {
         );
         setOpenDeleteDialog(false);
         setCinemaToDelete(null);
+    };
+
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetchCinemas();
+        dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu cụm rạp...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
     };
 
     // Error Notification
@@ -462,7 +470,7 @@ export default function CinemaManagementPage() {
     ];
 
     return (
-        <Box className="py-2 min-h-screen">
+        <div className="py-6 space-y-6">
             {/* Modal Quản lý Rạp & Phòng chiếu */}
             <CinemaModal
                 open={openModal}
@@ -487,11 +495,8 @@ export default function CinemaManagementPage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetchCinemas();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu cụm rạp...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,
@@ -867,6 +872,6 @@ export default function CinemaManagementPage() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Box>
+        </div>
     );
 }

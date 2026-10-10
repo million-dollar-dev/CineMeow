@@ -140,6 +140,7 @@ export default function AccountManagementPage() {
     const [custTierFilter, setCustTierFilter] = useState("ALL");
     const [custStatusTab, setCustStatusTab] = useState("ALL"); // "ALL" | "ACTIVE" | "INACTIVE" | "SUSPENDED"
     const [custSortBy, setCustSortBy] = useState("DEFAULT");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Pagination states
     const [paginationModel, setPaginationModel] = useState({
@@ -333,6 +334,21 @@ export default function AccountManagementPage() {
     };
 
     // 11. Admin CRUD Handlers
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        setAccounts(MOCK_ADMIN_ACCOUNTS);
+        setCustomers(MOCK_CUSTOMER_ACCOUNTS);
+        localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(MOCK_ADMIN_ACCOUNTS));
+        localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(MOCK_CUSTOMER_ACCOUNTS));
+        dispatch(
+            openSnackbar({
+                message: "Đã làm mới và đồng bộ danh sách tài khoản thành công!",
+                type: "success",
+            })
+        );
+        setTimeout(() => setIsRefreshing(false), 600);
+    };
+
     const handleAddAccount = () => {
         setModalMode("add");
         setSelectedAccount(null);
@@ -452,15 +468,6 @@ export default function AccountManagementPage() {
         );
         setCustomerDeleteDialogOpen(false);
         setCustomerToDelete(null);
-    };
-
-    const handleRefresh = () => {
-        dispatch(
-            openSnackbar({
-                message: "Đang làm mới danh sách dữ liệu tài khoản...",
-                type: "info",
-            })
-        );
     };
 
     // 13. DataGrid Columns Definition: ADMIN ACCOUNTS
@@ -891,7 +898,7 @@ export default function AccountManagementPage() {
                     <Button
                         variant="outlined"
                         onClick={handleRefresh}
-                        startIcon={<RefreshOutlinedIcon />}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

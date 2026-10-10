@@ -68,6 +68,7 @@ export default function PricingManagementPage() {
     // 3. Filter & Search states
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("DEFAULT");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Table pagination state
     const [paginationModel, setPaginationModel] = useState({
@@ -150,6 +151,13 @@ export default function PricingManagementPage() {
     }, [isError, error, dispatch]);
 
     // Handlers
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetch();
+        dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu biểu giá vé...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
+    };
+
     const handleOpenEditModal = (brand) => {
         setSelectedBrand(brand);
         setOpenModal(true);
@@ -339,11 +347,8 @@ export default function PricingManagementPage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetch();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ dữ liệu biểu giá vé...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,

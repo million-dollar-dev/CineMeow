@@ -271,7 +271,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="w-full pb-10">
+        <div className="w-full py-6 space-y-6">
             {/* Hidden file input for import */}
             <input
                 type="file"

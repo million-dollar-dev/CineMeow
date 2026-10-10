@@ -4,6 +4,7 @@ import {
     Select,
     MenuItem,
     IconButton,
+    Button,
     Tooltip as MuiTooltip,
 } from "@mui/material";
 
@@ -35,39 +36,7 @@ import {
 } from "recharts";
 
 import { useGetAllMoviesQuery } from "../services/movieService.js";
-
-// --- KPI CARD COMPONENT ---
-const KPICard = ({ title, value, subtext, trend, positive, icon, iconBg, iconColor }) => (
-    <div className="p-5 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
-        <div className="flex items-center justify-between gap-3 mb-3">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider truncate">
-                {title}
-            </span>
-            <div className={`w-10 h-10 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform`}>
-                {icon}
-            </div>
-        </div>
-
-        <div className="text-2xl xl:text-3xl font-black text-slate-900 tracking-tight">
-            {value}
-        </div>
-
-        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-[11px] ${
-                    positive
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
-                        : "bg-rose-50 text-rose-700 border border-rose-200/60"
-                }`}
-            >
-                {positive ? "↑" : "↓"} {trend}
-            </span>
-            <span className="text-slate-400 truncate max-w-[150px] font-medium">
-                {subtext}
-            </span>
-        </div>
-    </div>
-);
+import StatCard from "../components/OverviewStats/StatCard.jsx";
 
 // --- CUSTOM RECHARTS TOOLTIP ---
 const CustomChartTooltip = ({ active, payload, label }) => {
@@ -245,6 +214,59 @@ export default function DashboardPage() {
 
     const activeChartData = chartDataSets[timeframe] || chartDataSets.week;
 
+    // Dynamic stats synchronized with standard StatCard across pages
+    const stats = useMemo(
+        () => [
+            {
+                title: "Doanh thu phòng vé",
+                value:
+                    timeframe === "today"
+                        ? "48.250.000 ₫"
+                        : timeframe === "month"
+                        ? "1.248.500.000 ₫"
+                        : timeframe === "year"
+                        ? "14.850.000.000 ₫"
+                        : "383.900.000 ₫",
+                subtitle: "+14.8% so với kỳ trước",
+                icon: <TrendingUpOutlinedIcon fontSize="medium" />,
+                bigIcon: <TrendingUpOutlinedIcon fontSize="inherit" />,
+                bgColor: "#1976d2", // Indigo / Violet gradient
+            },
+            {
+                title: "Tổng số vé bán ra",
+                value:
+                    timeframe === "today"
+                        ? "462 vé"
+                        : timeframe === "month"
+                        ? "12.350 vé"
+                        : timeframe === "year"
+                        ? "146.200 vé"
+                        : "3.780 vé",
+                subtitle: "+8.2% (bình quân 101k / vé)",
+                icon: <ConfirmationNumberOutlinedIcon fontSize="medium" />,
+                bigIcon: <ConfirmationNumberOutlinedIcon fontSize="inherit" />,
+                bgColor: "#0284c7", // Sky blue gradient
+            },
+            {
+                title: "Tỷ lệ lấp đầy ghế",
+                value: "78.6%",
+                subtitle: "+5.4% (giờ vàng đạt 94.2%)",
+                icon: <EventSeatOutlinedIcon fontSize="medium" />,
+                bigIcon: <EventSeatOutlinedIcon fontSize="inherit" />,
+                bgColor: "#2e7d32", // Emerald green gradient
+            },
+            {
+                title: "Suất chiếu vận hành",
+                value: "36 / 42 suất",
+                subtitle: "8 phòng chiếu đang hoạt động (100%)",
+                icon: <MovieOutlinedIcon fontSize="medium" />,
+                bigIcon: <MovieOutlinedIcon fontSize="inherit" />,
+                bgColor: "#f57c00", // Amber / Orange gradient
+            },
+        ],
+        [timeframe]
+    );
+
     const handleRefresh = () => {
         setIsRefreshing(true);
         setTimeout(() => setIsRefreshing(false), 600);
@@ -253,32 +275,41 @@ export default function DashboardPage() {
     return (
         <div className="py-6 space-y-6">
             
-            {/* 1. TOP HEADER: GREETING & FILTERS */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            {/* 1. HEADER SECTION (STANDARD PAGE HEADER BANNER) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                     <div className="flex items-center gap-2.5 flex-wrap">
-                        <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
                             <TrendingUpOutlinedIcon className="text-violet-600" />
                             <span>Tổng Quan Vận Hành Cụm Rạp</span>
-                        </h1>
+                        </h2>
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/60 text-emerald-700 text-xs font-bold">
                             <FiberManualRecordIcon sx={{ fontSize: 9 }} className="text-emerald-500 animate-pulse" />
                             Trực tuyến
                         </span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1 font-medium">
-                        Giám sát hiệu suất phòng vé, tỷ lệ lấp đầy ghế và hoạt động các phòng chiếu thời gian thực.
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                        Giám sát hiệu suất phòng vé, tỷ lệ lấp đầy ghế và hoạt động các phòng chiếu thời gian thực
                     </p>
                 </div>
 
-                {/* Filters Row */}
+                {/* Filters & Actions Row */}
                 <div className="flex items-center gap-2.5 flex-wrap">
                     {/* Cinema Cluster Selector */}
                     <Select
                         value={selectedCluster}
                         onChange={(e) => setSelectedCluster(e.target.value)}
                         size="small"
-                        className="!bg-slate-50 hover:!bg-slate-100 !rounded-xl !text-xs !font-semibold !text-slate-700 !border-slate-200"
+                        sx={{
+                            backgroundColor: "#FFFFFF",
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                            color: "#334155",
+                            height: "38px",
+                            "& .MuiOutlinedInput-notchedOutline": { borderColor: "#E2E8F0" },
+                            "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#CBD5E1" },
+                        }}
                     >
                         <MenuItem value="all">Tất cả cụm rạp</MenuItem>
                         <MenuItem value="landmark">CineMeow Landmark 81</MenuItem>
@@ -291,7 +322,16 @@ export default function DashboardPage() {
                         value={timeframe}
                         onChange={(e) => setTimeframe(e.target.value)}
                         size="small"
-                        className="!bg-slate-50 hover:!bg-slate-100 !rounded-xl !text-xs !font-semibold !text-slate-700 !border-slate-200"
+                        sx={{
+                            backgroundColor: "#FFFFFF",
+                            borderRadius: "12px",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                            color: "#334155",
+                            height: "38px",
+                            "& .MuiOutlinedInput-notchedOutline": { borderColor: "#E2E8F0" },
+                            "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#CBD5E1" },
+                        }}
                     >
                         <MenuItem value="today">Hôm nay</MenuItem>
                         <MenuItem value="week">7 ngày qua</MenuItem>
@@ -300,78 +340,32 @@ export default function DashboardPage() {
                     </Select>
 
                     {/* Refresh Button */}
-                    <MuiTooltip title="Làm mới dữ liệu">
-                        <IconButton
-                            onClick={handleRefresh}
-                            className="!bg-slate-50 hover:!bg-slate-100 !border !border-slate-200 !rounded-xl !w-9 !h-9 !text-slate-600"
-                        >
-                            <RefreshOutlinedIcon fontSize="small" className={isRefreshing ? "animate-spin" : ""} />
-                        </IconButton>
-                    </MuiTooltip>
+                    <Button
+                        variant="outlined"
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
+                        sx={{
+                            height: "38px",
+                            textTransform: "none",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            borderRadius: "12px",
+                            borderColor: "#E2E8F0",
+                            backgroundColor: "#FFFFFF",
+                            color: "#475569",
+                            "&:hover": { borderColor: "#CBD5E1", backgroundColor: "#F8FAFC" },
+                        }}
+                    >
+                        Làm mới
+                    </Button>
                 </div>
             </div>
 
-            {/* 2. KPI METRICS (4 PRIMARY CARDS) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <KPICard
-                    title="Doanh thu phòng vé"
-                    value={
-                        timeframe === "today"
-                            ? "48.250.000 ₫"
-                            : timeframe === "month"
-                            ? "1.248.500.000 ₫"
-                            : timeframe === "year"
-                            ? "14.850.000.000 ₫"
-                            : "383.900.000 ₫"
-                    }
-                    trend="14.8%"
-                    positive={true}
-                    subtext="So với kỳ trước"
-                    icon={<TrendingUpOutlinedIcon sx={{ fontSize: 20, display: "block" }} />}
-                    iconBg="bg-violet-50"
-                    iconColor="text-violet-600"
-                />
-
-                <KPICard
-                    title="Tổng số vé bán ra"
-                    value={
-                        timeframe === "today"
-                            ? "462 vé"
-                            : timeframe === "month"
-                            ? "12.350 vé"
-                            : timeframe === "year"
-                            ? "146.200 vé"
-                            : "3.780 vé"
-                    }
-                    trend="8.2%"
-                    positive={true}
-                    subtext="Bình quân 101k / vé"
-                    icon={<ConfirmationNumberOutlinedIcon sx={{ fontSize: 20, display: "block" }} />}
-                    iconBg="bg-indigo-50"
-                    iconColor="text-indigo-600"
-                />
-
-                <KPICard
-                    title="Tỷ lệ lấp đầy ghế"
-                    value="78.6%"
-                    trend="5.4%"
-                    positive={true}
-                    subtext="Giờ vàng đạt 94.2%"
-                    icon={<EventSeatOutlinedIcon sx={{ fontSize: 20, display: "block" }} />}
-                    iconBg="bg-emerald-50"
-                    iconColor="text-emerald-600"
-                />
-
-                <KPICard
-                    title="Suất chiếu vận hành"
-                    value="36 / 42"
-                    trend="100%"
-                    positive={true}
-                    subtext="8 phòng chiếu hoạt động"
-                    icon={<MovieOutlinedIcon sx={{ fontSize: 20, display: "block" }} />}
-                    iconBg="bg-amber-50"
-                    iconColor="text-amber-600"
-                />
+            {/* 2. STATS ROW (4 JEWEL CARDS - SYNCHRONIZED) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                {stats.map((stat, idx) => (
+                    <StatCard key={idx} {...stat} loading={isRefreshing} />
+                ))}
             </div>
 
             {/* 3. MAIN CHARTS ROW (REVENUE TREND AREA + FORMAT DONUT) */}

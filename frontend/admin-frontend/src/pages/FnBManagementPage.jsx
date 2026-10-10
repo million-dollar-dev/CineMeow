@@ -87,6 +87,7 @@ export default function FnBManagementPage() {
     const [selectedCategory, setSelectedCategory] = useState("ALL");
     const [selectedStatus, setSelectedStatus] = useState("ALL");
     const [sortBy, setSortBy] = useState("DEFAULT");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Modal state
     const [openModal, setOpenModal] = useState(false);
@@ -199,6 +200,13 @@ export default function FnBManagementPage() {
     }, [items]);
 
     // 5. Handlers
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        refetchItems();
+        dispatch(openSnackbar({ message: "Đang đồng bộ thực đơn bắp nước...", type: "info" }));
+        setTimeout(() => setIsRefreshing(false), 600);
+    };
+
     const handleAddClick = () => {
         setModalMode("add");
         setSelectedItem(null);
@@ -419,7 +427,7 @@ export default function FnBManagementPage() {
     ];
 
     return (
-        <Box className="space-y-6 pb-12">
+        <div className="py-6 space-y-6">
             {/* Modal Edit/Add */}
             <FnBModal
                 open={openModal}
@@ -443,11 +451,8 @@ export default function FnBManagementPage() {
                 <div className="flex items-center gap-2.5">
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            refetchItems();
-                            dispatch(openSnackbar({ message: "Đang đồng bộ thực đơn bắp nước...", type: "info" }));
-                        }}
-                        startIcon={<RefreshOutlinedIcon />}
+                        onClick={handleRefresh}
+                        startIcon={<RefreshOutlinedIcon className={isRefreshing ? "animate-spin" : ""} />}
                         sx={{
                             textTransform: "none",
                             fontWeight: 700,
@@ -968,6 +973,6 @@ export default function FnBManagementPage() {
                     </div>
                 )}
             </Dialog>
-        </Box>
+        </div>
     );
 }
