@@ -60,6 +60,7 @@ We maintain a centralized tracking index to manage all implemented, in-progress,
 
 - [[Refactor Backend Services into Parent Module|Feature-Refactor-Backend-Services]]
 - [[Admin Portal UI/UX Refactoring & Design System|Feature-Admin-UI-UX-Refactoring]]
+- [[Client Portal UI/UX Refactoring & Dark Cinema Design System|Feature-Client-UI-UX-Refactoring]]
 - [[Ticket Booking Engine|Feature-Booking]]
 - [[Payment & Transactions|Feature-Payment]]
 - [[Cinema & Seat Layout Management|Feature-Cinema-Management]]
