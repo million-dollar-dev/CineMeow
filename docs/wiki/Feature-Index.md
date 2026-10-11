@@ -1,48 +1,113 @@
 # CineMeow Feature Index & Roadmap
 
-This page serves as the single source of truth for tracking the implementation status, architectural scope, and service dependencies for all CineMeow platform features.
+This page is the central index for tracking feature specifications, implementation status, architectural scope, and service dependencies across the CineMeow platform.
 
 > [!TIP]
-> Before implementing any new feature, register it here with an allocated `FEAT-XXX` code, specify its target microservices, and link its design document.
+> Before implementing a new feature, register it here with a unique feature ID, identify the affected modules or services, and link its specification page.
 
 ---
 
-## Status Legend
+## 1. Status Legend
 
-| Status | Badge | Definition |
-| :--- | :---: | :--- |
-| **Live** | `🟢 Live` | Fully implemented, tested, and running in production/staging. |
-| **In Progress** | `🟡 In Progress` | Currently being implemented or under code review. |
-| **Planned** | `🔵 Planned` | Requirements and acceptance criteria approved; ready for sprint backlog. |
-| **In Design** | `🟣 In Design` | Architecture, data modeling, or API contract discussion underway. |
-
----
-
-## Comprehensive Feature Catalog
-
-| Code | Feature Title | Target Microservices | Priority | Status | Specification Doc |
-| :---: | :--- | :--- | :---: | :---: | :--- |
-| **FEAT-UI-001** | Admin Portal UI/UX Refactoring & Design System | `admin-frontend`, `design-system` | P0 | `🟢 Live` | [[Feature-Admin-UI-UX-Refactoring]] |
-| **FEAT-ARCH-001** | Refactor Backend into Parent Module | `backend/`, `core/` | P0 | `🟡 In Progress` | [[Feature-Refactor-Backend-Services]] |
-| **FEAT-001** | Real-time Seat Hold & Release | `booking-service`, Redis | P0 | `🟢 Live` | [[Feature-Booking]] |
-| **FEAT-002** | Payment Gateway Integration (VNPay / MoMo) | `payment-service` | P0 | `🟢 Live` | [[Feature-Payment]] |
-| **FEAT-003** | Cinema & Screen Topology Management | `cinema-service`, `admin-frontend` | P1 | `🟢 Live` | [[Feature-Cinema-Management]] |
-| **FEAT-004** | Dynamic Showtime Scheduling Engine | `showtime-service`, `movie-service` | P1 | `🟢 Live` | [[Feature-Showtimes]] |
-| **FEAT-005** | Discount Engine & Voucher Rules | `promotion-service` | P1 | `🟡 In Progress` | [[Feature-Promotion]] |
-| **FEAT-006** | Concession (FnB) Ordering & Bundling | `booking-service`, `fnb-service` | P2 | `🟡 In Progress` | [[Feature-FnB-Concessions]] |
-| **FEAT-007** | Automated Ticket Refund & Cancellation | `booking-service`, `payment-service` | P1 | `🔵 Planned` | [[Feature-Refund-Handling]] |
-| **FEAT-008** | Loyalty Points & Customer Tiering | `profile-service`, `promotion-service` | P2 | `🔵 Planned` | [[Feature-Loyalty-Program]] |
-| **FEAT-009** | Multi-Branch / Tenant Operations | `cinema-service`, `auth-service` | P2 | `🟣 In Design` | [[Feature-Tenant-Management]] |
-| **FEAT-010** | Electronic Invoicing & Audit Export | `payment-service`, `notification-service` | P3 | `🟣 In Design` | [[Feature-E-Invoicing]] |
+| Status         | Definition                                                                              |
+| -------------- | --------------------------------------------------------------------------------------- |
+| 🟢 Live        | Fully implemented, tested, and running in the target environment.                       |
+| 🟡 In Progress | Currently being implemented, tested, or reviewed.                                       |
+| 🔵 Planned     | Requirements and acceptance criteria are defined and ready for implementation planning. |
+| 🟣 In Design   | Requirements, architecture, data modeling, or API contracts are still being discussed.  |
 
 ---
 
-## How to Register a New Feature
+## 2. Feature Catalog
 
-When proposing a new capability:
+### 2.1 Backend and Architecture
 
-1. **Assign an Identifier:** Allocate the next available sequential ID (`FEAT-011`, `FEAT-012`, etc.).
-2. **Define Ownership:** Identify all affected microservices (e.g., `booking-service`, `frontend/admin-frontend`).
-3. **Assign Initial Status:** Set to `🟣 In Design`.
-4. **Create Specification:** Create a dedicated Wiki page named `Feature-<Name>` using the template located at `docs/templates/feature-spec-template.md`.
-5. **Update Status:** As development progresses through PRs, update the badge to `🟡 In Progress` and finally `🟢 Live`.
+| Feature ID | Feature Title                                  | Target Modules / Services                                     | Status     | Specification                                                        |
+| ---------- | ---------------------------------------------- | ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------- |
+| CM-000001  | Refactor Backend Services into a Parent Module | `core`, `profile`, `movie`, `cinema`, `showtime`, `promotion` | 🔵 Planned | [Feature Specification](Feature‐Refactor‐Backend‐Services‐CM‐000001) |
+
+### 2.2 Frontend
+
+| Feature ID | Feature Title                                                         | Target Modules / Services | Status  | Specification                                                                                   |
+| ---------- | --------------------------------------------------------------------- | ------------------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| CM-000002  | Feature: Comprehensive Admin Portal UI/UX Refactoring & Design System | `frontend/admin`          | 🟢 Live | [Feature Specification](Feature‐Comprehensive‐Admin‐Portal‐Refactoring‐Design‐System‐CM‐000002) |
+
+### 2.3 Cinema and Showtime
+
+| Feature ID | Feature Title                       | Target Modules / Services  | Status  | Specification                                  |
+| ---------- | ----------------------------------- | -------------------------- | ------- | ---------------------------------------------- |
+| FEAT-003   | Cinema & Screen Topology Management | `cinema`, `frontend/admin` | 🟢 Live | [Cinema Management](Feature-Cinema-Management) |
+| FEAT-004   | Dynamic Showtime Scheduling Engine  | `showtime`, `movie`        | 🟢 Live | [Showtime Management](Feature-Showtimes)       |
+
+---
+
+## 3. How to Register a New Feature
+
+Follow these steps whenever a new feature is proposed.
+
+1. **Assign a unique identifier.** Use the project's agreed naming convention and choose the next available ID. Do not reuse an existing ID.
+2. **Define ownership.** Identify the affected backend modules, frontend applications, and external services.
+3. **Create the specification page.** Use the naming convention `Feature-<Feature-Name>-<Feature-ID>`.
+4. **Define the initial status.** Use `🟣 In Design` while requirements and technical decisions are being discussed.
+5. **Document acceptance criteria.** Specify the expected behavior and conditions for completion.
+6. **Add the feature to this index.** Include its ID, title, target modules or services, status, and specification link.
+7. **Update the status as work progresses.** Change it to `🔵 Planned`, `🟡 In Progress`, and finally `🟢 Live` as appropriate.
+
+### Feature ID Convention
+
+Use one consistent ID convention for newly registered features.
+
+Recommended format:
+
+`CM-000001`, `CM-000002`, `CM-000003`, and so on.
+
+Existing IDs such as `FEAT-003` and `FEAT-004` should remain unchanged unless the team explicitly decides to migrate the identifier convention.
+
+---
+
+## 4. Feature Specification Template
+
+Create a separate Wiki page for each feature. Use the following template as the starting point.
+
+### Feature Metadata
+
+- **Feature ID:** `CM-XXXXXX`
+- **Status:** 🟣 In Design
+- **Target Modules / Services:** List affected modules and services.
+- **Primary Owner:** Team or responsible developer.
+- **Related Issues / Pull Requests:** Add links when available.
+
+### 4.1 Overview and Business Value
+
+Describe what the feature does, which problem it solves, and why it is needed.
+
+### 4.2 Business Rules and Acceptance Criteria
+
+- Rule 1: Describe the expected behavior.
+- Rule 2: Describe validation and business constraints.
+- Acceptance criteria: Define the conditions that must be satisfied before the feature is considered complete.
+
+### 4.3 Architecture and Affected Components
+
+- **APIs Exposed:** Document affected endpoints, HTTP methods, request formats, and response formats.
+- **Events Published / Consumed:** Document relevant events, if applicable.
+- **Database Changes:** Describe schema changes and migration scripts, if applicable.
+- **Affected Modules:** List the modules that require changes.
+- **Dependencies:** Identify dependencies on other features or external systems.
+
+### 4.4 Sequence Diagram (Optional)
+
+Add a Mermaid sequence diagram when the feature involves multiple components or services.
+
+Example:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Gateway
+    participant Service
+    User->>Gateway: Request
+    Gateway->>Service: Forward request
+    Service-->>Gateway: Response
+    Gateway-->>User: Return response
+```
