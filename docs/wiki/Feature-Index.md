@@ -24,7 +24,7 @@ This page is the central index for tracking feature specifications, implementati
 
 | Feature ID | Feature Title                                  | Target Modules / Services                                     | Status     | Specification                                                        |
 | ---------- | ---------------------------------------------- | ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------- |
-| CM-000001  | Refactor Backend Services into a Parent Module | `core`, `profile`, `movie`, `cinema`, `showtime`, `promotion` | 🔵 Planned | [Feature Specification](Feature‐Refactor‐Backend‐Services‐CM‐000001) |
+| CM-000001  | Refactor Backend Services into a Parent Module | `core`, `profile`, `movie`, `cinema`, `showtime`, `promotion` | 🟢 Live | [Feature Specification](Feature-Refactor-Backend-Services) |
 
 ### 2.2 Frontend
 

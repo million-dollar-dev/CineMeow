@@ -54,10 +54,12 @@ Quick reference for service responsibilities and domains:
 
 We maintain a centralized tracking index to manage all implemented, in-progress, and planned features across all microservices:
 
-👉 **[Go to Feature Index & Roadmap](Features‐Index)**
+👉 **[Go to Feature Index & Roadmap](Feature-Index)**
 
 ### Core Feature Specifications
 
+- [[Refactor Backend Services into Parent Module|Feature-Refactor-Backend-Services]]
+- [[Admin Portal UI/UX Refactoring & Design System|Feature-Admin-UI-UX-Refactoring]]
 - [[Ticket Booking Engine|Feature-Booking]]
 - [[Payment & Transactions|Feature-Payment]]
 - [[Cinema & Seat Layout Management|Feature-Cinema-Management]]
