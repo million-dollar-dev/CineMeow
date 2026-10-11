@@ -7,7 +7,7 @@ spring:
   application:
     name: movie-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/cinemeow_movie
+    url: jdbc:postgresql://localhost:5432/cinemeow_core
     username: postgres
     password: sa123
     driver-class-name: org.postgresql.Driver

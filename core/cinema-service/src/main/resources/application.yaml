@@ -7,7 +7,7 @@ spring:
   application:
     name: cinema-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/cinemeow_cinema
+    url: jdbc:postgresql://localhost:5432/cinemeow_core
     username: postgres
     password: sa123
     driver-class-name: org.postgresql.Driver
