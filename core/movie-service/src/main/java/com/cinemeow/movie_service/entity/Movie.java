@@ -62,6 +62,7 @@ public class Movie {
     @Column(name = "duration")
     Integer duration;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     Status status;
 
