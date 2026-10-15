@@ -24,10 +24,13 @@ import AccountManagementPage from "./pages/AccountManagementPage.jsx";
 import NotificationManagementPage from "./pages/NotificationManagementPage.jsx";
 import BookingManagementPage from "./pages/BookingManagementPage.jsx";
 import TransactionManagementPage from "./pages/TransactionManagementPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ServiceUnavailablePage from "./pages/ServiceUnavailablePage.jsx";
 
 const router = createBrowserRouter([
     {
         element: <RootLayout/>,
+        errorElement: <NotFoundPage />,
         children: [
             {
                 element: <ProtectedLayout/>,
@@ -97,6 +100,18 @@ const router = createBrowserRouter([
             {
                 path: "/login",
                 element: <AuthPage/>
+            },
+            {
+                path: "/503",
+                element: <ServiceUnavailablePage />
+            },
+            {
+                path: "/service-unavailable",
+                element: <ServiceUnavailablePage />
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />
             }
         ]
     }

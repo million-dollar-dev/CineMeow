@@ -29,6 +29,8 @@ import Loading from "./components/Loading.jsx";
 import PaymentResultPage from "./pages/PaymentResultPage.jsx";
 import ActiveAccountPage from "./pages/ActiveAccountPage.jsx";
 import VerifyAccountPage from "./pages/VerifyAccountPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ServiceUnavailablePage from "./pages/ServiceUnavailablePage.jsx";
 import UserProfile from "./pages/UserProfilePage.jsx";
 const router = createBrowserRouter([
     {
@@ -120,9 +122,28 @@ const router = createBrowserRouter([
                         element: <LoginPage />,
                     }
                 ]
+            },
+            {
+                path: "/503",
+                element: <ServiceUnavailablePage />,
+            },
+            {
+                path: "/service-unavailable",
+                element: <ServiceUnavailablePage />,
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />,
             }
-
         ],
+    },
+    {
+        path: "/503",
+        element: <ServiceUnavailablePage />,
+    },
+    {
+        path: "*",
+        element: <NotFoundPage />,
     },
     {
         path: "/payment-result",
@@ -146,3 +167,5 @@ createRoot(document.getElementById('root')).render(
         </Provider>
     </PersistGate>
 )
+
+
