@@ -208,5 +208,51 @@ public class MovieServiceImplTest {
         assertEquals(Sort.Direction.ASC, order.getDirection());
     }
 
+    @Test
+    @DisplayName("getMovies: return unsort when soryBy is null or empty")
+    public void testGetMovies_WhenEmptySortBy_ReturnUnSorted() {
+        //Arrage
+        int page = 1;
+        int pageSize = 10;
+        String sortBy = "";
+        Page<Movie> emptyPage = new PageImpl<>(Collections.emptyList());
+
+        when(movieRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
+
+        //Act
+        movieServiceImpl.getMovies(page, pageSize, sortBy);
+
+        //Assert using captor
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(movieRepository).findAll(pageableCaptor.capture());
+        Pageable capturedPageable = pageableCaptor.getValue();
+        Sort capturedSort = capturedPageable.getSort();
+
+        assertTrue(capturedSort.isUnsorted());
+    }
+
+    @Test
+    @DisplayName("getMovies: return unsort when sortBy is invalid")
+    public void testGetMovies_WhenInvalidedSortBy_ReturnUnSorted() {
+        //Arrage
+        int page = 1;
+        int pageSize = 10;
+        String sortBy = "invalid_format";
+        Page<Movie> emptyPage = new PageImpl<>(Collections.emptyList());
+
+        when(movieRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
+
+        //Act
+        movieServiceImpl.getMovies(page, pageSize, sortBy);
+
+        //Assert using captor
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(movieRepository).findAll(pageableCaptor.capture());
+        Pageable capturedPageable = pageableCaptor.getValue();
+        Sort capturedSort = capturedPageable.getSort();
+
+        assertTrue(capturedSort.isUnsorted());
+    }
+
 
 }
