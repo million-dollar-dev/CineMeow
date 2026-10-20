@@ -232,7 +232,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    @DisplayName("getMovies: return unsort when sortBy is invalid")
+    @DisplayName("getMovies: return unsorted when sortBy is invalid")
     public void testGetMovies_WhenInvalidedSortBy_ReturnUnSorted() {
         //Arrage
         int page = 1;
@@ -252,6 +252,74 @@ public class MovieServiceImplTest {
         Sort capturedSort = capturedPageable.getSort();
 
         assertTrue(capturedSort.isUnsorted());
+    }
+
+    @Test
+    public void testUpdate_ValidInput_Success() {
+        // --- Arrange ---
+        String id = "movie-1";
+        Genre genre1 = new Genre(1, "action");
+        Genre genre2 = new Genre(2, "history");
+        Genre genre3 = new Genre(3, "romantic");
+        Set<Genre> genres = Set.of(genre1, genre2);
+        Set<Genre> updatedGenres = Set.of(genre3);
+        this.movie.setDuration(123);
+        this.movie.setGenres(genres);
+
+        MovieRequest request = MovieRequest.builder()
+                .title("updated title")
+                .genres(Set.of(genre3.getId()))
+                .build();
+
+        MovieResponse expectedResponse = MovieResponse.builder()
+                .id("movie-1")
+                .title("updated title")
+                .genres(updatedGenres)
+                .duration(123)
+                .build();
+
+        when(movieRepository.findById(id)).thenReturn(Optional.of(movie));
+        when(genreService.findGenresByIds(request.getGenres())).thenReturn(updatedGenres);
+        doNothing().when(movieMapper).update(movie, request);
+        when(movieRepository.save(movie)).thenReturn(movie);
+        when(movieMapper.toMovieResponse(movie)).thenReturn(expectedResponse);
+
+        // --- Act ---
+        MovieResponse result = movieServiceImpl.update(id, request);
+
+        // --- Assert ---
+        assertAll(() -> {
+            assertEquals("updated title", result.getTitle());
+            assertEquals("movie-1", result.getId());
+            assertEquals(123, result.getDuration());
+            assertThat(result.getGenres()).isEqualTo(updatedGenres);
+        });
+        verify(movieRepository, times(1)).findById(id);
+        verify(genreService, times(1)).findGenresByIds(request.getGenres());
+        verify(movieMapper, times(1)).update(movie, request);
+        verify(movieRepository, times(1)).save(movie);
+        verify(movieMapper, times(1)).toMovieResponse(movie);
+    }
+
+    @Test
+    public void testUpdate_WhenIdNotFound_ThrowsAppException() {
+        String id = "unknown-id";
+        MovieRequest request = MovieRequest.builder()
+                .title("updated title")
+                .genres(Set.of(1))
+                .build();
+
+        when(movieRepository.findById(id)).thenReturn(Optional.empty());
+
+        AppException exception = assertThrows(AppException.class,
+                () -> movieServiceImpl.update(id, request));
+
+        assertEquals(ErrorCode.MOVIE_NOT_FOUND.getMessage(), exception.getMessage());
+        assertEquals(ErrorCode.MOVIE_NOT_FOUND.getStatusCode(), exception.getErrorCode().getStatusCode());
+
+        verify(movieRepository, times(1)).findById(id);
+        verify(genreService, never()).findGenresByIds(anySet());
+        verify(movieRepository, never()).save(movie);
     }
 
 
