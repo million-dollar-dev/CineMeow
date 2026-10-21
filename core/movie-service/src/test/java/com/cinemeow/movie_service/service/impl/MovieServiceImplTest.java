@@ -2,6 +2,7 @@ package com.cinemeow.movie_service.service.impl;
 
 import com.cinemeow.movie_service.dto.request.MovieRequest;
 import com.cinemeow.movie_service.dto.response.MovieResponse;
+import com.cinemeow.movie_service.dto.response.PagedResponse;
 import com.cinemeow.movie_service.entity.Genre;
 import com.cinemeow.movie_service.entity.Movie;
 import com.cinemeow.movie_service.exception.AppException;
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,10 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 
 
 import java.util.Collections;
@@ -320,6 +322,67 @@ public class MovieServiceImplTest {
         verify(movieRepository, times(1)).findById(id);
         verify(genreService, never()).findGenresByIds(anySet());
         verify(movieRepository, never()).save(movie);
+    }
+
+    @Test
+    public void testSearchMovies_WhenValidFilter_Success() {
+        int pageNo = 0;
+        int pageSize = 3;
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        String[] filters = {"title~'avatar'", "duration>'120'"};
+
+        Movie movie1 = Movie.builder().title("avatar 1").duration(121).build();
+        Movie movie2 = Movie.builder().title("avatar 2").duration(132).build();
+        MovieResponse movieResponse1 = MovieResponse.builder()
+                .title("avatar 1")
+                .duration(121)
+                .build();
+        MovieResponse movieResponse2 = MovieResponse.builder()
+                .title("avatar 2")
+                .duration(132)
+                .build();
+        List<MovieResponse> listMovieResponse = List.of(movieResponse1, movieResponse2);
+        Page<Movie> page = new PageImpl<>(List.of(movie1, movie2), PageRequest.of(0, 3), 2);
+        PagedResponse<List<MovieResponse>> expectedPage = PagedResponse.<List<MovieResponse>>builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .totalPages(1)
+                .totalElements(2)
+                .content(listMovieResponse)
+                .build();
+
+        when(movieRepository.findAll((Specification<Movie>) any(), eq(pageable))).thenReturn(page);
+        when(movieMapper.toMovieResponse(movie1)).thenReturn(movieResponse1);
+        when(movieMapper.toMovieResponse(movie2)).thenReturn(movieResponse2);
+
+        PagedResponse<List<MovieResponse>> result = movieServiceImpl.searchMovies(pageable, filters);
+
+        assertEquals(0, result.getPageNo());
+        assertEquals(3, result.getPageSize());
+        assertEquals(2, result.getTotalElements());
+        assertThat(result).usingRecursiveComparison().isEqualTo(expectedPage);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource // Tự động test 2 lần: 1 lần với null, 1 lần với ""
+    @ValueSource(strings = {
+            "   ",               // Chuỗi toàn khoảng trắng
+            "invalid_format",    // Sai định dạng
+            "title",             // Thiếu :asc hoặc :desc
+            "title:random",      // Direction không phải asc/desc
+            ":asc"               // Thiếu tên trường
+    })
+    @DisplayName("getMovies: Trả về Sort.unsorted khi sortBy là null, rỗng hoặc sai định dạng")
+    void testGetMovies_WhenSortByInvalidOrEmpty_ReturnsUnsorted(String invalidSortBy) {
+        // 1. Arrange
+        Page<Movie> emptyPage = new PageImpl<>(List.of());
+        when(movieRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
+        // 2. Act
+        movieServiceImpl.getMovies(1, 10, invalidSortBy);
+        // 3. Assert
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(movieRepository).findAll(pageableCaptor.capture());
+        assertTrue(pageableCaptor.getValue().getSort().isUnsorted());
     }
 
 
