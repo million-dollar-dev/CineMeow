@@ -3,6 +3,8 @@ package com.cinemeow.movie_service.service.impl;
 import com.cinemeow.movie_service.dto.request.GenreRequest;
 import com.cinemeow.movie_service.dto.response.GenreResponse;
 import com.cinemeow.movie_service.entity.Genre;
+import com.cinemeow.movie_service.exception.AppException;
+import com.cinemeow.movie_service.exception.ErrorCode;
 import com.cinemeow.movie_service.mapper.GenreMapper;
 import com.cinemeow.movie_service.repository.GenreRepository;
 import com.cinemeow.movie_service.service.GenreService;
@@ -21,8 +23,8 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GenreServiceImpl implements GenreService {
     GenreRepository genreRepository;
-    GenreMapper genreMapper;
 
+    GenreMapper genreMapper;
 
     @Override
     @CacheEvict(value = "genres", key = "'all'")
@@ -47,7 +49,9 @@ public class GenreServiceImpl implements GenreService {
             }
     )
     public void deleteById(Integer id) {
-        genreRepository.deleteById(id);
+        Genre genre = genreRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_FOUND));
+        genreRepository.delete(genre);
     }
 
     @Override

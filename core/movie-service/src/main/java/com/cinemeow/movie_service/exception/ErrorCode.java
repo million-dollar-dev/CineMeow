@@ -16,7 +16,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(403, "Access denied", HttpStatus.UNAUTHORIZED),
     DATA_INTEGRITY_VIOLATION(1011, "Request's data issue", HttpStatus.BAD_REQUEST),
     INVALID_JWT(1012, "Invalid Token", HttpStatus.UNAUTHORIZED),
-    PARSE_ERROR(1013, "There's an issue in parsing", HttpStatus.BAD_REQUEST);
+    PARSE_ERROR(1013, "There's an issue in parsing", HttpStatus.BAD_REQUEST),
+    GENRE_NOT_FOUND(404, "Genre not found", HttpStatus.NOT_FOUND)
     ;
 
     int code;

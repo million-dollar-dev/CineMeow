@@ -385,5 +385,31 @@ public class MovieServiceImplTest {
         assertTrue(pageableCaptor.getValue().getSort().isUnsorted());
     }
 
+    @Test
+    public void testSearchMovies_WhenNullFilter_SearchWithoutSpec() {
+        Page<Movie> emptyPage = new PageImpl<>(List.of());
+        Pageable pageable = PageRequest.of(0, 3);
+        when(movieRepository.findAll(pageable)).thenReturn(emptyPage);
+
+        PagedResponse<List<MovieResponse>> result = movieServiceImpl.searchMovies(pageable, null);
+
+        assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+        verify(movieRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    public void testSearchMovies_WhenFiltersInvalidOrEmptyValue_IgnoresThem() {
+        Pageable pageable = PageRequest.of(0, 3);
+        String[] filters = {"invalid_format", "title~''"};
+        Page<Movie> emptyPage = new PageImpl<>(List.of());
+        when(movieRepository.findAll((Specification<Movie>) isNull(), eq(pageable))).thenReturn(emptyPage);
+
+        PagedResponse<List<MovieResponse>> result = movieServiceImpl.searchMovies(pageable, filters);
+
+        assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+        verify(movieRepository, times(1)).findAll((Specification<Movie>) isNull(), eq(pageable));
+    }
 
 }
