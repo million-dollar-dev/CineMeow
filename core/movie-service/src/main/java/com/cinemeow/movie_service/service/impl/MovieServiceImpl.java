@@ -166,6 +166,7 @@ public class MovieServiceImpl implements MovieService {
         return PagedResponse.<List<MovieResponse>>builder()
                 .pageNo(pageable.getPageNumber())
                 .pageSize(pageable.getPageSize())
+                .totalElements(moviePage.getTotalElements())
                 .totalPages(moviePage.getTotalPages())
                 .content(movieResponses)
                 .build();
