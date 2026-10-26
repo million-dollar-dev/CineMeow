@@ -1,7 +1,7 @@
 package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.request.CinemaBrandRequest;
-import com.cinemeow.cinema_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.CinemaBrandResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 import com.cinemeow.cinema_service.service.CinemaBrandService;
@@ -97,3 +97,4 @@ public class CinemaBrandController {
                 .build();
     }
 }
+

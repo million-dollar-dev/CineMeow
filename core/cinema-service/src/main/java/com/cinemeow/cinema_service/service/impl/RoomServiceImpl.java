@@ -10,8 +10,8 @@ import com.cinemeow.cinema_service.entity.Room;
 import com.cinemeow.cinema_service.entity.Seat;
 import com.cinemeow.cinema_service.enums.SeatStatus;
 import com.cinemeow.cinema_service.enums.SeatType;
-import com.cinemeow.cinema_service.exception.AppException;
-import com.cinemeow.cinema_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.RoomMapper;
 import com.cinemeow.cinema_service.mapper.SeatMapper;
 import com.cinemeow.cinema_service.repository.RoomRepository;
@@ -234,3 +234,4 @@ public class RoomServiceImpl implements RoomService {
         return SeatMapResponse.from(room);
     }
 }
+

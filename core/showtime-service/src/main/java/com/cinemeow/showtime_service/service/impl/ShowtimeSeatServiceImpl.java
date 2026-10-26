@@ -5,8 +5,8 @@ import com.cinemeow.showtime_service.dto.response.SeatResponse;
 import com.cinemeow.showtime_service.entity.ShowtimeSeat;
 import com.cinemeow.showtime_service.enums.SeatStatus;
 import com.cinemeow.showtime_service.enums.SeatType;
-import com.cinemeow.showtime_service.exception.AppException;
-import com.cinemeow.showtime_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.showtime_service.repository.ShowtimeSeatRepository;
 import com.cinemeow.showtime_service.service.ShowtimeSeatService;
 import jakarta.transaction.Transactional;
@@ -93,3 +93,4 @@ public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
         return showtimeSeatRepository.findAllByShowtimeId(showtimeId);
     }
 }
+

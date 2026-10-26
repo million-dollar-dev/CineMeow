@@ -15,6 +15,11 @@
 	<description>Showtime Service For CineMeow</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.cinemeow</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- OpenFeign for Inter-Service Communication -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -48,6 +53,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+		<dependency>
+			<groupId>com.cinemeow</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
@@ -72,3 +82,5 @@
 	</build>
 
 </project>
+
+

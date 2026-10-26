@@ -1,7 +1,7 @@
 package com.cinemeow.movie_service.controller;
 
 import com.cinemeow.movie_service.dto.request.GenreRequest;
-import com.cinemeow.movie_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.movie_service.dto.response.GenreResponse;
 import com.cinemeow.movie_service.service.GenreService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,3 +74,4 @@ public class GenreController {
                 .build();
     }
 }
+

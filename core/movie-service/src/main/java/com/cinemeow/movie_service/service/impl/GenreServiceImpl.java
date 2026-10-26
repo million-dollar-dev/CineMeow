@@ -3,8 +3,8 @@ package com.cinemeow.movie_service.service.impl;
 import com.cinemeow.movie_service.dto.request.GenreRequest;
 import com.cinemeow.movie_service.dto.response.GenreResponse;
 import com.cinemeow.movie_service.entity.Genre;
-import com.cinemeow.movie_service.exception.AppException;
-import com.cinemeow.movie_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.movie_service.mapper.GenreMapper;
 import com.cinemeow.movie_service.repository.GenreRepository;
 import com.cinemeow.movie_service.service.GenreService;
@@ -62,3 +62,4 @@ public class GenreServiceImpl implements GenreService {
         return new HashSet<>(genres);
     }
 }
+

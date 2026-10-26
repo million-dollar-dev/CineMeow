@@ -2,7 +2,7 @@ package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.request.RoomRequest;
 import com.cinemeow.cinema_service.dto.request.SeatMapRequest;
-import com.cinemeow.cinema_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.RoomResponse;
 import com.cinemeow.cinema_service.dto.response.SeatMapResponse;
 import com.cinemeow.cinema_service.service.RoomService;
@@ -145,3 +145,4 @@ public class RoomController {
                 .build();
     }
 }
+

@@ -16,6 +16,11 @@
     <description>Unified Spring Boot Application Runner for CineMeow Core Services</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.cinemeow</groupId>
+            <artifactId>common</artifactId>
+			<version>${project.version}</version>
+        </dependency>
         <!-- Core Domain Service Modules -->
         <dependency>
             <groupId>com.cinemeow</groupId>
@@ -82,6 +87,11 @@
 
     <dependencyManagement>
         <dependencies>
+        <dependency>
+            <groupId>com.cinemeow</groupId>
+            <artifactId>common</artifactId>
+			<version>${project.version}</version>
+        </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -109,3 +119,5 @@
         </plugins>
     </build>
 </project>
+
+

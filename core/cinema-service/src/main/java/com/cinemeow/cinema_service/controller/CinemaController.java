@@ -1,7 +1,7 @@
 package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.request.CinemaRequest;
-import com.cinemeow.cinema_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.CinemaDetailResponse;
 import com.cinemeow.cinema_service.dto.response.RoomResponse;
 import com.cinemeow.cinema_service.service.CinemaService;
@@ -130,3 +130,4 @@ public class CinemaController {
                 .build();
     }
 }
+

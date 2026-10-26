@@ -1,7 +1,7 @@
 package com.cinemeow.profile_service.controller;
 
 import com.cinemeow.profile_service.dto.request.UserProfileUpdateRequest;
-import com.cinemeow.profile_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.profile_service.dto.response.PagedResponse;
 import com.cinemeow.profile_service.dto.response.UserProfileResponse;
 import com.cinemeow.profile_service.service.UserProfileService;
@@ -107,4 +107,5 @@ public class UserProfileController {
                 .build();
     }
 }
+
 

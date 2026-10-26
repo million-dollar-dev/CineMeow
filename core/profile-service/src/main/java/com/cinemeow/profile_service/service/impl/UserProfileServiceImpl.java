@@ -5,8 +5,8 @@ import com.cinemeow.profile_service.dto.request.UserProfileUpdateRequest;
 import com.cinemeow.profile_service.dto.response.PagedResponse;
 import com.cinemeow.profile_service.dto.response.UserProfileResponse;
 import com.cinemeow.profile_service.entity.UserProfile;
-import com.cinemeow.profile_service.exception.AppException;
-import com.cinemeow.profile_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.profile_service.mapper.UserProfileMapper;
 import com.cinemeow.profile_service.repository.UserProfileRepository;
 import com.cinemeow.profile_service.service.UserProfileService;
@@ -123,3 +123,4 @@ public class UserProfileServiceImpl implements UserProfileService {
         return Sort.unsorted();
     }
 }
+

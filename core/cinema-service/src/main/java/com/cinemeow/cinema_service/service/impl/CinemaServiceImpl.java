@@ -3,8 +3,8 @@ package com.cinemeow.cinema_service.service.impl;
 import com.cinemeow.cinema_service.dto.request.CinemaRequest;
 import com.cinemeow.cinema_service.dto.response.CinemaDetailResponse;
 import com.cinemeow.cinema_service.entity.Cinema;
-import com.cinemeow.cinema_service.exception.AppException;
-import com.cinemeow.cinema_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.CinemaMapper;
 import com.cinemeow.cinema_service.repository.CinemaRepository;
 import com.cinemeow.cinema_service.service.CinemaBrandService;
@@ -87,3 +87,4 @@ public class CinemaServiceImpl implements CinemaService {
                 .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_EXISTED));
     }
 }
+

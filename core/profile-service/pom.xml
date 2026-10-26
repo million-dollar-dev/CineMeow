@@ -15,6 +15,11 @@
 	<description>Profile Service For CineMeow</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.cinemeow</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Redis & Caching -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -54,3 +59,5 @@
 	</build>
 
 </project>
+
+

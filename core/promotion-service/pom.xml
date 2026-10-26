@@ -14,6 +14,14 @@
 	<name>promotion-service</name>
 	<description>Promotion Service For CineMeow</description>
 
+	<dependencies>
+		<dependency>
+			<groupId>com.cinemeow</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -28,3 +36,5 @@
 	</build>
 
 </project>
+
+

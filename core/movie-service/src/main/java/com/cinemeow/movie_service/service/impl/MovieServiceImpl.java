@@ -4,8 +4,8 @@ import com.cinemeow.movie_service.dto.request.MovieRequest;
 import com.cinemeow.movie_service.dto.response.MovieResponse;
 import com.cinemeow.movie_service.dto.response.PagedResponse;
 import com.cinemeow.movie_service.entity.Movie;
-import com.cinemeow.movie_service.exception.AppException;
-import com.cinemeow.movie_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.movie_service.mapper.MovieMapper;
 import com.cinemeow.movie_service.repository.MovieRepository;
 import com.cinemeow.movie_service.repository.specification.MovieSpecificationBuilder;
@@ -172,3 +172,4 @@ public class MovieServiceImpl implements MovieService {
                 .build();
     }
 }
+

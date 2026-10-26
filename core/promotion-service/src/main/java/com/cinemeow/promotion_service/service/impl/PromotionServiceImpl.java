@@ -7,8 +7,8 @@ import com.cinemeow.promotion_service.dto.response.PromotionResponse;
 import com.cinemeow.promotion_service.dto.response.VoucherValidationResponse;
 import com.cinemeow.promotion_service.entity.Promotion;
 import com.cinemeow.promotion_service.entity.PromotionCondition;
-import com.cinemeow.promotion_service.exception.AppException;
-import com.cinemeow.promotion_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.promotion_service.mapper.PromotionMapper;
 import com.cinemeow.promotion_service.repository.PromotionRepository;
 import com.cinemeow.promotion_service.service.PromotionService;
@@ -93,3 +93,4 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
 }
+
