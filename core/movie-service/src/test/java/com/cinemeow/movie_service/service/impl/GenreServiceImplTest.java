@@ -138,7 +138,7 @@ class GenreServiceImplTest {
     }
 
     @Test
-    public void testFindGenresByIds_whenInvalidInput_ReturnSet() {
+    public void testFindGenresByIds_whenValidInput_ReturnSet() {
         Set<Integer> request = Set.of(1, 2, 3, 4);
         int id1 = 1;
         String name1 = "genre 1";
