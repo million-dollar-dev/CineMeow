@@ -3,8 +3,8 @@ package com.cinemeow.cinema_service.service.impl;
 import com.cinemeow.cinema_service.dto.request.CinemaBrandRequest;
 import com.cinemeow.cinema_service.dto.response.CinemaBrandResponse;
 import com.cinemeow.cinema_service.entity.CinemaBrand;
-import com.cinemeow.cinema_service.exception.AppException;
-import com.cinemeow.cinema_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.CinemaBrandMapper;
 import com.cinemeow.cinema_service.repository.CinemaBrandRepository;
 import com.cinemeow.cinema_service.service.CinemaBrandService;
@@ -76,3 +76,4 @@ public class CinemaBrandServiceImpl implements CinemaBrandService {
                 .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOT_EXISTED));
     }
 }
+

@@ -2,7 +2,7 @@ package com.cinemeow.promotion_service.controller;
 
 import com.cinemeow.promotion_service.dto.request.PromotionRequest;
 import com.cinemeow.promotion_service.dto.request.VoucherValidationRequest;
-import com.cinemeow.promotion_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.promotion_service.dto.response.PromotionResponse;
 import com.cinemeow.promotion_service.dto.response.VoucherValidationResponse;
 import com.cinemeow.promotion_service.service.PromotionService;
@@ -130,3 +130,4 @@ public class PromotionController {
                 .build();
     }
 }
+

@@ -1,7 +1,7 @@
 package com.cinemeow.showtime_service.controller;
 
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
-import com.cinemeow.showtime_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
 import com.cinemeow.showtime_service.entity.ShowtimeSeat;
 import com.cinemeow.showtime_service.service.ShowtimeSeatService;
@@ -159,3 +159,4 @@ public class ShowtimeController {
         return showtimeSeatService.checkAvailableSeats(id, seatIds);
     }
 }
+

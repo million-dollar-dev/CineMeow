@@ -1,6 +1,6 @@
 package com.cinemeow.showtime_service.client;
 
-import com.cinemeow.showtime_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.showtime_service.dto.response.RoomResponse;
 import com.cinemeow.showtime_service.dto.response.SeatMapResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,3 +18,4 @@ public interface CinemaClient {
     @GetMapping("/rooms/{id}/seats")
     BaseResponse<SeatMapResponse> getSeatMap(@PathVariable String id);
 }
+

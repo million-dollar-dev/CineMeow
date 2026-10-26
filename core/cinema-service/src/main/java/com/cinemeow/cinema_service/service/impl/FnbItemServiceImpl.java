@@ -5,8 +5,8 @@ import com.cinemeow.cinema_service.dto.request.FnbItemRequest;
 import com.cinemeow.cinema_service.dto.response.FnbCalculateResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 import com.cinemeow.cinema_service.entity.FnbItem;
-import com.cinemeow.cinema_service.exception.AppException;
-import com.cinemeow.cinema_service.exception.ErrorCode;
+import com.cinemeow.common.exception.AppException;
+import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.cinema_service.mapper.FnbItemMapper;
 import com.cinemeow.cinema_service.repository.CinemaBrandRepository;
 import com.cinemeow.cinema_service.repository.FnbItemRepository;
@@ -141,3 +141,4 @@ public class FnbItemServiceImpl implements FnbItemService {
         return totalPrice;
     }
 }
+

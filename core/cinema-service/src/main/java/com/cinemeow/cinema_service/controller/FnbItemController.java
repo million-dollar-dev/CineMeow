@@ -2,7 +2,7 @@ package com.cinemeow.cinema_service.controller;
 
 import com.cinemeow.cinema_service.dto.request.FnbCalculateRequest;
 import com.cinemeow.cinema_service.dto.request.FnbItemRequest;
-import com.cinemeow.cinema_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.cinema_service.dto.response.FnbCalculateResponse;
 import com.cinemeow.cinema_service.dto.response.FnbItemResponse;
 import com.cinemeow.cinema_service.service.FnbItemService;
@@ -127,3 +127,4 @@ public class FnbItemController {
         return fnbItemService.calculate(items);
     }
 }
+

@@ -1,5 +1,4 @@
-package com.cinemeow.cinema_service.dto.response;
-
+package com.cinemeow.common.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

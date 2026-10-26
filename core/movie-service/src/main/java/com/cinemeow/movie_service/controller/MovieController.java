@@ -1,7 +1,7 @@
 package com.cinemeow.movie_service.controller;
 
 import com.cinemeow.movie_service.dto.request.MovieRequest;
-import com.cinemeow.movie_service.dto.response.BaseResponse;
+import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.movie_service.dto.response.MovieResponse;
 import com.cinemeow.movie_service.dto.response.PagedResponse;
 import com.cinemeow.movie_service.service.MovieService;
@@ -162,3 +162,4 @@ public class MovieController {
                 .build();
     }
 }
+
