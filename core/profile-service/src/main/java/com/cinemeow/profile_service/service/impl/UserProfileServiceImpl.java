@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserProfileServiceImpl implements UserProfileService {
     UserProfileRepository userProfileRepository;
+
     UserProfileMapper userProfileMapper;
 
     @Override
@@ -41,7 +42,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     })
     public UserProfileResponse create(UserProfileRequest request) {
         var profile = userProfileMapper.toUserProfile(request);
-        userProfileRepository.save(profile);
+        profile = userProfileRepository.save(profile);
         return userProfileMapper.toUserProfileResponse(profile);
     }
 
@@ -96,7 +97,9 @@ public class UserProfileServiceImpl implements UserProfileService {
             @CacheEvict(value = "profile", key = "#userId")
     })
     public void deleteByUserId(String userId) {
-        userProfileRepository.deleteByUserId(userId);
+        UserProfile userProfile = userProfileRepository.findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.PROFILE_NOT_FOUND));
+        userProfileRepository.delete(userProfile);
     }
 
     @Override
