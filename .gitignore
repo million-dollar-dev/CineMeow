@@ -11,6 +11,8 @@
 .agent/
 **/.agents/
 **/.agent/
+.taste-skill/
+skills-lock.json
 
 frontend/client-frontend/design-system/
 

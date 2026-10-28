@@ -13,7 +13,7 @@ import RatingCard from "../RatingCard.jsx";
 
 const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
     return (
-        <div className="group relative flex flex-col justify-between bg-[#12121e]/90 hover:bg-[#161626] rounded-2xl overflow-hidden border border-white/10 hover:border-violet-500/70 shadow-xl hover:shadow-[0_12px_35px_rgba(127,90,240,0.3)] transition-all duration-300">
+        <div className="group relative flex flex-col justify-between bg-[#12121e]/90 hover:bg-[#161626] rounded-2xl overflow-hidden border border-white/10 hover:border-main/60 transition-colors duration-200">
             {/* Top Poster Container */}
             <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-900">
                 {/* Age Rating Badge */}
@@ -44,7 +44,7 @@ const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
                             key={idx}
                             className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider shadow-sm ${
                                 fmt.includes("IMAX")
-                                    ? "bg-amber-500 text-zinc-950"
+                                ? "bg-amber-500 text-zinc-950"
                                     : "bg-black/75 text-zinc-200 border border-white/20 backdrop-blur-sm"
                             }`}
                         >
@@ -75,14 +75,14 @@ const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
                             onClick={() => onPlayTrailer(movie)}
                             className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-black border border-white/40 text-xs font-bold transition-all transform scale-90 group-hover:scale-100 cursor-pointer shadow-lg"
                         >
-                            <FontAwesomeIcon icon={faPlay} className="text-xs text-violet-400 group-hover:text-violet-600" />
+                            <FontAwesomeIcon icon={faPlay} className="text-xs text-main group-hover:text-main" />
                             <span>Xem Trailer</span>
                         </button>
                     )}
 
                     <Link
                         to={`/movie/${movie.id}`}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all shadow-lg shadow-violet-900/50 transform scale-90 group-hover:scale-100 cursor-pointer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-main hover:bg-main-hover text-main-contrast text-xs font-bold transition-all shadow-md shadow-main/20 transform scale-90 group-hover:scale-100 cursor-pointer"
                     >
                         <FontAwesomeIcon icon={faTicket} className="text-xs" />
                         <span>Đặt Vé Chi Tiết</span>
@@ -96,7 +96,7 @@ const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
                     {/* Movie Title */}
                     <Link
                         to={`/movie/${movie.id}`}
-                        className="block font-bold text-sm sm:text-base text-white group-hover:text-violet-300 transition-colors line-clamp-1"
+                        className="block font-bold text-sm sm:text-base text-white group-hover:text-main transition-colors line-clamp-1"
                         title={movie.title}
                     >
                         {movie.title}
@@ -110,7 +110,7 @@ const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
                     {/* Metadata line: Duration & Release */}
                     <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-2.5 pt-2.5 border-t border-white/5">
                         <span className="flex items-center gap-1.5">
-                            <FontAwesomeIcon icon={faClock} className="text-violet-400 text-[10px]" />
+                            <FontAwesomeIcon icon={faClock} className="text-main text-[10px]" />
                             <span>{movie.duration || "120 phút"}</span>
                         </span>
                         <span className="flex items-center gap-1.5">
@@ -128,7 +128,7 @@ const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
                             onClick={() => onPlayTrailer(movie)}
                             className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-white/5 text-xs font-semibold transition-all cursor-pointer"
                         >
-                            <FontAwesomeIcon icon={faPlay} className="text-[10px] text-violet-400" />
+                            <FontAwesomeIcon icon={faPlay} className="text-[10px] text-main" />
                             <span>Trailer</span>
                         </button>
                     ) : (
@@ -142,7 +142,7 @@ const NowPlayingMovieCard = ({ movie, onPlayTrailer }) => {
 
                     <Link
                         to={`/movie/${movie.id}`}
-                        className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold shadow-md shadow-violet-900/40 transition-all cursor-pointer active:scale-95"
+                        className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-main hover:bg-main-hover text-main-contrast text-xs font-bold shadow-md shadow-main/20 transition-all cursor-pointer active:scale-95"
                     >
                         <FontAwesomeIcon icon={faTicket} className="text-[10px]" />
                         <span>Đặt vé</span>

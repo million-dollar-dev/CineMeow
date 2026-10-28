@@ -142,12 +142,12 @@ const Footer = () => {
                                     value={newsletterEmail}
                                     onChange={(e) => setNewsletterEmail(e.target.value)}
                                     placeholder="Nhập email của bạn (vd: yourname@gmail.com)..."
-                                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-zinc-900/90 border border-zinc-700/80 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
+                                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-zinc-900/90 border border-zinc-700/80 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-main focus:ring-1 focus:ring-main transition-all"
                                 />
                             </div>
                             <button
                                 type="submit"
-                                className="h-11 px-6 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shrink-0"
+                                className="h-11 px-6 rounded-xl bg-main hover:bg-main-hover text-main-contrast font-bold text-xs sm:text-sm shadow-md shadow-main/20 transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95 shrink-0"
                             >
                                 <FontAwesomeIcon icon={faPaperPlane} className="text-xs" />
                                 <span>Đăng Ký</span>
@@ -163,7 +163,7 @@ const Footer = () => {
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="shrink-0">
                             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
-                                <FontAwesomeIcon icon={faFilm} className="text-violet-400" />
+                                <FontAwesomeIcon icon={faFilm} className="text-main" />
                                 <span>Hệ Thống Rạp Đối Tác Toàn Quốc</span>
                             </p>
                         </div>
@@ -172,7 +172,7 @@ const Footer = () => {
                                 <Link
                                     key={brand.id}
                                     to={`/brands/${brand.id}`}
-                                    className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-violet-500/50 transition-all shadow-sm"
+                                    className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-main/50 transition-all shadow-sm"
                                     title={`Xem lịch chiếu rạp ${brand.name}`}
                                 >
                                     <div className="w-5 h-5 rounded flex items-center justify-center overflow-hidden bg-black/40">
@@ -189,7 +189,7 @@ const Footer = () => {
                                             {brand.fallbackText}
                                         </span>
                                     </div>
-                                    <span className="text-xs font-semibold text-zinc-300 group-hover:text-violet-300 transition-colors">
+                                    <span className="text-xs font-semibold text-zinc-300 group-hover:text-main transition-colors">
                                         {brand.name}
                                     </span>
                                 </Link>
@@ -205,12 +205,12 @@ const Footer = () => {
                     {/* Brand Info & Mission (Cols 1-2 on desktop) */}
                     <div className="lg:col-span-2 space-y-4">
                         <Link to="/" className="inline-flex items-center gap-2.5 group">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-600/30 group-hover:scale-105 transition-transform">
+                            <div className="w-10 h-10 rounded-xl bg-main flex items-center justify-center text-main-contrast shadow-md shadow-main/20 group-hover:scale-105 transition-transform">
                                 <FontAwesomeIcon icon={faFilm} className="text-lg" />
                             </div>
                             <div>
                                 <span className="text-2xl font-black text-white tracking-wider">
-                                    Cine<span className="text-violet-400">Meow</span>
+                                    Cine<span className="text-main">Meow</span>
                                 </span>
                                 <p className="text-[10px] text-zinc-400 tracking-widest uppercase font-semibold">
                                     Cinema & Ticket Platform
@@ -227,15 +227,15 @@ const Footer = () => {
                         {/* Contact details */}
                         <div className="space-y-2 pt-2 text-xs text-zinc-400">
                             <div className="flex items-center gap-2.5">
-                                <FontAwesomeIcon icon={faPhone} className="text-violet-400 w-3.5 text-center" />
+                                <FontAwesomeIcon icon={faPhone} className="text-main w-3.5 text-center" />
                                 <span>Hotline: <strong className="text-white">1900 123 456</strong> (8:00 - 22:00 hàng ngày)</span>
                             </div>
                             <div className="flex items-center gap-2.5">
-                                <FontAwesomeIcon icon={faEnvelope} className="text-violet-400 w-3.5 text-center" />
+                                <FontAwesomeIcon icon={faEnvelope} className="text-main w-3.5 text-center" />
                                 <span>Hỗ trợ kỹ thuật: <strong className="text-white">support@cinemeow.vn</strong></span>
                             </div>
                             <div className="flex items-center gap-2.5">
-                                <FontAwesomeIcon icon={faLocationDot} className="text-violet-400 w-3.5 text-center" />
+                                <FontAwesomeIcon icon={faLocationDot} className="text-main w-3.5 text-center" />
                                 <span>Trụ sở: Tòa nhà CineMeow Tower, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh</span>
                             </div>
                         </div>
@@ -302,31 +302,31 @@ const Footer = () => {
                         </h4>
                         <ul className="space-y-2.5 text-xs text-zinc-400">
                             <li>
-                                <Link to="/now-playing" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/now-playing" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Phim Đang Chiếu Rạp</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/comming-soon" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/comming-soon" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Phim Sắp Chiếu & Pre-sale</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/showtimes/today" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/showtimes/today" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Lịch Chiếu Hôm Nay</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/reviews" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/reviews" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Review & Phê Bình Phim</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/movies" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/movies" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Toàn Bộ Danh Mục Phim</span>
                                 </Link>
@@ -341,37 +341,37 @@ const Footer = () => {
                         </h4>
                         <ul className="space-y-2.5 text-xs text-zinc-400">
                             <li>
-                                <Link to="/brands/cgv" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/brands/cgv" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hệ Thống CGV Cinema</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/brands/lotte" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/brands/lotte" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hệ Thống Lotte Cinema</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/brands/bhd" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/brands/bhd" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hệ Thống BHD Star</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/brands/galaxy" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/brands/galaxy" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hệ Thống Galaxy Cinema</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/brands/beta" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/brands/beta" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hệ Thống Beta Cinemas</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/brands/cinestar" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/brands/cinestar" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hệ Thống Cinestar</span>
                                 </Link>
@@ -386,37 +386,37 @@ const Footer = () => {
                         </h4>
                         <ul className="space-y-2.5 text-xs text-zinc-400">
                             <li>
-                                <Link to="/promotions" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/promotions" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Ưu Đãi & Khuyến Mãi</span>
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/blogs/all" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <Link to="/blogs/all" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Tin Tức & Blog Điện Ảnh</span>
                                 </Link>
                             </li>
                             <li>
-                                <a href="#faq" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <a href="#faq" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Hướng Dẫn Đặt Vé Online</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#refund" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <a href="#refund" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Chính Sách Đổi & Hoàn Vé</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#privacy" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <a href="#privacy" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Chính Sách Bảo Mật Thông Tin</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#terms" className="hover:text-violet-400 transition-colors flex items-center gap-1.5">
+                                <a href="#terms" className="hover:text-main transition-colors flex items-center gap-1.5">
                                     <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-zinc-600" />
                                     <span>Điều Khoản Sử Dụng</span>
                                 </a>
@@ -432,7 +432,7 @@ const Footer = () => {
                     {/* Payment methods */}
                     <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start">
                         <span className="text-xs font-semibold text-zinc-400 mr-2 flex items-center gap-1">
-                            <FontAwesomeIcon icon={faCreditCard} className="text-violet-400" />
+                            <FontAwesomeIcon icon={faCreditCard} className="text-main" />
                             <span>Thanh toán tiện lợi:</span>
                         </span>
                         {PAYMENT_METHODS.map((pm, idx) => (
@@ -452,7 +452,7 @@ const Footer = () => {
                             <span className="text-[11px] font-medium">Bảo mật SSL 256-bit</span>
                         </div>
                         <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-zinc-900 border border-zinc-800">
-                            <FontAwesomeIcon icon={faShieldHalved} className="text-violet-400 text-xs" />
+                            <FontAwesomeIcon icon={faShieldHalved} className="text-main text-xs" />
                             <span className="text-[11px] font-medium">Chứng nhận Bộ Công Thương</span>
                         </div>
                     </div>
@@ -469,12 +469,12 @@ const Footer = () => {
                     <button
                         type="button"
                         onClick={scrollToTop}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 hover:border-violet-500/50 transition-all cursor-pointer shadow-sm text-xs font-semibold group shrink-0"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 hover:border-main/50 transition-all cursor-pointer shadow-sm text-xs font-semibold group shrink-0"
                     >
                         <span>Lên đầu trang</span>
                         <FontAwesomeIcon
                             icon={faArrowUp}
-                            className="text-[10px] text-violet-400 group-hover:-translate-y-0.5 transition-transform"
+                            className="text-[10px] text-main group-hover:-translate-y-0.5 transition-transform"
                         />
                     </button>
                 </div>

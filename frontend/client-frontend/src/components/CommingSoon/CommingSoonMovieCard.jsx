@@ -25,7 +25,7 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
     };
 
     return (
-        <div className="group relative flex flex-col justify-between h-full bg-[#12121e]/90 hover:bg-[#161626] rounded-2xl overflow-hidden border border-white/10 hover:border-violet-500/70 shadow-xl hover:shadow-[0_12px_35px_rgba(127,90,240,0.3)] transition-all duration-300">
+        <div className="group relative flex flex-col justify-between h-full bg-[#12121e]/90 hover:bg-[#161626] rounded-2xl overflow-hidden border border-white/10 hover:border-main/60 transition-colors duration-200">
             {/* Top Poster Container */}
             <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-900 shrink-0">
                 {/* Age Rating Badge */}
@@ -42,7 +42,7 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
                         </div>
                     )}
                     {movie.daysLeft !== undefined && (
-                        <div className="px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-violet-500/40 text-violet-300 text-[10px] font-bold shadow-sm">
+                        <div className="px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-main/40 text-main text-[10px] font-bold shadow-sm">
                             <span>Còn {movie.daysLeft} ngày</span>
                         </div>
                     )}
@@ -86,14 +86,14 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
                             onClick={() => onPlayTrailer(movie)}
                             className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 hover:bg-white text-white hover:text-black border border-white/40 text-xs font-bold transition-all transform scale-90 group-hover:scale-100 cursor-pointer shadow-lg"
                         >
-                            <FontAwesomeIcon icon={faPlay} className="text-xs text-violet-400 group-hover:text-violet-600" />
+                            <FontAwesomeIcon icon={faPlay} className="text-xs text-main group-hover:text-main" />
                             <span>Xem Trailer</span>
                         </button>
                     )}
 
                     <Link
                         to={`/movie/${movie.id}`}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition-all shadow-lg shadow-violet-900/50 transform scale-90 group-hover:scale-100 cursor-pointer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-main hover:bg-main-hover text-main-contrast text-xs font-bold transition-all shadow-md shadow-main/20 transform scale-90 group-hover:scale-100 cursor-pointer"
                     >
                         <FontAwesomeIcon icon={faFilm} className="text-xs" />
                         <span>Thông Tin Chi Tiết</span>
@@ -108,7 +108,7 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
                     <div className="h-10 sm:h-11 flex items-start">
                         <Link
                             to={`/movie/${movie.id}`}
-                            className="font-bold text-sm sm:text-base text-white group-hover:text-violet-300 transition-colors line-clamp-2 leading-snug"
+                            className="font-bold text-sm sm:text-base text-white group-hover:text-main transition-colors line-clamp-2 leading-snug"
                             title={movie.title}
                         >
                             {movie.title}
@@ -122,8 +122,8 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
 
                     {/* Premiere Date & Interest count */}
                     <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-2.5 pt-2.5 border-t border-white/5">
-                        <span className="flex items-center gap-1.5 text-violet-300 font-semibold truncate">
-                            <FontAwesomeIcon icon={faCalendarDays} className="text-violet-400 text-[10px]" />
+                        <span className="flex items-center gap-1.5 text-orange-200 font-semibold truncate">
+                            <FontAwesomeIcon icon={faCalendarDays} className="text-main text-[10px]" />
                             <span>Khởi chiếu: {movie.releaseDate}</span>
                         </span>
                         {movie.wantToSeeCount && (
@@ -143,7 +143,7 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
                         onClick={() => onPlayTrailer(movie)}
                         className="h-9 rounded-xl bg-zinc-800/90 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                     >
-                        <FontAwesomeIcon icon={faPlay} className="text-[10px] text-violet-400" />
+                        <FontAwesomeIcon icon={faPlay} className="text-[10px] text-main" />
                         <span>Trailer</span>
                     </button>
 
@@ -151,7 +151,7 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
                     {movie.isPreSale ? (
                         <Link
                             to={`/movie/${movie.id}`}
-                            className="h-9 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-violet-900/40 transition-all cursor-pointer active:scale-95 text-center"
+                            className="h-9 rounded-xl bg-main hover:bg-main-hover text-main-contrast text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-main/20 transition-all cursor-pointer active:scale-95 text-center"
                         >
                             <FontAwesomeIcon icon={faTicket} className="text-[10px]" />
                             <span>Mua vé sớm</span>
@@ -163,12 +163,12 @@ const CommingSoonMovieCard = ({ movie, onPlayTrailer, onToggleRemind, isReminded
                             className={`h-9 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer border ${
                                 remindState
                                     ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-sm"
-                                    : "bg-zinc-800/90 hover:bg-zinc-700 text-violet-300 hover:text-white border-violet-500/30 hover:border-violet-500/60"
+                                    : "bg-zinc-800/90 hover:bg-zinc-700 text-orange-300 hover:text-white border-main/30 hover:border-main/60"
                             }`}
                         >
                             <FontAwesomeIcon
                                 icon={remindState ? faCheck : faBell}
-                                className={`text-[10px] ${remindState ? "text-emerald-400" : "text-violet-400"}`}
+                                className={`text-[10px] ${remindState ? "text-emerald-400" : "text-main"}`}
                             />
                             <span>{remindState ? "Đã đặt nhắc" : "Nhắc tôi"}</span>
                         </button>

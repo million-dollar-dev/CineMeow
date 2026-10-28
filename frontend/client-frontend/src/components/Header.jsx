@@ -95,14 +95,14 @@ const Header = () => {
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 
-                {/* 1. Brand Logo (Violet Theme) */}
+                {/* 1. Brand Logo (Cinema Orange Theme) */}
                 <Link to="/" className="flex items-center gap-2.5 group">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-600 via-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-violet-900/40 group-hover:scale-105 transition-transform duration-300">
+                    <div className="w-10 h-10 rounded-2xl bg-main flex items-center justify-center text-main-contrast shadow-lg shadow-main/25 group-hover:scale-105 transition-transform duration-300">
                         <FontAwesomeIcon icon={faCat} className="text-xl" />
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
-                            Cine<span className="bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-300 bg-clip-text text-transparent">Meow</span>
+                            Cine<span className="text-main">Meow</span>
                         </span>
                         <span className="text-[10px] tracking-widest uppercase font-semibold text-slate-400">
                             Cinema Ticketing
@@ -118,14 +118,14 @@ const Header = () => {
                         <button 
                             className={`flex items-center gap-1.5 text-sm font-semibold transition-colors duration-200 ${
                                 isLinkActive('/showtimes') || isLinkActive('/now-playing') || isLinkActive('/comming-soon')
-                                    ? "text-violet-400 font-bold"
+                                    ? "text-main font-bold"
                                     : "text-slate-300 hover:text-white"
                             }`}
                         >
                             <span>Lịch chiếu</span>
                             <FontAwesomeIcon 
                                 icon={faChevronDown} 
-                                className="text-[10px] transition-transform duration-300 group-hover:rotate-180 text-slate-400 group-hover:text-violet-400" 
+                                className="text-[10px] transition-transform duration-300 group-hover:rotate-180 text-slate-400 group-hover:text-main" 
                             />
                         </button>
 
@@ -135,7 +135,7 @@ const Header = () => {
                                     to="/showtimes/today"
                                     className="block p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
                                 >
-                                    <p className="text-xs font-bold text-white group-hover/item:text-violet-400 transition-colors">
+                                    <p className="text-xs font-bold text-white group-hover/item:text-main transition-colors">
                                         Lịch chiếu hôm nay
                                     </p>
                                     <p className="text-[11px] text-slate-400">Suất chiếu theo ngày & giờ</p>
@@ -145,7 +145,7 @@ const Header = () => {
                                     to="/now-playing"
                                     className="block p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
                                 >
-                                    <p className="text-xs font-bold text-white group-hover/item:text-violet-400 transition-colors">
+                                    <p className="text-xs font-bold text-white group-hover/item:text-main transition-colors">
                                         Phim đang chiếu
                                     </p>
                                     <p className="text-[11px] text-slate-400">Các bom tấn đang tại rạp</p>
@@ -155,7 +155,7 @@ const Header = () => {
                                     to="/comming-soon"
                                     className="block p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item"
                                 >
-                                    <p className="text-xs font-bold text-white group-hover/item:text-violet-400 transition-colors">
+                                    <p className="text-xs font-bold text-white group-hover/item:text-main transition-colors">
                                         Phim sắp chiếu
                                     </p>
                                     <p className="text-[11px] text-slate-400">Lịch khởi chiếu sắp tới</p>
@@ -168,7 +168,7 @@ const Header = () => {
                     <Link
                         to="/movies"
                         className={`px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
-                            isLinkActive('/movies') ? "text-violet-400 font-bold" : "text-slate-300 hover:text-white"
+                            isLinkActive('/movies') ? "text-main font-bold" : "text-slate-300 hover:text-white"
                         }`}
                     >
                         <span>Phim Chiếu</span>
@@ -178,13 +178,13 @@ const Header = () => {
                     <div className="relative group px-3 py-2">
                         <button 
                             className={`flex items-center gap-1.5 text-sm font-semibold transition-colors duration-200 ${
-                                isLinkActive('/brands') ? "text-violet-400 font-bold" : "text-slate-300 hover:text-white"
+                                isLinkActive('/brands') ? "text-main font-bold" : "text-slate-300 hover:text-white"
                             }`}
                         >
                             <span>Cụm rạp</span>
                             <FontAwesomeIcon 
                                 icon={faChevronDown} 
-                                className="text-[10px] transition-transform duration-300 group-hover:rotate-180 text-slate-400 group-hover:text-violet-400" 
+                                className="text-[10px] transition-transform duration-300 group-hover:rotate-180 text-slate-400 group-hover:text-main" 
                             />
                         </button>
 
@@ -198,7 +198,7 @@ const Header = () => {
                                         <Link
                                             key={brand.id}
                                             to={`/brands/${brand.id}`}
-                                            className="p-2.5 rounded-xl hover:bg-white/5 border border-white/5 hover:border-violet-500/30 text-xs font-semibold text-slate-300 hover:text-violet-400 transition-all truncate"
+                                            className="p-2.5 rounded-xl hover:bg-white/5 border border-white/5 hover:border-main/40 text-xs font-semibold text-slate-300 hover:text-main transition-all truncate"
                                         >
                                             {brand.name}
                                         </Link>
@@ -212,11 +212,11 @@ const Header = () => {
                     <Link
                         to="/promotions"
                         className={`relative flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
-                            isLinkActive('/promotions') ? "text-violet-400 font-bold" : "text-slate-300 hover:text-white"
+                            isLinkActive('/promotions') ? "text-main font-bold" : "text-slate-300 hover:text-white"
                         }`}
                     >
                         <span>Ưu đãi</span>
-                        <span className="px-1.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase bg-violet-600 text-white animate-pulse shadow">
+                        <span className="px-1.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase bg-main text-main-contrast shadow">
                             HOT
                         </span>
                     </Link>
@@ -225,7 +225,7 @@ const Header = () => {
                     <Link
                         to="/reviews"
                         className={`px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
-                            isLinkActive('/reviews') ? "text-violet-400 font-bold" : "text-slate-300 hover:text-white"
+                            isLinkActive('/reviews') ? "text-main font-bold" : "text-slate-300 hover:text-white"
                         }`}
                     >
                         <span>Review</span>
@@ -235,13 +235,13 @@ const Header = () => {
                     <div className="relative group px-3 py-2">
                         <button 
                             className={`flex items-center gap-1.5 text-sm font-semibold transition-colors duration-200 ${
-                                isLinkActive('/blogs') ? "text-violet-400 font-bold" : "text-slate-300 hover:text-white"
+                                isLinkActive('/blogs') ? "text-main font-bold" : "text-slate-300 hover:text-white"
                             }`}
                         >
                             <span>Blog điện ảnh</span>
                             <FontAwesomeIcon 
                                 icon={faChevronDown} 
-                                className="text-[10px] transition-transform duration-300 group-hover:rotate-180 text-slate-400 group-hover:text-violet-400" 
+                                className="text-[10px] transition-transform duration-300 group-hover:rotate-180 text-slate-400 group-hover:text-main" 
                             />
                         </button>
 
@@ -249,25 +249,25 @@ const Header = () => {
                             <div className="p-3 rounded-2xl bg-[#141424]/95 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 space-y-1">
                                 <Link
                                     to="/blogs/cinema"
-                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-violet-400 transition-colors"
+                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-main transition-colors"
                                 >
                                     Blog điện ảnh
                                 </Link>
                                 <Link
                                     to="/blogs/movie"
-                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-violet-400 transition-colors"
+                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-main transition-colors"
                                 >
                                     Phim chiếu rạp
                                 </Link>
                                 <Link
                                     to="/blogs/synthetic"
-                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-violet-400 transition-colors"
+                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-main transition-colors"
                                 >
                                     Tổng hợp phim
                                 </Link>
                                 <Link
                                     to="/blogs/netflix"
-                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-violet-400 transition-colors"
+                                    className="block p-2.5 rounded-xl hover:bg-white/5 text-xs font-semibold text-slate-300 hover:text-main transition-colors"
                                 >
                                     Phim Netflix & OTT
                                 </Link>
@@ -280,8 +280,8 @@ const Header = () => {
                 <div className="hidden lg:flex items-center gap-3">
                     {accessToken ? (
                         <div className="relative group">
-                            <button className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#141424] border border-white/10 hover:border-violet-500/40 transition-colors shadow">
-                                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shadow">
+                            <button className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#141424] border border-white/10 hover:border-main/40 transition-colors shadow">
+                                <div className="w-8 h-8 rounded-xl bg-main flex items-center justify-center text-main-contrast text-xs font-bold shadow">
                                     {currentUser?.username ? currentUser.username.charAt(0).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
                                 </div>
                                 <span className="text-xs font-bold text-white max-w-[120px] truncate">
@@ -316,7 +316,7 @@ const Header = () => {
                     ) : (
                         <Link
                             to="/login"
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-900/40 transition-all hover:scale-105"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-main hover:bg-main-hover text-main-contrast shadow-md shadow-main/20 transition-all hover:scale-105"
                         >
                             <FontAwesomeIcon icon={faUser} className="text-xs" />
                             <span>Đăng nhập</span>
@@ -346,12 +346,12 @@ const Header = () => {
                         {accessToken ? (
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white text-sm font-bold">
+                                    <div className="w-10 h-10 rounded-xl bg-main flex items-center justify-center text-main-contrast text-sm font-bold">
                                         {currentUser?.username ? currentUser.username.charAt(0).toUpperCase() : <FontAwesomeIcon icon={faUser} />}
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold text-white">{currentUser?.username || "Thành viên"}</p>
-                                        <Link to={`/user-profile/${currentUser?.id || currentUser?.userId || 'me'}`} className="text-xs text-violet-400">Xem hồ sơ →</Link>
+                                        <Link to={`/user-profile/${currentUser?.id || currentUser?.userId || 'me'}`} className="text-xs text-main">Xem hồ sơ →</Link>
                                     </div>
                                 </div>
                                 <button
@@ -364,7 +364,7 @@ const Header = () => {
                         ) : (
                             <Link
                                 to="/login"
-                                className="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-violet-600 to-purple-600 text-white flex items-center justify-center gap-2 shadow-lg shadow-violet-900/40"
+                                className="w-full py-3 rounded-xl font-bold text-sm bg-main hover:bg-main-hover text-main-contrast flex items-center justify-center gap-2 shadow-lg shadow-main/20"
                             >
                                 <FontAwesomeIcon icon={faUser} />
                                 <span>Đăng nhập / Đăng ký</span>
@@ -384,15 +384,15 @@ const Header = () => {
                                 <span>Lịch chiếu & Phim</span>
                                 <FontAwesomeIcon 
                                     icon={faChevronDown} 
-                                    className={`text-xs transition-transform ${mobileSubmenu === 'showtimes' ? 'rotate-180 text-violet-400' : ''}`} 
+                                    className={`text-xs transition-transform ${mobileSubmenu === 'showtimes' ? 'rotate-180 text-main' : ''}`} 
                                 />
                             </button>
                             {mobileSubmenu === 'showtimes' && (
                                 <div className="pl-4 space-y-2 pt-2 text-xs text-slate-400">
-                                    <Link to="/movies" className="block py-1.5 text-violet-300 font-semibold hover:text-violet-400">Tất cả phim chiếu rạp</Link>
-                                    <Link to="/showtimes/today" className="block py-1.5 hover:text-violet-400">Lịch chiếu hôm nay</Link>
-                                    <Link to="/now-playing" className="block py-1.5 hover:text-violet-400">Phim đang chiếu</Link>
-                                    <Link to="/comming-soon" className="block py-1.5 hover:text-violet-400">Phim sắp chiếu</Link>
+                                    <Link to="/movies" className="block py-1.5 text-orange-200 font-semibold hover:text-main">Tất cả phim chiếu rạp</Link>
+                                    <Link to="/showtimes/today" className="block py-1.5 hover:text-main">Lịch chiếu hôm nay</Link>
+                                    <Link to="/now-playing" className="block py-1.5 hover:text-main">Phim đang chiếu</Link>
+                                    <Link to="/comming-soon" className="block py-1.5 hover:text-main">Phim sắp chiếu</Link>
                                 </div>
                             )}
                         </div>
@@ -400,12 +400,12 @@ const Header = () => {
                         {/* Phim Chiếu (All Movies) */}
                         <Link
                             to="/movies"
-                            className={`flex items-center justify-between text-slate-200 py-2 hover:text-violet-400 ${
-                                isLinkActive('/movies') ? "text-violet-400 font-bold" : ""
+                            className={`flex items-center justify-between text-slate-200 py-2 hover:text-main ${
+                                isLinkActive('/movies') ? "text-main font-bold" : ""
                             }`}
                         >
                             <span>Phim Chiếu Rạp</span>
-                            <span className="text-[10px] font-bold text-violet-400 uppercase tracking-wider bg-violet-500/10 px-2 py-0.5 rounded-full border border-violet-500/20">
+                            <span className="text-[10px] font-bold text-main uppercase tracking-wider bg-main/10 px-2 py-0.5 rounded-full border border-main/20">
                                 Tất cả phim
                             </span>
                         </Link>
@@ -419,13 +419,13 @@ const Header = () => {
                                 <span>Hệ thống cụm rạp</span>
                                 <FontAwesomeIcon 
                                     icon={faChevronDown} 
-                                    className={`text-xs transition-transform ${mobileSubmenu === 'brands' ? 'rotate-180 text-violet-400' : ''}`} 
+                                    className={`text-xs transition-transform ${mobileSubmenu === 'brands' ? 'rotate-180 text-main' : ''}`} 
                                 />
                             </button>
                             {mobileSubmenu === 'brands' && (
                                 <div className="pl-4 grid grid-cols-2 gap-2 pt-2 text-xs text-slate-400">
                                     {displayBrands.map((brand) => (
-                                        <Link key={brand.id} to={`/brands/${brand.id}`} className="py-1 hover:text-violet-400 truncate">
+                                        <Link key={brand.id} to={`/brands/${brand.id}`} className="py-1 hover:text-main truncate">
                                             {brand.name}
                                         </Link>
                                     ))}
@@ -436,11 +436,11 @@ const Header = () => {
                         {/* Ưu đãi */}
                         <Link to="/promotions" className="flex items-center justify-between text-slate-200 py-2">
                             <span>Khuyến mãi & Voucher</span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-violet-600 text-white">HOT</span>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-main text-main-contrast">HOT</span>
                         </Link>
 
                         {/* Review */}
-                        <Link to="/reviews" className="block text-slate-200 py-2 hover:text-violet-400">
+                        <Link to="/reviews" className="block text-slate-200 py-2 hover:text-main">
                             Góc Review Phim
                         </Link>
 
@@ -453,15 +453,15 @@ const Header = () => {
                                 <span>Blog & Tạp chí</span>
                                 <FontAwesomeIcon 
                                     icon={faChevronDown} 
-                                    className={`text-xs transition-transform ${mobileSubmenu === 'blog' ? 'rotate-180 text-violet-400' : ''}`} 
+                                    className={`text-xs transition-transform ${mobileSubmenu === 'blog' ? 'rotate-180 text-main' : ''}`} 
                                 />
                             </button>
                             {mobileSubmenu === 'blog' && (
                                 <div className="pl-4 space-y-2 pt-2 text-xs text-slate-400">
-                                    <Link to="/blogs/cinema" className="block py-1.5 hover:text-violet-400">Blog điện ảnh</Link>
-                                    <Link to="/blogs/movie" className="block py-1.5 hover:text-violet-400">Phim chiếu rạp</Link>
-                                    <Link to="/blogs/synthetic" className="block py-1.5 hover:text-violet-400">Tổng hợp phim</Link>
-                                    <Link to="/blogs/netflix" className="block py-1.5 hover:text-violet-400">Phim Netflix & OTT</Link>
+                                    <Link to="/blogs/cinema" className="block py-1.5 hover:text-main">Blog điện ảnh</Link>
+                                    <Link to="/blogs/movie" className="block py-1.5 hover:text-main">Phim chiếu rạp</Link>
+                                    <Link to="/blogs/synthetic" className="block py-1.5 hover:text-main">Tổng hợp phim</Link>
+                                    <Link to="/blogs/netflix" className="block py-1.5 hover:text-main">Phim Netflix & OTT</Link>
                                 </div>
                             )}
                         </div>

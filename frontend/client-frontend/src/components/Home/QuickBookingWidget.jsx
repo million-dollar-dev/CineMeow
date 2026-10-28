@@ -176,7 +176,7 @@ const QuickBookingWidget = () => {
                         <button
                             type="button"
                             onClick={handleQuickBook}
-                            className="w-full h-10 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-violet-600/40 hover:shadow-violet-600/60 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                            className="w-full h-10 rounded-xl bg-main hover:bg-main-hover text-main-contrast font-bold text-xs sm:text-sm shadow-md shadow-main/20 transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                         >
                             <FontAwesomeIcon icon={faTicket} className="text-xs" />
                             <span>Mua Vé Ngay</span>
