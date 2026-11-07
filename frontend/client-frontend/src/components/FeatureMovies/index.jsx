@@ -317,7 +317,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                             {/* Primary Button: Đặt vé ngay */}
                             <Link
                                 to={`/movie/${activeMovie.id}`}
-                                className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3 rounded-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-violet-600/40 hover:shadow-violet-600/60 transition-all cursor-pointer active:scale-95 group/btn"
+                                className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3 rounded-full bg-main hover:bg-main-hover text-main-contrast font-bold text-sm sm:text-base shadow-lg shadow-main/25 transition-colors cursor-pointer active:scale-95 group/btn"
                             >
                                 <FontAwesomeIcon icon={faTicket} className="text-sm group-hover/btn:rotate-12 transition-transform" />
                                 <span>Đặt Vé Ngay</span>
@@ -327,11 +327,11 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                             <button
                                 type="button"
                                 onClick={() => onPlayTrailer && onPlayTrailer(activeMovie)}
-                                className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-full bg-white/15 hover:bg-white text-white hover:text-black border border-white/30 backdrop-blur-md font-bold text-sm sm:text-base transition-all cursor-pointer active:scale-95 shadow-lg group/play"
+                                className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-full bg-white/15 hover:bg-white text-white hover:text-black border border-white/30 backdrop-blur-md font-bold text-sm sm:text-base transition-colors cursor-pointer active:scale-95 shadow-lg group/play"
                             >
                                 <FontAwesomeIcon
                                     icon={faPlay}
-                                    className="text-xs text-violet-400 group-hover/play:text-violet-600 transition-colors"
+                                    className="text-xs text-main group-hover/play:text-black transition-colors"
                                 />
                                 <span>Xem Trailer</span>
                             </button>
@@ -357,7 +357,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                         {/* Rail Header with Slide Counter and Arrow Controls */}
                         <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10 text-xs">
                             <div className="flex items-center gap-2">
-                                <FontAwesomeIcon icon={faFilm} className="text-violet-400" />
+                                <FontAwesomeIcon icon={faFilm} className="text-main" />
                                 <span className="font-extrabold uppercase tracking-wider text-white">
                                     Phim Tiêu Điểm
                                 </span>
@@ -365,7 +365,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
 
                             <div className="flex items-center gap-2">
                                 <span className="text-zinc-400 font-bold">
-                                    <strong className="text-violet-400">{String(currentIndex + 1).padStart(2, "0")}</strong> /{" "}
+                                    <strong className="text-main">{String(currentIndex + 1).padStart(2, "0")}</strong> /{" "}
                                     {String(movies.length).padStart(2, "0")}
                                 </span>
 
@@ -373,7 +373,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                                     <button
                                         type="button"
                                         onClick={handlePrev}
-                                        className="w-7 h-7 rounded-lg bg-zinc-900/90 hover:bg-violet-600 text-zinc-400 hover:text-white border border-zinc-800 hover:border-violet-500 transition-all flex items-center justify-center cursor-pointer shadow-sm"
+                                        className="w-7 h-7 rounded-lg bg-zinc-900/90 hover:bg-main text-zinc-400 hover:text-main-contrast border border-zinc-800 hover:border-main transition-colors flex items-center justify-center cursor-pointer shadow-sm"
                                         aria-label="Previous slide"
                                     >
                                         <FontAwesomeIcon icon={faChevronLeft} className="text-[10px]" />
@@ -381,7 +381,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                                     <button
                                         type="button"
                                         onClick={handleNext}
-                                        className="w-7 h-7 rounded-lg bg-zinc-900/90 hover:bg-violet-600 text-zinc-400 hover:text-white border border-zinc-800 hover:border-violet-500 transition-all flex items-center justify-center cursor-pointer shadow-sm"
+                                        className="w-7 h-7 rounded-lg bg-zinc-900/90 hover:bg-main text-zinc-400 hover:text-main-contrast border border-zinc-800 hover:border-main transition-colors flex items-center justify-center cursor-pointer shadow-sm"
                                         aria-label="Next slide"
                                     >
                                         <FontAwesomeIcon icon={faChevronRight} className="text-[10px]" />
@@ -400,7 +400,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                                         onClick={() => switchSlide(idx)}
                                         className={`group relative flex items-center gap-3 p-2 rounded-xl transition-all duration-300 cursor-pointer border select-none ${
                                             isActive
-                                                ? "bg-violet-950/60 border-violet-500 ring-1 ring-violet-500/50 shadow-lg shadow-violet-950/60 scale-[1.02]"
+                                                ? "bg-main/10 border-main ring-1 ring-main/40 shadow-lg shadow-black/40 scale-[1.02]"
                                                 : "bg-zinc-950/70 hover:bg-zinc-900/90 border-zinc-800/80 hover:border-zinc-700 opacity-70 hover:opacity-100"
                                         }`}
                                     >
@@ -417,7 +417,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                                         <div className="min-w-0 flex-1">
                                             <p
                                                 className={`text-xs font-bold truncate transition-colors ${
-                                                    isActive ? "text-violet-200" : "text-white group-hover:text-violet-300"
+                                                    isActive ? "text-main" : "text-white group-hover:text-orange-200"
                                                 }`}
                                             >
                                                 {movie.title}
@@ -436,7 +436,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
 
                                         {/* Active Playing Indicator */}
                                         {isActive && (
-                                            <div className="w-2 h-2 rounded-full bg-violet-400 animate-ping shrink-0 mr-1" />
+                                            <div className="w-2 h-2 rounded-full bg-main shrink-0 mr-1" />
                                         )}
                                     </div>
                                 );
@@ -456,7 +456,7 @@ const FeatureMovies = ({ onPlayTrailer }) => {
                                 onClick={() => switchSlide(idx)}
                                 className={`shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all text-left ${
                                     isActive
-                                        ? "bg-violet-600/40 border-violet-400 text-white shadow-md shadow-violet-600/30"
+                                        ? "bg-main/20 border-main text-white shadow-md shadow-main/20"
                                         : "bg-black/60 border-white/10 text-zinc-400"
                                 }`}
                             >

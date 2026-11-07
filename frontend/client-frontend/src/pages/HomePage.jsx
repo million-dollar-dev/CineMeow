@@ -2,15 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faFilm,
-    faCalendarDays,
-    faFire,
     faArrowRight,
     faCrown,
-    faTicket,
-    faGift,
-    faStar,
-    faClapperboard,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
@@ -42,7 +35,7 @@ const HomePage = () => {
 
         if (nextState) {
             toast.success(
-                `🔔 Đã bật nhắc nhở cho "${movie.title}"! CineMeow sẽ gửi thông báo khi rạp mở bán vé sớm.`,
+                `Đã bật nhắc nhở cho "${movie.title}". CineMeow sẽ gửi thông báo khi rạp mở bán vé sớm.`,
                 {
                     position: "bottom-right",
                     autoClose: 3500,
@@ -67,7 +60,7 @@ const HomePage = () => {
     const nowPlaying2Rows = NOW_PLAYING_MOVIES.slice(0, 10);
 
     return (
-        <div className="min-h-screen bg-[#07070b] text-zinc-100 overflow-x-hidden selection:bg-violet-600 selection:text-white">
+        <div className="min-h-[100dvh] bg-[#0f1013] text-[#eff0f1] overflow-x-hidden selection:bg-main selection:text-main-contrast">
             {/* 1. FeatureMovies Spotlight (RoPhim-inspired banner with Right-hand Thumbnail Rail) */}
             <FeatureMovies
                 onPlayTrailer={(movie) => setSelectedTrailerMovie(movie)}
@@ -76,14 +69,14 @@ const HomePage = () => {
             {/* 2. Quick Ticket Booking Widget */}
             <QuickBookingWidget />
 
-            {/* 3. Cinema Partner Chains Strip */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-14">
-                <div className="rounded-2xl bg-zinc-950/60 border border-zinc-800/80 p-4 sm:p-5 backdrop-blur-sm shadow-xl">
+            {/* 3. Cinema Partner Chains Strip - Clean flat tone-step surface, no glassmorphism or pulsing */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16">
+                <div className="rounded-2xl bg-[#18191d] p-5">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="shrink-0 flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-violet-400 animate-ping" />
-                            <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
-                                Cụm Rạp Đối Tác:
+                        <div className="shrink-0 flex items-center gap-2.5">
+                            <span className="w-2 h-2 rounded-full bg-main" />
+                            <span className="text-sm font-medium text-zinc-300">
+                                Cụm rạp đối tác
                             </span>
                         </div>
                         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
@@ -91,7 +84,7 @@ const HomePage = () => {
                                 <Link
                                     key={brand.id}
                                     to={`/brands/${brand.id}`}
-                                    className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-violet-500/50 transition-all shadow-sm"
+                                    className="group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#222428] hover:bg-[#2b2d33] transition-colors duration-150"
                                     title={`Xem lịch chiếu rạp ${brand.name}`}
                                 >
                                     <div className="w-5 h-5 rounded flex items-center justify-center overflow-hidden bg-black/40">
@@ -104,11 +97,11 @@ const HomePage = () => {
                                                 e.currentTarget.nextElementSibling?.classList.remove("hidden");
                                             }}
                                         />
-                                        <span className="hidden text-[9px] font-bold text-zinc-400">
+                                        <span className="hidden text-[10px] font-bold text-zinc-400">
                                             {brand.name.substring(0, 3)}
                                         </span>
                                     </div>
-                                    <span className="text-xs font-semibold text-zinc-300 group-hover:text-violet-300 transition-colors">
+                                    <span className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors duration-150">
                                         {brand.name}
                                     </span>
                                 </Link>
@@ -118,33 +111,32 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* 4. Now Playing: 2-Row Grid Layout (Thay thế carousel) */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                <div className="flex items-center justify-between gap-4 mb-6 pb-3 border-b border-zinc-800">
+            {/* 4. Now Playing: 2-Row Grid Layout - Separated by whitespace, no hairline rules */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-600/15 border border-violet-500/30 text-violet-300 text-xs font-semibold mb-1.5">
-                            <FontAwesomeIcon icon={faClapperboard} className="text-violet-400 text-xs" />
-                            <span>PHIM ĐANG CÔNG CHIẾU TẠI RẠP</span>
-                        </div>
-                        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
                             Phim Chiếu Rạp Mới Nhất
                         </h2>
+                        <p className="text-sm text-zinc-400 mt-1">
+                            Các suất chiếu hôm nay tại tất cả cụm rạp trên toàn quốc
+                        </p>
                     </div>
 
                     <Link
                         to="/now-playing"
-                        className="text-xs sm:text-sm text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-1.5 transition-colors shrink-0 group"
+                        className="text-sm text-main hover:text-main-hover font-medium flex items-center gap-1.5 transition-colors duration-150 shrink-0 group"
                     >
                         <span>Xem tất cả {NOW_PLAYING_MOVIES.length} phim</span>
                         <FontAwesomeIcon
                             icon={faArrowRight}
-                            className="text-xs group-hover:translate-x-1 transition-transform"
+                            className="text-xs group-hover:translate-x-1 transition-transform duration-150"
                         />
                     </Link>
                 </div>
 
                 {/* 2-Row Grid (5 cols x 2 rows = 10 movies) */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                     {nowPlaying2Rows.map((movie) => (
                         <NowPlayingMovieCard
                             key={movie.id}
@@ -155,33 +147,32 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* 5. Upcoming Blockbusters Showcase (Grid tùy thuộc vào số lượng phim) */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                <div className="flex items-center justify-between gap-4 mb-6 pb-3 border-b border-zinc-800">
+            {/* 5. Upcoming Blockbusters Showcase */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-600/15 border border-rose-500/30 text-rose-300 text-xs font-semibold mb-1.5">
-                            <FontAwesomeIcon icon={faFire} className="text-rose-400 text-xs" />
-                            <span>MÙA PHIM BOM TẤN 2026 - 2027</span>
-                        </div>
-                        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                            Phim Sắp Khởi Chiếu & Mở Bán Sớm
+                        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                            Phim Sắp Khởi Chiếu
                         </h2>
+                        <p className="text-sm text-zinc-400 mt-1">
+                            Lịch phát hành dự kiến và các suất chiếu sớm mở bán trước
+                        </p>
                     </div>
 
                     <Link
                         to="/comming-soon"
-                        className="text-xs sm:text-sm text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-1.5 transition-colors shrink-0 group"
+                        className="text-sm text-main hover:text-main-hover font-medium flex items-center gap-1.5 transition-colors duration-150 shrink-0 group"
                     >
                         <span>Xem tất cả {COMMING_SOON_MOVIES.length} phim</span>
                         <FontAwesomeIcon
                             icon={faArrowRight}
-                            className="text-xs group-hover:translate-x-1 transition-transform"
+                            className="text-xs group-hover:translate-x-1 transition-transform duration-150"
                         />
                     </Link>
                 </div>
 
                 {/* Dynamic Grid: Aligned CommingSoonMovieCards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                     {COMMING_SOON_MOVIES.map((movie) => (
                         <CommingSoonMovieCard
                             key={movie.id}
@@ -194,53 +185,53 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* 6. CineClub VIP Membership Banner */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-violet-950 via-[#18122c] to-indigo-950 border border-violet-500/30 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="max-w-2xl text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold mb-3">
-                            <FontAwesomeIcon icon={faCrown} className="text-amber-400" />
-                            <span>ĐẶC QUYỀN THÀNH VIÊN CINECLUB</span>
+            {/* 6. CineClub VIP Membership Banner - Solid flat reply card, zero gradients or glow */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+                <div className="rounded-2xl bg-[#18191d] p-8 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                    <div className="max-w-2xl">
+                        <div className="flex items-center gap-2 text-main text-sm font-medium mb-3">
+                            <FontAwesomeIcon icon={faCrown} />
+                            <span>Đặc quyền thành viên CineClub</span>
                         </div>
-                        <h3 className="text-2xl sm:text-3xl font-black text-white">
-                            Gia Nhập CineClub - Nhận Vé 0đ & Ưu Đãi Bắp Nước 50%
+                        <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                            Gia nhập CineClub, đổi vé và ưu đãi bắp nước
                         </h3>
-                        <p className="text-xs sm:text-sm text-zinc-300 mt-2 leading-relaxed">
-                            Tích điểm tự động mỗi lần đặt vé, đổi combo bắp nước miễn phí và sở hữu tấm vé premier độc quyền
-                            gặp gỡ đạo diễn, diễn viên các bom tấn Hollywood & Việt Nam.
+                        <p className="text-sm text-zinc-400 mt-2.5 leading-relaxed">
+                            Tích điểm tự động mỗi lần đặt vé, đổi combo bắp nước miễn phí và sở hữu tấm vé premier
+                            gặp gỡ đạo diễn, diễn viên các bom tấn điện ảnh.
                         </p>
                     </div>
-                    <div className="shrink-0 flex flex-col sm:flex-row gap-3">
+                    <div className="shrink-0 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                         <Link
                             to="/register"
-                            className="px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-zinc-950 font-black text-xs sm:text-sm transition-all shadow-lg text-center"
+                            className="px-6 py-3 rounded-xl bg-main hover:bg-main-hover text-main-contrast font-semibold text-sm transition-colors duration-150 text-center"
                         >
-                            Đăng Ký Thành Viên Ngay
+                            Đăng ký thành viên
                         </Link>
                         <Link
                             to="/promotions"
-                            className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all text-center"
+                            className="px-6 py-3 rounded-xl bg-[#25272c] hover:bg-[#2f3137] text-zinc-100 font-medium text-sm transition-colors duration-150 text-center"
                         >
-                            Xem Thể Lệ Ưu Đãi
+                            Xem thể lệ ưu đãi
                         </Link>
                     </div>
                 </div>
             </section>
 
-            {/* 7. Top Reviews Section (Gọn gàng trong 1 khung hình) */}
-            <div className="mb-14">
+            {/* 7. Top Reviews Section */}
+            <div className="mb-20">
                 <TopReviewSection
                     title="Bình Luận & Đánh Giá Nổi Bật"
                 />
             </div>
 
             {/* 8. Movie News & Previews Blog Section */}
-            <div className="mb-14">
+            <div className="mb-20">
                 <MovieBlogSection />
             </div>
 
             {/* 9. Promotions Section */}
-            <div className="mb-8">
+            <div className="mb-16">
                 <PromotionSection />
             </div>
 
