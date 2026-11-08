@@ -30,10 +30,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AppException.class)
     public ResponseEntity<BaseResponse<?>> handlingAppException(AppException exception) {
         BaseErrorCode errorCode = exception.getErrorCode();
+        String message = exception.getMessage() != null && !exception.getMessage().isBlank()
+                ? exception.getMessage()
+                : errorCode.getMessage();
         BaseResponse<?> baseResponse = BaseResponse.builder()
                 .status("Error")
                 .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .message(message)
                 .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(baseResponse);
     }
