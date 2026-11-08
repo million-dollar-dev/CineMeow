@@ -38,7 +38,8 @@ This page is the central index for tracking feature specifications, implementati
 | Feature ID | Feature Title                       | Target Modules / Services  | Status  | Specification                                  |
 | ---------- | ----------------------------------- | -------------------------- | ------- | ---------------------------------------------- |
 | FEAT-003   | Cinema & Screen Topology Management | `cinema`, `frontend/admin` | 🟢 Live | [Cinema Management](Feature-Cinema-Management) |
-| FEAT-004   | Dynamic Showtime Scheduling Engine  | `showtime`, `movie`        | 🟢 Live | [Showtime Management](Feature-Showtimes)       |
+| FEAT-004   | Dynamic Showtime Scheduling Engine           | `showtime`, `movie`       | 🟢 Live        | [Showtime Management](Feature-Showtimes)             |
+| CM-000004  | Single-Seat Gap Prevention Rule Engine       | `showtime`, `booking`     | 🟡 In Progress | [Feature Specification](Feature-Single-Seat-Gap-Rule) |
 
 ---
 
