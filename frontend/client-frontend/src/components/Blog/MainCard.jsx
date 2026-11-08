@@ -11,7 +11,7 @@ const MainCard = ({ article }) => {
     return (
         <Link 
             to={`/blogs/${category}/${id}`}
-            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-rose-500/40 shadow-xl hover:shadow-[0_10px_30px_rgba(225,29,72,0.15)] transition-all duration-300 hover:-translate-y-1"
+            className="group flex flex-col justify-between rounded-2xl overflow-hidden bg-[#141424] border border-white/10 hover:border-violet-500/40 shadow-xl hover:shadow-[0_10px_30px_rgba(127,90,240,0.18)] transition-all duration-300 hover:-translate-y-1"
         >
             {/* Image Banner */}
             <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
@@ -25,14 +25,14 @@ const MainCard = ({ article }) => {
 
                 {/* Badge Tag */}
                 <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 text-[11px] font-extrabold uppercase rounded-lg bg-rose-600/90 text-white backdrop-blur-md shadow">
+                    <span className="px-2.5 py-1 text-[11px] font-extrabold uppercase rounded-lg bg-violet-600/90 text-white backdrop-blur-md shadow">
                         {tag}
                     </span>
                 </div>
 
                 <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-xs text-slate-300">
                     <span className="flex items-center gap-1 font-medium text-slate-300">
-                        <FontAwesomeIcon icon={faClock} className="text-rose-400 text-[10px]" />
+                        <FontAwesomeIcon icon={faClock} className="text-amber-400 text-[10px]" />
                         {readTime}
                     </span>
                     <span className="flex items-center gap-1 text-slate-400">
@@ -45,7 +45,7 @@ const MainCard = ({ article }) => {
             {/* Content */}
             <div className="p-5 flex flex-col justify-between flex-grow">
                 <div>
-                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-snug">
                         {title}
                     </h3>
                     <p className="mt-2 text-xs sm:text-sm text-slate-400 line-clamp-2 leading-relaxed">

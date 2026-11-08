@@ -11,7 +11,7 @@ const BlogCard = ({ article }) => {
     return (
         <Link
             to={`/blogs/${category}/${id}`}
-            className="group flex flex-col sm:flex-row gap-5 p-4 rounded-2xl bg-[#141424]/90 border border-white/5 hover:border-rose-500/40 hover:bg-[#1a1a32] shadow-lg hover:shadow-[0_8px_25px_rgba(225,29,72,0.12)] transition-all duration-300"
+            className="group flex flex-col sm:flex-row gap-5 p-4 rounded-2xl bg-[#141424]/90 border border-white/5 hover:border-violet-500/40 hover:bg-[#1a1a32] shadow-lg hover:shadow-[0_8px_25px_rgba(127,90,240,0.15)] transition-all duration-300"
         >
             {/* Image Thumbnail */}
             <div className="relative w-full sm:w-56 h-40 sm:h-auto flex-shrink-0 rounded-xl overflow-hidden bg-slate-900">
@@ -31,7 +31,7 @@ const BlogCard = ({ article }) => {
                 <div>
                     <div className="flex items-center gap-3 text-xs text-slate-400 mb-1.5">
                         <span className="flex items-center gap-1">
-                            <FontAwesomeIcon icon={faCalendarAlt} className="text-[10px] text-rose-400" />
+                            <FontAwesomeIcon icon={faCalendarAlt} className="text-[10px] text-violet-400" />
                             {date}
                         </span>
                         <span>•</span>
@@ -41,7 +41,7 @@ const BlogCard = ({ article }) => {
                         </span>
                     </div>
 
-                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-2 leading-snug">
                         {title}
                     </h3>
 
@@ -67,7 +67,7 @@ const BlogCard = ({ article }) => {
                             <FontAwesomeIcon icon={faEye} className="text-[11px]" />
                             {views}
                         </span>
-                        <span className="text-rose-400 font-semibold group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
+                        <span className="text-violet-400 font-semibold group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
                             Đọc tiếp <FontAwesomeIcon icon={faArrowRight} className="text-[10px]" />
                         </span>
                     </div>
