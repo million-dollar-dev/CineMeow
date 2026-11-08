@@ -32,6 +32,16 @@ import StatCard from "../components/OverviewStats/StatCard.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import BookingDetailModal from "../components/BookingManagement/BookingDetailModal.jsx";
 import QuickLookupModal from "../components/BookingManagement/QuickLookupModal.jsx";
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
 
 // Icons
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
@@ -711,142 +721,64 @@ export default function BookingManagementPage() {
             </div>
 
             {/* 3. TOOLBAR CONTROLS: MULTI-FILTER 2-ROW LAYOUT */}
-            <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-3.5">
-                {/* Row 1: Quick Status Tabs + Reset Button + Count Badge */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    {/* Quick Tabs */}
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                        {BOOKING_QUICK_TABS.map((tab) => (
-                            <button
-                                key={tab.value}
-                                type="button"
-                                onClick={() => setStatusTab(tab.value)}
-                                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer ${
-                                    statusTab === tab.value
-                                        ? "bg-violet-600 text-white shadow-2xs"
-                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
-                                }`}
-                            >
-                                {tab.label}
-                            </button>
+            <FilterToolbar className="mb-6">
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={BOOKING_QUICK_TABS}
+                        activeTab={statusTab}
+                        onChange={setStatusTab}
+                    />
+
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
+                        />
+                        <ResultCountBadge count={filteredBookings.length} unit="đơn" />
+                    </div>
+                </FilterToolbarHeader>
+
+                <FilterToolbarControls>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm kiếm theo mã đơn, mã vé, tên khách, số điện thoại, phim, rạp..."
+                    />
+
+                    <FilterSelect
+                        icon={<StorefrontOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedCinema}
+                        onChange={setSelectedCinema}
+                        ariaLabel="Chi nhánh cụm rạp"
+                        options={CINEMA_BRANCH_FILTERS}
+                        className="relative w-full md:w-56 shrink-0"
+                    />
+
+                    <FilterSelect
+                        icon={<CreditCardOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedPaymentMethod}
+                        onChange={setSelectedPaymentMethod}
+                        ariaLabel="Cổng thanh toán"
+                        className="relative w-full md:w-48 shrink-0"
+                    >
+                        <option value="ALL">Cổng thanh toán: Tất cả</option>
+                        {Object.values(PAYMENT_METHODS).map((p) => (
+                            <option key={p.value} value={p.value}>
+                                {p.label}
+                            </option>
                         ))}
-                    </div>
+                    </FilterSelect>
 
-                    {/* Right side: Reset + Result Counter */}
-                    <div className="flex items-center gap-2.5 shrink-0">
-                        {(statusTab !== "ALL" ||
-                            searchQuery ||
-                            selectedCinema !== "ALL" ||
-                            selectedPaymentMethod !== "ALL" ||
-                            sortBy !== "NEWEST") && (
-                            <button
-                                type="button"
-                                onClick={handleResetFilters}
-                                className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
-                            >
-                                <RestartAltOutlinedIcon sx={{ fontSize: 15 }} />
-                                <span>Đặt lại bộ lọc</span>
-                            </button>
-                        )}
-
-                        <div className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>Hiển thị: {filteredBookings.length} đơn</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Row 2: Search Input + Cinema Branch + Payment Method + Sort Dropdown */}
-                <div className="flex flex-col md:flex-row items-center gap-3">
-                    {/* Search Input */}
-                    <div className="relative flex-1 w-full min-w-[240px]">
-                        <SearchOutlinedIcon
-                            sx={{ fontSize: 18 }}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                        />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm kiếm theo mã đơn, mã vé, tên khách, số điện thoại, phim, rạp..."
-                            className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                        />
-                        {searchQuery && (
-                            <button
-                                type="button"
-                                onClick={() => setSearchQuery("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                            >
-                                <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Cinema Branch Select */}
-                    <div className="relative w-full md:w-56 shrink-0">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <StorefrontOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={selectedCinema}
-                            onChange={(e) => setSelectedCinema(e.target.value)}
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                        >
-                            {CINEMA_BRANCH_FILTERS.map((c) => (
-                                <option key={c.value} value={c.value}>
-                                    {c.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
-
-                    {/* Payment Method Select */}
-                    <div className="relative w-full md:w-48 shrink-0">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <CreditCardOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={selectedPaymentMethod}
-                            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                        >
-                            <option value="ALL">Cổng thanh toán: Tất cả</option>
-                            {Object.values(PAYMENT_METHODS).map((p) => (
-                                <option key={p.value} value={p.value}>
-                                    {p.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
-
-                    {/* Sort Dropdown */}
-                    <div className="relative w-full md:w-48 shrink-0">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                        >
-                            {BOOKING_SORT_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <FilterSelect
+                        icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={sortBy}
+                        onChange={setSortBy}
+                        ariaLabel="Sắp xếp đơn vé"
+                        options={BOOKING_SORT_OPTIONS}
+                        className="relative w-full md:w-48 shrink-0"
+                    />
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. DATAGRID TABLE */}
             <div className="rounded-2xl bg-white border border-slate-200/80 shadow-2xs overflow-hidden">

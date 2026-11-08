@@ -36,6 +36,16 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import ShowtimeModal from "../components/ShowtimeManagement/ShowtimeModal.jsx";
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
 import { useGetAllShowtimesQuery } from "../services/showtimeService.js";
 import { useGetAllCinemasQuery } from "../services/cinemaService.js";
 import { openSnackbar } from "../redux/slices/snackbarSlice.js";
@@ -224,6 +234,22 @@ export default function ShowtimePage() {
             return matchesStatus && matchesCinema && matchesDate && matchesSearch;
         });
     }, [showtimes, selectedStatusTab, selectedCinemaFilter, selectedDateFilter, searchQuery]);
+
+    const hasActiveFilters = useMemo(() => {
+        return (
+            selectedStatusTab !== "ALL" ||
+            selectedCinemaFilter !== "ALL" ||
+            selectedDateFilter !== "ALL" ||
+            Boolean(searchQuery.trim())
+        );
+    }, [selectedStatusTab, selectedCinemaFilter, selectedDateFilter, searchQuery]);
+
+    const handleResetFilters = () => {
+        setSelectedStatusTab("ALL");
+        setSelectedCinemaFilter("ALL");
+        setSelectedDateFilter("ALL");
+        setSearchQuery("");
+    };
 
     // Handlers
     const handleRefresh = () => {
@@ -561,81 +587,55 @@ export default function ShowtimePage() {
             </div>
 
             {/* 3. MULTI-FILTER BAR & STATUS TABS */}
-            <div className="bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3.5 mb-5">
+            <FilterToolbar className="mb-5">
                 {/* Top Row: Status Tabs */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-0.5">
-                        {[
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={[
                             { key: "ALL", label: "Tất cả", count: totalCount },
                             { key: "AVAILABLE", label: "Đang mở bán", count: availableCount },
                             { key: "SOLD_OUT", label: "Hết vé", count: showtimes.filter((s) => s.status === "SOLD_OUT").length },
                             { key: "FINISHED", label: "Đã kết thúc", count: showtimes.filter((s) => s.status === "FINISHED").length },
                             { key: "CANCELLED", label: "Đã hủy", count: showtimes.filter((s) => s.status === "CANCELLED").length },
-                        ].map((tab) => (
-                            <button
-                                key={tab.key}
-                                type="button"
-                                onClick={() => setSelectedStatusTab(tab.key)}
-                                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                                    selectedStatusTab === tab.key
-                                        ? "bg-violet-600 text-white shadow-md shadow-violet-600/25"
-                                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                                }`}
-                            >
-                                <span>{tab.label}</span>
-                                <span
-                                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                                        selectedStatusTab === tab.key
-                                            ? "bg-white/20 text-white"
-                                            : "bg-slate-200 text-slate-600"
-                                    }`}
-                                >
-                                    {tab.count}
-                                </span>
-                            </button>
+                        ]}
+                        activeTab={selectedStatusTab}
+                        onChange={setSelectedStatusTab}
+                    />
+
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
+                        />
+                        <ResultCountBadge count={filteredShowtimes.length} unit="suất chiếu" />
+                    </div>
+                </FilterToolbarHeader>
+
+                {/* Bottom Row: Search Box + Cinema Dropdown + Date Quick Filters */}
+                <FilterToolbarControls>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm kiếm phim, rạp, phòng chiếu..."
+                    />
+
+                    <FilterSelect
+                        icon={<StorefrontOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedCinemaFilter}
+                        onChange={setSelectedCinemaFilter}
+                        ariaLabel="Cụm rạp"
+                        className="relative w-full md:w-56 shrink-0"
+                    >
+                        <option value="ALL">Tất cả cụm rạp</option>
+                        {cinemas.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.name}
+                            </option>
                         ))}
-                    </div>
-
-                    <span className="text-xs text-slate-400 font-semibold hidden md:block">
-                        Tìm thấy <strong className="text-slate-800">{filteredShowtimes.length}</strong> suất chiếu
-                    </span>
-                </div>
-
-                {/* Bottom Row: Cinema Dropdown + Date Quick Filters + Search Box */}
-                <div className="flex flex-wrap items-center gap-3">
-                    {/* Search Input */}
-                    <div className="relative flex-1 min-w-[220px]">
-                        <SearchOutlinedIcon
-                            sx={{ fontSize: 18 }}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                        />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm kiếm phim, rạp, phòng chiếu..."
-                            className="w-full pl-10 pr-4 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-violet-500 focus:outline-none transition"
-                        />
-                    </div>
-
-                    {/* Cinema Filter */}
-                    <div className="min-w-[170px]">
-                        <select
-                            value={selectedCinemaFilter}
-                            onChange={(e) => setSelectedCinemaFilter(e.target.value)}
-                            className="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-violet-500 focus:outline-none transition cursor-pointer"
-                        >
-                            <option value="ALL">Tất cả cụm rạp</option>
-                            {cinemas.map((c) => (
-                                <option key={c.id} value={c.id}>
-                                    {c.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    </FilterSelect>
 
                     {/* Date Quick Filter */}
-                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0">
                         {[
                             { key: "ALL", label: "Tất cả ngày" },
                             { key: "TODAY", label: "Hôm nay" },
@@ -655,8 +655,8 @@ export default function ShowtimePage() {
                             </button>
                         ))}
                     </div>
-                </div>
-            </div>
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. MAIN DATAGRID TABLE */}
             <Box

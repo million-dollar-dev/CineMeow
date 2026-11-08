@@ -34,6 +34,16 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import CinemaModal from "../components/CinemaManagement/CinemaModal.jsx";
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
 import { useGetAllCinemasQuery } from "../services/cinemaService.js";
 import { useGetAllBrandsQuery } from "../services/brandService.js";
 import { openSnackbar } from "../redux/slices/snackbarSlice.js";
@@ -199,6 +209,16 @@ export default function CinemaManagementPage() {
             return matchesCity && matchesBrand && matchesSearch;
         });
     }, [cinemas, selectedCityFilter, selectedBrandFilter, searchQuery]);
+
+    const hasActiveFilters = useMemo(() => {
+        return selectedCityFilter !== "ALL" || selectedBrandFilter !== "ALL" || Boolean(searchQuery.trim());
+    }, [selectedCityFilter, selectedBrandFilter, searchQuery]);
+
+    const handleResetFilters = () => {
+        setSelectedCityFilter("ALL");
+        setSelectedBrandFilter("ALL");
+        setSearchQuery("");
+    };
 
     // Handlers
     const handleAddClick = () => {
@@ -539,75 +559,51 @@ export default function CinemaManagementPage() {
             </div>
 
             {/* 3. MULTI-FILTER TOOLBAR */}
-            <div className="p-4 mb-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex flex-col gap-3.5">
-                {/* Top Row: City Quick Filter Tabs */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs font-bold text-slate-400 mr-1.5 uppercase tracking-wider">
-                            Khu vực:
-                        </span>
-                        {[
+            <FilterToolbar className="mb-6">
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={[
                             { key: "ALL", label: "Tất cả khu vực" },
                             { key: "TP. Hồ Chí Minh", label: "TP. HCM" },
                             { key: "Hà Nội", label: "Hà Nội" },
                             { key: "Đà Nẵng", label: "Đà Nẵng" },
                             { key: "Cần Thơ", label: "Cần Thơ" },
                             { key: "Hải Phòng", label: "Hải Phòng" },
-                        ].map((c) => (
-                            <button
-                                key={c.key}
-                                type="button"
-                                onClick={() => setSelectedCityFilter(c.key)}
-                                className={`px-3 py-1.5 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-                                    selectedCityFilter === c.key
-                                        ? "bg-violet-600 text-white shadow-xs"
-                                        : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/60"
-                                }`}
-                            >
-                                <span>{c.label}</span>
-                            </button>
+                        ]}
+                        activeTab={selectedCityFilter}
+                        onChange={setSelectedCityFilter}
+                    />
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
+                        />
+                        <ResultCountBadge count={filteredCinemas.length} unit="cụm rạp" />
+                    </div>
+                </FilterToolbarHeader>
+
+                <FilterToolbarControls>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm kiếm theo tên rạp, địa chỉ, thương hiệu, quận huyện..."
+                    />
+                    <FilterSelect
+                        icon={<StorefrontOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedBrandFilter}
+                        onChange={setSelectedBrandFilter}
+                        ariaLabel="Thương hiệu rạp"
+                        className="relative w-full md:w-64 shrink-0"
+                    >
+                        <option value="ALL">Tất cả thương hiệu rạp</option>
+                        {brands.map((b) => (
+                            <option key={b.id} value={b.id}>
+                                {b.name}
+                            </option>
                         ))}
-                    </div>
-
-                    <span className="text-xs text-slate-400 font-semibold hidden md:block">
-                        Tìm thấy <strong className="text-slate-800">{filteredCinemas.length}</strong> cụm rạp
-                    </span>
-                </div>
-
-                {/* Bottom Row: Brand Filter + Search Input */}
-                <div className="flex flex-wrap items-center gap-3">
-                    {/* Search Input */}
-                    <div className="relative flex-1 min-w-[240px]">
-                        <SearchOutlinedIcon
-                            sx={{ fontSize: 18 }}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                        />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm kiếm theo tên rạp, địa chỉ, thương hiệu, quận huyện..."
-                            className="w-full pl-10 pr-4 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-violet-500 focus:outline-none transition"
-                        />
-                    </div>
-
-                    {/* Brand Filter Dropdown */}
-                    <div className="min-w-[190px]">
-                        <select
-                            value={selectedBrandFilter}
-                            onChange={(e) => setSelectedBrandFilter(e.target.value)}
-                            className="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-violet-500 focus:outline-none transition cursor-pointer"
-                        >
-                            <option value="ALL">Tất cả thương hiệu rạp</option>
-                            {brands.map((b) => (
-                                <option key={b.id} value={b.id}>
-                                    {b.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            </div>
+                    </FilterSelect>
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. MAIN DATAGRID TABLE */}
             <Box
