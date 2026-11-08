@@ -338,7 +338,7 @@ export default function AccountManagementPage() {
         setIsRefreshing(true);
         setAccounts(MOCK_ADMIN_ACCOUNTS);
         setCustomers(MOCK_CUSTOMER_ACCOUNTS);
-        localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(MOCK_ADMIN_ACCOUNTS));
+        localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify(MOCK_ADMIN_ACCOUNTS));
         localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(MOCK_CUSTOMER_ACCOUNTS));
         dispatch(
             openSnackbar({
@@ -1000,10 +1000,10 @@ export default function AccountManagementPage() {
             {/* 4. FILTER TOOLBAR: 2-ROW DESIGN */}
             {accountTypeTab === "ADMIN" ? (
                 /* ADMIN FILTERS */
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3">
+                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3.5">
                     {/* Row 1: Quick Status / Role Filter Tabs */}
-                    <div className="flex items-center justify-between gap-3 overflow-x-auto pb-1">
-                        <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
                             {[
                                 { id: "ALL", label: "Tất cả", count: accounts.length },
                                 { id: "ACTIVE", label: "Đang hoạt động", count: activeCount },
@@ -1015,19 +1015,20 @@ export default function AccountManagementPage() {
                                 return (
                                     <button
                                         key={tab.id}
+                                        type="button"
                                         onClick={() => setStatusTab(tab.id)}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${
                                             isSelected
-                                                ? "bg-violet-50 text-violet-700 border border-violet-200 shadow-2xs"
-                                                : "text-slate-600 hover:bg-slate-50 border border-transparent"
+                                                ? "bg-violet-600 text-white shadow-2xs"
+                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
                                         }`}
                                     >
                                         <span>{tab.label}</span>
                                         <span
                                             className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                                                 isSelected
-                                                    ? "bg-violet-200/70 text-violet-800"
-                                                    : "bg-slate-100 text-slate-500"
+                                                    ? "bg-white/20 text-white"
+                                                    : "bg-slate-200 text-slate-600"
                                             }`}
                                         >
                                             {tab.count}
@@ -1037,34 +1038,44 @@ export default function AccountManagementPage() {
                             })}
                         </div>
 
-                        {/* Reset Filter Button */}
-                        {isAdminFiltered && (
-                            <button
-                                onClick={handleResetAdminFilters}
-                                className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 hover:text-rose-700 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition cursor-pointer shrink-0"
-                            >
-                                <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
-                                <span>Đặt lại bộ lọc</span>
-                            </button>
-                        )}
+                        {/* Right side: Reset + Result Counter */}
+                        <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                            {isAdminFiltered && (
+                                <button
+                                    type="button"
+                                    onClick={handleResetAdminFilters}
+                                    className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
+                                >
+                                    <RestartAltOutlinedIcon sx={{ fontSize: 15 }} />
+                                    <span>Đặt lại bộ lọc</span>
+                                </button>
+                            )}
+
+                            <div className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                <span>Hiển thị: {filteredAccounts.length} tài khoản</span>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Row 2: Search Input & Dropdowns */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-slate-100">
+                    <div className="flex flex-col md:flex-row items-center gap-3">
                         {/* Search Input */}
-                        <div className="relative flex-1">
-                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 flex items-center pointer-events-none">
-                                <SearchOutlinedIcon sx={{ fontSize: 18 }} />
-                            </span>
+                        <div className="relative flex-1 w-full min-w-[240px]">
+                            <SearchOutlinedIcon
+                                sx={{ fontSize: 18 }}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                            />
                             <input
                                 type="text"
                                 placeholder="Tìm quản trị viên theo họ tên, username, email hoặc SĐT..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs"
+                                className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
                             />
                             {searchQuery && (
                                 <button
+                                    type="button"
                                     onClick={() => setSearchQuery("")}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                                 >
@@ -1074,11 +1085,15 @@ export default function AccountManagementPage() {
                         </div>
 
                         {/* Role Select Dropdown */}
-                        <div className="relative min-w-[200px]">
+                        <div className="relative w-full md:w-60 shrink-0">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
+                                <AdminPanelSettingsOutlinedIcon sx={{ fontSize: 16 }} />
+                            </div>
                             <select
                                 value={roleFilter}
                                 onChange={(e) => setRoleFilter(e.target.value)}
-                                className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
+                                aria-label="Vai trò quản trị"
+                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
                             >
                                 <option value="ALL">Tất cả vai trò quản trị</option>
                                 {Object.values(ADMIN_ROLES).map((r) => (
@@ -1093,11 +1108,15 @@ export default function AccountManagementPage() {
                         </div>
 
                         {/* Sort Dropdown */}
-                        <div className="relative min-w-[170px]">
+                        <div className="relative w-full md:w-52 shrink-0">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
+                                <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
+                            </div>
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
+                                aria-label="Sắp xếp danh sách"
+                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
                             >
                                 <option value="DEFAULT">Sắp xếp: Mặc định</option>
                                 <option value="NAME_ASC">Họ tên: A → Z</option>
@@ -1113,10 +1132,10 @@ export default function AccountManagementPage() {
                 </div>
             ) : (
                 /* CUSTOMER FILTERS */
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3">
+                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3.5">
                     {/* Row 1: Quick Customer Status Tabs */}
-                    <div className="flex items-center justify-between gap-3 overflow-x-auto pb-1">
-                        <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
                             {[
                                 { id: "ALL", label: "Tất cả khách hàng", count: customers.length },
                                 { id: "ACTIVE", label: "Đang hoạt động", count: activeCustomersCount },
@@ -1127,19 +1146,20 @@ export default function AccountManagementPage() {
                                 return (
                                     <button
                                         key={tab.id}
+                                        type="button"
                                         onClick={() => setCustStatusTab(tab.id)}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${
                                             isSelected
-                                                ? "bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs"
-                                                : "text-slate-600 hover:bg-slate-50 border border-transparent"
+                                                ? "bg-violet-600 text-white shadow-2xs"
+                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
                                         }`}
                                     >
                                         <span>{tab.label}</span>
                                         <span
                                             className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                                                 isSelected
-                                                    ? "bg-indigo-200/70 text-indigo-800"
-                                                    : "bg-slate-100 text-slate-500"
+                                                    ? "bg-white/20 text-white"
+                                                    : "bg-slate-200 text-slate-600"
                                             }`}
                                         >
                                             {tab.count}
@@ -1149,34 +1169,44 @@ export default function AccountManagementPage() {
                             })}
                         </div>
 
-                        {/* Reset Filter Button */}
-                        {isCustFiltered && (
-                            <button
-                                onClick={handleResetCustFilters}
-                                className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 hover:text-rose-700 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition cursor-pointer shrink-0"
-                            >
-                                <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
-                                <span>Đặt lại bộ lọc</span>
-                            </button>
-                        )}
+                        {/* Right side: Reset + Result Counter */}
+                        <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                            {isCustFiltered && (
+                                <button
+                                    type="button"
+                                    onClick={handleResetCustFilters}
+                                    className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
+                                >
+                                    <RestartAltOutlinedIcon sx={{ fontSize: 15 }} />
+                                    <span>Đặt lại bộ lọc</span>
+                                </button>
+                            )}
+
+                            <div className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                <span>Hiển thị: {filteredCustomers.length} khách hàng</span>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Row 2: Search Input & Dropdowns */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-slate-100">
+                    <div className="flex flex-col md:flex-row items-center gap-3">
                         {/* Search Input */}
-                        <div className="relative flex-1">
-                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 flex items-center pointer-events-none">
-                                <SearchOutlinedIcon sx={{ fontSize: 18 }} />
-                            </span>
+                        <div className="relative flex-1 w-full min-w-[240px]">
+                            <SearchOutlinedIcon
+                                sx={{ fontSize: 18 }}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                            />
                             <input
                                 type="text"
                                 placeholder="Tìm khách hàng theo họ tên, SĐT, email hoặc username..."
                                 value={custSearchQuery}
                                 onChange={(e) => setCustSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs"
+                                className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
                             />
                             {custSearchQuery && (
                                 <button
+                                    type="button"
                                     onClick={() => setCustSearchQuery("")}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                                 >
@@ -1186,11 +1216,15 @@ export default function AccountManagementPage() {
                         </div>
 
                         {/* Membership Tier Select Dropdown */}
-                        <div className="relative min-w-[200px]">
+                        <div className="relative w-full md:w-60 shrink-0">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
+                                <WorkspacePremiumOutlinedIcon sx={{ fontSize: 16 }} />
+                            </div>
                             <select
                                 value={custTierFilter}
                                 onChange={(e) => setCustTierFilter(e.target.value)}
-                                className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
+                                aria-label="Hạng thành viên"
+                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
                             >
                                 <option value="ALL">Tất cả hạng thành viên</option>
                                 {Object.values(MEMBERSHIP_TIERS).map((t) => (
@@ -1205,11 +1239,15 @@ export default function AccountManagementPage() {
                         </div>
 
                         {/* Sort Dropdown */}
-                        <div className="relative min-w-[180px]">
+                        <div className="relative w-full md:w-52 shrink-0">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
+                                <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
+                            </div>
                             <select
                                 value={custSortBy}
                                 onChange={(e) => setCustSortBy(e.target.value)}
-                                className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
+                                aria-label="Sắp xếp danh sách"
+                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
                             >
                                 <option value="DEFAULT">Sắp xếp: Mặc định</option>
                                 <option value="POINTS_DESC">Điểm thưởng: Cao → Thấp</option>
