@@ -4,18 +4,22 @@ import com.cinemeow.cinema_service.dto.response.SeatResponse;
 import com.cinemeow.cinema_service.enums.SeatStatus;
 import com.cinemeow.cinema_service.enums.SeatType;
 import com.cinemeow.cinema_service.service.RoomService;
+import com.cinemeow.showtime_service.entity.Showtime;
 import com.cinemeow.showtime_service.entity.ShowtimeSeat;
 import com.cinemeow.common.exception.AppException;
 import com.cinemeow.common.exception.ErrorCode;
+import com.cinemeow.showtime_service.repository.ShowtimeRepository;
 import com.cinemeow.showtime_service.repository.ShowtimeSeatRepository;
 import com.cinemeow.showtime_service.service.ShowtimeSeatService;
+import com.cinemeow.showtime_service.validator.SeatGapValidator;
+import com.cinemeow.showtime_service.validator.SeatPosition;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,8 +27,9 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
     ShowtimeSeatRepository showtimeSeatRepository;
-
+    ShowtimeRepository showtimeRepository;
     RoomService roomService;
+    SeatGapValidator seatGapValidator;
 
     @Override
     public void initializeSeatsForShowtime(String showtimeId, String roomId) {
@@ -47,10 +52,16 @@ public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
 
     @Override
     public List<ShowtimeSeat> checkAvailableSeats(String showtimeId, List<Long> seatIds) {
-        return showtimeSeatRepository.findBySeatIdInAndStatusAndShowtimeId(seatIds,
+        List<ShowtimeSeat> availableSeats = showtimeSeatRepository.findBySeatIdInAndStatusAndShowtimeId(seatIds,
                         SeatStatus.AVAILABLE, showtimeId)
                 .stream()
                 .toList();
+
+        if (availableSeats.size() == seatIds.size()) {
+            validateSeatGap(showtimeId, seatIds);
+        }
+
+        return availableSeats;
     }
 
     @Transactional
@@ -61,6 +72,15 @@ public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
             if (seat.getStatus() != SeatStatus.AVAILABLE) {
                 throw new AppException(ErrorCode.SEAT_NOT_AVAILABLE);
             }
+        }
+
+        if (!seats.isEmpty()) {
+            String showtimeId = seats.get(0).getShowtimeId();
+            List<Long> physicalSeatIds = seats.stream().map(ShowtimeSeat::getSeatId).toList();
+            validateSeatGap(showtimeId, physicalSeatIds);
+        }
+
+        for (ShowtimeSeat seat : seats) {
             seat.setStatus(SeatStatus.LOCKED);
         }
         showtimeSeatRepository.saveAll(seats);
@@ -92,6 +112,40 @@ public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
     @Override
     public List<ShowtimeSeat> getSeatsByShowtimeId(String showtimeId) {
         return showtimeSeatRepository.findAllByShowtimeId(showtimeId);
+    }
+
+    private void validateSeatGap(String showtimeId, List<Long> physicalSeatIds) {
+        if (showtimeId == null || physicalSeatIds == null || physicalSeatIds.isEmpty()) {
+            return;
+        }
+
+        Showtime showtime = showtimeRepository.findById(showtimeId).orElse(null);
+        if (showtime == null || showtime.getRoomId() == null) {
+            return;
+        }
+
+        List<SeatResponse> roomSeats = roomService.getSeatMap(showtime.getRoomId()).getSeats();
+        if (roomSeats == null || roomSeats.isEmpty()) {
+            return;
+        }
+
+        List<ShowtimeSeat> allShowtimeSeats = showtimeSeatRepository.findAllByShowtimeId(showtimeId);
+        Map<Long, SeatStatus> statusMap = allShowtimeSeats.stream()
+                .filter(s -> s.getSeatId() != null)
+                .collect(Collectors.toMap(ShowtimeSeat::getSeatId, ShowtimeSeat::getStatus, (s1, s2) -> s1));
+
+        List<SeatPosition> positions = roomSeats.stream()
+                .map(s -> SeatPosition.builder()
+                        .seatId(s.getId())
+                        .label(s.getLabel())
+                        .rowIndex(s.getRowIndex())
+                        .colIndex(s.getColIndex())
+                        .type(s.getType())
+                        .status(statusMap.getOrDefault(s.getId(), s.getStatus()))
+                        .build())
+                .collect(Collectors.toList());
+
+        seatGapValidator.validate(positions, new HashSet<>(physicalSeatIds));
     }
 }
 

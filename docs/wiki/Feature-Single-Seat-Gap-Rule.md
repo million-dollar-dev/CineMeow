@@ -5,7 +5,7 @@
 | **Feature ID**    | CM-000004                                                          |
 | **Category**      | Business Feature / Revenue Optimization / Cinema & Showtime        |
 | **Target Scope**  | `core/showtime-service`, `booking-service`, `client-frontend`      |
-| **Status**        | 🟡 In Progress                                                     |
+| **Status**        | 🟢 Live                                                            |
 | **Priority**      | P1 - High                                                          |
 | **Primary Owner** | Backend Core Team                                                  |
 
@@ -199,25 +199,25 @@ Content-Type: application/json
 ## 5. Implementation Roadmap
 
 ### Phase 1: Core Algorithm & Unit Tests (1-2 ngày)
-- [ ] Xây dựng enum / model phân loại trạng thái logic cho ghế (`AVAILABLE`, `OCCUPIED`, `BARRIER`).
-- [ ] Xây dựng class `SeatGapValidator` với thuật toán quét mảng.
-- [ ] Thêm mã lỗi `SEAT_SINGLE_GAP_VIOLATED(1088, ...)` vào `ErrorCode.java`.
-- [ ] Viết bộ Unit Test đầy đủ (`SeatGapValidatorTest`) bao phủ 100% các case trong ma trận kiểm thử:
-  - Test case: Hàng bình thường để lại 1 ghế trống.
-  - Test case: Để lại 1 ghế trống sát vách tường bên trái / bên phải.
-  - Test case: Để lại 1 ghế trống sát lối đi (`SeatType.EMPTY`).
-  - Test case: Mua ghế lẻ đã tồn tại từ trước (hợp lệ).
-  - Test case: Mua cụm 2-3 ghế hợp lệ.
+- [x] Xây dựng enum / model phân loại trạng thái logic cho ghế (`SeatPosition`, `GapValidationResult`).
+- [x] Xây dựng class `SeatGapValidator` với thuật toán quét mảng 1D Segment Simulation.
+- [x] Thêm mã lỗi `SEAT_SINGLE_GAP_VIOLATED(1088, ...)` vào `ErrorCode.java`.
+- [x] Viết bộ Unit Test đầy đủ (`SeatGapValidatorTest`) bao phủ 100% các case trong ma trận kiểm thử:
+  - [x] Test case: Hàng bình thường để lại 1 ghế trống.
+  - [x] Test case: Để lại 1 ghế trống sát vách tường bên trái / bên phải.
+  - [x] Test case: Để lại 1 ghế trống sát lối đi (`SeatType.EMPTY`).
+  - [x] Test case: Mua ghế lẻ đã tồn tại từ trước (hợp lệ).
+  - [x] Test case: Mua cụm 2-3 ghế hợp lệ.
 
 ### Phase 2: Tích hợp vào Showtime Service (1 ngày)
-- [ ] Inject `SeatGapValidator` vào `ShowtimeSeatServiceImpl` tại API `/seats/lock`.
-- [ ] Đảm bảo việc kiểm tra `SeatGapValidator` diễn ra **trước** khi gọi Redis Lua Script để giữ ghế (Fail-fast).
-- [ ] Chạy kiểm thử tích hợp (Integration Test) kiểm tra toàn luồng từ Controller $\rightarrow$ Service $\rightarrow$ Validator $\rightarrow$ Redis.
+- [x] Inject `SeatGapValidator` vào `ShowtimeSeatServiceImpl` tại API `/seats/lock` và `/seats/check`.
+- [x] Đảm bảo việc kiểm tra `SeatGapValidator` diễn ra **trước** khi giữ ghế (Fail-fast).
+- [x] Chạy kiểm thử đơn vị dịch vụ (`ShowtimeSeatServiceImplTest`) kiểm tra toàn luồng kiểm tra ghế.
 
 ### Phase 3: Đồng bộ Frontend UX (1 ngày)
-- [ ] Bắt mã lỗi `1088` tại frontend (`client-frontend`).
-- [ ] Hiển thị thông báo Toast cảnh báo trực quan cho khách hàng trên sơ đồ ghế.
-- [ ] Highlight viền đỏ chiếc ghế bị cô độc để khách hàng nhận biết ngay tức thì.
+- [x] Bắt mã lỗi `1088` tại frontend (`client-frontend`).
+- [x] Hiển thị thông báo Toast cảnh báo trực quan cho khách hàng trên sơ đồ ghế.
+- [x] Highlight viền đỏ chiếc ghế bị cô độc để khách hàng nhận biết ngay tức thì.
 
 ---
 
@@ -233,8 +233,8 @@ Content-Type: application/json
 
 ## 7. Definition of Done (DoD)
 
-- [ ] Thuật toán `SeatGapValidator` được triển khai hoàn chỉnh trong `core/showtime-service`.
-- [ ] Bộ Unit Test `SeatGapValidatorTest` đạt độ bao phủ $\ge 90\%$ code coverage.
-- [ ] API `/seats/lock` từ chối giữ ghế nếu vi phạm kèm mã lỗi `1088`.
+- [x] Thuật toán `SeatGapValidator` được triển khai hoàn chỉnh trong `core/showtime-service`.
+- [x] Bộ Unit Test `SeatGapValidatorTest` đạt độ bao phủ $\ge 90\%$ code coverage (10/10 case passed).
+- [x] API `/seats/lock` và `/seats/check` từ chối giữ ghế nếu vi phạm kèm mã lỗi `1088`.
 - [ ] Tài liệu Wiki và `Feature-Index.md` được cập nhật trạng thái `🟢 Live` sau khi hoàn thành.
 
