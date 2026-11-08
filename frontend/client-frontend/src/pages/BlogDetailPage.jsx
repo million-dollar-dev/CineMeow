@@ -183,11 +183,11 @@ const BlogDetailPage = () => {
                     </div>
 
                     {/* Right Column: Sticky Table of Contents & Trending */}
-                    <div className="lg:col-span-4 space-y-6">
+                    <aside className="lg:col-span-4 lg:sticky lg:top-28 space-y-6 self-start max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-hide">
                         
                         {/* Table of Contents (Mục Lục) */}
                         {article.tableOfContents && article.tableOfContents.length > 0 && (
-                            <div className="p-5 rounded-2xl bg-[#141424]/90 border border-white/10 shadow-xl sticky top-28">
+                            <div className="p-5 rounded-2xl bg-[#141424] border border-white/10 shadow-xl">
                                 <h4 className="text-sm font-extrabold text-white flex items-center gap-2 uppercase tracking-wider mb-3">
                                     <FontAwesomeIcon icon={faListUl} className="text-violet-400" />
                                     Mục Lục Bài Viết
@@ -204,7 +204,7 @@ const BlogDetailPage = () => {
                         )}
 
                         {/* Trending Articles Sidebar */}
-                        <div className="p-5 rounded-2xl bg-[#141424]/90 border border-white/10 shadow-xl">
+                        <div className="p-5 rounded-2xl bg-[#141424] border border-white/10 shadow-xl">
                             <h4 className="text-sm font-extrabold text-white flex items-center gap-2 mb-3">
                                 <FontAwesomeIcon icon={faEye} className="text-violet-400" />
                                 Đọc Nhiều Nhất
@@ -216,7 +216,7 @@ const BlogDetailPage = () => {
                             </div>
                         </div>
 
-                    </div>
+                    </aside>
 
                 </div>
 
