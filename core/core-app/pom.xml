@@ -48,12 +48,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- OpenFeign Support for Showtime inter-service communication -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
         <!-- Redis & Caching -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

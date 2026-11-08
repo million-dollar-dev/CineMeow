@@ -1,21 +1,17 @@
 package com.cinemeow.showtime_service.service.impl;
 
-import com.cinemeow.showtime_service.client.CinemaClient;
-import com.cinemeow.showtime_service.client.MovieClient;
+import com.cinemeow.cinema_service.dto.response.RoomResponse;
+import com.cinemeow.cinema_service.service.RoomService;
+import com.cinemeow.movie_service.dto.response.MovieResponse;
+import com.cinemeow.movie_service.service.MovieService;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
-import com.cinemeow.showtime_service.dto.response.MovieResponse;
-import com.cinemeow.showtime_service.dto.response.RoomResponse;
-import com.cinemeow.showtime_service.dto.response.SeatResponse;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
 import com.cinemeow.showtime_service.entity.Showtime;
 import com.cinemeow.showtime_service.entity.ShowtimeSeat;
-import com.cinemeow.showtime_service.enums.SeatStatus;
-import com.cinemeow.showtime_service.enums.SeatType;
 import com.cinemeow.common.exception.AppException;
 import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.showtime_service.mapper.ShowtimeMapper;
 import com.cinemeow.showtime_service.repository.ShowtimeRepository;
-import com.cinemeow.showtime_service.repository.ShowtimeSeatRepository;
 import com.cinemeow.showtime_service.repository.specification.ShowtimeSpecificationBuilder;
 import com.cinemeow.showtime_service.service.ShowtimeSeatService;
 import com.cinemeow.showtime_service.service.ShowtimeService;
@@ -31,12 +27,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,9 +43,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     ShowtimeSeatService showtimeSeatService;
 
-    MovieClient movieClient;
+    MovieService movieService;
 
-    CinemaClient cinemaClient;
+    RoomService roomService;
 
     @Override
     @Caching(evict = {
@@ -155,11 +149,11 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private ShowtimeResponse buildFullShowtimeResponse(Showtime showtime) {
         ShowtimeResponse response = showtimeMapper.toShowtimeResponse(showtime);
 
-        MovieResponse movie = movieClient.getById(showtime.getMovieId()).getData();
+        MovieResponse movie = movieService.getById(showtime.getMovieId());
         response.setMovieTitle(movie.getTitle());
         response.setPosterPath(movie.getPosterPath());
 
-        RoomResponse room = cinemaClient.getById(showtime.getRoomId()).getData();
+        RoomResponse room = roomService.getById(showtime.getRoomId());
         response.setRoomName(room.getName());
         response.setCinemaId(room.getCinemaId());
         response.setCinemaName(room.getCinemaName());

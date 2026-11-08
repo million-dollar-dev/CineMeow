@@ -1,7 +1,7 @@
 package com.cinemeow.showtime_service.repository;
 
+import com.cinemeow.cinema_service.enums.SeatStatus;
 import com.cinemeow.showtime_service.entity.ShowtimeSeat;
-import com.cinemeow.showtime_service.enums.SeatStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
