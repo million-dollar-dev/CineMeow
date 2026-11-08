@@ -32,6 +32,18 @@ import { CINEMA_BRANCH_OPTIONS } from "../constants/accountConstants.js";
 // Components
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import NotificationDetailModal from "../components/NotificationManagement/NotificationDetailModal.jsx";
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
+import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
+import PriorityHighOutlinedIcon from "@mui/icons-material/PriorityHighOutlined";
 
 // Icons
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
@@ -460,149 +472,101 @@ export default function NotificationManagementPage() {
             </div>
 
             {/* 3. MULTI-FILTER TOOLBAR (2-ROW DESIGN) */}
-            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3">
-                {/* Row 1: Category Quick Tabs */}
-                <div className="flex items-center justify-between gap-3 overflow-x-auto pb-1">
-                    <div className="flex items-center gap-1.5 shrink-0">
-                        {[
-                            { id: "ALL", label: "Tất cả", count: totalCount },
-                            { id: "UNREAD", label: "Chưa đọc", count: unreadCount },
+            <FilterToolbar className="mb-5">
+                {/* Row 1: Quick Status / Category Filter Tabs */}
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={[
+                            { id: "ALL", label: "Tất cả", count: notifications.length },
                             { id: "BOOKING", label: "Vé & Đơn", count: notifications.filter((n) => n.category === "BOOKING").length },
                             { id: "SHOWTIME", label: "Suất chiếu", count: notifications.filter((n) => n.category === "SHOWTIME").length },
                             { id: "INVENTORY", label: "Kho F&B", count: notifications.filter((n) => n.category === "INVENTORY").length },
                             { id: "REVENUE", label: "Doanh thu", count: notifications.filter((n) => n.category === "REVENUE").length },
                             { id: "PROMOTION", label: "Khuyến mãi", count: notifications.filter((n) => n.category === "PROMOTION").length },
                             { id: "SYSTEM", label: "Hệ thống", count: notifications.filter((n) => n.category === "SYSTEM").length },
-                        ].map((tab) => {
-                            const isSelected = categoryTab === tab.id;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => {
-                                        setCategoryTab(tab.id);
-                                        setCurrentPage(1);
-                                    }}
-                                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                                        isSelected
-                                            ? "bg-violet-50 text-violet-700 border border-violet-200 shadow-2xs"
-                                            : "text-slate-600 hover:bg-slate-50 border border-transparent"
-                                    }`}
-                                >
-                                    <span>{tab.label}</span>
-                                    <span
-                                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                                            isSelected
-                                                ? "bg-violet-200/70 text-violet-800"
-                                                : "bg-slate-100 text-slate-500"
-                                        }`}
-                                    >
-                                        {tab.count}
-                                    </span>
-                                </button>
-                            );
-                        })}
-                    </div>
+                        ]}
+                        activeTab={categoryTab}
+                        onChange={(tabId) => {
+                            setCategoryTab(tabId);
+                            setCurrentPage(1);
+                        }}
+                    />
 
-                    {/* Reset Filter Button */}
-                    {isFiltered && (
-                        <button
+                    {/* Right side: Reset + Result Counter */}
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={isFiltered}
                             onClick={handleResetFilters}
-                            className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 hover:text-rose-700 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition cursor-pointer shrink-0"
-                        >
-                            <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
-                            <span>Đặt lại bộ lọc</span>
-                        </button>
-                    )}
-                </div>
+                        />
+                        <ResultCountBadge count={filteredNotifications.length} unit="thông báo" />
+                    </div>
+                </FilterToolbarHeader>
 
                 {/* Row 2: Search Input & Dropdowns */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 border-t border-slate-100">
+                <FilterToolbarControls>
                     {/* Search Input */}
-                    <div className="relative flex-1">
-                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 flex items-center pointer-events-none">
-                            <SearchOutlinedIcon sx={{ fontSize: 18 }} />
-                        </span>
-                        <input
-                            type="text"
-                            placeholder="Tìm thông báo theo tiêu đề, nội dung, mã thông báo hoặc chi nhánh..."
-                            value={searchQuery}
-                            onChange={(e) => {
-                                setSearchQuery(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                            className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs"
-                        />
-                        {searchQuery && (
-                            <button
-                                onClick={() => setSearchQuery("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                            >
-                                <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                            </button>
-                        )}
-                    </div>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={(val) => {
+                            setSearchQuery(val);
+                            setCurrentPage(1);
+                        }}
+                        placeholder="Tìm thông báo theo tiêu đề, nội dung, mã thông báo hoặc chi nhánh..."
+                        className="relative flex-1 w-full min-w-[240px]"
+                    />
 
                     {/* Priority Dropdown */}
-                    <div className="relative min-w-[180px]">
-                        <select
-                            value={priorityFilter}
-                            onChange={(e) => {
-                                setPriorityFilter(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                            className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                        >
-                            <option value="ALL">Tất cả mức độ ưu tiên</option>
-                            {Object.values(NOTIFICATION_PRIORITIES).map((p) => (
-                                <option key={p.code} value={p.code}>
-                                    {p.badge} ({p.label})
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
+                    <FilterSelect
+                        icon={<PriorityHighOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={priorityFilter}
+                        onChange={(val) => {
+                            setPriorityFilter(val);
+                            setCurrentPage(1);
+                        }}
+                        ariaLabel="Mức độ ưu tiên"
+                        className="relative w-full md:w-56 shrink-0"
+                    >
+                        <option value="ALL">Tất cả mức độ ưu tiên</option>
+                        {Object.values(NOTIFICATION_PRIORITIES).map((p) => (
+                            <option key={p.code} value={p.code}>
+                                {p.badge} ({p.label})
+                            </option>
+                        ))}
+                    </FilterSelect>
 
                     {/* Branch Dropdown */}
-                    <div className="relative min-w-[190px]">
-                        <select
-                            value={branchFilter}
-                            onChange={(e) => {
-                                setBranchFilter(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                            className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                        >
-                            <option value="ALL">Tất cả chi nhánh rạp</option>
-                            {CINEMA_BRANCH_OPTIONS.map((b) => (
-                                <option key={b.id} value={b.name.split(" (")[0]}>
-                                    {b.name}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
+                    <FilterSelect
+                        icon={<StorefrontOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={branchFilter}
+                        onChange={(val) => {
+                            setBranchFilter(val);
+                            setCurrentPage(1);
+                        }}
+                        ariaLabel="Chi nhánh rạp"
+                        className="relative w-full md:w-56 shrink-0"
+                    >
+                        <option value="ALL">Tất cả chi nhánh rạp</option>
+                        {CINEMA_BRANCH_OPTIONS.map((b) => (
+                            <option key={b.id} value={b.name.split(" (")[0]}>
+                                {b.name}
+                            </option>
+                        ))}
+                    </FilterSelect>
 
                     {/* Sort Dropdown */}
-                    <div className="relative min-w-[160px]">
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="w-full pl-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                        >
-                            <option value="NEWEST">Mới nhất trước</option>
-                            <option value="OLDEST">Cũ nhất trước</option>
-                            <option value="PRIORITY">Ưu tiên cao nhất</option>
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <FilterSelect
+                        icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={sortBy}
+                        onChange={(val) => setSortBy(val)}
+                        ariaLabel="Sắp xếp thông báo"
+                        className="relative w-full md:w-48 shrink-0"
+                    >
+                        <option value="NEWEST">Mới nhất trước</option>
+                        <option value="OLDEST">Cũ nhất trước</option>
+                        <option value="PRIORITY">Ưu tiên cao nhất</option>
+                    </FilterSelect>
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. BATCH ACTIONS BAR (Appears when items are checked) */}
             {selectedIds.length > 0 && (

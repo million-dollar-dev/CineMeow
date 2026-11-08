@@ -28,6 +28,16 @@ import StatCard from "../components/OverviewStats/StatCard.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import TransactionDetailModal from "../components/TransactionManagement/TransactionDetailModal.jsx";
 import RefundTransactionModal from "../components/TransactionManagement/RefundTransactionModal.jsx";
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
 
 // Icons
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
@@ -714,142 +724,58 @@ export default function TransactionManagementPage() {
             </div>
 
             {/* 3. TOOLBAR CONTROLS: MULTI-FILTER */}
-            <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-3.5">
-                {/* Row 1: Status Tabs + Reset + Count */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                        {TRANSACTION_QUICK_TABS.map((tab) => {
-                            const isSelected = statusTab === tab.value;
-                            return (
-                                <button
-                                    key={tab.value}
-                                    type="button"
-                                    onClick={() => setStatusTab(tab.value)}
-                                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer ${
-                                        isSelected
-                                            ? "bg-violet-600 text-white shadow-2xs"
-                                            : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
-                                    }`}
-                                >
-                                    {tab.label}
-                                </button>
-                            );
-                        })}
-                    </div>
+            <FilterToolbar className="mb-6">
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={TRANSACTION_QUICK_TABS}
+                        activeTab={statusTab}
+                        onChange={setStatusTab}
+                    />
 
-                    {/* Right side: Reset + Result Counter */}
                     <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
-                        {hasActiveFilters && (
-                            <button
-                                type="button"
-                                onClick={handleResetFilters}
-                                className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
-                            >
-                                <RestartAltOutlinedIcon sx={{ fontSize: 15 }} />
-                                <span>Đặt lại bộ lọc</span>
-                            </button>
-                        )}
-
-                        <div className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>Hiển thị: {filteredTransactions.length} giao dịch</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Row 2: Search Input + Gateways + Type + Sort */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
-                    {/* Search */}
-                    <div className="lg:col-span-5 relative">
-                        <SearchOutlinedIcon
-                            sx={{ fontSize: 18 }}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
                         />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm theo mã GD, mã tham chiếu, mã đơn, khách hàng..."
-                            className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                        />
-                        {searchQuery && (
-                            <button
-                                type="button"
-                                onClick={() => setSearchQuery("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                            >
-                                <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                            </button>
-                        )}
+                        <ResultCountBadge count={filteredTransactions.length} unit="giao dịch" />
                     </div>
+                </FilterToolbarHeader>
 
-                    {/* Gateway Filter */}
-                    <div className="lg:col-span-3 relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <AccountBalanceWalletOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={selectedGateway}
-                            onChange={(e) => setSelectedGateway(e.target.value)}
-                            aria-label="Cổng thanh toán"
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                        >
-                            {Object.values(PAYMENT_GATEWAYS).map((gw) => (
-                                <option key={gw.value} value={gw.value}>
-                                    {gw.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
+                <FilterToolbarControls>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm theo mã GD, mã tham chiếu, mã đơn, khách hàng..."
+                    />
 
-                    {/* Type Filter */}
-                    <div className="lg:col-span-2 relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <CurrencyExchangeOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                            aria-label="Phân loại giao dịch"
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                        >
-                            {Object.values(TRANSACTION_TYPES).map((tp) => (
-                                <option key={tp.value} value={tp.value}>
-                                    {tp.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
+                    <FilterSelect
+                        icon={<AccountBalanceWalletOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedGateway}
+                        onChange={setSelectedGateway}
+                        ariaLabel="Cổng thanh toán"
+                        options={Object.values(PAYMENT_GATEWAYS)}
+                        className="relative w-full md:w-56 shrink-0"
+                    />
 
-                    {/* Sort Options */}
-                    <div className="lg:col-span-2 relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            aria-label="Sắp xếp giao dịch"
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                        >
-                            {TRANSACTION_SORT_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <FilterSelect
+                        icon={<CurrencyExchangeOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedType}
+                        onChange={setSelectedType}
+                        ariaLabel="Phân loại giao dịch"
+                        options={Object.values(TRANSACTION_TYPES)}
+                        className="relative w-full md:w-48 shrink-0"
+                    />
+
+                    <FilterSelect
+                        icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={sortBy}
+                        onChange={setSortBy}
+                        ariaLabel="Sắp xếp giao dịch"
+                        options={TRANSACTION_SORT_OPTIONS}
+                        className="relative w-full md:w-48 shrink-0"
+                    />
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. DATAGRID TABLE */}
             <div className="rounded-2xl bg-white border border-slate-200/80 shadow-2xs overflow-hidden">

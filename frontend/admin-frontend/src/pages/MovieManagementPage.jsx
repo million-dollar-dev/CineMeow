@@ -22,6 +22,15 @@ import MovieModal from "../components/MovieManagement/MovieModal.jsx";
 import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import StatusChip from "../components/StatusChip.jsx";
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+} from "../components/common/FilterToolbar/index.js";
 import { MOVIE_STATUS_CONFIG } from "../constants/movieStatus.js";
 import { MOCK_MOVIES } from "../mock/mockMovies.js";
 
@@ -368,6 +377,15 @@ export default function MovieManagementPage() {
         });
     }, [movies, selectedStatusTab, searchQuery]);
 
+    const hasActiveFilters = useMemo(() => {
+        return selectedStatusTab !== "ALL" || Boolean(searchQuery.trim());
+    }, [selectedStatusTab, searchQuery]);
+
+    const handleResetFilters = () => {
+        setSelectedStatusTab("ALL");
+        setSearchQuery("");
+    };
+
     // Handlers
     const handleAddClick = () => {
         setModalMode("add");
@@ -677,64 +695,36 @@ export default function MovieManagementPage() {
             </div>
 
             {/* 3. CONTROL BAR: STATUS TABS & QUICK SEARCH */}
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-3 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
-                {/* Status Tabs */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                    {[
-                        { key: "ALL", label: "Tất cả", count: totalMovies },
-                        { key: "NOW_PLAYING", label: "Đang chiếu", count: nowShowing },
-                        { key: "COMING_SOON", label: "Sắp chiếu", count: comingSoon },
-                        { key: "RELEASED", label: "Đã phát hành", count: released },
-                        { key: "POST_PRODUCTION", label: "Đang hậu kỳ", count: postProduction },
-                    ].map((tab) => {
-                        const isActive = selectedStatusTab === tab.key;
-                        return (
-                            <button
-                                key={tab.key}
-                                type="button"
-                                onClick={() => setSelectedStatusTab(tab.key)}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                                    isActive
-                                        ? "bg-violet-600 text-white shadow-sm font-bold"
-                                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                                }`}
-                            >
-                                <span>{tab.label}</span>
-                                <span
-                                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                                        isActive
-                                            ? "bg-white/20 text-white"
-                                            : "bg-slate-200/70 text-slate-600"
-                                    }`}
-                                >
-                                    {tab.count}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Search Input */}
-                <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200/80 focus-within:bg-white focus-within:border-violet-500 focus-within:ring-3 focus-within:ring-violet-500/10 transition-all w-full md:w-80 shadow-2xs">
-                    <SearchOutlinedIcon sx={{ fontSize: 18 }} className="text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Tìm theo tên phim, thể loại, đạo diễn..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-transparent border-none outline-none text-xs font-medium text-slate-800 placeholder:text-slate-400"
+            <FilterToolbar className="mb-6">
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={[
+                            { key: "ALL", label: "Tất cả", count: totalMovies },
+                            { key: "NOW_PLAYING", label: "Đang chiếu", count: nowShowing },
+                            { key: "COMING_SOON", label: "Sắp chiếu", count: comingSoon },
+                            { key: "RELEASED", label: "Đã phát hành", count: released },
+                            { key: "POST_PRODUCTION", label: "Đang hậu kỳ", count: postProduction },
+                        ]}
+                        activeTab={selectedStatusTab}
+                        onChange={setSelectedStatusTab}
                     />
-                    {searchQuery && (
-                        <button
-                            type="button"
-                            onClick={() => setSearchQuery("")}
-                            className="text-slate-400 hover:text-slate-600 cursor-pointer"
-                        >
-                            <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                        </button>
-                    )}
-                </div>
-            </div>
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
+                        />
+                        <ResultCountBadge count={filteredMovies.length} unit="phim" />
+                    </div>
+                </FilterToolbarHeader>
+
+                <FilterToolbarControls>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm theo tên phim, thể loại, đạo diễn..."
+                    />
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. DATAGRID TABLE: Spacious 140px rowHeight, 80x114px Posters */}
             <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">

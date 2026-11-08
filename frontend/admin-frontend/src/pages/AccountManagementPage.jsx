@@ -26,6 +26,16 @@ import {
 import { MOCK_ADMIN_ACCOUNTS, MOCK_CUSTOMER_ACCOUNTS } from "../mock/mockAccounts.js";
 
 // Components
+import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar";
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import AdminAccountModal from "../components/AccountManagement/AdminAccountModal.jsx";
@@ -1000,267 +1010,121 @@ export default function AccountManagementPage() {
             {/* 4. FILTER TOOLBAR: 2-ROW DESIGN */}
             {accountTypeTab === "ADMIN" ? (
                 /* ADMIN FILTERS */
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3.5">
-                    {/* Row 1: Quick Status / Role Filter Tabs */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                            {[
+                <FilterToolbar>
+                    <FilterToolbarHeader>
+                        <FilterTabs
+                            tabs={[
                                 { id: "ALL", label: "Tất cả", count: accounts.length },
                                 { id: "ACTIVE", label: "Đang hoạt động", count: activeCount },
                                 { id: "INACTIVE", label: "Tạm ngưng", count: accounts.length - activeCount },
                                 { id: "SUPER_ADMIN", label: "Super Admin", count: accounts.filter((a) => a.role === "SUPER_ADMIN").length },
                                 { id: "CINEMA_MANAGER", label: "Quản lý rạp", count: branchManagerCount },
-                            ].map((tab) => {
-                                const isSelected = statusTab === tab.id;
-                                return (
-                                    <button
-                                        key={tab.id}
-                                        type="button"
-                                        onClick={() => setStatusTab(tab.id)}
-                                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                                            isSelected
-                                                ? "bg-violet-600 text-white shadow-2xs"
-                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
-                                        }`}
-                                    >
-                                        <span>{tab.label}</span>
-                                        <span
-                                            className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                                                isSelected
-                                                    ? "bg-white/20 text-white"
-                                                    : "bg-slate-200 text-slate-600"
-                                            }`}
-                                        >
-                                            {tab.count}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        {/* Right side: Reset + Result Counter */}
+                            ]}
+                            activeTab={statusTab}
+                            onTabChange={setStatusTab}
+                        />
                         <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
-                            {isAdminFiltered && (
-                                <button
-                                    type="button"
-                                    onClick={handleResetAdminFilters}
-                                    className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
-                                >
-                                    <RestartAltOutlinedIcon sx={{ fontSize: 15 }} />
-                                    <span>Đặt lại bộ lọc</span>
-                                </button>
-                            )}
-
-                            <div className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span>Hiển thị: {filteredAccounts.length} tài khoản</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Row 2: Search Input & Dropdowns */}
-                    <div className="flex flex-col md:flex-row items-center gap-3">
-                        {/* Search Input */}
-                        <div className="relative flex-1 w-full min-w-[240px]">
-                            <SearchOutlinedIcon
-                                sx={{ fontSize: 18 }}
-                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                            <ResetFilterButton
+                                hasActiveFilters={isAdminFiltered}
+                                onReset={handleResetAdminFilters}
                             />
-                            <input
-                                type="text"
-                                placeholder="Tìm quản trị viên theo họ tên, username, email hoặc SĐT..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                            />
-                            {searchQuery && (
-                                <button
-                                    type="button"
-                                    onClick={() => setSearchQuery("")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                                >
-                                    <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                                </button>
-                            )}
+                            <ResultCountBadge count={filteredAccounts.length} unit="tài khoản" />
                         </div>
+                    </FilterToolbarHeader>
 
-                        {/* Role Select Dropdown */}
-                        <div className="relative w-full md:w-60 shrink-0">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <AdminPanelSettingsOutlinedIcon sx={{ fontSize: 16 }} />
-                            </div>
-                            <select
-                                value={roleFilter}
-                                onChange={(e) => setRoleFilter(e.target.value)}
-                                aria-label="Vai trò quản trị"
-                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                            >
-                                <option value="ALL">Tất cả vai trò quản trị</option>
-                                {Object.values(ADMIN_ROLES).map((r) => (
-                                    <option key={r.code} value={r.code}>
-                                        {r.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
-
-                        {/* Sort Dropdown */}
-                        <div className="relative w-full md:w-52 shrink-0">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
-                            </div>
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                aria-label="Sắp xếp danh sách"
-                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                            >
-                                <option value="DEFAULT">Sắp xếp: Mặc định</option>
-                                <option value="NAME_ASC">Họ tên: A → Z</option>
-                                <option value="NAME_DESC">Họ tên: Z → A</option>
-                                <option value="LOGIN_RECENT">Đăng nhập gần nhất</option>
-                                <option value="CREATED_NEWEST">Tạo mới nhất</option>
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <FilterToolbarControls>
+                        <SearchInput
+                            value={searchQuery}
+                            onChange={setSearchQuery}
+                            placeholder="Tìm quản trị viên theo họ tên, username, email hoặc SĐT..."
+                        />
+                        <FilterSelect
+                            value={roleFilter}
+                            onChange={(e) => setRoleFilter(e.target.value)}
+                            icon={AdminPanelSettingsOutlinedIcon}
+                            ariaLabel="Vai trò quản trị"
+                            className="w-full md:w-60"
+                        >
+                            <option value="ALL">Tất cả vai trò quản trị</option>
+                            {Object.values(ADMIN_ROLES).map((r) => (
+                                <option key={r.code} value={r.code}>
+                                    {r.label}
+                                </option>
+                            ))}
+                        </FilterSelect>
+                        <FilterSelect
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            icon={FilterListOutlinedIcon}
+                            ariaLabel="Sắp xếp danh sách"
+                            className="w-full md:w-52"
+                        >
+                            <option value="DEFAULT">Sắp xếp: Mặc định</option>
+                            <option value="NAME_ASC">Họ tên: A → Z</option>
+                            <option value="NAME_DESC">Họ tên: Z → A</option>
+                            <option value="LOGIN_RECENT">Đăng nhập gần nhất</option>
+                            <option value="CREATED_NEWEST">Tạo mới nhất</option>
+                        </FilterSelect>
+                    </FilterToolbarControls>
+                </FilterToolbar>
             ) : (
                 /* CUSTOMER FILTERS */
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 space-y-3.5">
-                    {/* Row 1: Quick Customer Status Tabs */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-                            {[
+                <FilterToolbar>
+                    <FilterToolbarHeader>
+                        <FilterTabs
+                            tabs={[
                                 { id: "ALL", label: "Tất cả khách hàng", count: customers.length },
                                 { id: "ACTIVE", label: "Đang hoạt động", count: activeCustomersCount },
                                 { id: "INACTIVE", label: "Tạm ngưng", count: customers.filter((c) => c.status === "INACTIVE").length },
                                 { id: "SUSPENDED", label: "Đã đình chỉ / Khóa", count: customers.filter((c) => c.status === "SUSPENDED").length },
-                            ].map((tab) => {
-                                const isSelected = custStatusTab === tab.id;
-                                return (
-                                    <button
-                                        key={tab.id}
-                                        type="button"
-                                        onClick={() => setCustStatusTab(tab.id)}
-                                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                                            isSelected
-                                                ? "bg-violet-600 text-white shadow-2xs"
-                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
-                                        }`}
-                                    >
-                                        <span>{tab.label}</span>
-                                        <span
-                                            className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                                                isSelected
-                                                    ? "bg-white/20 text-white"
-                                                    : "bg-slate-200 text-slate-600"
-                                            }`}
-                                        >
-                                            {tab.count}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        {/* Right side: Reset + Result Counter */}
+                            ]}
+                            activeTab={custStatusTab}
+                            onTabChange={setCustStatusTab}
+                        />
                         <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
-                            {isCustFiltered && (
-                                <button
-                                    type="button"
-                                    onClick={handleResetCustFilters}
-                                    className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
-                                >
-                                    <RestartAltOutlinedIcon sx={{ fontSize: 15 }} />
-                                    <span>Đặt lại bộ lọc</span>
-                                </button>
-                            )}
-
-                            <div className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span>Hiển thị: {filteredCustomers.length} khách hàng</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Row 2: Search Input & Dropdowns */}
-                    <div className="flex flex-col md:flex-row items-center gap-3">
-                        {/* Search Input */}
-                        <div className="relative flex-1 w-full min-w-[240px]">
-                            <SearchOutlinedIcon
-                                sx={{ fontSize: 18 }}
-                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+                            <ResetFilterButton
+                                hasActiveFilters={isCustFiltered}
+                                onReset={handleResetCustFilters}
                             />
-                            <input
-                                type="text"
-                                placeholder="Tìm khách hàng theo họ tên, SĐT, email hoặc username..."
-                                value={custSearchQuery}
-                                onChange={(e) => setCustSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                            />
-                            {custSearchQuery && (
-                                <button
-                                    type="button"
-                                    onClick={() => setCustSearchQuery("")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                                >
-                                    <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                                </button>
-                            )}
+                            <ResultCountBadge count={filteredCustomers.length} unit="khách hàng" />
                         </div>
+                    </FilterToolbarHeader>
 
-                        {/* Membership Tier Select Dropdown */}
-                        <div className="relative w-full md:w-60 shrink-0">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <WorkspacePremiumOutlinedIcon sx={{ fontSize: 16 }} />
-                            </div>
-                            <select
-                                value={custTierFilter}
-                                onChange={(e) => setCustTierFilter(e.target.value)}
-                                aria-label="Hạng thành viên"
-                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                            >
-                                <option value="ALL">Tất cả hạng thành viên</option>
-                                {Object.values(MEMBERSHIP_TIERS).map((t) => (
-                                    <option key={t.code} value={t.code}>
-                                        {t.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
-
-                        {/* Sort Dropdown */}
-                        <div className="relative w-full md:w-52 shrink-0">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
-                            </div>
-                            <select
-                                value={custSortBy}
-                                onChange={(e) => setCustSortBy(e.target.value)}
-                                aria-label="Sắp xếp danh sách"
-                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none truncate"
-                            >
-                                <option value="DEFAULT">Sắp xếp: Mặc định</option>
-                                <option value="POINTS_DESC">Điểm thưởng: Cao → Thấp</option>
-                                <option value="SPENT_DESC">Chi tiêu: Cao → Thấp</option>
-                                <option value="NAME_ASC">Họ tên: A → Z</option>
-                                <option value="LOGIN_RECENT">Đăng nhập gần nhất</option>
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <FilterToolbarControls>
+                        <SearchInput
+                            value={custSearchQuery}
+                            onChange={setCustSearchQuery}
+                            placeholder="Tìm khách hàng theo họ tên, SĐT, email hoặc username..."
+                        />
+                        <FilterSelect
+                            value={custTierFilter}
+                            onChange={(e) => setCustTierFilter(e.target.value)}
+                            icon={WorkspacePremiumOutlinedIcon}
+                            ariaLabel="Hạng thành viên"
+                            className="w-full md:w-60"
+                        >
+                            <option value="ALL">Tất cả hạng thành viên</option>
+                            {Object.values(MEMBERSHIP_TIERS).map((t) => (
+                                <option key={t.code} value={t.code}>
+                                    {t.label}
+                                </option>
+                            ))}
+                        </FilterSelect>
+                        <FilterSelect
+                            value={custSortBy}
+                            onChange={(e) => setCustSortBy(e.target.value)}
+                            icon={FilterListOutlinedIcon}
+                            ariaLabel="Sắp xếp danh sách"
+                            className="w-full md:w-52"
+                        >
+                            <option value="DEFAULT">Sắp xếp: Mặc định</option>
+                            <option value="POINTS_DESC">Điểm thưởng: Cao → Thấp</option>
+                            <option value="SPENT_DESC">Chi tiêu: Cao → Thấp</option>
+                            <option value="NAME_ASC">Họ tên: A → Z</option>
+                            <option value="LOGIN_RECENT">Đăng nhập gần nhất</option>
+                        </FilterSelect>
+                    </FilterToolbarControls>
+                </FilterToolbar>
             )}
 
             {/* 5. DATAGRID TABLE */}

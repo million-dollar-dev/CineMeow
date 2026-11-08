@@ -30,6 +30,13 @@ import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
 // Components, Services & Mock
 import StatCard from "../components/OverviewStats/StatCard.jsx";
 import TicketPriceModal from "../components/CinemaManagement/TicketPriceModal.jsx";
+import {
+    FilterToolbar,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
 import { useGetAllBrandsQuery } from "../services/brandService.js";
 import { openSnackbar } from "../redux/slices/snackbarSlice.js";
 import { MOCK_ADMIN_BRANDS } from "../mock/mockBrands.js";
@@ -400,73 +407,37 @@ export default function PricingManagementPage() {
             </div>
 
             {/* 3. FILTER & SEARCH TOOLBAR */}
-            <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4">
+            <FilterToolbar className="flex flex-col md:flex-row items-center justify-between gap-4 space-y-0">
                 {/* Search input */}
-                <div className="relative flex-1 min-w-[240px] max-w-md w-full">
-                    <SearchOutlinedIcon
-                        sx={{ fontSize: 18 }}
-                        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Tìm chuỗi rạp theo tên..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                    />
-                    {searchQuery && (
-                        <button
-                            type="button"
-                            onClick={() => setSearchQuery("")}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                        >
-                            <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                        </button>
-                    )}
-                </div>
+                <SearchInput
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Tìm chuỗi rạp theo tên..."
+                    className="relative flex-1 min-w-[240px] max-w-md w-full"
+                />
 
                 {/* Sort selector & Actions */}
                 <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-3 flex-wrap">
-                    {/* Standard Sort Dropdown */}
-                    <div className="relative min-w-[200px]">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
-                        </div>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                        >
-                            <option value="DEFAULT">Sắp xếp: Mặc định</option>
-                            <option value="NAME_ASC">Tên chuỗi (A → Z)</option>
-                            <option value="NAME_DESC">Tên chuỗi (Z → A)</option>
-                        </select>
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                            <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                        </div>
-                    </div>
+                    <FilterSelect
+                        icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={sortBy}
+                        onChange={setSortBy}
+                        ariaLabel="Sắp xếp chuỗi rạp"
+                        className="relative min-w-[200px]"
+                    >
+                        <option value="DEFAULT">Sắp xếp: Mặc định</option>
+                        <option value="NAME_ASC">Tên chuỗi (A → Z)</option>
+                        <option value="NAME_DESC">Tên chuỗi (Z → A)</option>
+                    </FilterSelect>
 
-                    {/* Reset Filters */}
-                    {(searchQuery || sortBy !== "DEFAULT") && (
-                        <button
-                            type="button"
-                            onClick={handleResetFilters}
-                            className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
-                        >
-                            <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
-                            <span>Đặt lại</span>
-                        </button>
-                    )}
+                    <ResetFilterButton
+                        hasActiveFilters={Boolean(searchQuery || sortBy !== "DEFAULT")}
+                        onClick={handleResetFilters}
+                    />
 
-                    {/* Count badge */}
-                    <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 shadow-2xs">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span>
-                            Hiển thị: {filteredBrands.length}/{brands.length} chuỗi rạp
-                        </span>
-                    </div>
+                    <ResultCountBadge count={filteredBrands.length} unit="chuỗi rạp" />
                 </div>
-            </div>
+            </FilterToolbar>
 
             {/* 4. DATAGRID TABLE */}
             <Box

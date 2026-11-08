@@ -35,6 +35,16 @@ import StatCard from "../components/OverviewStats/StatCard.jsx";
 import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import FnBModal from "../components/CinemaManagement/FnBModal.jsx";
 import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
+import {
     useGetAllFnBsQuery,
     useDeleteFnBMutation,
 } from "../services/cinemaService.js";
@@ -504,174 +514,91 @@ export default function FnBManagementPage() {
             </div>
 
             {/* 3. FILTER & SEARCH TOOLBAR (STRUCTURED 2-ROW TO PREVENT LAYOUT SHIFT) */}
-            <div className="bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3.5 mb-5">
+            <FilterToolbar className="mb-5">
                 {/* HÀNG 1: Category Quick Tabs (Trái) & Nút Đặt Lại + Count Badge (Phải) */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <FilterToolbarHeader>
                     {/* Category Tabs: 1-touch quick filtering */}
-                    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-0.5">
-                        <button
-                            type="button"
-                            onClick={() => setSelectedCategory("ALL")}
-                            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                                selectedCategory === "ALL"
-                                    ? "bg-violet-600 text-white shadow-md shadow-violet-600/25"
-                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                            }`}
-                        >
-                            <span>Tất cả</span>
-                            <span
-                                className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                                    selectedCategory === "ALL"
-                                        ? "bg-white/20 text-white"
-                                        : "bg-slate-200 text-slate-600"
-                                }`}
-                            >
-                                {items.length}
-                            </span>
-                        </button>
-
-                        {FNB_CATEGORY.map((cat) => {
-                            const count = items.filter((i) => i.category === cat.value).length;
-                            const isSelected = selectedCategory === cat.value;
-                            return (
-                                <button
-                                    key={cat.value}
-                                    type="button"
-                                    onClick={() => setSelectedCategory(cat.value)}
-                                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                                        isSelected
-                                            ? "bg-violet-600 text-white shadow-md shadow-violet-600/25"
-                                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                                    }`}
-                                >
-                                    <span>{cat.icon} {cat.label}</span>
-                                    <span
-                                        className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                                            isSelected
-                                                ? "bg-white/20 text-white"
-                                                : "bg-slate-200 text-slate-600"
-                                        }`}
-                                    >
-                                        {count}
-                                    </span>
-                                </button>
-                            );
-                        })}
-                    </div>
+                    <FilterTabs
+                        tabs={[
+                            { value: "ALL", label: "Tất cả", count: items.length },
+                            ...FNB_CATEGORY.map((cat) => ({
+                                value: cat.value,
+                                label: `${cat.icon} ${cat.label}`,
+                                count: items.filter((i) => i.category === cat.value).length,
+                            })),
+                        ]}
+                        activeTab={selectedCategory}
+                        onChange={setSelectedCategory}
+                    />
 
                     {/* Right side of Row 1: Reset Filters & Count Badge */}
-                    <div className="flex items-center gap-2.5">
-                        {/* Reset Filters */}
-                        {hasActiveFilters && (
-                            <button
-                                type="button"
-                                onClick={handleResetFilters}
-                                className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
-                            >
-                                <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
-                                <span>Đặt lại</span>
-                            </button>
-                        )}
-
-                        {/* Count badge */}
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-600 shadow-2xs">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>
-                                Hiển thị: {filteredItems.length}/{items.length} món
-                            </span>
-                        </div>
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
+                        />
+                        <ResultCountBadge count={filteredItems.length} unit="món" />
                     </div>
-                </div>
+                </FilterToolbarHeader>
 
                 {/* HÀNG 2: Search Input + Brand Dropdown + Status Dropdown + Sort Dropdown */}
-                <div className="flex flex-col sm:flex-row items-center gap-3">
+                <FilterToolbarControls>
                     {/* Search input */}
-                    <div className="relative flex-1 min-w-[240px] w-full">
-                        <SearchOutlinedIcon
-                            sx={{ fontSize: 18 }}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Tìm theo tên món, mô tả, chuỗi rạp..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                        />
-                        {searchQuery && (
-                            <button
-                                type="button"
-                                onClick={() => setSearchQuery("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                            >
-                                <CloseOutlinedIcon sx={{ fontSize: 15 }} />
-                            </button>
-                        )}
-                    </div>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm theo tên món, mô tả, chuỗi rạp..."
+                        className="relative flex-1 min-w-[240px] w-full"
+                    />
 
                     {/* Dropdowns on the right */}
                     <div className="w-full sm:w-auto flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
                         {/* Brand Filter */}
-                        <div className="relative min-w-[170px] flex-1 sm:flex-none">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <StorefrontOutlinedIcon sx={{ fontSize: 16 }} />
-                            </div>
-                            <select
-                                value={selectedBrand}
-                                onChange={(e) => setSelectedBrand(e.target.value)}
-                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                            >
-                                <option value="ALL">Tất cả chuỗi rạp</option>
-                                {brands.map((b) => (
-                                    <option key={b.id} value={b.id}>
-                                        {b.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
+                        <FilterSelect
+                            icon={<StorefrontOutlinedIcon sx={{ fontSize: 16 }} />}
+                            value={selectedBrand}
+                            onChange={setSelectedBrand}
+                            ariaLabel="Chuỗi rạp"
+                            className="relative min-w-[170px] flex-1 sm:flex-none"
+                        >
+                            <option value="ALL">Tất cả chuỗi rạp</option>
+                            {brands.map((b) => (
+                                <option key={b.id} value={b.id}>
+                                    {b.name}
+                                </option>
+                            ))}
+                        </FilterSelect>
 
                         {/* Availability Filter */}
-                        <div className="relative min-w-[140px] flex-1 sm:flex-none">
-                            <select
-                                value={selectedStatus}
-                                onChange={(e) => setSelectedStatus(e.target.value)}
-                                className="w-full px-3.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                            >
-                                <option value="ALL">Tất cả trạng thái</option>
-                                <option value="AVAILABLE">Đang mở bán</option>
-                                <option value="UNAVAILABLE">Tạm ngưng</option>
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
+                        <FilterSelect
+                            icon={<CheckCircleOutlineOutlinedIcon sx={{ fontSize: 16 }} />}
+                            value={selectedStatus}
+                            onChange={setSelectedStatus}
+                            ariaLabel="Trạng thái món"
+                            className="relative min-w-[150px] flex-1 sm:flex-none"
+                        >
+                            <option value="ALL">Tất cả trạng thái</option>
+                            <option value="AVAILABLE">Đang mở bán</option>
+                            <option value="UNAVAILABLE">Tạm ngưng</option>
+                        </FilterSelect>
 
                         {/* Sort Dropdown */}
-                        <div className="relative min-w-[170px] flex-1 sm:flex-none">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <FilterListOutlinedIcon sx={{ fontSize: 16 }} />
-                            </div>
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full pl-8.5 pr-8 py-2 text-xs font-bold text-slate-700 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition cursor-pointer shadow-2xs appearance-none"
-                            >
-                                <option value="DEFAULT">Sắp xếp: Mặc định</option>
-                                <option value="NAME_ASC">Tên món (A → Z)</option>
-                                <option value="NAME_DESC">Tên món (Z → A)</option>
-                                <option value="PRICE_DESC">Giá (Cao → Thấp)</option>
-                                <option value="PRICE_ASC">Giá (Thấp → Cao)</option>
-                            </select>
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center">
-                                <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-                            </div>
-                        </div>
+                        <FilterSelect
+                            icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                            value={sortBy}
+                            onChange={setSortBy}
+                            ariaLabel="Sắp xếp danh sách"
+                            className="relative min-w-[170px] flex-1 sm:flex-none"
+                        >
+                            <option value="DEFAULT">Sắp xếp: Mặc định</option>
+                            <option value="NAME_ASC">Tên món (A → Z)</option>
+                            <option value="NAME_DESC">Tên món (Z → A)</option>
+                            <option value="PRICE_DESC">Giá (Cao → Thấp)</option>
+                            <option value="PRICE_ASC">Giá (Thấp → Cao)</option>
+                        </FilterSelect>
                     </div>
-                </div>
-            </div>
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. DATAGRID TABLE */}
             <Box

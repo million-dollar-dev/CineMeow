@@ -38,6 +38,16 @@ import TableSkeleton from "../components/MovieManagement/TableSkeleton.jsx";
 import StatusChip from "../components/StatusChip.jsx";
 import PromotionModal from "../components/PromotionManagement/PromotionModal.jsx";
 import {
+    FilterToolbar,
+    FilterToolbarHeader,
+    FilterToolbarControls,
+    FilterTabs,
+    ResetFilterButton,
+    ResultCountBadge,
+    SearchInput,
+    FilterSelect,
+} from "../components/common/FilterToolbar/index.js";
+import {
     useGetAllPromotionsQuery,
     useDeletePromotionMutation,
 } from "../services/promotionService.js";
@@ -594,127 +604,65 @@ export default function PromotionManagementPage() {
             </div>
 
             {/* 3. MULTI-FILTER TOOLBAR */}
-            <div className="p-4 mb-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex flex-col gap-3.5">
+            <FilterToolbar className="mb-6">
                 {/* Top Row: Status Quick Tabs */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                    <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-0.5">
-                        {[
+                <FilterToolbarHeader>
+                    <FilterTabs
+                        tabs={[
                             { key: "ALL", label: "Tất cả", count: totalCount },
                             { key: "ACTIVE", label: "Kích hoạt", count: activeCount },
                             { key: "INACTIVE", label: "Chưa kích hoạt", count: promotions.filter((p) => p.status === "INACTIVE").length },
                             { key: "EXPIRED", label: "Đã hết hạn", count: promotions.filter((p) => p.status === "EXPIRED").length },
-                        ].map((tab) => (
-                            <button
-                                key={tab.key}
-                                type="button"
-                                onClick={() => setSelectedStatusTab(tab.key)}
-                                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                                    selectedStatusTab === tab.key
-                                        ? "bg-violet-600 text-white shadow-xs"
-                                        : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/60"
-                                }`}
-                            >
-                                <span>{tab.label}</span>
-                                <span
-                                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                                        selectedStatusTab === tab.key
-                                             ? "bg-white/20 text-white"
-                                            : "bg-slate-200 text-slate-700"
-                                    }`}
-                                >
-                                    {tab.count}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
+                        ]}
+                        activeTab={selectedStatusTab}
+                        onChange={setSelectedStatusTab}
+                    />
 
-                    <div className="text-xs font-medium text-slate-400">
-                        Hiển thị <span className="font-bold text-slate-700">{filteredPromotions.length}</span> / {totalCount} mã ưu đãi
+                    <div className="flex items-center gap-2.5 shrink-0 self-end md:self-auto">
+                        <ResetFilterButton
+                            hasActiveFilters={hasActiveFilters}
+                            onClick={handleResetFilters}
+                        />
+                        <ResultCountBadge count={filteredPromotions.length} unit="mã ưu đãi" />
                     </div>
-                </div>
+                </FilterToolbarHeader>
 
                 {/* Bottom Row: Search & Filters */}
-                <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-                    {/* Search Input */}
-                    <div className="relative flex-1 w-full md:max-w-md">
-                        <SearchOutlinedIcon
-                            sx={{ fontSize: 18 }}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                        />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Tìm kiếm theo mã voucher, tên chương trình..."
-                            className="w-full pl-10 pr-9 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none transition shadow-2xs placeholder:text-slate-400 text-slate-800"
-                        />
-                        {searchQuery && (
-                            <button
-                                type="button"
-                                onClick={() => setSearchQuery("")}
-                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
-                            >
-                                <CloseOutlinedIcon sx={{ fontSize: 14 }} />
-                            </button>
-                        )}
-                    </div>
+                <FilterToolbarControls>
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Tìm kiếm theo mã voucher, tên chương trình..."
+                        className="relative flex-1 w-full min-w-[240px]"
+                    />
 
-                    {/* Filter Dropdowns */}
-                    <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
-                        {/* Scope Filter */}
-                        <div className="relative">
-                            <select
-                                value={selectedScopeFilter}
-                                onChange={(e) => setSelectedScopeFilter(e.target.value)}
-                                className="appearance-none pl-8 pr-8 py-2 text-xs font-semibold rounded-xl border border-slate-200/90 bg-white hover:border-slate-300 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none cursor-pointer transition shadow-2xs text-slate-700"
-                            >
-                                <option value="ALL">Mọi phạm vi áp dụng</option>
-                                <option value="TICKET">Chỉ vé xem phim</option>
-                                <option value="FNB">Chỉ Combo F&B</option>
-                                <option value="GUEST">Khách vãng lai</option>
-                            </select>
-                            <FilterListOutlinedIcon
-                                sx={{ fontSize: 16 }}
-                                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-                            />
-                            <KeyboardArrowDownIcon
-                                sx={{ fontSize: 16 }}
-                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-                            />
-                        </div>
+                    <FilterSelect
+                        icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={selectedScopeFilter}
+                        onChange={setSelectedScopeFilter}
+                        ariaLabel="Phạm vi áp dụng"
+                        className="relative w-full md:w-56 shrink-0"
+                    >
+                        <option value="ALL">Mọi phạm vi áp dụng</option>
+                        <option value="TICKET">Chỉ vé xem phim</option>
+                        <option value="FNB">Chỉ Combo F&B</option>
+                        <option value="GUEST">Khách vãng lai</option>
+                    </FilterSelect>
 
-                        {/* Sort Dropdown */}
-                        <div className="relative">
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="appearance-none pl-3 pr-8 py-2 text-xs font-semibold rounded-xl border border-slate-200/90 bg-white hover:border-slate-300 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 focus:outline-none cursor-pointer transition shadow-2xs text-slate-700"
-                            >
-                                <option value="DEFAULT">Sắp xếp: Mặc định</option>
-                                <option value="VALUE_DESC">Mức giảm cao nhất</option>
-                                <option value="CODE_ASC">Mã ưu đãi A-Z</option>
-                                <option value="EXPIRING_SOON">Sắp hết hạn trước</option>
-                            </select>
-                            <KeyboardArrowDownIcon
-                                sx={{ fontSize: 16 }}
-                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-                            />
-                        </div>
-
-                        {/* Reset Filters Button */}
-                        {hasActiveFilters && (
-                            <button
-                                type="button"
-                                onClick={handleResetFilters}
-                                className="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
-                            >
-                                <RestartAltOutlinedIcon sx={{ fontSize: 16 }} />
-                                <span>Đặt lại</span>
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
+                    <FilterSelect
+                        icon={<FilterListOutlinedIcon sx={{ fontSize: 16 }} />}
+                        value={sortBy}
+                        onChange={setSortBy}
+                        ariaLabel="Sắp xếp ưu đãi"
+                        className="relative w-full md:w-52 shrink-0"
+                    >
+                        <option value="DEFAULT">Sắp xếp: Mặc định</option>
+                        <option value="VALUE_DESC">Mức giảm cao nhất</option>
+                        <option value="CODE_ASC">Mã ưu đãi A-Z</option>
+                        <option value="EXPIRING_SOON">Sắp hết hạn trước</option>
+                    </FilterSelect>
+                </FilterToolbarControls>
+            </FilterToolbar>
 
             {/* 4. DATAGRID TABLE */}
             <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
