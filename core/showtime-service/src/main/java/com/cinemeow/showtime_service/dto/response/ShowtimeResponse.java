@@ -1,6 +1,6 @@
 package com.cinemeow.showtime_service.dto.response;
 
-import com.cinemeow.showtime_service.enums.RoomType;
+import com.cinemeow.cinema_service.enums.RoomType;
 import com.cinemeow.showtime_service.enums.ShowtimeStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

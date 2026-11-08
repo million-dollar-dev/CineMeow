@@ -1,10 +1,10 @@
 package com.cinemeow.showtime_service.service.impl;
 
-import com.cinemeow.showtime_service.client.CinemaClient;
-import com.cinemeow.showtime_service.dto.response.SeatResponse;
+import com.cinemeow.cinema_service.dto.response.SeatResponse;
+import com.cinemeow.cinema_service.enums.SeatStatus;
+import com.cinemeow.cinema_service.enums.SeatType;
+import com.cinemeow.cinema_service.service.RoomService;
 import com.cinemeow.showtime_service.entity.ShowtimeSeat;
-import com.cinemeow.showtime_service.enums.SeatStatus;
-import com.cinemeow.showtime_service.enums.SeatType;
 import com.cinemeow.common.exception.AppException;
 import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.showtime_service.repository.ShowtimeSeatRepository;
@@ -23,13 +23,14 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShowtimeSeatServiceImpl implements ShowtimeSeatService {
     ShowtimeSeatRepository showtimeSeatRepository;
-    CinemaClient cinemaClient;
+
+    RoomService roomService;
 
     @Override
     public void initializeSeatsForShowtime(String showtimeId, String roomId) {
-        List<SeatResponse> seats = cinemaClient.getSeatMap(roomId).getData().getSeats();
+        List<SeatResponse> seats = roomService.getSeatMap(roomId).getSeats();
         List<ShowtimeSeat> showtimeSeats = seats.stream()
-                .filter(seat -> seat.getType() != SeatType.EMPTY.EMPTY)
+                .filter(seat -> seat.getType() != SeatType.EMPTY)
                 .map(seat -> ShowtimeSeat.builder()
                         .showtimeId(showtimeId)
                         .seatId(seat.getId())

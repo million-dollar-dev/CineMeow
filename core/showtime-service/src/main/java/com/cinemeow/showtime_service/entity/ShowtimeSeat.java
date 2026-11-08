@@ -1,7 +1,7 @@
 package com.cinemeow.showtime_service.entity;
 
-import com.cinemeow.showtime_service.enums.SeatStatus;
-import com.cinemeow.showtime_service.enums.SeatType;
+import com.cinemeow.cinema_service.enums.SeatStatus;
+import com.cinemeow.cinema_service.enums.SeatType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
