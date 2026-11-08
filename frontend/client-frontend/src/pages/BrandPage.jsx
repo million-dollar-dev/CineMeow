@@ -2,8 +2,6 @@ import React, { useMemo, useRef, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faHouse,
-    faChevronRight,
     faLocationDot,
     faUser,
     faPhone,
@@ -80,25 +78,9 @@ const BrandPage = () => {
 
     return (
         <div className="min-h-screen bg-[#0a0a0d] text-zinc-100 pt-20 sm:pt-24 pb-16 selection:bg-violet-600 selection:text-white">
-            {/* Top Breadcrumb Navigation */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-                <nav className="flex items-center gap-2 text-xs text-zinc-400">
-                    <Link to="/" className="hover:text-white transition-colors flex items-center gap-1.5">
-                        <FontAwesomeIcon icon={faHouse} className="text-violet-400 text-xs" />
-                        <span>Trang chủ</span>
-                    </Link>
-                    <FontAwesomeIcon icon={faChevronRight} className="text-[10px] text-zinc-600" />
-                    <Link to="/brands" className="hover:text-white transition-colors">
-                        Hệ thống rạp
-                    </Link>
-                    <FontAwesomeIcon icon={faChevronRight} className="text-[10px] text-zinc-600" />
-                    <span className="text-zinc-200 font-medium">{currentBrand.name}</span>
-                </nav>
-            </div>
-
             {/* Interactive Cinema Brands Switcher Bar */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                <div className="flex items-center gap-2 overflow-x-auto py-1 px-0.5 scrollbar-none">
                     {ALL_BRANDS_LIST.map((brand) => {
                         const isActive = brand.id === activeBrandId;
                         return (
@@ -106,13 +88,13 @@ const BrandPage = () => {
                                 key={brand.id}
                                 type="button"
                                 onClick={() => navigate(`/brands/${brand.id}`)}
-                                className={`flex items-center gap-2.5 px-3.5 py-2 rounded-2xl transition-all cursor-pointer shrink-0 border select-none ${
+                                className={`flex items-center gap-2.5 px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 border select-none ${
                                     isActive
-                                        ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 border-violet-400 text-white shadow-lg shadow-violet-600/30 scale-105"
+                                        ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 border-violet-500 text-white shadow-md shadow-violet-600/25"
                                         : "bg-zinc-900/90 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border-zinc-800"
                                 }`}
                             >
-                                <div className="w-6 h-6 rounded-lg bg-black/40 flex items-center justify-center overflow-hidden p-0.5">
+                                <div className="w-6 h-6 rounded-lg bg-black/40 flex items-center justify-center overflow-hidden p-0.5 shrink-0">
                                     <img
                                         src={brand.logoUrl}
                                         alt={brand.name}
