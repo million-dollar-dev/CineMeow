@@ -1,13 +1,14 @@
 import React, { useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faCheck, faLock, faArrowsLeftRight } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faCheck, faLock, faArrowsLeftRight, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const SeatSelection = ({
     seats = [],
     selectedSeats = [],
     onToggleSeat,
     priceList = [],
-    roomType = "_2D"
+    roomType = "_2D",
+    violatedSeat = null
 }) => {
     const groupedSeats = useMemo(() => {
         const rows = {};
@@ -39,6 +40,11 @@ const SeatSelection = ({
 
     const getSeatClasses = (seat) => {
         if (seat.type === "EMPTY") return "invisible pointer-events-none";
+
+        const isViolated = violatedSeat && violatedSeat.id === seat.id;
+        if (isViolated) {
+            return "bg-rose-950/90 border-2 border-rose-500 text-rose-200 ring-4 ring-rose-500/50 animate-pulse font-extrabold shadow-[0_0_20px_rgba(244,63,94,0.8)] scale-110 z-20";
+        }
 
         const isSelected = selectedSeats.some((s) => s.id === seat.id);
         const isUnavailable = seat.status !== "AVAILABLE";
@@ -74,6 +80,21 @@ const SeatSelection = ({
 
     return (
         <div className="w-full flex flex-col items-center">
+            {/* Single-Seat Gap Warning Banner */}
+            {violatedSeat && (
+                <div className="w-full max-w-2xl mx-auto mb-6 p-4 rounded-2xl bg-rose-950/70 border border-rose-500/60 flex items-start sm:items-center gap-3.5 text-rose-200 text-xs sm:text-sm animate-pulse shadow-xl shadow-rose-950/50">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0 border border-rose-500/40 text-rose-400">
+                        <FontAwesomeIcon icon={faTriangleExclamation} className="text-sm" />
+                    </div>
+                    <div className="flex-1">
+                        <p className="font-bold text-rose-300">Cảnh báo quy tắc chọn ghế (Single-Seat Gap):</p>
+                        <p className="text-zinc-300 text-xs mt-0.5">
+                            Không thể để trống 1 ghế đơn độc <span className="font-extrabold text-rose-400 bg-rose-900/60 px-1.5 py-0.5 rounded border border-rose-500/40">({violatedSeat.label})</span>. Vui lòng chọn ghế liền kề hoặc cách ít nhất 2 ghế.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Luminous Curved Screen */}
             <div className="w-full max-w-2xl mx-auto mb-10 text-center relative select-none">
                 <div className="h-2 w-4/5 mx-auto bg-gradient-to-r from-violet-600/10 via-violet-500 to-violet-600/10 rounded-full shadow-[0_0_25px_rgba(139,92,246,0.8)]" />
@@ -112,6 +133,7 @@ const SeatSelection = ({
                                         {rowSeats.map((seat) => {
                                             const isSelected = selectedSeats.some((s) => s.id === seat.id);
                                             const isCouple = seat.type === "COUPLE";
+                                            const isViolated = violatedSeat && violatedSeat.id === seat.id;
 
                                             return (
                                                 <button
@@ -119,7 +141,11 @@ const SeatSelection = ({
                                                     type="button"
                                                     onClick={() => onToggleSeat(seat)}
                                                     disabled={seat.type === "EMPTY" || seat.status !== "AVAILABLE"}
-                                                    title={`${seat.label} - ${seat.type === "COUPLE" ? "Ghế Đôi" : seat.type === "VIP" ? "Ghế VIP" : "Ghế Thường"}`}
+                                                    title={
+                                                        isViolated
+                                                            ? `${seat.label} - Cảnh báo: Không thể để trống 1 ghế đơn độc!`
+                                                            : `${seat.label} - ${seat.type === "COUPLE" ? "Ghế Đôi" : seat.type === "VIP" ? "Ghế VIP" : "Ghế Thường"}`
+                                                    }
                                                     className={`
                                                         ${isCouple ? "w-14 sm:w-16 md:w-20" : "w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9"}
                                                         h-7 sm:h-8 md:h-9 text-[10px] sm:text-xs font-bold rounded-lg
@@ -129,7 +155,12 @@ const SeatSelection = ({
                                                 >
                                                     {seat.type !== "EMPTY" && (
                                                         <>
-                                                            {isSelected ? (
+                                                            {isViolated ? (
+                                                                <span className="flex items-center gap-0.5 text-rose-300 font-extrabold animate-pulse">
+                                                                    <FontAwesomeIcon icon={faTriangleExclamation} className="text-[9px] text-rose-400" />
+                                                                    <span>{seat.label}</span>
+                                                                </span>
+                                                            ) : isSelected ? (
                                                                 <FontAwesomeIcon icon={faCheck} className="text-xs" />
                                                             ) : isCouple ? (
                                                                 <span className="flex items-center gap-1">
@@ -192,6 +223,14 @@ const SeatSelection = ({
                         <FontAwesomeIcon icon={faLock} className="text-[8px] text-zinc-600" />
                     </div>
                     <span className="text-zinc-500">Đã Bán</span>
+                </div>
+
+                {/* Ghế Cô Độc Vi Phạm */}
+                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-rose-900/40">
+                    <div className="w-4 h-4 bg-rose-950/90 border border-rose-500 rounded-sm flex items-center justify-center ring-1 ring-rose-500/50">
+                        <FontAwesomeIcon icon={faTriangleExclamation} className="text-[8px] text-rose-400" />
+                    </div>
+                    <span className="text-rose-300 font-medium">Bị Trống Đơn Độc</span>
                 </div>
             </div>
         </div>

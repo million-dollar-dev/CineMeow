@@ -5,7 +5,7 @@
 | **Feature ID**    | CM-000004                                                          |
 | **Category**      | Business Feature / Revenue Optimization / Cinema & Showtime        |
 | **Target Scope**  | `core/showtime-service`, `booking-service`, `client-frontend`      |
-| **Status**        | 🟡 In Progress                                                     |
+| **Status**        | 🟢 Live                                                            |
 | **Priority**      | P1 - High                                                          |
 | **Primary Owner** | Backend Core Team                                                  |
 
@@ -215,9 +215,9 @@ Content-Type: application/json
 - [x] Chạy kiểm thử đơn vị dịch vụ (`ShowtimeSeatServiceImplTest`) kiểm tra toàn luồng kiểm tra ghế.
 
 ### Phase 3: Đồng bộ Frontend UX (1 ngày)
-- [ ] Bắt mã lỗi `1088` tại frontend (`client-frontend`).
-- [ ] Hiển thị thông báo Toast cảnh báo trực quan cho khách hàng trên sơ đồ ghế.
-- [ ] Highlight viền đỏ chiếc ghế bị cô độc để khách hàng nhận biết ngay tức thì.
+- [x] Bắt mã lỗi `1088` tại frontend (`client-frontend`).
+- [x] Hiển thị thông báo Toast cảnh báo trực quan cho khách hàng trên sơ đồ ghế.
+- [x] Highlight viền đỏ chiếc ghế bị cô độc để khách hàng nhận biết ngay tức thì.
 
 ---
 

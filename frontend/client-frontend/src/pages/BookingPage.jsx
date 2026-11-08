@@ -20,6 +20,7 @@ import PaymentStep from "../components/Booking/PaymentStep.jsx";
 import TicketCard from "../components/Booking/TicketCard.jsx";
 import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 import Promotions from "../components/PromotionSection.jsx";
+import { checkSeatGapRule } from "../utils/seatGapValidator.js";
 
 // Import rich mock data for frontend testing
 import {
@@ -104,6 +105,7 @@ const BookingPage = () => {
     ] = useInitPaymentMutation();
 
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [violatedSeat, setViolatedSeat] = useState(null);
     const [openPopup, setOpenPopup] = useState(false);
     const [selectedCombos, setSelectedCombos] = useState([]);
 
@@ -155,11 +157,21 @@ const BookingPage = () => {
     const handleToggleSeat = (seat) => {
         if (seat.type === "EMPTY" || seat.status !== "AVAILABLE") return;
 
-        setSelectedSeats((prev) =>
-            prev.some((s) => s.id === seat.id)
-                ? prev.filter((s) => s.id !== seat.id)
-                : [...prev, seat]
-        );
+        const nextSelectedSeats = selectedSeats.some((s) => s.id === seat.id)
+            ? selectedSeats.filter((s) => s.id !== seat.id)
+            : [...selectedSeats, seat];
+
+        setSelectedSeats(nextSelectedSeats);
+
+        // If a gap violation was flagged, re-check to see if the user resolved it
+        if (violatedSeat) {
+            const gapCheck = checkSeatGapRule(seats, nextSelectedSeats);
+            if (gapCheck.valid) {
+                setViolatedSeat(null);
+            } else {
+                setViolatedSeat(gapCheck.violatedSeat);
+            }
+        }
     };
 
     const comboTotalPrice = useMemo(() => {
@@ -206,8 +218,29 @@ const BookingPage = () => {
         const availableVipSeats = seats.filter((s) => s.type === "VIP" && s.status === "AVAILABLE").slice(0, 2);
         if (availableVipSeats.length > 0) {
             setSelectedSeats(availableVipSeats);
+            setViolatedSeat(null);
             toast.info("Đã chọn nhanh 2 ghế VIP!");
         }
+    };
+
+    const handleContinueToPayment = () => {
+        if (selectedSeats.length === 0) {
+            toast.warning("Vui lòng chọn ít nhất 1 ghế để tiếp tục!");
+            return;
+        }
+
+        const gapCheck = checkSeatGapRule(seats, selectedSeats);
+        if (!gapCheck.valid) {
+            setViolatedSeat(gapCheck.violatedSeat);
+            toast.warning(gapCheck.message, {
+                autoClose: 5000,
+                toastId: "single-seat-gap-warning",
+            });
+            return;
+        }
+
+        setViolatedSeat(null);
+        setStep("payment");
     };
 
     const handleQuickPickCombo = () => {
@@ -319,7 +352,28 @@ const BookingPage = () => {
                         return;
                     }
                 } catch (backendError) {
-                    console.warn("Backend booking failed, falling back to mock flow simulation:", backendError);
+                    console.warn("Backend booking failed:", backendError);
+
+                    const errorCode = backendError?.data?.code || backendError?.status;
+                    const errorMessage = backendError?.data?.message || backendError?.message;
+
+                    // Code 1088: SEAT_SINGLE_GAP_VIOLATED or seat constraint error
+                    if (errorCode === 1088 || (errorCode === 400 && errorMessage?.toLowerCase()?.includes("seat"))) {
+                        toast.error(errorMessage || "Không thể đặt vé do vi phạm quy tắc chọn ghế!", {
+                            autoClose: 6000,
+                        });
+                        setStep("summary");
+                        const gapCheck = checkSeatGapRule(seats, selectedSeats);
+                        if (!gapCheck.valid) {
+                            setViolatedSeat(gapCheck.violatedSeat);
+                        }
+                        return;
+                    }
+
+                    if (backendError?.data?.message) {
+                        toast.error(backendError.data.message);
+                        return;
+                    }
                 }
             }
 
@@ -570,6 +624,7 @@ const BookingPage = () => {
                                     onToggleSeat={handleToggleSeat}
                                     priceList={activePrices}
                                     roomType={activeShowtime?.roomType || "_2D"}
+                                    violatedSeat={violatedSeat}
                                 />
                             </div>
                         ) : (
@@ -626,7 +681,7 @@ const BookingPage = () => {
                                 setSelectedCombos={setSelectedCombos}
                                 setOpenPopup={setOpenPopup}
                                 seatGroups={groupedSeats}
-                                onContinue={() => setStep("payment")}
+                                onContinue={handleContinueToPayment}
                             />
                         ) : (
                             <PaymentStep
