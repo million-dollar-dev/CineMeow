@@ -22,7 +22,7 @@ export const BLOG_ARTICLES = [
         readTime: "6 phút đọc",
         views: "145.8K",
         tag: "TIÊU ĐIỂM",
-        badgeColor: "rose",
+        badgeColor: "violet",
         isFeatured: true,
         isTrending: true,
         tableOfContents: [
@@ -176,7 +176,7 @@ export const BLOG_ARTICLES = [
         readTime: "5 phút đọc",
         views: "62.9K",
         tag: "SOUNDTRACK",
-        badgeColor: "rose",
+        badgeColor: "violet",
         isFeatured: false,
         isTrending: false,
         tableOfContents: [
@@ -201,7 +201,7 @@ export const BLOG_ARTICLES = [
         readTime: "6 phút đọc",
         views: "245.0K",
         tag: "REVIEW PHIM",
-        badgeColor: "rose",
+        badgeColor: "violet",
         isFeatured: false,
         isTrending: true,
         tableOfContents: [
