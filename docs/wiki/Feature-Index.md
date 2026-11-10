@@ -27,6 +27,7 @@ This page is the central index for tracking feature specifications, implementati
 | CM-000001  | Refactor Backend Services into a Parent Module                | `core`, `profile`, `movie`, `cinema`, `showtime`, `promotion` | 🟢 Live        | [Feature Specification](Feature-Refactor-Backend-Services) |
 | CM-000004  | Single-Seat Gap Prevention Rule Engine                        | `showtime`, `booking`, `client-frontend`                      | 🟢 Live        | [Feature Specification](Feature-Single-Seat-Gap-Rule)      |
 | CM-000005  | Remove ShowtimeSeat & Unify Dynamic Seat Inventory in Booking Service | `showtime`, `booking`, `cinema`, `client-frontend`            | 🟡 In Progress | [Feature Specification](Feature-Remove-Showtime-Seat)      |
+| CM-000006  | End-to-End Cinema Ticket Booking Workflow Specification       | `booking`, `payment`, `cinema`, `notification`, `client`      | 🟣 In Design   | [Feature Specification](Feature-Ticket-Booking-Workflow)   |
 
 ### 2.2 Frontend
 
