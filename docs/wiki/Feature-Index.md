@@ -22,24 +22,18 @@ This page is the central index for tracking feature specifications, implementati
 
 ### 2.1 Backend and Architecture
 
-| Feature ID | Feature Title                                  | Target Modules / Services                                     | Status     | Specification                                                        |
-| ---------- | ---------------------------------------------- | ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------- |
-| CM-000001  | Refactor Backend Services into a Parent Module | `core`, `profile`, `movie`, `cinema`, `showtime`, `promotion` | 🟢 Live | [Feature Specification](Feature-Refactor-Backend-Services) |
+| Feature ID | Feature Title                                                 | Target Modules / Services                                     | Status         | Specification                                              |
+| ---------- | ------------------------------------------------------------- | ------------------------------------------------------------- | -------------- | ---------------------------------------------------------- |
+| CM-000001  | Refactor Backend Services into a Parent Module                | `core`, `profile`, `movie`, `cinema`, `showtime`, `promotion` | 🟢 Live        | [Feature Specification](Feature-Refactor-Backend-Services) |
+| CM-000004  | Single-Seat Gap Prevention Rule Engine                        | `showtime`, `booking`, `client-frontend`                      | 🟢 Live        | [Feature Specification](Feature-Single-Seat-Gap-Rule)      |
+| CM-000005  | Remove ShowtimeSeat & Unify Dynamic Seat Inventory in Booking Service | `showtime`, `booking`, `cinema`, `client-frontend`            | 🟡 In Progress | [Feature Specification](Feature-Remove-Showtime-Seat)      |
 
 ### 2.2 Frontend
 
-| Feature ID | Feature Title                                                         | Target Modules / Services  | Status  | Specification                                             |
-| ---------- | --------------------------------------------------------------------- | -------------------------- | ------- | --------------------------------------------------------- |
-| CM-000002  | Comprehensive Admin Portal UI/UX Refactoring & Design System          | `frontend/admin-frontend`  | 🟢 Live | [Feature Specification](Feature-Admin-UI-UX-Refactoring)  |
-| CM-000003  | Comprehensive Client Portal UI/UX Refactoring & Dark Cinema Design    | `frontend/client-frontend` | 🟢 Live | [Feature Specification](Feature-Client-UI-UX-Refactoring) |
-
-### 2.3 Cinema and Showtime
-
-| Feature ID | Feature Title                       | Target Modules / Services  | Status  | Specification                                  |
-| ---------- | ----------------------------------- | -------------------------- | ------- | ---------------------------------------------- |
-| FEAT-003   | Cinema & Screen Topology Management | `cinema`, `frontend/admin` | 🟢 Live | [Cinema Management](Feature-Cinema-Management) |
-| FEAT-004   | Dynamic Showtime Scheduling Engine           | `showtime`, `movie`       | 🟢 Live        | [Showtime Management](Feature-Showtimes)             |
-| CM-000004  | Single-Seat Gap Prevention Rule Engine       | `showtime`, `booking`, `client-frontend` | 🟢 Live        | [Feature Specification](Feature-Single-Seat-Gap-Rule) |
+| Feature ID | Feature Title                                                      | Target Modules / Services  | Status  | Specification                                             |
+| ---------- | ------------------------------------------------------------------ | -------------------------- | ------- | --------------------------------------------------------- |
+| CM-000002  | Comprehensive Admin Portal UI/UX Refactoring & Design System       | `frontend/admin-frontend`  | 🟢 Live | [Feature Specification](Feature-Admin-UI-UX-Refactoring)  |
+| CM-000003  | Comprehensive Client Portal UI/UX Refactoring & Dark Cinema Design | `frontend/client-frontend` | 🟢 Live | [Feature Specification](Feature-Client-UI-UX-Refactoring) |
 
 ---
 
