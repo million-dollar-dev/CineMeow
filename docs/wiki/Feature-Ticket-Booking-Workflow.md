@@ -51,6 +51,17 @@ Mục tiêu là cung cấp một bản thiết kế chuẩn mực (Blue-print) g
 
 ### 4.1 Master Sequence Diagram (Luồng Đặt Vé Toàn Diện)
 
+> [!TIP]
+> 🔍 **Xem & Phóng to Sơ đồ Kích thước Đầy đủ (Full Resolution Image):**
+> Sơ đồ tuần tự toàn luồng đã được kết xuất sẵn dưới 2 định dạng ảnh chất lượng cao kèm nền trắng chuẩn tương phản (tránh hiện tượng chìm màu khi xem ở Dark Mode):
+> - **Ảnh Vector SVG (Khuyên dùng - Zoom in/out mượt mà vô cực không vỡ nét):** [booking-workflow-sequence.svg](file:///e:/Workspace/LEARN/springboot_projects/CineMeow/docs/images/booking-workflow-sequence.svg)
+> - **Ảnh Bitmap PNG:** [booking-workflow-sequence.png](file:///e:/Workspace/LEARN/springboot_projects/CineMeow/docs/images/booking-workflow-sequence.png)
+
+[![Master Sequence Diagram Luồng Đặt Vé](file:///e:/Workspace/LEARN/springboot_projects/CineMeow/docs/images/booking-workflow-sequence.svg)](file:///e:/Workspace/LEARN/springboot_projects/CineMeow/docs/images/booking-workflow-sequence.svg)
+
+<details>
+<summary><b>Xem mã nguồn sơ đồ Mermaid gốc (Click để mở)</b></summary>
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -128,6 +139,7 @@ sequenceDiagram
         MQ->>Notif: Worker gửi Email hóa đơn vé kèm mã QR cho khách
     end
 ```
+</details>
 
 ---
 
