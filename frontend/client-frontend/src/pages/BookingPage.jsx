@@ -5,11 +5,11 @@ import "dayjs/locale/vi";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 
-import {useGetShowtimeQuery, useGetShowtimeSeatsQuery} from "../services/showtimeService.js";
+import {useGetShowtimeQuery} from "../services/showtimeService.js";
 import {useGetMovieQuery} from "../services/movieService.js";
 import {useGetSeatMapQuery} from "../services/cinemaService.js";
 import {useGetFnbsByBrandQuery} from "../services/brandService.js";
-import {useCreateBookingMutation, useGetAllPriceByBrandQuery} from "../services/bookingService.js";
+import {useCreateBookingMutation, useGetAllPriceByBrandQuery, useGetShowtimeSeatsQuery} from "../services/bookingService.js";
 import {useValidateVoucherMutation} from "../services/promotionService.js";
 import {useInitPaymentMutation} from "../services/paymentService.js";
 

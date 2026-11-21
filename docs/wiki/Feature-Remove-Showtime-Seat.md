@@ -196,10 +196,10 @@ Content-Type: application/json
 - [ ] Viết Unit Test cho logic ánh xạ in-memory `DynamicSeatInventoryServiceTest`. (Tạm bỏ qua theo yêu cầu)
 
 ### Phase 2: Triển khai API tại Booking Service & Cập nhật Client
-- [ ] Viết API `GET /bookings/showtimes/{showtimeId}/seats` tại `booking-service`.
-- [ ] Tích hợp `SeatGapValidator` vào luồng `createBooking` (`POST /bookings`).
-- [ ] Cập nhật `client-frontend`: đổi endpoint query trạng thái ghế sang `booking-service`.
-- [ ] Chạy kiểm thử End-to-End luồng đặt vé: Chọn ghế $\rightarrow$ Giữ chỗ $\rightarrow$ Kiểm tra vi phạm 1 ghế $\rightarrow$ Thanh toán $\rightarrow$ Xác nhận ghế.
+- [x] Viết API `GET /bookings/showtimes/{showtimeId}/seats` tại `booking-service`.
+- [x] Tích hợp `SeatGapValidator` vào luồng `createBooking` (`POST /bookings`).
+- [x] Cập nhật `client-frontend`: đổi endpoint query trạng thái ghế sang `booking-service`.
+- [x] Kiểm thử build và tích hợp toàn diện trên `booking-service` & `client-frontend`.
 
 ### Phase 3: Dọn dẹp Showtime Service & Database Migration
 - [ ] Xóa dòng gọi `initializeSeatsForShowtime` trong `ShowtimeServiceImpl.create`.

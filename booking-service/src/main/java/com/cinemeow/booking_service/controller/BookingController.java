@@ -5,6 +5,7 @@ import com.cinemeow.booking_service.dto.response.BaseResponse;
 import com.cinemeow.booking_service.dto.response.BookingDetailResponse;
 import com.cinemeow.booking_service.dto.response.BookingResponse;
 import com.cinemeow.booking_service.dto.response.PagedResponse;
+import com.cinemeow.booking_service.dto.response.ShowtimeSeatResponse;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.service.BookingService;
 import jakarta.validation.Valid;
@@ -14,12 +15,21 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/bookings")
 public class BookingController {
     BookingService bookingService;
+
+    @GetMapping("/showtimes/{showtimeId}/seats")
+    public BaseResponse<List<ShowtimeSeatResponse>> getShowtimeSeats(@PathVariable String showtimeId) {
+        return BaseResponse.<List<ShowtimeSeatResponse>>builder()
+                .data(bookingService.getShowtimeSeats(showtimeId))
+                .build();
+    }
 
     @PostMapping
     public BaseResponse<BookingResponse> create(@Valid @RequestBody BookingRequest request){

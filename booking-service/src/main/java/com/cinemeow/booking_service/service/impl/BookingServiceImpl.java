@@ -13,15 +13,20 @@ import com.cinemeow.booking_service.entity.*;
 import com.cinemeow.booking_service.enums.BookingStatus;
 import com.cinemeow.booking_service.enums.PaymentMethod;
 import com.cinemeow.booking_service.enums.RoomType;
+import com.cinemeow.booking_service.enums.SeatStatus;
+import com.cinemeow.booking_service.enums.SeatType;
 import com.cinemeow.booking_service.enums.ShowtimeStatus;
 import com.cinemeow.booking_service.exception.AppException;
 import com.cinemeow.booking_service.exception.ErrorCode;
 import com.cinemeow.booking_service.mapper.BookingMapper;
+import com.cinemeow.booking_service.repository.BookedSeatRepository;
 import com.cinemeow.booking_service.repository.BookingRepository;
 import com.cinemeow.booking_service.repository.specification.BookingSpecificationBuilder;
 import com.cinemeow.booking_service.service.BookingService;
 import com.cinemeow.booking_service.service.QrService;
 import com.cinemeow.booking_service.service.TicketPriceService;
+import com.cinemeow.booking_service.validator.SeatGapValidator;
+import com.cinemeow.booking_service.validator.SeatPosition;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +39,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -48,28 +51,105 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BookingServiceImpl implements BookingService {
     BookingRepository bookingRepository;
+
+    BookedSeatRepository bookedSeatRepository;
+
     BookingMapper bookingMapper;
 
     RabbitTemplate rabbitTemplate;
 
     ShowtimeClient showtimeClient;
+
     CinemaClient cinemaClient;
+    
+    SeatGapValidator seatGapValidator;
+
+    @Override
+    public List<ShowtimeSeatResponse> getShowtimeSeats(String showtimeId) {
+        LocalDateTime expireThreshold = LocalDateTime.now().minusMinutes(10);
+        List<BookedSeat> activeBookedSeats = bookedSeatRepository.findActiveBookedSeatsByShowtime(showtimeId, expireThreshold);
+
+        Map<Long, ShowtimeSeatResponse> responseMap = new HashMap<>();
+        for (BookedSeat bs : activeBookedSeats) {
+            Booking booking = bs.getBooking();
+            SeatStatus status = (booking.getStatus() == BookingStatus.PAID)
+                    ? SeatStatus.BOOKED
+                    : SeatStatus.LOCKED;
+
+            LocalDateTime reservedUntil = (status == SeatStatus.LOCKED && booking.getCreatedAt() != null)
+                    ? booking.getCreatedAt().plusMinutes(10)
+                    : null;
+
+            ShowtimeSeatResponse existing = responseMap.get(bs.getSeatId());
+            if (existing == null || existing.getStatus() != SeatStatus.BOOKED) {
+                responseMap.put(bs.getSeatId(), ShowtimeSeatResponse.builder()
+                        .seatId(bs.getSeatId())
+                        .label(bs.getSeatLabel())
+                        .status(status)
+                        .reservedUntil(reservedUntil)
+                        .build());
+            }
+        }
+        return new ArrayList<>(responseMap.values());
+    }
 
     @Override
     public BookingResponse create(BookingRequest request) {
         ShowtimeResponse showtime = showtimeClient.getById(request.getShowtimeId()).getData();
 
-        if (showtime.getStatus() != ShowtimeStatus.AVAILABLE)
+        if (showtime == null || showtime.getStatus() != ShowtimeStatus.AVAILABLE)
             throw new AppException(ErrorCode.SHOWTIME_NOT_AVAILABLE);
 
-        List<ShowtimeSeat> seats = showtimeClient.checkAvailableSeats( request.getShowtimeId(), request.getSeatIds());
-        if (seats.size() != request.getSeatIds().size())
-            throw new AppException(ErrorCode.INVALID_SEAT);
+        BaseResponse<SeatMapResponse> seatMapResponse = cinemaClient.getSeatMap(showtime.getRoomId());
+        if (seatMapResponse == null || seatMapResponse.getData() == null || seatMapResponse.getData().getSeats() == null) {
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+        }
+
+        List<SeatResponse> roomSeats = seatMapResponse.getData().getSeats();
+        Map<Long, SeatResponse> physicalSeatMap = roomSeats.stream()
+                .collect(Collectors.toMap(SeatResponse::getId, s -> s));
+
+        for (Long seatId : request.getSeatIds()) {
+            SeatResponse seat = physicalSeatMap.get(seatId);
+            if (seat == null || seat.getType() == SeatType.EMPTY) {
+                throw new AppException(ErrorCode.INVALID_SEAT);
+            }
+        }
+
+        LocalDateTime expireThreshold = LocalDateTime.now().minusMinutes(10);
+        List<BookedSeat> activeBookedSeats = bookedSeatRepository.findActiveBookedSeatsByShowtime(request.getShowtimeId(), expireThreshold);
+        Map<Long, SeatStatus> occupiedSeatMap = new HashMap<>();
+        for (BookedSeat bs : activeBookedSeats) {
+            SeatStatus status = (bs.getBooking().getStatus() == BookingStatus.PAID)
+                    ? SeatStatus.BOOKED
+                    : SeatStatus.LOCKED;
+            occupiedSeatMap.put(bs.getSeatId(), status);
+        }
+
+        for (Long seatId : request.getSeatIds()) {
+            if (occupiedSeatMap.containsKey(seatId)) {
+                throw new AppException(ErrorCode.INVALID_SEAT, "Seat " + seatId + " is already reserved or booked");
+            }
+        }
+
+        List<SeatPosition> roomPositions = roomSeats.stream()
+                .map(s -> SeatPosition.builder()
+                        .seatId(s.getId())
+                        .label(s.getLabel())
+                        .rowIndex(s.getRowIndex())
+                        .colIndex(s.getColIndex())
+                        .type(s.getType())
+                        .status(occupiedSeatMap.getOrDefault(s.getId(), SeatStatus.AVAILABLE))
+                        .build())
+                .toList();
+
+        seatGapValidator.validate(roomPositions, new HashSet<>(request.getSeatIds()));
 
         Booking booking = bookingMapper.toBooking(request);
         booking.setStatus(BookingStatus.PENDING_PAYMENT);
 
-        seats.forEach(seat -> {
+        for (Long seatId : request.getSeatIds()) {
+            SeatResponse seat = physicalSeatMap.get(seatId);
             BookedSeat bookedSeat = BookedSeat.builder()
                     .booking(booking)
                     .seatId(seat.getId())
@@ -78,21 +158,23 @@ public class BookingServiceImpl implements BookingService {
                     .build();
 
             booking.getSeats().add(bookedSeat);
-        });
+        }
 
         List<FnbOrderRequest> fnbItems = request.getFnbItems();
-        fnbItems.forEach(item -> {
-            BookedFnbItem bookedFnbItem = BookedFnbItem.builder()
-                    .booking(booking)
-                    .fnbItemId(item.getFnbItemId())
-                    .fnbName(item.getName())
-                    .quantity(item.getQuantity())
-                    .unitPrice(item.getUnitPrice())
-                    .totalPrice(item.getUnitPrice()
-                            .multiply(BigDecimal.valueOf(item.getQuantity())))
-                    .build();
-            booking.getFnbItems().add(bookedFnbItem);
-        });
+        if (fnbItems != null) {
+            fnbItems.forEach(item -> {
+                BookedFnbItem bookedFnbItem = BookedFnbItem.builder()
+                        .booking(booking)
+                        .fnbItemId(item.getFnbItemId())
+                        .fnbName(item.getName())
+                        .quantity(item.getQuantity())
+                        .unitPrice(item.getUnitPrice())
+                        .totalPrice(item.getUnitPrice()
+                                .multiply(BigDecimal.valueOf(item.getQuantity())))
+                        .build();
+                booking.getFnbItems().add(bookedFnbItem);
+            });
+        }
 
         bookingRepository.save(booking);
 
