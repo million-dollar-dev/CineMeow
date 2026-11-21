@@ -279,11 +279,6 @@ public class BookingServiceImpl implements BookingService {
                 booking
         );
 
-        List<Long> seatIds = booking.getSeats().stream()
-                .map(s -> s.getSeatId())
-                .toList();
-        showtimeClient.confirmSeats(seatIds);
-
         sendEmailConfirm(bookingId);
     }
 

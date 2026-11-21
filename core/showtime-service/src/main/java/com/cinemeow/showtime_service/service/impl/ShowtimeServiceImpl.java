@@ -7,13 +7,11 @@ import com.cinemeow.movie_service.service.MovieService;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
 import com.cinemeow.showtime_service.entity.Showtime;
-import com.cinemeow.showtime_service.entity.ShowtimeSeat;
 import com.cinemeow.common.exception.AppException;
 import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.showtime_service.mapper.ShowtimeMapper;
 import com.cinemeow.showtime_service.repository.ShowtimeRepository;
 import com.cinemeow.showtime_service.repository.specification.ShowtimeSpecificationBuilder;
-import com.cinemeow.showtime_service.service.ShowtimeSeatService;
 import com.cinemeow.showtime_service.service.ShowtimeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +39,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     ShowtimeMapper showtimeMapper;
 
-    ShowtimeSeatService showtimeSeatService;
-
     MovieService movieService;
 
     RoomService roomService;
@@ -55,7 +51,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     public ShowtimeResponse create(ShowtimeRequest request) {
         var showtime = showtimeMapper.toShowtime(request);
         showtimeRepository.save(showtime);
-        showtimeSeatService.initializeSeatsForShowtime(showtime.getId(), request.getRoomId());
         var response = buildFullShowtimeResponse(showtime);
         return response;
     }
@@ -139,11 +134,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         return showtimePage.stream()
                 .map(this::buildFullShowtimeResponse)
                 .toList();
-    }
-
-    @Override
-    public List<ShowtimeSeat> getSeats(String id) {
-        return showtimeSeatService.getSeatsByShowtimeId(id);
     }
 
     private ShowtimeResponse buildFullShowtimeResponse(Showtime showtime) {
