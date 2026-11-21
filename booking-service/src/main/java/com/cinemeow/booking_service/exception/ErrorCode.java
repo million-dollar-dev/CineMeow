@@ -24,6 +24,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(403, "Access denied", HttpStatus.UNAUTHORIZED),
     QR_GENERATION_FAILED(4001, "Qr generation failed", HttpStatus.INTERNAL_SERVER_ERROR),
     QR_INVALID(1007, "Qr invalid", HttpStatus.BAD_REQUEST),
+    SEAT_SINGLE_GAP_VIOLATED(1088, "Cannot leave a single isolated empty seat", HttpStatus.BAD_REQUEST),
     ;
 
     int code;

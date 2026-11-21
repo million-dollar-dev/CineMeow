@@ -3,8 +3,6 @@ package com.cinemeow.showtime_service.controller;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
 import com.cinemeow.common.dto.response.BaseResponse;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
-import com.cinemeow.showtime_service.entity.ShowtimeSeat;
-import com.cinemeow.showtime_service.service.ShowtimeSeatService;
 import com.cinemeow.showtime_service.service.ShowtimeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,7 +29,6 @@ import java.util.List;
 @Tag(name = "Showtime API", description = "Manage movie showtimes")
 public class ShowtimeController {
     ShowtimeService showtimeService;
-    ShowtimeSeatService showtimeSeatService;
     @Operation(
             summary = "Create a new showtime",
             description = "Add a new movie showtime to the system")
@@ -142,21 +139,6 @@ public class ShowtimeController {
         return BaseResponse.<List<ShowtimeResponse>>builder()
                 .data(showtimeService.searchShowtime(pageable, filters))
                 .build();
-    }
-
-    @GetMapping("/{id}/seats")
-    public BaseResponse<List<ShowtimeSeat>> getSeats(
-            @PathVariable String id
-    ) {
-        return BaseResponse.<List<ShowtimeSeat>>builder()
-                .data(showtimeService.getSeats(id))
-                .build();
-    }
-
-    @PostMapping("{id}/seats/check")
-    public List<ShowtimeSeat> checkAvailableSeats(@PathVariable String id,
-                                                  @RequestBody List<Long> seatIds) {
-        return showtimeSeatService.checkAvailableSeats(id, seatIds);
     }
 }
 

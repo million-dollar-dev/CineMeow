@@ -32,7 +32,9 @@ public class GlobalExceptionHandler {
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setStatus("Error");
         baseResponse.setCode(errorCode.getCode());
-        baseResponse.setMessage(errorCode.getMessage());
+        baseResponse.setMessage(exception.getMessage() != null && !exception.getMessage().isBlank()
+                ? exception.getMessage()
+                : errorCode.getMessage());
         return ResponseEntity.status(errorCode.getStatusCode()).body(baseResponse);
     }
 

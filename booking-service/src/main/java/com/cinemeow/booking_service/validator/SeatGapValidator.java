@@ -1,16 +1,16 @@
-package com.cinemeow.showtime_service.validator;
+package com.cinemeow.booking_service.validator;
 
-import com.cinemeow.cinema_service.enums.SeatStatus;
-import com.cinemeow.cinema_service.enums.SeatType;
-import com.cinemeow.common.exception.AppException;
-import com.cinemeow.common.exception.ErrorCode;
+import com.cinemeow.booking_service.enums.SeatStatus;
+import com.cinemeow.booking_service.enums.SeatType;
+import com.cinemeow.booking_service.exception.AppException;
+import com.cinemeow.booking_service.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Validator to enforce the Single-Seat Gap Prevention Rule (CM-000004).
+ * Validator to enforce the Single-Seat Gap Prevention Rule (CM-000004 & CM-000005).
  * Prevents users from booking seats that leave a single isolated empty seat
  * between booked seats or between a booked seat and an aisle/wall.
  */

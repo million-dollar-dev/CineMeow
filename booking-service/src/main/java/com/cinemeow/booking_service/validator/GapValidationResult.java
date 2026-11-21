@@ -1,4 +1,4 @@
-package com.cinemeow.showtime_service.validator;
+package com.cinemeow.booking_service.validator;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

@@ -1,7 +1,7 @@
-package com.cinemeow.showtime_service.validator;
+package com.cinemeow.booking_service.validator;
 
-import com.cinemeow.cinema_service.enums.SeatStatus;
-import com.cinemeow.cinema_service.enums.SeatType;
+import com.cinemeow.booking_service.enums.SeatStatus;
+import com.cinemeow.booking_service.enums.SeatType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

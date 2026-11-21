@@ -1,8 +1,7 @@
-package com.cinemeow.booking_service.entity;
+package com.cinemeow.booking_service.dto.response;
 
 import com.cinemeow.booking_service.enums.SeatStatus;
-import com.cinemeow.booking_service.enums.SeatType;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,16 +10,13 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ShowtimeSeat {
-    Long id;
-    String showtimeId;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ShowtimeSeatResponse {
     Long seatId;
     String label;
-    SeatType type;
     SeatStatus status;
     LocalDateTime reservedUntil;
-    String bookingId;
 }

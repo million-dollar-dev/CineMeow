@@ -28,6 +28,13 @@ export const bookingApi = rootApi.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
+        getShowtimeSeats: builder.query({
+            query: (showtimeId) => ({
+                url: `${CONTEXT_PATH}/bookings/showtimes/${showtimeId}/seats`,
+            }),
+            transformResponse: (response) => response.data,
+        }),
+
         searchBooking: builder.query({
             query: ({ sort, filters = [] }) => {
                 const params = new URLSearchParams();
@@ -53,5 +60,6 @@ export const {
     useGetAllPriceByBrandQuery,
     useCreateBookingMutation,
     useGetBookingQuery,
+    useGetShowtimeSeatsQuery,
     useSearchBookingQuery,
 } = bookingApi;
