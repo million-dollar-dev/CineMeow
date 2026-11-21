@@ -191,9 +191,9 @@ Content-Type: application/json
 ## 5. Implementation Roadmap
 
 ### Phase 1: Chuẩn bị & Chuyển giao Validator
-- [ ] Chuyển class `SeatGapValidator.java` và các DTO (`SeatPosition`, `GapValidationResult`) sang `booking-service` (hoặc module `common-library`).
-- [ ] Bổ sung FeignClient `CinemaClient.getSeatMap(roomId)` trong `booking-service`.
-- [ ] Viết Unit Test cho logic ánh xạ in-memory `DynamicSeatInventoryServiceTest`.
+- [x] Chuyển class `SeatGapValidator.java` và các DTO (`SeatPosition`, `GapValidationResult`) sang `booking-service` (hoặc module `common-library`).
+- [x] Bổ sung FeignClient `CinemaClient.getSeatMap(roomId)` trong `booking-service`.
+- [ ] Viết Unit Test cho logic ánh xạ in-memory `DynamicSeatInventoryServiceTest`. (Tạm bỏ qua theo yêu cầu)
 
 ### Phase 2: Triển khai API tại Booking Service & Cập nhật Client
 - [ ] Viết API `GET /bookings/showtimes/{showtimeId}/seats` tại `booking-service`.

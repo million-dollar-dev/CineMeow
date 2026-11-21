@@ -20,6 +20,9 @@ public interface CinemaClient {
     @GetMapping("/rooms/{id}")
     BaseResponse<RoomResponse> getById(@PathVariable String id);
 
+    @GetMapping("/rooms/{id}/seats")
+    BaseResponse<SeatMapResponse> getSeatMap(@PathVariable("id") String id);
+
     @GetMapping("/brands")
     BaseResponse<List<CinemaBrandResponse>> getAll();
 
