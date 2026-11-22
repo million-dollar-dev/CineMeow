@@ -35,8 +35,9 @@ This page is the central index for tracking feature specifications, implementati
 
 | Feature ID | Feature Title                                                      | Target Modules / Services  | Status  | Specification                                             |
 | ---------- | ------------------------------------------------------------------ | -------------------------- | ------- | --------------------------------------------------------- |
-| CM-000002  | Comprehensive Admin Portal UI/UX Refactoring & Design System       | `frontend/admin-frontend`  | 🟢 Live | [Feature Specification](Feature-Admin-UI-UX-Refactoring)  |
-| CM-000003  | Comprehensive Client Portal UI/UX Refactoring & Dark Cinema Design | `frontend/client-frontend` | 🟢 Live | [Feature Specification](Feature-Client-UI-UX-Refactoring) |
+| CM-000002  | Comprehensive Admin Portal UI/UX Refactoring & Design System       | `frontend/admin-frontend`  | 🟢 Live     | [Feature Specification](Feature-Admin-UI-UX-Refactoring)  |
+| CM-000003  | Comprehensive Client Portal UI/UX Refactoring & Dark Cinema Design | `frontend/client-frontend` | 🟢 Live     | [Feature Specification](Feature-Client-UI-UX-Refactoring) |
+| CM-000009  | Explicit Multi-Step Booking Flow Refactoring (Seats, F&B, Payment) | `frontend/client-frontend` | 🟣 In Design | [Feature Specification](Feature-Client-Multi-Step-Booking-Flow) |
 
 ---
 
