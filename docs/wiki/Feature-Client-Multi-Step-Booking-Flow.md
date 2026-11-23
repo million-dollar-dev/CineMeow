@@ -5,7 +5,7 @@
 | **Feature ID** | CM-000009 |
 | **Category** | Frontend UX / Conversion Optimization / Booking Flow Architecture |
 | **Target Services** | `frontend/client-frontend` |
-| **Status** | 🟣 In Design |
+| **Status** | 🟢 Live |
 | **Priority** | P1 - High |
 | **Author / Tech Lead** | Frontend Core Team |
 
@@ -251,27 +251,27 @@ Thay thế hoàn toàn `ComboPopup.jsx` bằng giao diện chính thức:
 ## 6. Implementation Roadmap
 
 ### Phase 1: Tạo Component Bước Bắp Nước (`FnbSelectionStep.jsx`)
-- [ ] Chuyển đổi logic chọn số lượng từ `ComboPopup.jsx` sang component trang chính `FnbSelectionStep.jsx`.
-- [ ] Thiết kế `FnbItemCard.jsx` với ảnh sản phẩm sắc nét, badge danh mục, giá tiền và bộ tăng giảm số lượng.
-- [ ] Tích hợp thanh lọc category (Tabs).
+- [x] Chuyển đổi logic chọn số lượng từ `ComboPopup.jsx` sang component trang chính `FnbSelectionStep.jsx`.
+- [x] Thiết kế giao diện F&B Grid với ảnh sản phẩm sắc nét, badge danh mục, giá tiền và bộ tăng giảm số lượng.
+- [x] Tích hợp thanh lọc category (Tabs: Tất cả, Combo, Bắp rang, Nước uống).
 
 ### Phase 2: Nâng cấp Stepper & Điều phối State tại `BookingPage.jsx`
-- [ ] Tạo `BookingStepIndicator.jsx` hiển thị 3 bước: `Chọn Ghế` $\rightarrow$ `Bắp Nước` $\rightarrow$ `Thanh Toán`.
-- [ ] Chuyển biến trạng thái `step` từ `['summary', 'payment']` thành `['SEAT', 'FNB', 'CHECKOUT']`.
-- [ ] Viết các hàm chuyển bước `goToFnb()`, `goToCheckout()`, `goBackToSeat()`, `goBackToFnb()`.
-- [ ] Đảm bảo cơ chế cuộn trang (`window.scrollTo({ top: 0, behavior: 'smooth' })`) mỗi khi đổi bước.
+- [x] Tạo `BookingStepIndicator.jsx` hiển thị 3 bước: `Chọn Ghế` $\rightarrow$ `Bắp Nước` $\rightarrow$ `Thanh Toán`.
+- [x] Chuyển biến trạng thái `step` từ `['summary', 'payment']` thành `['seat', 'fnb', 'checkout']`.
+- [x] Viết các hàm chuyển bước `handleGoToFnb()`, `handleGoToCheckout()`, `handleBackToSeat()`, `handleBackToFnb()`.
+- [x] Đảm bảo cơ chế cuộn trang (`window.scrollTo({ top: 0, behavior: 'smooth' })`) mỗi khi đổi bước.
 
 ### Phase 3: Cập nhật `BookingSummary.jsx` & Tinh chỉnh `PaymentStep.jsx`
-- [ ] Ẩn nút "Thêm Combo Bắp Nước" khi đang ở Bước 1 `SEAT`.
-- [ ] Hiển thị nút CTA phù hợp theo từng bước trên sidebar `BookingSummary`:
-  - Tại `SEAT`: Nút "Tiếp tục: Chọn bắp nước →".
-  - Tại `FNB`: Nút "Tiếp tục: Thanh toán →" & Nút "Bỏ qua bắp nước".
-- [ ] Đổi nút quay lại trong `PaymentStep.jsx` từ "Quay lại chọn ghế" thành "← Quay lại chọn bắp nước".
+- [x] Ẩn phần combo bắp nước khi đang ở Bước 1 `seat`.
+- [x] Hiển thị nút CTA phù hợp theo từng bước trên sidebar `BookingSummary`:
+  - Tại `seat`: Nút "Tiếp tục: Chọn bắp nước →".
+  - Tại `fnb`: Nút "Tiếp tục: Thanh toán →" & Nút "Bỏ qua bắp nước".
+- [x] Đổi nút quay lại trong `PaymentStep.jsx` từ "Quay lại chọn ghế" thành "← Quay lại chọn bắp nước".
 
 ### Phase 4: E2E Verification & Responsive Polishing
-- [ ] Kiểm tra điều hướng tiến/lùi trên cả Desktop và Mobile.
-- [ ] Kiểm tra tính toàn vẹn của dữ liệu: chọn ghế $\rightarrow$ chọn bắp nước $\rightarrow$ quay lại đổi ghế $\rightarrow$ quay lại chọn thêm bắp nước $\rightarrow$ sang thanh toán (dữ liệu không bị reset).
-- [ ] Kiểm tra trường hợp khách không chọn bắp nước và bấm "Bỏ qua" hoặc đi thẳng sang thanh toán.
+- [x] Kiểm tra điều hướng tiến/lùi trên cả Desktop và Mobile.
+- [x] Kiểm tra tính toàn vẹn của dữ liệu: chọn ghế $\rightarrow$ chọn bắp nước $\rightarrow$ quay lại đổi ghế $\rightarrow$ quay lại chọn thêm bắp nước $\rightarrow$ sang thanh toán (dữ liệu không bị reset).
+- [x] Kiểm tra trường hợp khách không chọn bắp nước và bấm "Bỏ qua" hoặc đi thẳng sang thanh toán.
 
 ---
 
@@ -287,9 +287,9 @@ Thay thế hoàn toàn `ComboPopup.jsx` bằng giao diện chính thức:
 
 ## 8. Definition of Done (DoD)
 
-- [ ] Quy trình đặt vé được chia thành 3 bước rõ ràng: `Chọn Vé` $\rightarrow$ `Bắp Nước` $\rightarrow$ `Thanh Toán`.
-- [ ] Component `FnbSelectionStep.jsx` hoạt động ổn định, cho phép tăng giảm số lượng combo mượt mà.
-- [ ] Nút "Bỏ qua bắp nước" hoạt động chính xác khi khách hàng không có nhu cầu mua kèm.
-- [ ] Thao tác lùi bước (Back) bảo toàn 100% các ghế và combo đã chọn trước đó.
-- [ ] Responsive hoàn hảo trên Mobile, Tablet và Desktop.
-- [ ] Cập nhật trạng thái tính năng `CM-000009` trong `docs/wiki/Feature-Index.md`.
+- [x] Quy trình đặt vé được chia thành 3 bước rõ ràng: `Chọn Vé` $\rightarrow$ `Bắp Nước` $\rightarrow$ `Thanh Toán`.
+- [x] Component `FnbSelectionStep.jsx` hoạt động ổn định, cho phép tăng giảm số lượng combo mượt mà.
+- [x] Nút "Bỏ qua bắp nước" hoạt động chính xác khi khách hàng không có nhu cầu mua kèm.
+- [x] Thao tác lùi bước (Back) bảo toàn 100% các ghế và combo đã chọn trước đó.
+- [x] Responsive hoàn hảo trên Mobile, Tablet và Desktop.
+- [x] Cập nhật trạng thái tính năng `CM-000009` trong `docs/wiki/Feature-Index.md`.

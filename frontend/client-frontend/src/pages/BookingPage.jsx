@@ -14,13 +14,16 @@ import {useValidateVoucherMutation} from "../services/promotionService.js";
 import {useInitPaymentMutation} from "../services/paymentService.js";
 
 import SeatSelection from "../components/Booking/SeatSelection.jsx";
-import ComboPopup from "../components/Booking/ComboPopup.jsx";
+import BookingStepIndicator from "../components/Booking/BookingStepIndicator.jsx";
+import FnbSelectionStep from "../components/Booking/FnbSelectionStep.jsx";
 import BookingSummary from "../components/Booking/BookingSummary.jsx";
 import PaymentStep from "../components/Booking/PaymentStep.jsx";
 import TicketCard from "../components/Booking/TicketCard.jsx";
 import OverlayLoading from "../components/Booking/OverlayLoading.jsx";
 import Promotions from "../components/PromotionSection.jsx";
 import { checkSeatGapRule } from "../utils/seatGapValidator.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilm, faClock } from "@fortawesome/free-solid-svg-icons";
 
 // Import rich mock data for frontend testing
 import {
@@ -121,7 +124,7 @@ const BookingPage = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const user = useSelector((state) => state.user);
-    const [step, setStep] = useState("summary");
+    const [step, setStep] = useState("seat"); // "seat" | "fnb" | "checkout"
 
     const isUsingMock = isExplicitMock || (!showtime && !loadingShowtime);
 
@@ -223,7 +226,7 @@ const BookingPage = () => {
         }
     };
 
-    const handleContinueToPayment = () => {
+    const handleGoToFnb = () => {
         if (selectedSeats.length === 0) {
             toast.warning("Vui lòng chọn ít nhất 1 ghế để tiếp tục!");
             return;
@@ -240,7 +243,62 @@ const BookingPage = () => {
         }
 
         setViolatedSeat(null);
-        setStep("payment");
+        setStep("fnb");
+    };
+
+    const handleBackToSeat = () => {
+        setStep("seat");
+    };
+
+    const handleGoToCheckout = () => {
+        if (selectedSeats.length === 0) {
+            toast.warning("Vui lòng chọn ít nhất 1 ghế để tiếp tục!");
+            setStep("seat");
+            return;
+        }
+        setStep("checkout");
+    };
+
+    const handleBackToFnb = () => {
+        setStep("fnb");
+    };
+
+    const handleSkipFnb = () => {
+        setSelectedCombos([]);
+        toast.info("Đã bỏ qua bắp nước!");
+        setStep("checkout");
+    };
+
+    const handleUpdateComboQuantity = (item, delta) => {
+        setSelectedCombos((prev) => {
+            const existing = prev.find((c) => c.id === item.id);
+            if (!existing) {
+                if (delta > 0) {
+                    return [...prev, { ...item, quantity: delta }];
+                }
+                return prev;
+            }
+            const newQty = (existing.quantity || 1) + delta;
+            if (newQty <= 0) {
+                return prev.filter((c) => c.id !== item.id);
+            }
+            return prev.map((c) => (c.id === item.id ? { ...c, quantity: newQty } : c));
+        });
+    };
+
+    const handleStepClick = (targetStep) => {
+        if (targetStep === "seat") {
+            setStep("seat");
+            return;
+        }
+        if (targetStep === "fnb") {
+            handleGoToFnb();
+            return;
+        }
+        if (targetStep === "checkout") {
+            handleGoToCheckout();
+            return;
+        }
     };
 
     const handleQuickPickCombo = () => {
@@ -362,7 +420,7 @@ const BookingPage = () => {
                         toast.error(errorMessage || "Không thể đặt vé do vi phạm quy tắc chọn ghế!", {
                             autoClose: 6000,
                         });
-                        setStep("summary");
+                        setStep("seat");
                         const gapCheck = checkSeatGapRule(seats, selectedSeats);
                         if (!gapCheck.valid) {
                             setViolatedSeat(gapCheck.violatedSeat);
@@ -425,199 +483,85 @@ const BookingPage = () => {
         : "19:30 - Thứ Bảy, 11/10/2026";
 
     return (
-        <div className="bg-[#07070B] text-zinc-100 min-h-screen pt-20 sm:pt-24">
+        <div className="bg-[#07070B] text-zinc-100 min-h-screen pt-16 sm:pt-20">
             {(isInitingPayment || isSimulatingPayment) && <OverlayLoading />}
 
-            {/* Demo Ribbon for easy frontend testing */}
-            {isUsingMock && (
-                <div className="bg-gradient-to-r from-violet-950/90 via-indigo-950/90 to-violet-950/90 border-b border-violet-800/40 px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 text-zinc-300">
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <span className="px-2 py-0.5 rounded-full bg-violet-600 text-white font-bold text-[10px] uppercase tracking-wider">
-                            Demo Mode
-                        </span>
-                        <span>
-                            Đang dùng dữ liệu mẫu. Thử mã giảm giá:{" "}
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setVoucherCode("CINEMEOW20");
-                                    handleApplyVoucher("CINEMEOW20");
-                                }}
-                                className="font-semibold text-violet-300 hover:text-white underline underline-offset-2 ml-1"
-                            >
-                                CINEMEOW20 (-20k)
-                            </button>
-                            ,{" "}
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setVoucherCode("MEOW50K");
-                                    handleApplyVoucher("MEOW50K");
-                                }}
-                                className="font-semibold text-violet-300 hover:text-white underline underline-offset-2"
-                            >
-                                MEOW50K (-50k)
-                            </button>
-                        </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <button
-                            type="button"
-                            onClick={handleQuickPickSeats}
-                            className="px-2.5 py-1 rounded-lg bg-zinc-850 hover:bg-violet-700/80 text-violet-200 border border-violet-500/30 text-[11px] font-medium transition cursor-pointer"
-                        >
-                            Chọn nhanh 2 ghế VIP
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleQuickPickCombo}
-                            className="px-2.5 py-1 rounded-lg bg-zinc-850 hover:bg-violet-700/80 text-violet-200 border border-violet-500/30 text-[11px] font-medium transition cursor-pointer"
-                        >
-                            Thêm Combo bắp nước
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Popup combo */}
-            <ComboPopup
-                open={openPopup}
-                onClose={() => setOpenPopup(false)}
-                combos={activeFnbs}
-                selectedCombos={selectedCombos}
-                onConfirm={handleConfirmCombo}
-            />
-
             {/* Topbar: Cinema Booking Header */}
-            <div className="relative border-b border-zinc-850 bg-gradient-to-b from-zinc-950 via-zinc-900/90 to-zinc-950/80 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 relative z-10">
-                    {/* Breadcrumbs & Step Indicator */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/60">
-                        <Link
-                            to={activeMovie?.id ? `/movies/${activeMovie.id}` : "/"}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors"
-                        >
-                            <span>← Quay lại chi tiết phim</span>
-                        </Link>
-
-                        {/* Booking Steps Indicator (Clean typography, minimal icons) */}
-                        <div className="flex items-center gap-2 sm:gap-4 text-xs">
-                            <div
-                                className={`flex items-center gap-2 font-semibold ${
-                                    step === "summary" ? "text-violet-400" : "text-emerald-400"
-                                }`}
-                            >
-                                <span
-                                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                                        step === "summary"
-                                            ? "bg-violet-600 text-white shadow-sm shadow-violet-500/50"
-                                            : "bg-emerald-600/30 text-emerald-400 border border-emerald-500/40"
-                                    }`}
-                                >
-                                    {step === "summary" ? "1" : "✓"}
-                                </span>
-                                <span className="hidden sm:inline">Chọn ghế & Bắp nước</span>
-                            </div>
-
-                            <div className="w-6 sm:w-10 h-px bg-zinc-800" />
-
-                            <div
-                                className={`flex items-center gap-2 font-semibold ${
-                                    step === "payment" ? "text-violet-400" : "text-zinc-500"
-                                }`}
-                            >
-                                <span
-                                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                                        step === "payment"
-                                            ? "bg-violet-600 text-white shadow-sm shadow-violet-500/50"
-                                            : "bg-zinc-800 text-zinc-400 border border-zinc-700"
-                                    }`}
-                                >
-                                    2
-                                </span>
-                                <span className="hidden sm:inline">Thanh toán</span>
-                            </div>
-
-                            <div className="w-6 sm:w-10 h-px bg-zinc-800" />
-
-                            <div className="flex items-center gap-2 font-semibold text-zinc-600">
-                                <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-zinc-900 text-zinc-600 border border-zinc-800">
-                                    3
-                                </span>
-                                <span className="hidden sm:inline">Nhận vé</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Movie Info & Showtime Pills */}
-                    <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
+            <div className="relative border-b border-zinc-800/80 bg-gradient-to-b from-zinc-950 via-zinc-900/90 to-zinc-950/80 backdrop-blur-xl">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 relative z-10 space-y-2.5">
+                    {/* Booking Header: Movie Info (Left) + Showtime Meta Details (Right) */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        {/* Left: Movie Thumbnail & Metadata */}
+                        <div className="flex items-center gap-3 min-w-0">
                             {activeMovie?.posterUrl ? (
                                 <img
                                     src={activeMovie.posterUrl}
                                     alt={activeMovie?.title}
-                                    className="w-14 h-20 sm:w-16 sm:h-24 rounded-2xl object-cover border border-zinc-750 shadow-lg shrink-0"
+                                    className="w-10 h-14 sm:w-11 sm:h-15 rounded-xl object-cover border border-zinc-700/60 shadow-md shrink-0"
                                 />
                             ) : (
-                                <div className="w-14 h-20 sm:w-16 sm:h-24 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 text-xs shrink-0 font-medium">
+                                <div className="w-10 h-14 sm:w-11 sm:h-15 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 text-[10px] shrink-0 font-medium">
                                     Poster
                                 </div>
                             )}
 
-                            <div>
-                                <div className="flex items-center gap-2 flex-wrap mb-1">
-                                    <h1 className="text-lg sm:text-2xl font-black text-white tracking-wide">
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <h1 className="text-base sm:text-lg font-black text-white tracking-wide truncate">
                                         {activeMovie?.title || "Đang tải thông tin phim..."}
                                     </h1>
                                     {activeShowtime?.roomType && (
-                                        <span className="px-2 py-0.5 rounded-md bg-violet-600/20 text-violet-300 border border-violet-500/30 text-[11px] font-bold">
+                                        <span className="px-2 py-0.5 rounded-md bg-violet-600/25 text-violet-300 border border-violet-500/35 text-[10px] font-extrabold uppercase tracking-wider">
                                             {activeShowtime.roomType.replace("_", "")}
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-xs text-zinc-400 line-clamp-1">
-                                    {activeMovie?.genres?.join?.(" • ") || activeMovie?.duration
-                                        ? `${activeMovie?.duration} phút • Phụ đề tiếng Việt`
-                                        : "Suất chiếu rạp chuẩn quốc tế"}
+                                <p className="text-xs text-zinc-400 truncate mt-0.5">
+                                    {activeMovie?.duration ? `${activeMovie.duration} phút` : "120 phút"}
+                                    {activeMovie?.genres?.length ? ` • ${activeMovie.genres.join(", ")}` : " • Phụ đề tiếng Việt"}
                                 </p>
                             </div>
                         </div>
 
-                        {/* Badges / Showtime details (Clean, no decorative icons) */}
-                        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                            <div className="bg-zinc-950/70 border border-zinc-800/90 rounded-2xl px-3.5 py-2">
-                                <span className="text-[10px] text-zinc-500 block uppercase font-medium">Rạp</span>
-                                <span className="text-xs font-semibold text-zinc-200">
-                                    {activeShowtime?.cinemaName || "Rạp CineMeow"}
-                                </span>
+                        {/* Right: Showtime Context Badges (Cinema • Room • Showtime) */}
+                        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap text-xs shrink-0">
+                            {/* Cinema & Hall Badge */}
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 border border-zinc-800/80 text-zinc-200 shadow-sm">
+                                <FontAwesomeIcon icon={faFilm} className="text-violet-400 text-xs" />
+                                <div className="flex items-center gap-1.5">
+                                    <span className="font-semibold">{activeShowtime?.cinemaName || "Rạp CineMeow"}</span>
+                                    <span className="text-zinc-600 font-bold">•</span>
+                                    <span className="text-zinc-400">{activeShowtime?.roomName || "Phòng chiếu"}</span>
+                                </div>
                             </div>
 
-                            <div className="bg-zinc-950/70 border border-zinc-800/90 rounded-2xl px-3.5 py-2">
-                                <span className="text-[10px] text-zinc-500 block uppercase font-medium">Phòng</span>
-                                <span className="text-xs font-semibold text-zinc-200">
-                                    {activeShowtime?.roomName || "Phòng chiếu"}
-                                </span>
-                            </div>
-
-                            <div className="bg-zinc-950/70 border border-zinc-800/90 rounded-2xl px-3.5 py-2">
-                                <span className="text-[10px] text-zinc-500 block uppercase font-medium">Suất chiếu</span>
-                                <span className="text-xs font-semibold text-violet-300">
-                                    {formattedTime}
-                                </span>
+                            {/* Showtime Badge */}
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-violet-950/40 border border-violet-800/50 text-violet-200 shadow-sm">
+                                <FontAwesomeIcon icon={faClock} className="text-violet-400 text-xs" />
+                                <span className="font-bold text-violet-300">{formattedTime}</span>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Step Indicator: Left-aligned and placed directly UNDER booking info */}
+                    <div className="pt-2 border-t border-zinc-800/50 flex items-center justify-start">
+                        <BookingStepIndicator
+                            currentStep={step}
+                            onStepClick={handleStepClick}
+                            canGoToFnb={selectedSeats.length > 0 && !violatedSeat}
+                            canGoToCheckout={selectedSeats.length > 0 && !violatedSeat}
+                        />
                     </div>
                 </div>
             </div>
 
-            {/* Main Booking Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* Left Column (8 cols): Seat Map OR TicketCard Preview */}
+            {/* Main Booking Content - Compact */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
+                    {/* Left Column (8 cols): Step 1 SeatSelection OR Step 2 FnbSelectionStep OR Step 3 TicketCard Preview */}
                     <div className="lg:col-span-8">
-                        {step === "summary" ? (
-                            <div className="bg-zinc-900/80 backdrop-blur-xl rounded-3xl border border-zinc-800/80 p-4 sm:p-6 shadow-2xl">
+                        {step === "seat" && (
+                            <div className="bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-zinc-800/80 p-3 sm:p-4 shadow-xl">
                                 <SeatSelection
                                     seats={seats}
                                     selectedSeats={selectedSeats}
@@ -627,7 +571,19 @@ const BookingPage = () => {
                                     violatedSeat={violatedSeat}
                                 />
                             </div>
-                        ) : (
+                        )}
+
+                        {step === "fnb" && (
+                            <div className="bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-zinc-800/80 p-4 sm:p-5 shadow-2xl flex flex-col h-[560px] lg:h-[600px]">
+                                <FnbSelectionStep
+                                    fnbs={activeFnbs}
+                                    selectedCombos={selectedCombos}
+                                    onUpdateComboQuantity={handleUpdateComboQuantity}
+                                />
+                            </div>
+                        )}
+
+                        {step === "checkout" && (
                             <div className="space-y-6">
                                 <div className="flex items-center justify-between pb-3 border-b border-zinc-800/80">
                                     <div>
@@ -638,13 +594,23 @@ const BookingPage = () => {
                                             Kiểm tra thông tin vé điện tử trước khi thanh toán
                                         </p>
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setStep("summary")}
-                                        className="text-xs font-semibold text-violet-400 hover:text-violet-300 underline underline-offset-4 transition cursor-pointer"
-                                    >
-                                        Đổi ghế / Combo
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={handleBackToFnb}
+                                            className="text-xs font-semibold text-violet-400 hover:text-violet-300 underline underline-offset-4 transition cursor-pointer"
+                                        >
+                                            Đổi bắp nước
+                                        </button>
+                                        <span className="text-zinc-600">•</span>
+                                        <button
+                                            type="button"
+                                            onClick={handleBackToSeat}
+                                            className="text-xs font-semibold text-zinc-400 hover:text-zinc-200 underline underline-offset-4 transition cursor-pointer"
+                                        >
+                                            Đổi ghế
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Component TicketCard used in Payment Step (Pre-paid mode) */}
@@ -674,16 +640,29 @@ const BookingPage = () => {
 
                     {/* Right Column (4 cols): Sticky Summary OR Payment Form */}
                     <div className="lg:col-span-4">
-                        {step === "summary" ? (
+                        {step === "seat" && (
                             <BookingSummary
+                                step="seat"
+                                selectedSeats={selectedSeats}
+                                seatGroups={groupedSeats}
+                                onContinue={handleGoToFnb}
+                            />
+                        )}
+
+                        {step === "fnb" && (
+                            <BookingSummary
+                                step="fnb"
                                 selectedSeats={selectedSeats}
                                 selectedCombos={selectedCombos}
                                 setSelectedCombos={setSelectedCombos}
-                                setOpenPopup={setOpenPopup}
                                 seatGroups={groupedSeats}
-                                onContinue={handleContinueToPayment}
+                                onContinue={handleGoToCheckout}
+                                onBack={handleBackToSeat}
+                                onSkipFnb={handleSkipFnb}
                             />
-                        ) : (
+                        )}
+
+                        {step === "checkout" && (
                             <PaymentStep
                                 user={user}
                                 selectedSeats={selectedSeats}
@@ -702,7 +681,7 @@ const BookingPage = () => {
                                 setEmail={setEmail}
                                 paymentMethod={paymentMethod}
                                 setPaymentMethod={setPaymentMethod}
-                                onBack={() => setStep("summary")}
+                                onBack={handleBackToFnb}
                                 handleCreateBooking={handleCreateBooking}
                                 isBooking={isBooking || isSimulatingPayment}
                                 isValidatingVoucher={isValidatingVoucher}
@@ -756,7 +735,7 @@ const BookingPage = () => {
                                     setShowSuccessModal(false);
                                     setSelectedSeats([]);
                                     setSelectedCombos([]);
-                                    setStep("summary");
+                                    setStep("seat");
                                 }}
                                 className="flex-1 py-3 px-5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white font-semibold text-xs border border-zinc-800 transition cursor-pointer"
                             >
