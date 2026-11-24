@@ -5,7 +5,7 @@
 | **Feature ID** | CM-000008 |
 | **Category** | Core Domain Feature / Seat Inventory / Business Invariant |
 | **Target Services** | `core/cinema-service`, `booking-service`, `frontend/client-frontend`, `frontend/admin-frontend` |
-| **Status** | 🟣 In Design |
+| **Status** | 🟢 Live |
 | **Priority** | P1 - High |
 | **Author / Tech Lead** | Backend Core Team |
 
@@ -360,8 +360,8 @@ const handleToggleSeat = (seat) => {
 
 ## 8. Definition of Done (DoD)
 
-- [ ] File Flyway migration thêm cột `pair_seat_id` được thực thi thành công.
-- [ ] API `POST /api/v1/bookings` chặn thành công 100% các request chỉ gửi 1 nửa ghế đôi với mã lỗi `1090`.
-- [ ] Unit Test `CoupleSeatValidatorTest` pass 100% test cases.
-- [ ] Frontend `BookingPage.jsx` tự động chọn và bỏ chọn đồng thời cả 2 ghế khi người dùng click vào ghế Sweetbox.
-- [ ] Đăng ký tính năng `CM-000008` vào `docs/wiki/Feature-Index.md` với trạng thái `🟣 In Design`.
+- [x] File Flyway migration thêm cột `pair_seat_id` được thực thi thành công.
+- [x] API `POST /api/v1/bookings` chặn thành công 100% các request chỉ gửi 1 nửa ghế đôi với mã lỗi `1090`.
+- [x] Unit Test `CoupleSeatValidatorTest` pass 100% test cases.
+- [x] Frontend `BookingPage.jsx` tự động chọn và bỏ chọn đồng thời cả 2 ghế khi người dùng click vào ghế Sweetbox.
+- [x] Đăng ký tính năng `CM-000008` vào `docs/wiki/Feature-Index.md` với trạng thái `🟢 Live`.

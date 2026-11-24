@@ -34,6 +34,9 @@ public class Seat {
     @Enumerated(EnumType.STRING)
     SeatType type;
 
+    @Column(name = "pair_seat_id")
+    Long pairSeatId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     Room room;
 }

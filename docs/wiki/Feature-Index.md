@@ -29,7 +29,7 @@ This page is the central index for tracking feature specifications, implementati
 | CM-000005  | Remove ShowtimeSeat & Unify Dynamic Seat Inventory in Booking Service | `showtime`, `booking`, `cinema`, `client-frontend`            | 🟢 Live        | [Feature Specification](Feature-Remove-Showtime-Seat)      |
 | CM-000006  | End-to-End Cinema Ticket Booking Workflow Specification       | `booking`, `payment`, `cinema`, `notification`, `client`      | 🟣 In Design   | [Feature Specification](Feature-Ticket-Booking-Workflow)   |
 | CM-000007  | Prevent Showtime Overlap with PostgreSQL Exclusion Constraint | `core/showtime`, `core-app`, `admin-frontend`                 | 🟣 In Design   | [Feature Specification](Feature-Postgres-Exclusion-Constraint-Showtime) |
-| CM-000008  | Sweetbox Couple Seat Atomic Constraint Rule                   | `core/cinema`, `booking`, `client-frontend`, `admin-frontend` | 🟣 In Design   | [Feature Specification](Feature-Sweetbox-Atomic-Seat-Constraint) |
+| CM-000008  | Sweetbox Couple Seat Atomic Constraint Rule                   | `core/cinema`, `booking`, `client-frontend`, `admin-frontend` | 🟢 Live        | [Feature Specification](Feature-Sweetbox-Atomic-Seat-Constraint) |
 
 ### 2.2 Frontend
 
@@ -37,7 +37,7 @@ This page is the central index for tracking feature specifications, implementati
 | ---------- | ------------------------------------------------------------------ | -------------------------- | ------- | --------------------------------------------------------- |
 | CM-000002  | Comprehensive Admin Portal UI/UX Refactoring & Design System       | `frontend/admin-frontend`  | 🟢 Live     | [Feature Specification](Feature-Admin-UI-UX-Refactoring)  |
 | CM-000003  | Comprehensive Client Portal UI/UX Refactoring & Dark Cinema Design | `frontend/client-frontend` | 🟢 Live     | [Feature Specification](Feature-Client-UI-UX-Refactoring) |
-| CM-000009  | Explicit Multi-Step Booking Flow Refactoring (Seats, F&B, Payment) | `frontend/client-frontend` | 🟣 In Design | [Feature Specification](Feature-Client-Multi-Step-Booking-Flow) |
+| CM-000009  | Explicit Multi-Step Booking Flow Refactoring (Seats, F&B, Payment) | `frontend/client-frontend` | 🟢 Live     | [Feature Specification](Feature-Client-Multi-Step-Booking-Flow) |
 
 ---
 

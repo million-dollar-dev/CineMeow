@@ -17,4 +17,5 @@ public class SeatRequest {
     Integer colIndex;
     SeatType type;
     SeatStatus status;
+    Long pairSeatId;
 }

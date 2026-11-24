@@ -82,39 +82,39 @@ const SeatSelection = ({
         <div className="w-full flex flex-col items-center">
             {/* Single-Seat Gap Warning Banner */}
             {violatedSeat && (
-                <div className="w-full max-w-2xl mx-auto mb-6 p-4 rounded-2xl bg-rose-950/70 border border-rose-500/60 flex items-start sm:items-center gap-3.5 text-rose-200 text-xs sm:text-sm animate-pulse shadow-xl shadow-rose-950/50">
-                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0 border border-rose-500/40 text-rose-400">
-                        <FontAwesomeIcon icon={faTriangleExclamation} className="text-sm" />
+                <div className="w-full max-w-xl mx-auto mb-3 p-3 rounded-xl bg-rose-950/70 border border-rose-500/60 flex items-start sm:items-center gap-2.5 text-rose-200 text-xs animate-pulse shadow-lg shadow-rose-950/50">
+                    <div className="w-7 h-7 rounded-lg bg-rose-500/20 flex items-center justify-center shrink-0 border border-rose-500/40 text-rose-400">
+                        <FontAwesomeIcon icon={faTriangleExclamation} className="text-xs" />
                     </div>
                     <div className="flex-1">
                         <p className="font-bold text-rose-300">Cảnh báo quy tắc chọn ghế (Single-Seat Gap):</p>
-                        <p className="text-zinc-300 text-xs mt-0.5">
-                            Không thể để trống 1 ghế đơn độc <span className="font-extrabold text-rose-400 bg-rose-900/60 px-1.5 py-0.5 rounded border border-rose-500/40">({violatedSeat.label})</span>. Vui lòng chọn ghế liền kề hoặc cách ít nhất 2 ghế.
+                        <p className="text-zinc-300 text-[11px] mt-0.5">
+                            Không thể để trống 1 ghế đơn độc <span className="font-extrabold text-rose-400 bg-rose-900/60 px-1 py-0.5 rounded border border-rose-500/40">({violatedSeat.label})</span>. Vui lòng chọn ghế liền kề hoặc cách ít nhất 2 ghế.
                         </p>
                     </div>
                 </div>
             )}
 
-            {/* Luminous Curved Screen */}
-            <div className="w-full max-w-2xl mx-auto mb-10 text-center relative select-none">
-                <div className="h-2 w-4/5 mx-auto bg-gradient-to-r from-violet-600/10 via-violet-500 to-violet-600/10 rounded-full shadow-[0_0_25px_rgba(139,92,246,0.8)]" />
-                <div className="h-14 w-full bg-gradient-to-b from-violet-500/15 via-violet-500/5 to-transparent blur-sm rounded-t-3xl -mt-1" />
-                <div className="flex items-center justify-center gap-2 -mt-6">
-                    <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold">
+            {/* Luminous Curved Screen - Ultra Compact */}
+            <div className="w-full max-w-xl mx-auto mb-3 sm:mb-4 text-center relative select-none">
+                <div className="h-1.5 w-3/4 mx-auto bg-gradient-to-r from-violet-600/10 via-violet-500 to-violet-600/10 rounded-full shadow-[0_0_20px_rgba(139,92,246,0.8)]" />
+                <div className="h-6 w-full bg-gradient-to-b from-violet-500/15 via-violet-500/5 to-transparent blur-xs rounded-t-2xl -mt-0.5" />
+                <div className="flex items-center justify-center gap-2 -mt-4">
+                    <span className="text-[10px] sm:text-xs uppercase tracking-widest text-zinc-400 font-bold">
                         MÀN HÌNH CHIẾU
                     </span>
                 </div>
             </div>
 
             {/* Mobile Scroll Hint */}
-            <div className="lg:hidden flex items-center gap-1.5 text-xs text-zinc-500 mb-3 self-center">
-                <FontAwesomeIcon icon={faArrowsLeftRight} className="text-violet-400" />
+            <div className="lg:hidden flex items-center gap-1.5 text-[11px] text-zinc-500 mb-2 self-center">
+                <FontAwesomeIcon icon={faArrowsLeftRight} className="text-violet-400 text-xs" />
                 <span>Kéo ngang để xem toàn bộ phòng chiếu</span>
             </div>
 
-            {/* Responsive Seat Grid Canvas */}
-            <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-700/50 pb-6 flex justify-center">
-                <div className="min-w-fit px-4 flex flex-col gap-2.5">
+            {/* Responsive Seat Grid Canvas - Ultra Compact */}
+            <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-zinc-700/50 pb-2 sm:pb-3 flex justify-center">
+                <div className="min-w-fit px-2 sm:px-4 flex flex-col gap-1.5 sm:gap-2">
                     {Object.keys(groupedSeats)
                         .sort((a, b) => a - b)
                         .map((rowIndex) => {
@@ -122,18 +122,20 @@ const SeatSelection = ({
                             const rowSeats = groupedSeats[rowIndex].sort((a, b) => a.colIndex - b.colIndex);
 
                             return (
-                                <div key={rowIndex} className="flex items-center gap-2 sm:gap-3 justify-center">
+                                <div key={rowIndex} className="flex items-center gap-1.5 sm:gap-2 justify-center">
                                     {/* Left Row Letter */}
-                                    <div className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center font-bold text-xs text-zinc-400 bg-zinc-900/80 rounded-md border border-zinc-800/80 select-none">
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-bold text-[10px] sm:text-xs text-zinc-400 bg-zinc-900/80 rounded border border-zinc-800/80 select-none">
                                         {rowLetter}
                                     </div>
 
                                     {/* Seats in Row */}
-                                    <div className="flex items-center gap-1.5 sm:gap-2">
+                                    <div className="flex items-center gap-1 sm:gap-1.5">
                                         {rowSeats.map((seat) => {
                                             const isSelected = selectedSeats.some((s) => s.id === seat.id);
                                             const isCouple = seat.type === "COUPLE";
                                             const isViolated = violatedSeat && violatedSeat.id === seat.id;
+                                            const isLeftCouple = isCouple && (seat.colIndex % 2 === 0);
+                                            const isRightCouple = isCouple && (seat.colIndex % 2 === 1);
 
                                             return (
                                                 <button
@@ -144,31 +146,30 @@ const SeatSelection = ({
                                                     title={
                                                         isViolated
                                                             ? `${seat.label} - Cảnh báo: Không thể để trống 1 ghế đơn độc!`
-                                                            : `${seat.label} - ${seat.type === "COUPLE" ? "Ghế Đôi" : seat.type === "VIP" ? "Ghế VIP" : "Ghế Thường"}`
+                                                            : `${seat.label} - ${seat.type === "COUPLE" ? "Ghế Đôi Sweetbox" : seat.type === "VIP" ? "Ghế VIP" : "Ghế Thường"}`
                                                     }
                                                     className={`
-                                                        ${isCouple ? "w-14 sm:w-16 md:w-20" : "w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9"}
-                                                        h-7 sm:h-8 md:h-9 text-[10px] sm:text-xs font-bold rounded-lg
-                                                        flex items-center justify-center cursor-pointer
+                                                        ${isCouple ? "w-7 sm:w-8 md:w-8.5" : "w-6 sm:w-7 md:w-8"}
+                                                        h-6 sm:h-7 md:h-8
+                                                        text-[9px] sm:text-[10px] md:text-xs font-bold leading-none
+                                                        flex items-center justify-center cursor-pointer transition-transform select-none
+                                                        ${isLeftCouple ? "rounded-l-md rounded-r-none border-r-dashed border-r-rose-500/40 mr-[-4px] sm:mr-[-6px] z-10" : ""}
+                                                        ${isRightCouple ? "rounded-r-md rounded-l-none border-l-0" : ""}
+                                                        ${!isCouple ? "rounded-md" : ""}
                                                         ${getSeatClasses(seat)}
                                                     `}
                                                 >
                                                     {seat.type !== "EMPTY" && (
                                                         <>
                                                             {isViolated ? (
-                                                                <span className="flex items-center gap-0.5 text-rose-300 font-extrabold animate-pulse">
-                                                                    <FontAwesomeIcon icon={faTriangleExclamation} className="text-[9px] text-rose-400" />
+                                                                 <span className="flex items-center gap-0.5 text-rose-300 font-extrabold animate-pulse">
+                                                                    <FontAwesomeIcon icon={faTriangleExclamation} className="text-[8px] text-rose-400" />
                                                                     <span>{seat.label}</span>
                                                                 </span>
                                                             ) : isSelected ? (
-                                                                <FontAwesomeIcon icon={faCheck} className="text-xs" />
-                                                            ) : isCouple ? (
-                                                                <span className="flex items-center gap-1">
-                                                                    <FontAwesomeIcon icon={faHeart} className="text-[10px] text-rose-400" />
-                                                                    <span>{seat.label}</span>
-                                                                </span>
+                                                                <FontAwesomeIcon icon={faCheck} className="text-[10px] sm:text-xs" />
                                                             ) : seat.status !== "AVAILABLE" ? (
-                                                                <FontAwesomeIcon icon={faLock} className="text-[10px] text-zinc-600" />
+                                                                <FontAwesomeIcon icon={faLock} className="text-[9px] text-zinc-600" />
                                                             ) : (
                                                                 <span>{seat.label}</span>
                                                             )}
@@ -180,7 +181,7 @@ const SeatSelection = ({
                                     </div>
 
                                     {/* Right Row Letter */}
-                                    <div className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center font-bold text-xs text-zinc-400 bg-zinc-900/80 rounded-md border border-zinc-800/80 select-none">
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-bold text-[10px] sm:text-xs text-zinc-400 bg-zinc-900/80 rounded border border-zinc-800/80 select-none">
                                         {rowLetter}
                                     </div>
                                 </div>
@@ -189,48 +190,47 @@ const SeatSelection = ({
                 </div>
             </div>
 
-            {/* Standardized Legend Bar */}
-            <div className="w-full pt-6 mt-4 border-t border-zinc-800/80 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-zinc-300">
+            {/* Standardized Legend Bar - Clean, bug-free, perfectly aligned */}
+            <div className="w-full pt-3 mt-2 border-t border-zinc-800/80 flex flex-wrap items-center justify-center gap-2 sm:gap-3.5 text-xs text-zinc-300">
                 {/* Ghế Thường */}
-                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-zinc-800">
-                    <div className="w-4 h-4 bg-zinc-800 border border-zinc-700 rounded-sm" />
-                    <span>Ghế Thường ({normalPrice})</span>
+                <div className="flex items-center gap-2 bg-zinc-900/80 px-2.5 py-1.5 rounded-xl border border-zinc-800 shadow-sm">
+                    <div className="w-4 h-4 rounded bg-zinc-800 border border-zinc-700 shrink-0" />
+                    <span>Thường <strong className="text-white font-semibold">({normalPrice})</strong></span>
                 </div>
 
                 {/* Ghế VIP */}
-                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-zinc-800">
-                    <div className="w-4 h-4 bg-amber-950/50 border border-amber-500 rounded-sm" />
-                    <span>Ghế VIP ({vipPrice})</span>
+                <div className="flex items-center gap-2 bg-zinc-900/80 px-2.5 py-1.5 rounded-xl border border-zinc-800 shadow-sm">
+                    <div className="w-4 h-4 rounded bg-amber-950/40 border border-amber-500/70 shrink-0" />
+                    <span>VIP <strong className="text-amber-400 font-semibold">({vipPrice})</strong></span>
                 </div>
 
                 {/* Ghế Đôi */}
-                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-zinc-800">
-                    <div className="w-6 h-4 bg-rose-950/50 border border-rose-500 rounded-sm flex items-center justify-center">
-                        <FontAwesomeIcon icon={faHeart} className="text-[8px] text-rose-400" />
+                <div className="flex items-center gap-2 bg-zinc-900/80 px-2.5 py-1.5 rounded-xl border border-zinc-800 shadow-sm">
+                    <div className="flex items-center shrink-0">
+                        <div className="w-3.5 h-4 rounded-l bg-rose-950/40 border border-rose-500/70 border-r-dashed border-r-rose-500/40 flex items-center justify-center">
+                            <FontAwesomeIcon icon={faHeart} className="text-[6px] text-rose-400" />
+                        </div>
+                        <div className="w-3.5 h-4 rounded-r bg-rose-950/40 border border-rose-500/70 border-l-0" />
                     </div>
-                    <span>Ghế Đôi ({couplePrice})</span>
+                    <span>Ghế Đôi <strong className="text-rose-400 font-semibold">({couplePrice})</strong></span>
                 </div>
 
-                {/* Đang chọn */}
-                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-zinc-800">
-                    <div className="w-4 h-4 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-sm shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
-                    <span className="text-violet-300 font-semibold">Đang Chọn</span>
+                <div className="hidden sm:block w-px h-4 bg-zinc-800 shrink-0" />
+
+                {/* Đang Chọn */}
+                <div className="flex items-center gap-2 bg-zinc-900/80 px-2.5 py-1.5 rounded-xl border border-zinc-800 shadow-sm">
+                    <div className="w-4 h-4 rounded bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-600 border border-violet-300 flex items-center justify-center text-white shrink-0 shadow-[0_0_8px_rgba(139,92,246,0.6)]">
+                        <FontAwesomeIcon icon={faCheck} className="text-[8px]" />
+                    </div>
+                    <span className="text-violet-300 font-semibold">Đang chọn</span>
                 </div>
 
-                {/* Đã đặt */}
-                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-zinc-800">
-                    <div className="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded-sm opacity-40 flex items-center justify-center">
-                        <FontAwesomeIcon icon={faLock} className="text-[8px] text-zinc-600" />
+                {/* Đã Bán */}
+                <div className="flex items-center gap-2 bg-zinc-900/80 px-2.5 py-1.5 rounded-xl border border-zinc-800 shadow-sm text-zinc-500">
+                    <div className="w-4 h-4 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 opacity-50">
+                        <FontAwesomeIcon icon={faLock} className="text-[8px] text-zinc-500" />
                     </div>
-                    <span className="text-zinc-500">Đã Bán</span>
-                </div>
-
-                {/* Ghế Cô Độc Vi Phạm */}
-                <div className="flex items-center gap-2 bg-zinc-900/60 px-3 py-1.5 rounded-lg border border-rose-900/40">
-                    <div className="w-4 h-4 bg-rose-950/90 border border-rose-500 rounded-sm flex items-center justify-center ring-1 ring-rose-500/50">
-                        <FontAwesomeIcon icon={faTriangleExclamation} className="text-[8px] text-rose-400" />
-                    </div>
-                    <span className="text-rose-300 font-medium">Bị Trống Đơn Độc</span>
+                    <span>Đã bán</span>
                 </div>
             </div>
         </div>

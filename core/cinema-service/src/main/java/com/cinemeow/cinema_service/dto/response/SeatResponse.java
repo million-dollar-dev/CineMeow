@@ -18,4 +18,5 @@ public class SeatResponse {
     String label;
     SeatType type;
     SeatStatus status;
+    Long pairSeatId;
 }

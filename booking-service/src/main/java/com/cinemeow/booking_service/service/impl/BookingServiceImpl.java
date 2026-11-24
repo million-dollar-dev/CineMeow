@@ -25,6 +25,7 @@ import com.cinemeow.booking_service.repository.specification.BookingSpecificatio
 import com.cinemeow.booking_service.service.BookingService;
 import com.cinemeow.booking_service.service.QrService;
 import com.cinemeow.booking_service.service.TicketPriceService;
+import com.cinemeow.booking_service.validator.CoupleSeatValidator;
 import com.cinemeow.booking_service.validator.SeatGapValidator;
 import com.cinemeow.booking_service.validator.SeatPosition;
 import jakarta.transaction.Transactional;
@@ -63,6 +64,8 @@ public class BookingServiceImpl implements BookingService {
     CinemaClient cinemaClient;
     
     SeatGapValidator seatGapValidator;
+    
+    CoupleSeatValidator coupleSeatValidator;
 
     @Override
     public List<ShowtimeSeatResponse> getShowtimeSeats(String showtimeId) {
@@ -115,6 +118,8 @@ public class BookingServiceImpl implements BookingService {
                 throw new AppException(ErrorCode.INVALID_SEAT);
             }
         }
+
+        coupleSeatValidator.validateCoupleSeats(request.getSeatIds(), physicalSeatMap);
 
         LocalDateTime expireThreshold = LocalDateTime.now().minusMinutes(10);
         List<BookedSeat> activeBookedSeats = bookedSeatRepository.findActiveBookedSeatsByShowtime(request.getShowtimeId(), expireThreshold);

@@ -47,12 +47,12 @@ export default function PaymentStep({
                     <button
                         type="button"
                         onClick={onBack}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
                     >
-                        <span>← Quay lại chọn ghế</span>
+                        <span>← Quay lại chọn bắp nước</span>
                     </button>
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-violet-400 bg-violet-600/10 px-2.5 py-1 rounded-full border border-violet-500/20">
-                        Bước 2 / 2
+                        Bước 3 / 3
                     </span>
                 </div>
 

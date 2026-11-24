@@ -25,6 +25,7 @@ public enum ErrorCode {
     QR_GENERATION_FAILED(4001, "Qr generation failed", HttpStatus.INTERNAL_SERVER_ERROR),
     QR_INVALID(1007, "Qr invalid", HttpStatus.BAD_REQUEST),
     SEAT_SINGLE_GAP_VIOLATED(1088, "Cannot leave a single isolated empty seat", HttpStatus.BAD_REQUEST),
+    SEAT_COUPLE_PAIR_INCOMPLETE(1090, "Couple seats must be selected together as a pair", HttpStatus.BAD_REQUEST),
     ;
 
     int code;
