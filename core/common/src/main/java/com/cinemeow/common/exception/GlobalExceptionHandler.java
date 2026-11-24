@@ -2,6 +2,7 @@ package com.cinemeow.common.exception;
 
 import com.cinemeow.common.dto.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -63,5 +64,28 @@ public class GlobalExceptionHandler {
                 .code(ErrorCode.UNAUTHENTICATED.getCode())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(baseResponse);
+    }
+
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public ResponseEntity<BaseResponse<?>> handlingDataIntegrityViolation(DataIntegrityViolationException exception) {
+        log.error("DataIntegrityViolationException caught: ", exception);
+        Throwable rootCause = exception.getRootCause();
+        if (rootCause != null && rootCause.getMessage() != null) {
+            String msg = rootCause.getMessage();
+            if (msg.contains("exclude_overlapping_showtimes") || msg.contains("23P01")) {
+                BaseResponse<?> baseResponse = BaseResponse.builder()
+                        .status("Error")
+                        .code(ErrorCode.SHOWTIME_OVERLAPPED.getCode())
+                        .message(ErrorCode.SHOWTIME_OVERLAPPED.getMessage())
+                        .build();
+                return ResponseEntity.status(ErrorCode.SHOWTIME_OVERLAPPED.getStatusCode()).body(baseResponse);
+            }
+        }
+        BaseResponse<?> baseResponse = BaseResponse.builder()
+                .status("Error")
+                .code(ErrorCode.DATA_INTEGRITY_VIOLATION.getCode())
+                .message(ErrorCode.DATA_INTEGRITY_VIOLATION.getMessage())
+                .build();
+        return ResponseEntity.status(ErrorCode.DATA_INTEGRITY_VIOLATION.getStatusCode()).body(baseResponse);
     }
 }

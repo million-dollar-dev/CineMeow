@@ -32,6 +32,13 @@ public class Showtime {
     @Column(name = "end_time", nullable = false)
     LocalDateTime endTime;
 
+    @Builder.Default
+    @Column(name = "transition_buffer_minutes", nullable = false)
+    int transitionBufferMinutes = 15;
+
+    @Column(name = "effective_end_time", nullable = false)
+    LocalDateTime effectiveEndTime;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     ShowtimeStatus status = ShowtimeStatus.AVAILABLE;

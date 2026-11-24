@@ -29,5 +29,7 @@ public class ShowtimeRequest {
     @NotNull(message = "End time must not be null")
     LocalDateTime endTime;
 
+    Integer transitionBufferMinutes;
+
     ShowtimeStatus status;
 }
