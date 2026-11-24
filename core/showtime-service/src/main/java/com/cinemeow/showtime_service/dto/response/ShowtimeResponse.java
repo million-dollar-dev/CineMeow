@@ -42,5 +42,9 @@ public class ShowtimeResponse {
 
     LocalDateTime endTime;
 
+    Integer transitionBufferMinutes;
+
+    LocalDateTime effectiveEndTime;
+
     ShowtimeStatus status;
 }

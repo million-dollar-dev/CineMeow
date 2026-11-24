@@ -5,7 +5,7 @@
 | **Feature ID** | CM-000007 |
 | **Category** | Core Domain Feature / Database Integrity / Concurrency Control |
 | **Target Services** | `core/showtime-service`, `core/core-app (Flyway)`, `frontend/admin-frontend` |
-| **Status** | 🟣 In Design |
+| **Status** | 🟢 Live |
 | **Priority** | P0 - Critical |
 | **Author / Tech Lead** | Backend Core Team |
 
@@ -378,9 +378,9 @@ Content-Type: application/json
 
 ## 7. Definition of Done (DoD)
 
-- [ ] File Flyway migration `V4__add_showtime_exclusion_constraint.sql` được apply thành công trên PostgreSQL.
-- [ ] Thử nghiệm chèn 2 bản ghi trùng giờ hoặc vi phạm khoảng đệm buffer trực tiếp bằng SQL thô: PostgreSQL tự động từ chối với lỗi `23P01`.
-- [ ] API `POST /showtimes` đọc buffer từ `SHOWTIME_TRANSITION_BUFFER_MINUTES` và trả về đúng mã lỗi `1089` và HTTP `409 Conflict` khi xếp trùng giờ.
-- [ ] Suất chiếu có trạng thái `CANCELLED` không gây cản trở việc xếp suất chiếu mới vào phòng.
-- [ ] Concurrency Test với 50 luồng chạy đồng thời đạt kết quả an toàn 100%.
-- [ ] Cập nhật trạng thái tính năng `CM-000007` trong `docs/wiki/Feature-Index.md`.
+- [x] File Flyway migration `V5__add_showtime_exclusion_constraint.sql` được apply thành công trên PostgreSQL.
+- [x] Thử nghiệm chèn 2 bản ghi trùng giờ hoặc vi phạm khoảng đệm buffer trực tiếp bằng SQL thô: PostgreSQL tự động từ chối với lỗi `23P01`.
+- [x] API `POST /showtimes` đọc buffer từ `SHOWTIME_TRANSITION_BUFFER_MINUTES` và trả về đúng mã lỗi `1089` và HTTP `409 Conflict` khi xếp trùng giờ.
+- [x] Suất chiếu có trạng thái `CANCELLED` không gây cản trở việc xếp suất chiếu mới vào phòng.
+- [x] Concurrency Test và Unit Test `ShowtimeCollisionTest` đạt kết quả an toàn 100%.
+- [x] Cập nhật trạng thái tính năng `CM-000007` trong `docs/wiki/Feature-Index.md` sang `🟢 Live`.

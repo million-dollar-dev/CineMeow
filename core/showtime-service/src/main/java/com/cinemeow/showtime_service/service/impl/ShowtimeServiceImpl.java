@@ -7,6 +7,7 @@ import com.cinemeow.movie_service.service.MovieService;
 import com.cinemeow.showtime_service.dto.request.ShowtimeRequest;
 import com.cinemeow.showtime_service.dto.response.ShowtimeResponse;
 import com.cinemeow.showtime_service.entity.Showtime;
+import com.cinemeow.showtime_service.enums.ShowtimeStatus;
 import com.cinemeow.common.exception.AppException;
 import com.cinemeow.common.exception.ErrorCode;
 import com.cinemeow.showtime_service.mapper.ShowtimeMapper;
@@ -16,17 +17,23 @@ import com.cinemeow.showtime_service.service.ShowtimeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,14 +50,50 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     RoomService roomService;
 
+    @NonFinal
+    @Value("${app.showtime.transition-buffer-minutes:15}")
+    int defaultBufferMinutes = 15;
+
+    private int getEffectiveBufferMinutes(ShowtimeRequest request) {
+        if (request.getTransitionBufferMinutes() != null && request.getTransitionBufferMinutes() > 0) {
+            return request.getTransitionBufferMinutes();
+        }
+        return defaultBufferMinutes;
+    }
+
     @Override
     @Caching(evict = {
             @CacheEvict(value = "showtimes", allEntries = true),
             @CacheEvict(value = "showtime_search", allEntries = true)
     })
+    @Transactional
     public ShowtimeResponse create(ShowtimeRequest request) {
+        int bufferMinutes = getEffectiveBufferMinutes(request);
+        LocalDateTime effectiveEndTime = request.getEndTime().plusMinutes(bufferMinutes);
+
+        // Layer 1: Application-level check
+        Optional<Showtime> conflict = showtimeRepository.findConflictingShowtime(
+                request.getRoomId(),
+                request.getStartTime(),
+                effectiveEndTime,
+                ShowtimeStatus.CANCELLED.name(),
+                null
+        );
+        if (conflict.isPresent()) {
+            throw new AppException(ErrorCode.SHOWTIME_OVERLAPPED);
+        }
+
         var showtime = showtimeMapper.toShowtime(request);
-        showtimeRepository.save(showtime);
+        showtime.setTransitionBufferMinutes(bufferMinutes);
+        showtime.setEffectiveEndTime(effectiveEndTime);
+
+        // Layer 2: Save to DB (PostgreSQL Exclusion Constraint protects against concurrent race conditions)
+        try {
+            showtimeRepository.save(showtime);
+        } catch (DataIntegrityViolationException ex) {
+            throw new AppException(ErrorCode.SHOWTIME_OVERLAPPED);
+        }
+
         var response = buildFullShowtimeResponse(showtime);
         return response;
     }
@@ -79,11 +122,36 @@ public class ShowtimeServiceImpl implements ShowtimeService {
             @CacheEvict(value = "showtime_search", allEntries = true),
             @CacheEvict(value = "showtime", key = "#id")
     })
+    @Transactional
     public ShowtimeResponse updateById(String id, ShowtimeRequest request) {
         var showtime = showtimeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_EXISTED));
+
+        int bufferMinutes = getEffectiveBufferMinutes(request);
+        LocalDateTime effectiveEndTime = request.getEndTime().plusMinutes(bufferMinutes);
+
+        // Layer 1: Application-level check (excluding current showtime id)
+        Optional<Showtime> conflict = showtimeRepository.findConflictingShowtime(
+                request.getRoomId(),
+                request.getStartTime(),
+                effectiveEndTime,
+                ShowtimeStatus.CANCELLED.name(),
+                id
+        );
+        if (conflict.isPresent()) {
+            throw new AppException(ErrorCode.SHOWTIME_OVERLAPPED);
+        }
+
         showtimeMapper.update(showtime, request);
-        showtimeRepository.save(showtime);
+        showtime.setTransitionBufferMinutes(bufferMinutes);
+        showtime.setEffectiveEndTime(effectiveEndTime);
+
+        try {
+            showtimeRepository.save(showtime);
+        } catch (DataIntegrityViolationException ex) {
+            throw new AppException(ErrorCode.SHOWTIME_OVERLAPPED);
+        }
+
         var response = buildFullShowtimeResponse(showtime);
         return response;
     }
@@ -151,6 +219,8 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         response.setBrandId(room.getBrandId());
         response.setBrandName(room.getBrandName());
         response.setRoomType(room.getType());
+        response.setTransitionBufferMinutes(showtime.getTransitionBufferMinutes());
+        response.setEffectiveEndTime(showtime.getEffectiveEndTime());
 
         return response;
     }

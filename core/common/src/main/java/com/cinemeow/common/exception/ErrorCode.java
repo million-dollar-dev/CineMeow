@@ -38,6 +38,7 @@ public enum ErrorCode implements BaseErrorCode {
     // --- Showtime Service ---
     SHOWTIME_NOT_EXISTED(10045, "Showtime not existed", HttpStatus.NOT_FOUND),
     SEAT_SINGLE_GAP_VIOLATED(1088, "Cannot leave a single isolated empty seat", HttpStatus.BAD_REQUEST),
+    SHOWTIME_OVERLAPPED(1089, "Phòng chiếu đã có lịch chiếu khác trong khoảng thời gian này hoặc không đủ thời gian chuyển tiếp giữa 2 suất chiếu!", HttpStatus.CONFLICT),
 
     // --- Profile Service ---
     PROFILE_NOT_FOUND(1001, "Profile is not found", HttpStatus.NOT_FOUND),

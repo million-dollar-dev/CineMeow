@@ -571,8 +571,8 @@ export default function ShowtimeModal({ open, onClose, mode = "add", showtimeDat
                                                 helperText={
                                                     errors.endTime?.message ||
                                                     (currentMovie?.duration
-                                                        ? `Tự động cộng ${currentMovie.duration} phút thời lượng phim`
-                                                        : "")
+                                                        ? `Tự động cộng ${currentMovie.duration} phút thời lượng phim (hệ thống tự cộng thêm 15 phút thời gian đệm chuyển tiếp)`
+                                                        : "Hệ thống tự động cộng thêm 15 phút đệm chuyển tiếp giữa 2 suất chiếu")
                                                 }
                                             />
                                         )}
