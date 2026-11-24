@@ -160,9 +160,29 @@ const BookingPage = () => {
     const handleToggleSeat = (seat) => {
         if (seat.type === "EMPTY" || seat.status !== "AVAILABLE") return;
 
-        const nextSelectedSeats = selectedSeats.some((s) => s.id === seat.id)
-            ? selectedSeats.filter((s) => s.id !== seat.id)
-            : [...selectedSeats, seat];
+        // Atomic pairing for COUPLE (Sweetbox) seats
+        const pairSeat = (seat.type === "COUPLE" && seat.pairSeatId)
+            ? seats.find((s) => s.id === seat.pairSeatId)
+            : null;
+
+        const isAlreadySelected = selectedSeats.some((s) => s.id === seat.id);
+
+        let nextSelectedSeats;
+        if (isAlreadySelected) {
+            // Remove both if COUPLE
+            const idsToRemove = pairSeat ? [seat.id, pairSeat.id] : [seat.id];
+            nextSelectedSeats = selectedSeats.filter((s) => !idsToRemove.includes(s.id));
+        } else {
+            // Select both if COUPLE
+            if (pairSeat && pairSeat.status === "AVAILABLE") {
+                nextSelectedSeats = [...selectedSeats, seat, pairSeat];
+            } else if (pairSeat && pairSeat.status !== "AVAILABLE") {
+                toast.error(`Ghế đối ứng trong cặp (${pairSeat.label || "ghế đôi"}) hiện không khả dụng!`);
+                return;
+            } else {
+                nextSelectedSeats = [...selectedSeats, seat];
+            }
+        }
 
         setSelectedSeats(nextSelectedSeats);
 
@@ -415,8 +435,8 @@ const BookingPage = () => {
                     const errorCode = backendError?.data?.code || backendError?.status;
                     const errorMessage = backendError?.data?.message || backendError?.message;
 
-                    // Code 1088: SEAT_SINGLE_GAP_VIOLATED or seat constraint error
-                    if (errorCode === 1088 || (errorCode === 400 && errorMessage?.toLowerCase()?.includes("seat"))) {
+                    // Code 1088: SEAT_SINGLE_GAP_VIOLATED or 1090: SEAT_COUPLE_PAIR_INCOMPLETE or seat constraint error
+                    if (errorCode === 1088 || errorCode === 1090 || (errorCode === 400 && errorMessage?.toLowerCase()?.includes("seat"))) {
                         toast.error(errorMessage || "Không thể đặt vé do vi phạm quy tắc chọn ghế!", {
                             autoClose: 6000,
                         });

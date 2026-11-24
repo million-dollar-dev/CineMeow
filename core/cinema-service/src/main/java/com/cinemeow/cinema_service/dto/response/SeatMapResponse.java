@@ -35,6 +35,7 @@ public class SeatMapResponse {
                         .type(seat.getType())
                         .status(seat.getStatus())
                         .label(seat.getLabel())
+                        .pairSeatId(seat.getPairSeatId())
                         .build())
 
                 .toList();

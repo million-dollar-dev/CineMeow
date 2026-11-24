@@ -134,6 +134,8 @@ const SeatSelection = ({
                                             const isSelected = selectedSeats.some((s) => s.id === seat.id);
                                             const isCouple = seat.type === "COUPLE";
                                             const isViolated = violatedSeat && violatedSeat.id === seat.id;
+                                            const isLeftCouple = isCouple && (seat.colIndex % 2 === 0);
+                                            const isRightCouple = isCouple && (seat.colIndex % 2 === 1);
 
                                             return (
                                                 <button
@@ -144,29 +146,28 @@ const SeatSelection = ({
                                                     title={
                                                         isViolated
                                                             ? `${seat.label} - Cảnh báo: Không thể để trống 1 ghế đơn độc!`
-                                                            : `${seat.label} - ${seat.type === "COUPLE" ? "Ghế Đôi" : seat.type === "VIP" ? "Ghế VIP" : "Ghế Thường"}`
+                                                            : `${seat.label} - ${seat.type === "COUPLE" ? "Ghế Đôi Sweetbox" : seat.type === "VIP" ? "Ghế VIP" : "Ghế Thường"}`
                                                     }
                                                     className={`
-                                                        ${isCouple ? "w-12 sm:w-14 md:w-16" : "w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8"}
-                                                        h-6 sm:h-7 md:h-8 text-[9px] sm:text-[10px] md:text-xs font-bold rounded-md
-                                                        flex items-center justify-center cursor-pointer transition-transform
+                                                        ${isCouple ? "w-7 sm:w-8 md:w-8.5" : "w-6 sm:w-7 md:w-8"}
+                                                        h-6 sm:h-7 md:h-8
+                                                        text-[9px] sm:text-[10px] md:text-xs font-bold leading-none
+                                                        flex items-center justify-center cursor-pointer transition-transform select-none
+                                                        ${isLeftCouple ? "rounded-l-md rounded-r-none border-r-dashed border-r-rose-500/40 mr-[-4px] sm:mr-[-6px] z-10" : ""}
+                                                        ${isRightCouple ? "rounded-r-md rounded-l-none border-l-0" : ""}
+                                                        ${!isCouple ? "rounded-md" : ""}
                                                         ${getSeatClasses(seat)}
                                                     `}
                                                 >
                                                     {seat.type !== "EMPTY" && (
                                                         <>
                                                             {isViolated ? (
-                                                                <span className="flex items-center gap-0.5 text-rose-300 font-extrabold animate-pulse">
+                                                                 <span className="flex items-center gap-0.5 text-rose-300 font-extrabold animate-pulse">
                                                                     <FontAwesomeIcon icon={faTriangleExclamation} className="text-[8px] text-rose-400" />
                                                                     <span>{seat.label}</span>
                                                                 </span>
                                                             ) : isSelected ? (
                                                                 <FontAwesomeIcon icon={faCheck} className="text-[10px] sm:text-xs" />
-                                                            ) : isCouple ? (
-                                                                <span className="flex items-center gap-0.5">
-                                                                    <FontAwesomeIcon icon={faHeart} className="text-[8px] sm:text-[9px] text-rose-400" />
-                                                                    <span>{seat.label}</span>
-                                                                </span>
                                                             ) : seat.status !== "AVAILABLE" ? (
                                                                 <FontAwesomeIcon icon={faLock} className="text-[9px] text-zinc-600" />
                                                             ) : (
@@ -205,8 +206,11 @@ const SeatSelection = ({
 
                 {/* Ghế Đôi */}
                 <div className="flex items-center gap-2 bg-zinc-900/80 px-2.5 py-1.5 rounded-xl border border-zinc-800 shadow-sm">
-                    <div className="w-6 h-4 rounded bg-rose-950/40 border border-rose-500/70 flex items-center justify-center shrink-0">
-                        <FontAwesomeIcon icon={faHeart} className="text-[8px] text-rose-400" />
+                    <div className="flex items-center shrink-0">
+                        <div className="w-3.5 h-4 rounded-l bg-rose-950/40 border border-rose-500/70 border-r-dashed border-r-rose-500/40 flex items-center justify-center">
+                            <FontAwesomeIcon icon={faHeart} className="text-[6px] text-rose-400" />
+                        </div>
+                        <div className="w-3.5 h-4 rounded-r bg-rose-950/40 border border-rose-500/70 border-l-0" />
                     </div>
                     <span>Ghế Đôi <strong className="text-rose-400 font-semibold">({couplePrice})</strong></span>
                 </div>

@@ -96,11 +96,14 @@ export const generateMockSeats = () => {
         const isVipRow = ["D", "E", "F", "G"].includes(rowLetter);
 
         if (isCoupleRow) {
-            // 6 Couple seats across row H
-            for (let col = 1; col <= 11; col += 2) {
-                const label = `${rowLetter}${col}-${col + 1}`;
+            // 6 Sweetbox couples (12 individual seats H1..H12, atomically paired H1<->H2, H3<->H4, etc.)
+            for (let col = 1; col <= 12; col++) {
+                const isOdd = col % 2 === 1;
+                const pairCol = isOdd ? col + 1 : col - 1;
+                const label = `${rowLetter}${col}`;
                 const seatId = `seat-${rowLetter}-${col}`;
-                const isOccupied = occupiedLabels.has(`${rowLetter}${col}`);
+                const pairSeatId = `seat-${rowLetter}-${pairCol}`;
+                const isOccupied = occupiedLabels.has(label);
 
                 seats.push({
                     id: seatId,
@@ -109,6 +112,7 @@ export const generateMockSeats = () => {
                     colIndex: col - 1,
                     type: "COUPLE",
                     status: isOccupied ? "OCCUPIED" : "AVAILABLE",
+                    pairSeatId: pairSeatId,
                     reservedUntil: null,
                     bookingId: null,
                 });
